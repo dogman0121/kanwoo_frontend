@@ -1,6 +1,6 @@
 "use client"
 
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useContext, useState } from "react";
 import AuthError from "./AuthError";
 import AuthForm from "./AuthForm";
@@ -21,7 +21,7 @@ export default function AuthLogin({onSuccess}: {onSuccess?: () => void}) {
 
     const handleLogin = async() => {
         console.log("123");
-        const {data, error} = await authService.login(login, password);
+        const {error} = await authService.login(login, password);
 
         if (error) {
             setWrongForm(true);

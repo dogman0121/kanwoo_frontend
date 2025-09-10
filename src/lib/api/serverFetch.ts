@@ -8,26 +8,24 @@ export const serverFetch = {
     },
 
     // POST запрос
-    async post<T>(url: string, data?: any, options?: RequestInit): Promise<T> {
+    async post(url: string, payload?: RequestInit) {
         return this._sendRequest(url, {
-            ...options,
+            ...payload,
             method: 'POST',
-            body: data ? JSON.stringify(data) : undefined,
         });
     },
 
     // PUT запрос
-    async put<T>(url: string, data?: any, options?: RequestInit): Promise<T> {
+    async put(url: string, payload?: RequestInit) {
         return this._sendRequest(url, {
-            ...options,
+            ...payload,
             method: 'PUT',
-            body: data ? JSON.stringify(data) : undefined,
         });
     },
 
     // DELETE запрос
-    async delete<T>(url: string, options?: RequestInit): Promise<T> {
-        return this._sendRequest(url, { ...options, method: 'DELETE' });
+    async delete(url: string, payload: RequestInit) {
+        return this._sendRequest(url, { ...payload, method: 'DELETE' });
     },
 
     // Базовый метод запроса
