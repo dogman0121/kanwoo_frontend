@@ -1,0 +1,24 @@
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.dark {
+  --knw-typography-body1-color: #E1E1E0;
+  --knw-typography-caption-color: #BCBCBC;
+}
+
+.light {
+  --knw-typography-body1-color: #000000;
+  --knw-typography-caption-color: #606060;
+}
+
+input:-webkit-autofill {
+    box-shadow: inset 0 0 0 30px hsla(0, 0%, 55%, 0) !important;
+    -webkit-transition: background-color 5000s ease-in-out 0s, color 5000s ease-in-out 0s;
+    transition: background-color 5000s ease-in-out 0s, color 5000s ease-in-out 0s;
+    transition-delay: 5000s;
+    -webkit-transition-property: background-color, color;
+    transition-property: background-color, color;
+}
+
