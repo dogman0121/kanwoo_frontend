@@ -88,7 +88,7 @@ export const serverFetch = {
                 return false;
             }
 
-            const response = await this._fetch('/v1/auth/refresh', {
+            const response = await this._fetch('/auth/refresh', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
