@@ -47,7 +47,6 @@ export default async function Page({
 
     if (!manga)
         return notFound();
-    else
 
     return ( 
         <>
