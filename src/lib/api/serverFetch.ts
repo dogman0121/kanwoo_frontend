@@ -72,7 +72,7 @@ export const serverFetch = {
         }
         const json = await response.json();
 
-        console.log("Returning response", json)
+        console.log("Returning response", url, json)
 
         return await json;
     },
