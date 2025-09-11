@@ -1,8 +1,6 @@
 import MobileLayout from "./MobileLayout";
 import DesktopLayout from "./DesktopLayout";
 import { headers } from "next/headers";
-import { serverFetch } from "@/lib/api/serverFetch";
-import AuthUserSetter from "./AuthUserLoader";
 
 export default async function MainLayout({children}: {children: React.ReactNode}) {
     const device = (await headers()).get("X-Device-Type")
