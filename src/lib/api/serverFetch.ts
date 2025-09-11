@@ -34,19 +34,21 @@ export const serverFetch = {
 
         if (url.startsWith("http"))
             return await fetch(url, {
+                credentials: "include",
                 ...options,
                 headers: {
                     'Content-Type': 'application/json',
-                    ...(currentCookies && { Cookie: currentCookies }),
+                    'cookie': currentCookies,
                     ...options.headers,
                 },
             });
         else
             return await fetch(process.env.NEXT_PUBLIC_API_URL + url, {
+                credentials: "include",
                 ...options,
                 headers: {
                     'Content-Type': 'application/json',
-                    ...(currentCookies && { Cookie: currentCookies }),
+                    'cookie': currentCookies,
                     ...options.headers,
                 },
             });

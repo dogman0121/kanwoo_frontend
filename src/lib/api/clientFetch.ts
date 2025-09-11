@@ -60,11 +60,13 @@ export const clientFetch = {
     async _fetch(url: string, payload?: RequestInit) {
         if (url.startsWith("http")){
             return await fetch(url, {
+                credentials: "include",
                 ...payload,
             })
         }
         else {
             return await fetch(process.env.NEXT_PUBLIC_API_URL + url, {
+                credentials: "include",
                 ...payload,
             })
         }
