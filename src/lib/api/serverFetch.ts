@@ -76,18 +76,21 @@ export const serverFetch = {
     async _refreshToken() {
         try {
             const cookieStore = await cookies();
-            const refreshToken = cookieStore.get('refresh_token_cookie')?.value;
 
-            if (!refreshToken) {
-            return false;
+            const refreshToken = cookieStore.get('refresh_token_cookie')?.value;
+            const csrfRefreshToken = cookieStore.get('csrf_refresh_token')?.value;
+
+            if (!refreshToken || !csrfRefreshToken) {
+                return false;
             }
 
             const response = await fetch('/v1/auth/refresh', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfRefreshToken,
+                    'cookie': `csrf_refresh_token=${csrfRefreshToken}`
                 },
-                body: JSON.stringify({ refreshToken }),
             });
 
             if (response.ok) {
