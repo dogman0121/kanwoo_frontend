@@ -70,6 +70,7 @@ export const serverFetch = {
                 response = await this._fetch(url, options);
             }
         }
+        console.log("Returning response")
 
         return await response.json();
     },
