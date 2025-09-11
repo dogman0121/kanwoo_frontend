@@ -76,13 +76,13 @@ export const serverFetch = {
     async _refreshToken() {
         try {
             const cookieStore = await cookies();
-            const refreshToken = cookieStore.get('refresh-token')?.value;
+            const refreshToken = cookieStore.get('refresh_token_cookie')?.value;
 
             if (!refreshToken) {
             return false;
             }
 
-            const response = await fetch('/api/auth/refresh', {
+            const response = await fetch('/v1/auth/refresh', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
