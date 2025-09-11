@@ -79,10 +79,9 @@ export const serverFetch = {
         try {
             const cookieStore = await cookies();
 
-            const refreshToken = cookieStore.get('refresh_token_cookie')?.value;
             const csrfRefreshToken = cookieStore.get('csrf_refresh_token')?.value;
 
-            if (!refreshToken || !csrfRefreshToken) {
+            if (!csrfRefreshToken) {
                 return false;
             }
 
