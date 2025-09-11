@@ -6,7 +6,11 @@ import { serverFetch } from "@/lib/api/serverFetch";
 export default async function MainLayout({children}: {children: React.ReactNode}) {
     const device = (await headers()).get("X-Device-Type")
 
-    const {data: user} = await serverFetch.get("/users/me")
+    const {data: user} = await serverFetch.get("/users/me",
+        {
+            credentials: "include"
+        }
+    )
 
     return (
         <>  
