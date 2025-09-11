@@ -86,7 +86,7 @@ export const serverFetch = {
                 return false;
             }
 
-            const response = await fetch('/v1/auth/refresh', {
+            const response = await this._fetch('/v1/auth/refresh', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -102,8 +102,8 @@ export const serverFetch = {
 
             return false;
         } catch (error) {
-                console.error('Token refresh failed:', error);
-                return false;
+            console.log('Token refreshing failed');
+            return false;
         }
     }
 };
