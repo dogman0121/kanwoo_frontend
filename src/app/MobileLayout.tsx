@@ -5,11 +5,23 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
-import { useState } from "react"
+import { useRef, useState } from "react"
 import Link from "next/link";
+import User from "@/types/user";
+import { useAppStore } from "@/lib/state/hooks";
+import { setManga } from "@/lib/state/features/manga/mangaSlice";
+import { setAuthUser } from "@/lib/state/features/auth_user/authUserSlice";
 
-export default function MobileLayout({children}: {children: React.ReactNode}) {
+export default function MobileLayout({children, user}: {children: React.ReactNode, user: User | null}) {
+    const store = useAppStore()
+    const initialized = useRef(false)
+    if (!initialized.current) {
+        store.dispatch(setAuthUser(user))
+        initialized.current = true
+    }
+
     const [value, setValue] = useState(0);
+
     return (
         <>
             <Box

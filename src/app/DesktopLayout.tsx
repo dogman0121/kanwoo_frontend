@@ -1,9 +1,12 @@
 "use client"
 
 import HeaderUserNavDesktop from "@/components/HeaderUserNavDesktop"
+import { setAuthUser } from "@/lib/state/features/auth_user/authUserSlice"
+import { useAppStore } from "@/lib/state/hooks"
+import User from "@/types/user"
 import { Avatar, Box, SvgIcon, Typography } from "@mui/material"
 import Link from "next/link"
-import { Suspense } from "react"
+import { Suspense, useRef } from "react"
 
 function Header() {
     return (
@@ -77,7 +80,13 @@ function Footer() {
     )
 }
 
-export default function DesktopLayout({children}: {children: React.ReactNode}) {
+export default function DesktopLayout({children, user}: {children: React.ReactNode, user: User | null}) {
+    const store = useAppStore()
+    const initialized = useRef(false)
+    if (!initialized.current) {
+        store.dispatch(setAuthUser(user))
+        initialized.current = true
+    }
     return (
         <>
             <Header />

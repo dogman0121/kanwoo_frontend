@@ -11,11 +11,11 @@ export default async function MainLayout({children}: {children: React.ReactNode}
     return (
         <>  
             { device == "mobile" ? 
-                <MobileLayout>
+                <MobileLayout user={user}>
                     {children}
                 </MobileLayout>
                 :
-                <DesktopLayout>
+                <DesktopLayout user={user}>
                     {children}
                 </DesktopLayout>
             }
