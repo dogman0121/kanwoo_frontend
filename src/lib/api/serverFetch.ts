@@ -70,9 +70,11 @@ export const serverFetch = {
                 response = await this._fetch(url, options);
             }
         }
-        console.log("Returning response")
+        const json = await response.json();
 
-        return await response.json();
+        console.log("Returning response", json)
+
+        return await json;
     },
 
     // Функция обновления токена
