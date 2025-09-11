@@ -93,7 +93,6 @@ export const serverFetch = {
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': csrfRefreshToken,
-                    'cookie': `csrf_refresh_token=${csrfRefreshToken}`
                 },
             });
 
