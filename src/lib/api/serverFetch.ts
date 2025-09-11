@@ -59,6 +59,7 @@ export const serverFetch = {
 
         // Если 401 ошибка - обновляем токен и повторяем запрос
         if (response.status === 401) {
+            console.log(response)
             console.log('Token expired, refreshing...');
             
             // Обновляем токен
@@ -69,7 +70,7 @@ export const serverFetch = {
             }
         }
 
-        return response.json();
+        return await response.json();
     },
 
     // Функция обновления токена
