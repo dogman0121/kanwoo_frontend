@@ -1,11 +1,12 @@
 import MobileLayout from "./MobileLayout";
 import DesktopLayout from "./DesktopLayout";
 import { headers } from "next/headers";
+import { serverFetch } from "@/lib/api/serverFetch";
 
 export default async function MainLayout({children}: {children: React.ReactNode}) {
     const device = (await headers()).get("X-Device-Type")
 
-    // const {data: user} = await serverFetch.get("https://kanwoo.ru/api/v1/users/me")
+    const {data: user} = await serverFetch.get("/users/me")
 
     return (
         <>  

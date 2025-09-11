@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import MangaPageMobile from "./MangaPageMobile";
 import MangaPageDesktop from "./MangaPageDesktop";
+import { serverFetch } from "@/lib/api/serverFetch";
 
 
 export async function generateMetadata({
@@ -11,25 +12,24 @@ export async function generateMetadata({
 }): Promise<Metadata> {
     const { mangaSlug } = await params;
 
-    const res = await fetch(`https://kanwoo.ru/api/v1/manga/${mangaSlug}`)
+    const {data: manga} = await serverFetch.get(`/manga/${mangaSlug}`)
 
-    const {data: manga} = await res.json();
-
-    if (!manga)
+    if (!manga){
         return notFound();
+    }
  
-  return {
-    title: `Читать ${manga.type.name} ${manga.name} онлайн | kanwoo`,
-    description: manga.description,
-    openGraph: {
-        type: "book",
-        url: `https://kanwoo.ru/manga/${manga.slug}`,
+    return {
         title: `Читать ${manga.type.name} ${manga.name} онлайн | kanwoo`,
         description: manga.description,
-        images: [{url: manga.main_poster.medium}],
-        siteName: "Kanwoo"
-    },
-  }
+        openGraph: {
+            type: "book",
+            url: `https://kanwoo.ru/manga/${manga.slug}`,
+            title: `Читать ${manga.type.name} ${manga.name} онлайн | kanwoo`,
+            description: manga.description,
+            images: [{url: manga.main_poster.medium}],
+            siteName: "Kanwoo"
+        },
+    }
 }
 
 export default async function Page({
@@ -41,9 +41,7 @@ export default async function Page({
 }) {
     const { mangaSlug } = await params;
 
-    const res = await fetch(`https://kanwoo.ru/api/v1/manga/${mangaSlug}`)
-
-    const {data: manga} = await res.json();
+    const {data: manga} = await serverFetch.get(`/manga/${mangaSlug}`)
 
     const { viewport } = await searchParams;
 

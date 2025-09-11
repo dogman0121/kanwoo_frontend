@@ -28,72 +28,77 @@ export const serverFetch = {
         return this._sendRequest(url, { ...payload, method: 'DELETE' });
     },
 
-    // Базовый метод запроса
-    async _sendRequest(url: string, options: RequestInit = {}) {
+    async _fetch(url: string, options: RequestInit = {}) {
         const cookieStore = await cookies();
         const currentCookies = cookieStore.toString();
 
+        if (url.startsWith("http"))
+            return await fetch(url, {
+                ...options,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(currentCookies && { Cookie: currentCookies }),
+                    ...options.headers,
+                },
+            });
+        else
+            return await fetch(process.env.NEXT_PUBLIC_API_URL + url, {
+                ...options,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(currentCookies && { Cookie: currentCookies }),
+                    ...options.headers,
+                },
+            });
+    },
+
+    // Базовый метод запроса
+    async _sendRequest(url: string, options: RequestInit = {}) {
         // Первый запрос
-        let response = await fetch(url, {
-            ...options,
-            headers: {
-                'Content-Type': 'application/json',
-                ...(currentCookies && { Cookie: currentCookies }),
-                ...options.headers,
-            },
-        });
+        let response = await this._fetch(url, options)
 
         // Если 401 ошибка - обновляем токен и повторяем запрос
         if (response.status === 401) {
             console.log('Token expired, refreshing...');
             
             // Обновляем токен
-            const refreshSuccess = await refreshToken();
+            const refreshSuccess = await this._refreshToken();
             
             if (refreshSuccess) {
-                    // Повторяем запрос с обновленными куками
-                    const newCookies = cookieStore.toString();
-                    response = await fetch(url, {
-                    ...options,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...(newCookies && { Cookie: newCookies }),
-                        ...options.headers,
-                    },
-                });
+                response = await this._fetch(url, options);
             }
         }
 
         return response.json();
+    },
+
+    // Функция обновления токена
+    async _refreshToken() {
+        try {
+            const cookieStore = await cookies();
+            const refreshToken = cookieStore.get('refresh-token')?.value;
+
+            if (!refreshToken) {
+            return false;
+            }
+
+            const response = await fetch('/api/auth/refresh', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ refreshToken }),
+            });
+
+            if (response.ok) {
+                console.log('Token refreshed successfully');
+                return true;
+            }
+
+            return false;
+        } catch (error) {
+                console.error('Token refresh failed:', error);
+                return false;
+        }
     }
 };
-
-// Функция обновления токена
-async function refreshToken(): Promise<boolean> {
-    try {
-        const cookieStore = await cookies();
-        const refreshToken = cookieStore.get('refresh-token')?.value;
-
-        if (!refreshToken) {
-        return false;
-        }
-
-        const response = await fetch('/api/auth/refresh', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ refreshToken }),
-        });
-
-        if (response.ok) {
-            console.log('Token refreshed successfully');
-            return true;
-        }
-
-        return false;
-    } catch (error) {
-            console.error('Token refresh failed:', error);
-            return false;
-    }
-}
