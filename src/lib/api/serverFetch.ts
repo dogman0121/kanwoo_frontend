@@ -58,30 +58,37 @@ export const serverFetch = {
     // Базовый метод запроса
     async _sendRequest(url: string, options: RequestInit = {}) {
         // Первый запрос
-        let response = await this._fetch(url, options)
+        const response = await this._fetch(url, options)
+
+        let responseJson = await response.json();
 
         // Если 401 ошибка - обновляем токен и повторяем запрос
-        if (response.status === 401) {
-            console.log('Token expired, refreshing...');
+        if (responseJson.error?.code === "unuauthorized") {
+            const {error} = await response.json()
             
-            // Обновляем токен
-            const refreshResponse = await this._refreshToken();
+            if (responseJson.error?.detail?.token == "Token expired"){
+                console.log('Token expired, refreshing...');
             
-            if (refreshResponse.ok) {
-                response = await this._fetch(url, {
-                    ...options,
-                    headers: {
-                        ...options.headers,
-                        "cookie": refreshResponse.headers.getSetCookie().join(";")
-                    }
-                });
+                // Обновляем токен
+                const refreshResponse = await this._refreshToken();
+                
+                if (refreshResponse.ok) {
+                    const response = await this._fetch(url, {
+                        ...options,
+                        headers: {
+                            ...options.headers,
+                            "cookie": refreshResponse.headers.getSetCookie().join(";")
+                        }
+                    });
+
+                    responseJson = await response.json()
+                }
             }
         }
-        const json = await response.json();
 
-        console.log("Returning response", url, json)
+        console.log("Returning response", url, responseJson)
 
-        return await json;
+        return await responseJson;
     },
 
     // Функция обновления токена
