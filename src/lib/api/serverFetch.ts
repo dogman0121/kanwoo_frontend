@@ -63,7 +63,7 @@ export const serverFetch = {
         let responseJson = await response.json();
 
         // Если 401 ошибка - обновляем токен и повторяем запрос
-        if (responseJson.error?.code === "unuauthorized") {
+        if (responseJson.error?.code === "unauthorized") {
             const {error} = await response.json()
             
             if (responseJson.error?.detail?.token == "Token expired"){
