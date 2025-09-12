@@ -1,3 +1,4 @@
+import { error } from 'console';
 import { cookies } from 'next/headers';
 
 // Базовые методы
@@ -64,10 +65,16 @@ export const serverFetch = {
             console.log('Token expired, refreshing...');
             
             // Обновляем токен
-            const refreshSuccess = await this._refreshToken();
+            const refreshResponse = await this._refreshToken();
             
-            if (refreshSuccess) {
-                response = await this._fetch(url, options);
+            if (refreshResponse.ok) {
+                response = await this._fetch(url, {
+                    ...options,
+                    headers: {
+                        ...options.headers,
+                        "cookie": refreshResponse.headers.getSetCookie().join(";")
+                    }
+                });
             }
         }
         const json = await response.json();
@@ -79,32 +86,26 @@ export const serverFetch = {
 
     // Функция обновления токена
     async _refreshToken() {
-        try {
-            const cookieStore = await cookies();
+        const cookieStore = await cookies();
 
-            const csrfRefreshToken = cookieStore.get('csrf_refresh_token')?.value;
+        const csrfRefreshToken = cookieStore.get('csrf_refresh_token')?.value;
 
-            if (!csrfRefreshToken) {
-                return false;
-            }
-
-            const response = await this._fetch('/auth/refresh', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfRefreshToken,
-                },
-            });
-
-            if (response.ok) {
-                console.log('Token refreshed successfully');
-                return true;
-            }
-
-            return false;
-        } catch (error) {
-            console.log('Token refreshing failed');
-            return false;
+        if (!csrfRefreshToken) {
+            throw Error("CSRF Refresh token not found")
         }
+
+        const response = await this._fetch('/auth/refresh', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfRefreshToken,
+            },
+        });
+
+        if (response.ok) {
+            console.log('Token refreshed successfully');
+        }
+
+        return response
     }
 };
