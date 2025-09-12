@@ -1,4 +1,4 @@
-"use client"
+import Image from "next/image"
 
 export default function Poster({
     src, 
@@ -10,7 +10,7 @@ export default function Poster({
     style?: React.CSSProperties
 }){
     return (
-        <img
+        <Image
             draggable={false}
             src={src}
             alt="poster"
