@@ -1,5 +1,3 @@
-import Image from "next/image"
-
 export default function Poster({
     src, 
     width,
@@ -10,7 +8,7 @@ export default function Poster({
     style?: React.CSSProperties
 }){
     return (
-        <Image
+        <img
             draggable={false}
             src={src}
             alt="poster"
