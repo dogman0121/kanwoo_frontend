@@ -95,7 +95,8 @@ export default function MangaPageMobile({manga}: {manga: Manga}) {
                             lineHeight: "1.2",
                             fontSize: "20px",
                             fontWeight: "600",
-                            mt: "5px"
+                            mt: "5px",
+                            textAlign: "center"
                         }}
                     >
                         {manga?.name}
