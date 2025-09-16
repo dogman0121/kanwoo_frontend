@@ -84,8 +84,6 @@ export const serverFetch = {
             }
         }
 
-        console.log("Returning response", url, responseJson)
-
         return await responseJson;
     },
 

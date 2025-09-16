@@ -26,6 +26,9 @@ function GenreItem({genre}: {genre: {id: number, name: string}}) {
 export default function Genres() {
     const genres = useAppSelector(state => state.manga.manga?.genres);
 
+    if (!genres?.length)
+        return null;
+
     return (
         <Box
             sx={{
