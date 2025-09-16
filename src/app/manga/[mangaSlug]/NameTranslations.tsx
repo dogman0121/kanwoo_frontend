@@ -7,6 +7,9 @@ import { Box, Breadcrumbs, Typography } from "@mui/material";
 export default function NameTranslations() {
     const nameTranlations = useAppSelector(state => state.manga.manga?.name_translations);
 
+    if (!nameTranlations?.length)
+        return null;
+
     return (
         <Box
             sx={{
