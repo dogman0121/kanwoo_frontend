@@ -8,7 +8,7 @@ import { Button } from "@mui/material";
 import AuthError from "./ui/AuthError";
 import AuthForm from "./ui/AuthForm";
 import AuthInput from "./ui/AuthInput";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function AuthRecovery({onSuccess}: {onSuccess?: () => void}) {
     const [wrongForm, setWrongForm] = useState(false);
@@ -21,7 +21,7 @@ export default function AuthRecovery({onSuccess}: {onSuccess?: () => void}) {
 
     const router = useRouter()
 
-    const urlParams = new URLSearchParams(document.location.search);
+    const urlParams = useSearchParams();
         
     const token = urlParams.get("t");
 

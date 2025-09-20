@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { authService } from "../api/services/authService";
 import AuthMessage from "./ui/AuthMessage";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function AuthVerify({onSuccess}: {onSuccess?: () => void}) {
     enum VERIFY_STATUS {
@@ -15,7 +15,7 @@ export default function AuthVerify({onSuccess}: {onSuccess?: () => void}) {
 
     const router = useRouter();
 
-    const urlParams = new URLSearchParams(document.location.search);
+    const urlParams = useSearchParams();
         
     const token = urlParams.get("t");
 
