@@ -32,7 +32,7 @@ export default function AuthRecovery({onSuccess}: {onSuccess?: () => void}) {
         if (!token){
             if (!process.env.NEXT_PUBLIC_SITE_URL)
                 throw Error("Env variable 'NEXT_PUBLIC_SITE_URL' not found")
-            return document.location.href = process.env.NEXT_PUBLIC_SITE_URL
+            return router.push(process.env.NEXT_PUBLIC_SITE_URL)
         }
 
         const response = await authService.recovery(token, password);
