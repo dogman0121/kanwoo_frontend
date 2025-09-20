@@ -3,6 +3,7 @@
 import HeaderUserNavDesktop from "@/components/HeaderUserNavDesktop"
 import { setAuthUser } from "@/lib/state/features/auth_user/authUserSlice"
 import { useAppStore } from "@/lib/state/hooks"
+import theme from "@/theme"
 import User from "@/types/user"
 import { Avatar, Box, SvgIcon, Typography } from "@mui/material"
 import Link from "next/link"
@@ -13,7 +14,7 @@ function Header() {
         <Box
             component={"header"} 
             sx={{
-                bgcolor: "var(--knw-palette-customBackgrounds-footer)"
+                bgcolor: theme.vars?.palette.customBackgrounds.footer
             }}
         >
             <Box
@@ -37,7 +38,8 @@ function Header() {
                             viewBox="0 0 96 96"
                             sx={{
                                 width: "32px",
-                                height: "32px"
+                                height: "32px",
+                                color: theme.typography.body1.color
                             }}
                         >
                             <g transform="translate(0.000000,96.000000) scale(0.100000,-0.100000)"

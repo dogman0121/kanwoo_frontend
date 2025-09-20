@@ -37,11 +37,15 @@ export default async function Page({
 }) { 
     const { listId } = await params;
 
+    const { viewport } = await searchParams;
+
     const {data: list} = await serverFetch.get(`/lists/${listId}`)
 
     if (!list){
         return notFound();
     }
 
-    return (<ListPage list={list}/>)
+    return (
+        <ListPage list={list} viewport={viewport}/>
+    )
 }

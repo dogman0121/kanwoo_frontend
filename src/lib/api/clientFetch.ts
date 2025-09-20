@@ -12,13 +12,13 @@ export const clientFetch = {
     },
 
     async _sendCSRFRequest(url: string, payload: RequestInit) {
-        const csrfAccessToken = this._getCookie("csrf-access_token");
+        const csrfAccessToken = this._getCookie("csrf_access_token");
 
         if (!csrfAccessToken)
             throw Error("Failed to fetch csrf token.")
 
         // fetch with csrf token
-        const response = this._sendRequest(url, {
+        const response = await this._fetch(url, {
             ...payload,
             headers: {
                 "X-CSRF-TOKEN": csrfAccessToken,
@@ -26,17 +26,28 @@ export const clientFetch = {
             }
         })
 
+        if (response.status == 401){
+            this._refreshToken()
+
+            const newCsrfToken = this._getCookie("csrf_access_token");
+
+            if (!newCsrfToken)
+                throw Error("Failed to get refreshed tokens")
+
+            return await this._fetch(url, {
+                ...payload,
+                headers: {
+                    "X-CSRF-TOKEN": newCsrfToken,
+                    ...payload.headers
+                }
+            })
+        }
+
         return response;
     },
 
     async _sendRequest(url: string, payload?: RequestInit) {
         const response = await this._fetch(url, payload);
-
-        if (response.status === 401){
-            await this._refreshToken();
-            
-            return this._fetch(url, payload);
-        }
 
         return response;
     },
@@ -47,11 +58,11 @@ export const clientFetch = {
         if (!csrfRefreshToken)
             throw Error("Failed to fetch refresh csrf token")
 
-        const response = await this.get("/auth/refresh", {
+        const response = await this.post("/auth/refresh", {
             headers: {
                 "X-CSRF-TOKEN": csrfRefreshToken
-            }
-        })
+            },
+        }, false)
     
         if (!response.ok) 
             throw new Error("Failed to refresh token");

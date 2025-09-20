@@ -2,13 +2,13 @@
 
 import { Box, Button } from "@mui/material";
 import { useContext, useState } from "react";
-import AuthError from "./AuthError";
-import AuthForm from "./AuthForm";
-import AuthLink from "./AuthLink";
+import AuthError from "./ui/AuthError";
+import AuthForm from "./ui/AuthForm";
+import AuthLink from "./ui/AuthLink";
 import authPanelContext from "../context/authPanelContext";
 import { AuthPanel } from "../types/AuthPanel";
 import { authService } from "../api/services/authService";
-import AuthInput from "./AuthInput";
+import AuthInput from "./ui/AuthInput";
 
 export default function AuthLogin({onSuccess}: {onSuccess?: () => void}) {
     const [wrongForm, setWrongForm] = useState(false);
@@ -20,7 +20,6 @@ export default function AuthLogin({onSuccess}: {onSuccess?: () => void}) {
     const {panel, setPanel} = useContext(authPanelContext);
 
     const handleLogin = async() => {
-        console.log("123");
         const {error} = await authService.login(login, password);
 
         if (error) {
@@ -48,7 +47,6 @@ export default function AuthLogin({onSuccess}: {onSuccess?: () => void}) {
                     error={wrongForm}
                     label="Login"
                     variant="outlined"
-                    color="secondary"
                     fullWidth
                     onInput={(e) => {setLogin((e.target as HTMLInputElement).value)}}
                 />
@@ -58,7 +56,6 @@ export default function AuthLogin({onSuccess}: {onSuccess?: () => void}) {
                     label="Password"
                     variant="outlined"
                     type="password"
-                    color="secondary"
                     fullWidth
                     onInput={(e) => {setPassword((e.target as HTMLInputElement).value)}}
                 />
@@ -76,6 +73,9 @@ export default function AuthLogin({onSuccess}: {onSuccess?: () => void}) {
                 fullWidth
                 variant="contained"
                 onClick={handleLogin}
+                sx={{
+                    mt: "10px"
+                }}
             >
                 Войти
             </Button>
@@ -86,7 +86,7 @@ export default function AuthLogin({onSuccess}: {onSuccess?: () => void}) {
             >
                 Нет учетной записи? 
                 <AuthLink
-                    onClick={()=>{setPanel(AuthPanel.REGISTER)}}
+                    onClick={() => setPanel(AuthPanel.REGISTER)}
                 >
                     Зарегестрироваться
                 </AuthLink>

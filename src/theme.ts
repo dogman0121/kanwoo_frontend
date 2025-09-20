@@ -37,7 +37,7 @@ const theme = createTheme({
       color: 'var(--knw-typography-body1-color)'
     },
     h1: {
-      fontWeight: "400",
+      fontWeight: "600",
       fontSize: "24px"
     },
     caption: {
@@ -56,7 +56,7 @@ const theme = createTheme({
         },
         background: {
           default: "#121212",
-          paper: "#1C1C1C"
+          paper: "#1c1c1c"
         },
         customBackgrounds: {
           header: "#06090E",
@@ -101,7 +101,40 @@ const theme = createTheme({
           fontWeight: "400",
           borderRadius: "40px",
           textTransform: 'none',
+          boxShadow: "none"
         }
+      }
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          backgroundColor: theme.vars?.palette.secondary.main,
+        }),
+      }
+    },
+    MuiDialog: {
+      defaultProps: {
+        slotProps: {
+          paper: {
+            elevation: 1
+          }
+        }
+      },
+      styleOverrides: {
+        root: ({ theme }) => ({
+          "& .MuiDialog-paper": {
+            borderRadius: "20px",
+            width: "min(400px, 100vw)",
+            boxShadow: 24,
+            backgroundColor: theme.vars?.palette.background.paper
+          },
+          "& .MuiDialogTitle-root": {
+            padding: "16px 24px 8px"
+          },
+          '& .MuiDialogContent-root': {
+            padding: "8px 24px 20px",
+          },
+        })
       }
     }
   }

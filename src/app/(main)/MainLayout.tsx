@@ -5,7 +5,6 @@ import { serverFetch } from "@/lib/api/serverFetch";
 
 export default async function MainLayout({children}: {children: React.ReactNode}) {
     const device = (await headers()).get("X-Device-Type")
-    const cookieStore = await cookies()
 
     const {data: user} = await serverFetch.get("/users/me")
 

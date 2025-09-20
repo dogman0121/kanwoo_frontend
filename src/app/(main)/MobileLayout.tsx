@@ -9,7 +9,6 @@ import { useRef, useState } from "react"
 import Link from "next/link";
 import User from "@/types/user";
 import { useAppStore } from "@/lib/state/hooks";
-import { setManga } from "@/lib/state/features/manga/mangaSlice";
 import { setAuthUser } from "@/lib/state/features/auth_user/authUserSlice";
 
 export default function MobileLayout({children, user}: {children: React.ReactNode, user: User | null}) {

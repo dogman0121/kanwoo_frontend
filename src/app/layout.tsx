@@ -3,8 +3,6 @@ import { Roboto } from 'next/font/google';
 import "./global.css"
 import theme from '@/theme';
 import { CssBaseline, InitColorSchemeScript, ThemeProvider } from '@mui/material';
-import StoreProvider from './StoreProvider';
-import MainLayout from './MainLayout';
 
 
 const roboto = Roboto({
@@ -29,11 +27,7 @@ export default function RootLayout({
           <InitColorSchemeScript attribute="class" />
           <ThemeProvider theme={theme}>
             <CssBaseline />
-              <StoreProvider>
-                <MainLayout>
-                  {children}
-                </MainLayout>
-              </StoreProvider>
+              {children}
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

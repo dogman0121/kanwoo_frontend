@@ -1,3 +1,4 @@
+import Manga from "./manga";
 import User from "./user";
 
 export default interface List {
@@ -6,5 +7,6 @@ export default interface List {
     description: string,
     saves_count: number,
     creator: User,
-    created_at: string
+    created_at: string,
+    manga: Manga[]
 }

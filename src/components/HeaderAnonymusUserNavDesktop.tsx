@@ -3,8 +3,9 @@
 import AuthModal from "@/features/auth/components/AuthModal";
 import { Button } from "@mui/material";
 import { useState } from "react"
+import CreateListDialog from "./CreateListDialog";
 
-export default function HeaderAnonymusNavDesktop() {
+export default function HeaderAnonymusUserNavDesktop() {
     const [authModalOpened, setAuthModalOpened] = useState(false);
 
     return (

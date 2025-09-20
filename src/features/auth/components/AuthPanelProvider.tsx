@@ -1,14 +1,20 @@
 "use client"
 
-import { useState } from "react"
-import authPanelContext from "../context/authPanelContext"
-import { AuthPanel } from "../types/AuthPanel"
+import { AuthPanel } from "../types/AuthPanel";
+import authPanelContext from "../context/authPanelContext";
+import { Dispatch, SetStateAction } from "react";
 
-export default function AuthPanelProvider({children}: {children: React.ReactNode}) {
-    const [currentPanel, setCurrentPanel] = useState(AuthPanel.LOGIN);
-
+export default function AuthPanelProvider({
+    children, 
+    panel, 
+    setPanel
+}: {
+    children: React.ReactNode, 
+    panel: AuthPanel, 
+    setPanel: Dispatch<SetStateAction<AuthPanel>>
+}) {
     return (
-        <authPanelContext.Provider value={{panel: currentPanel, setPanel: setCurrentPanel}}>
+        <authPanelContext.Provider value={{panel: panel, setPanel: setPanel}}>
             {children}
         </authPanelContext.Provider>
     )

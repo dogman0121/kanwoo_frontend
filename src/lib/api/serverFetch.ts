@@ -35,7 +35,7 @@ export const serverFetch = {
 
         if (url.startsWith("http"))
             return await fetch(url, {
-                credentials: "include",
+                credentials: "same-origin",
                 ...options,
                 headers: {
                     'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ export const serverFetch = {
             });
         else
             return await fetch(process.env.NEXT_PUBLIC_API_URL + url, {
-                credentials: "include",
+                credentials: "same-origin",
                 ...options,
                 headers: {
                     'Content-Type': 'application/json',
