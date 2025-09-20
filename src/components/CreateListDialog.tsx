@@ -106,7 +106,7 @@ export default function CreateListDialog({onClose, ...props}: Omit<DialogProps, 
                             onChange={(event) => {
                                 setListVisibility(event.target.value as "private" | "public" | "link");
                             }}
-                            renderValue={(selected: any) => (
+                            renderValue={(selected: unknown) => (
                                 <Typography>
                                     {selected == "public" && "Публичный"}
                                     {selected == "link" && "По ссылке"}

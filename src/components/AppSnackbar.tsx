@@ -12,7 +12,7 @@ export default function AppSnackbar({
     }: 
     {
         open: boolean, 
-        onClose: (event: Event | SyntheticEvent<any, Event>, reason: SnackbarCloseReason) => any,
+        onClose: () => void,
         message: string,
         variant: "success" | "error"
     }){
