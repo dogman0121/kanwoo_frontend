@@ -1,4 +1,3 @@
-import { error } from 'console';
 import { cookies } from 'next/headers';
 
 // Базовые методы

@@ -1,6 +1,6 @@
 "use client"
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { authService } from "../api/services/authService";
 import authPanelContext from "../context/authPanelContext";
 import { AuthPanel } from "../types/AuthPanel";

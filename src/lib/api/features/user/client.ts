@@ -1,4 +1,3 @@
-import { getCurrentUser } from "@/api/user";
 import { clientFetch } from "../../clientFetch";
 
 export const userClientApi = {
