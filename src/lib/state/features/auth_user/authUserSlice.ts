@@ -1,8 +1,8 @@
-import User from "@/types/user";
+import AuthUser from "@/types/authUser";
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface AuthUserState {
-    user: User | null | undefined
+    user: AuthUser | null | undefined
 }
 
 const initialState: AuthUserState = {

@@ -4,7 +4,7 @@ import HeaderUserNavDesktop from "@/components/HeaderUserNavDesktop"
 import { setAuthUser } from "@/lib/state/features/auth_user/authUserSlice"
 import { useAppStore } from "@/lib/state/hooks"
 import theme from "@/theme"
-import User from "@/types/user"
+import AuthUser from "@/types/authUser"
 import { Avatar, Box, SvgIcon, Typography } from "@mui/material"
 import Link from "next/link"
 import { Suspense, useRef } from "react"
@@ -82,7 +82,7 @@ function Footer() {
     )
 }
 
-export default function DesktopLayout({children, user}: {children: React.ReactNode, user: User | null}) {
+export default function DesktopLayout({children, user}: {children: React.ReactNode, user: AuthUser | null}) {
     const store = useAppStore()
     const initialized = useRef(false)
     if (!initialized.current) {

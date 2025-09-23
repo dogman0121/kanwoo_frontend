@@ -7,11 +7,11 @@ import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import { useRef, useState } from "react"
 import Link from "next/link";
-import User from "@/types/user";
 import { useAppStore } from "@/lib/state/hooks";
 import { setAuthUser } from "@/lib/state/features/auth_user/authUserSlice";
+import AuthUser from "@/types/authUser";
 
-export default function MobileLayout({children, user}: {children: React.ReactNode, user: User | null}) {
+export default function MobileLayout({children, user}: {children: React.ReactNode, user: AuthUser | null}) {
     const store = useAppStore()
     const initialized = useRef(false)
     if (!initialized.current) {
