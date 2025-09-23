@@ -193,6 +193,8 @@ function UserMenuButton() {
 
 
 export default function HeaderAuthorizedUserNavDesktop() {
+    const notificationsCount = useAppSelector(state => state.authUser.user?.notifications_count);
+
     return (
         <Box
             sx={{
@@ -205,7 +207,7 @@ export default function HeaderAuthorizedUserNavDesktop() {
             <ContentCreatingButton />
             <IconButton>
                 <Badge
-                    badgeContent={5}
+                    badgeContent={notificationsCount}
                     color="error"
                     sx={{
                         "&:hover .MuiBadge-badge": {

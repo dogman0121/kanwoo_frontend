@@ -5,8 +5,8 @@ export default interface AuthUser {
     avatar: string,
     role: number,
     about: string,
-    subscribers_count: number | null,
-    notifications_count: number | null,
-    created_at: string | null,
+    subscribers_count: number,
+    notifications_count: number,
+    created_at: string,
     is_verified: boolean
 }
