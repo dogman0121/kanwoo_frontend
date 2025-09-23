@@ -81,7 +81,8 @@ export default function AuthLogin({onSuccess}: {onSuccess?: () => void}) {
             </Button>
             <Box
                 sx={{
-                    textAlign: "center"
+                    textAlign: "center",
+                    mt: "5px"
                 }}
             >
                 Нет учетной записи? 

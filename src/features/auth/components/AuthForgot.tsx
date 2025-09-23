@@ -48,6 +48,9 @@ export default function AuthForgot() {
                 fullWidth
                 variant="contained"
                 onClick={handleForgot}
+                sx={{
+                    mt: "10px"
+                }}
             >
                 Отправить
             </Button>

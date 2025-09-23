@@ -3,7 +3,7 @@
 import { Modal } from "@mui/material"
 import Auth from "./AuthWrapper"
 import AuthPanelProvider from "./AuthPanelProvider"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { AuthPanel } from "../types/AuthPanel"
 import { useAppDispatch } from "@/lib/state/hooks"
 import { userClientApi } from "@/lib/api/features/user/client"
@@ -18,6 +18,10 @@ export default function AuthModal({open, onClose}: {open: boolean, onClose: () =
     const [currentPanel, setCurrentPanel] = useState(AuthPanel.LOGIN);
 
     const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        setCurrentPanel(AuthPanel.LOGIN)
+    }, [open])
 
     const onLogin = async () => {
         const {data: user} = await userClientApi.getCurrentUser();
