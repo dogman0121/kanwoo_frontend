@@ -67,7 +67,7 @@ export default function AuthLogin({onSuccess}: {onSuccess?: () => void}) {
                 }}
                 onClick={()=>{setPanel(AuthPanel.FORGOT)}}
             >
-                Забыли пароль
+                Забыли пароль?
             </AuthLink>
             <Button
                 fullWidth
