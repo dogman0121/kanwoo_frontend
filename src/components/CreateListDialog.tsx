@@ -13,8 +13,7 @@ import {
     InputLabel, 
     ListItemIcon, 
     MenuItem,
-    Select, 
-    SelectChangeEvent, 
+    Select,  
     styled, 
     TextField, 
     Typography
@@ -28,12 +27,6 @@ import { listClientApi } from "@/lib/api/features/list/client";
 import { useRouter } from "next/navigation";
 import List from "@/types/list";
 import AppSnackbar from "./AppSnackbar";
-
-const MyTextField = styled(TextField)(({theme}) => ({
-    '& .MuiOutlinedInput-root': {
-        borderRadius: "12px",
-    },
-}))
 
 const MySelect = styled(Select)(() => ({
     borderRadius: "12px"
@@ -83,7 +76,7 @@ export default function CreateListDialog({onClose, ...props}: Omit<DialogProps, 
                     <CloseRoundedIcon />
                 </IconButton>
                 <DialogContent>
-                    <MyTextField 
+                    <TextField 
                         fullWidth
                         value={listName}
                         label="Название"
@@ -147,6 +140,7 @@ export default function CreateListDialog({onClose, ...props}: Omit<DialogProps, 
                 <DialogActions>
                     <Button
                         variant="outlined"
+                        onClick={() => onClose?.({}, "escapeKeyDown")}
                     >
                         Отмена
                     </Button>

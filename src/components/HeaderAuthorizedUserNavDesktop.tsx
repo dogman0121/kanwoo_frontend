@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import CreateListDialog from "./CreateListDialog";
 import { clientFetch } from "@/lib/api/clientFetch";
 import { setAuthUser } from "@/lib/state/features/auth_user/authUserSlice";
+import CreateTeamDialog from "./CreateTeamDialog";
 
 
 function ContentCreatingButton() {
@@ -28,6 +29,8 @@ function ContentCreatingButton() {
 
     // Dialog states
     const [listDialogOpen, setListDialogOpen] = useState(false);
+
+    const [teamDialogOpen, setTeamDialogOpen] = useState(false);
 
 
     return (
@@ -74,7 +77,9 @@ function ContentCreatingButton() {
                     </ListItemIcon>
                     Коллекция
                 </MenuItem>
-                <MenuItem>
+                <MenuItem
+                    onClick={() => setTeamDialogOpen(true)}
+                >
                     <ListItemIcon>
                         <PeopleAltRoundedIcon/>
                     </ListItemIcon>
@@ -88,6 +93,7 @@ function ContentCreatingButton() {
                 </MenuItem>
             </Menu>
             <CreateListDialog open={listDialogOpen} onClose={() => setListDialogOpen(false)}/>
+            <CreateTeamDialog open={teamDialogOpen} onClose={() => setTeamDialogOpen(false)}/>
         </>
     )
 }

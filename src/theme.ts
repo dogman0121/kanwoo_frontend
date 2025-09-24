@@ -136,6 +136,15 @@ const theme = createTheme({
           },
         })
       }
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+              borderRadius: "12px",
+          },
+        }
+      }
     }
   }
 });
