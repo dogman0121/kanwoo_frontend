@@ -1,7 +1,6 @@
 "use client"
 
 import { Button, Dialog, DialogActions, DialogContent, DialogProps, DialogTitle, IconButton, TextField } from "@mui/material";
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { ChangeEvent, useState } from "react";
 import { teamClientApi } from "@/lib/api/features/team/client";
 import AppSnackbar from "./AppSnackbar";
@@ -33,18 +32,6 @@ export default function CreateTeamDialog({onClose, ...props}: DialogProps){
         <>
             <Dialog onClose={onClose} {...props}>
                 <DialogTitle>Создание команды</DialogTitle>
-                <IconButton
-                    aria-label="close"
-                    onClick={() => onClose?.({}, "backdropClick")}
-                    sx={(theme) => ({
-                        position: 'absolute',
-                        right: 8,
-                        top: 8,
-                        color: theme.typography.caption.color,
-                    })}
-                >
-                    <CloseRoundedIcon />
-                </IconButton>
                 <DialogContent>
                     <TextField 
                         fullWidth

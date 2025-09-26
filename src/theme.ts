@@ -116,7 +116,7 @@ const theme = createTheme({
       defaultProps: {
         slotProps: {
           paper: {
-            elevation: 1
+            elevation: 3
           }
         }
       },
@@ -131,10 +131,14 @@ const theme = createTheme({
           "& .MuiDialogTitle-root": {
             padding: "16px 24px 8px"
           },
-          '& .MuiDialogContent-root': {
-            padding: "8px 24px 20px",
-          },
         })
+      }
+    },
+    MuiDialogContent: {
+      styleOverrides: {
+        root: {
+          padding: "8px 24px 20px !important",
+        }
       }
     },
     MuiTextField: {

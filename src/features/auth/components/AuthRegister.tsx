@@ -125,7 +125,8 @@ export default function AuthRegister({onSuccess}: {onSuccess?: () => void}) {
             </Button>
             <Box
                 sx={{
-                    textAlign: "center"    
+                    textAlign: "center",
+                    mt: "5px"    
                 }}
             >
                 Уже есть аккаунт? 

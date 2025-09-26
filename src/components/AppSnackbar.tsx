@@ -1,5 +1,4 @@
-import { Snackbar, Box, SnackbarCloseReason, Paper } from "@mui/material"
-import { SyntheticEvent } from "react"
+import { Snackbar, Box, Paper } from "@mui/material"
 import ErrorIcon from '@mui/icons-material/Error';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 

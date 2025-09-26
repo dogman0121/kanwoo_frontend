@@ -9,7 +9,6 @@ import {
     DialogProps, 
     DialogTitle, 
     FormControl, 
-    IconButton, 
     InputLabel, 
     ListItemIcon, 
     MenuItem,
@@ -22,7 +21,6 @@ import PublicRoundedIcon from '@mui/icons-material/PublicRounded';
 import LockRoundedIcon from '@mui/icons-material/LockRounded';
 import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
 import { ChangeEvent, useState } from "react";
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { listClientApi } from "@/lib/api/features/list/client";
 import { useRouter } from "next/navigation";
 import List from "@/types/list";
@@ -63,18 +61,6 @@ export default function CreateListDialog({onClose, ...props}: Omit<DialogProps, 
                 {...props}
             >
                 <DialogTitle>Создание списка</DialogTitle>
-                <IconButton
-                    aria-label="close"
-                    onClick={() => onClose?.({}, "backdropClick")}
-                    sx={(theme) => ({
-                        position: 'absolute',
-                        right: 8,
-                        top: 8,
-                        color: theme.typography.caption.color,
-                    })}
-                >
-                    <CloseRoundedIcon />
-                </IconButton>
                 <DialogContent>
                     <TextField 
                         fullWidth

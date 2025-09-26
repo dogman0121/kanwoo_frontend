@@ -4,7 +4,7 @@ import { styled } from "@mui/system";
 const AuthForm = styled(Box)({
     display: "flex",
     flexDirection: "column",
-    rowGap: "20px",
+    rowGap: "15px",
     marginTop: "20px"
 })
 

@@ -14,7 +14,7 @@ export default interface Manga {
         large: string,
         medium: string,
         small: string,
-        thumbmain: string,
+        thumbnail: string,
     },
     background: string,
     type: {

@@ -1,6 +1,6 @@
 import MobileLayout from "./MobileLayout";
 import DesktopLayout from "./DesktopLayout";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 import { serverFetch } from "@/lib/api/serverFetch";
 
 export default async function MainLayout({children}: {children: React.ReactNode}) {

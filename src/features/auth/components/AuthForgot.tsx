@@ -2,19 +2,20 @@
 
 import { useContext, useState } from "react";
 import { authService } from "../api/services/authService";
-import { Box, Button } from "@mui/material";
+import { Box, Button, IconButton } from "@mui/material";
 import AuthForm from "./ui/AuthForm";
 import AuthInput from "./ui/AuthInput";
 import AuthMessage from "./ui/AuthMessage";
 import authPanelContext from "../context/authPanelContext";
 import { AuthPanel } from "../types/AuthPanel";
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 
 export default function AuthForgot() {
     const [email, setEmail] = useState("");
 
     const [emailSent, setEmailSent] = useState(false);
 
-    const { panel } = useContext(authPanelContext)
+    const { setPanel, panel } = useContext(authPanelContext)
 
     const handleForgot = async () => {
         const response = await authService.forgot(email);
@@ -36,7 +37,14 @@ export default function AuthForgot() {
 
     return (
         <>
-            <h2>Восстановление пароля</h2>
+            <h2>
+                <IconButton sx={{mr: "5px"}}
+                    onClick={() => setPanel(AuthPanel.LOGIN)}
+                >
+                    <ArrowBackRoundedIcon />
+                </IconButton>
+                Восстановление пароля
+            </h2>
             <AuthForm>
                 <AuthInput
                     label="Email"

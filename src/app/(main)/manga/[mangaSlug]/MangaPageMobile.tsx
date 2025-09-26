@@ -21,7 +21,7 @@ export default function MangaPageMobile({manga}: {manga: Manga}) {
         initialized.current = true
     }
 
-    const similar = useAppSelector(state => state.manga.similar);
+    // const similar = useAppSelector(state => state.manga.similar);
 
     return (
         <Box

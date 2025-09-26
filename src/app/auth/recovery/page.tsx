@@ -1,6 +1,5 @@
 "use client"
 
-import Auth from "@/features/auth/components/AuthWrapper";
 import AuthPanelProvider from "@/features/auth/components/AuthPanelProvider";
 import { AuthPanel } from "@/features/auth/types/AuthPanel";
 import AuthWrapper from "@/features/auth/components/AuthWrapper";
