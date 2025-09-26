@@ -5,12 +5,10 @@ import { useTheme } from "@mui/material/styles";
 import SearchList from "./SearchList";
 import Poster from "@/components/Poster";
 import Manga from "@/types/manga";
-import Sections from "../types/searchSection";
+import SearchSection from "../types/searchSection";
 
 
 function MangaItem({ item }: { item: Manga }) {
-    const theme = useTheme()
-
     return (
         <a href={`/manga/${item.slug}`}>
             <Box
@@ -57,13 +55,9 @@ function SearchListModal({ sx }: { sx?: SxProps }) {
                     ...sx
                 }}
             >
-                {section === Sections.MANGA && (
-                    <>
-                        {results.slice(0, 10).map((result) => 
-                            <MangaItem item={result} key={result.id}/>
-                        )}
-                    </>
-                )} 
+                {(results.slice(0, 10) as Manga[]).map((result: Manga) => 
+                    <MangaItem item={result} key={result.id}/>
+                )}
             </SearchList>
         </>
     )

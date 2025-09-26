@@ -1,8 +1,7 @@
 import { BoxProps, styled, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import type {} from '@mui/material/themeCssVarsAugmentation';
 import { useContext } from "react";
 import SearchContext from "../context/SearchContext";
-import Sections from "../types/searchSection";
+import SearchSection from "../types/searchSection";
 
 const SectionToggleGroup = styled(ToggleButtonGroup)(({theme}) => ({
     columnGap: theme.spacing(1),
@@ -31,7 +30,7 @@ const SectionToggleButton = styled(ToggleButton)(({theme}) => ({
 function SearchSectionSelector({ sx }: BoxProps) {
     const { section, setSection } = useContext(SearchContext);
 
-    const handleChoose = (_event: React.MouseEvent<HTMLElement>, newValue: string) => {
+    const handleChoose = (_event: React.MouseEvent<HTMLElement>, newValue: SearchSection) => {
         if (newValue !== null)
             setSection(newValue);
     }
@@ -45,8 +44,8 @@ function SearchSectionSelector({ sx }: BoxProps) {
                 ...sx
             }}
         >
-            <SectionToggleButton value={Sections.MANGA}>манга</SectionToggleButton>
-            <SectionToggleButton value={Sections.TEAM}>команды</SectionToggleButton>
+            <SectionToggleButton value={SearchSection.MANGA}>манга</SectionToggleButton>
+            <SectionToggleButton value={SearchSection.TEAM}>команды</SectionToggleButton>
         </SectionToggleGroup>
     )
 }

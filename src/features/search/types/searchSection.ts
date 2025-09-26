@@ -1,6 +1,6 @@
-enum Sections {
+enum SearchSection {
     MANGA = "manga",
     TEAM = "team"
 }
 
-export default Sections
+export default SearchSection

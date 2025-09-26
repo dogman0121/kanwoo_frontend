@@ -4,14 +4,15 @@ import { createContext } from "react";
 import Manga from "@/types/manga";
 import Sections from "../types/searchSection";
 import Team from "@/types/team";
+import SearchSection from "../types/searchSection";
 
 interface SearchContextProps {
     query: string,
     setQuery: (query: string) => void,
-    results: Array<Manga>,
+    results: Manga[] | Team[],
     setResults: (results: Manga[] | Team[]) => void,
-    section: string,
-    setSection: (section: Sections) => void,
+    section: SearchSection,
+    setSection: (section: SearchSection) => void,
     filters: Map<string, string[]>,
     setFilters: (filters: Map<string, string[]>) => void,
     isLoading: boolean

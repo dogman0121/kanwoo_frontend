@@ -5,14 +5,16 @@ import SearchContext from "../context/SearchContext";
 import { searchService } from "../services/api/searchService";
 import Manga from "@/types/manga";
 import Sections from "../types/searchSection";
+import Team from "@/types/team";
+import SearchSection from "../types/searchSection";
 
 
 function SearchProvider({ children, emptyQuery}: { children: React.ReactNode, emptyQuery: boolean }) {
     const [query, setQuery] = useState<string>("");
 
-    const [section, setSection] = useState<Sections>(Sections.MANGA);
+    const [section, setSection] = useState<SearchSection>(SearchSection.MANGA);
 
-    const [results, setResults] = useState<Array<Manga>>([]);
+    const [results, setResults] = useState<Manga[] | Team[]>([]);
 
     const [filters, setFilters] = useState<Map<string, string[]>>(new Map<string, string[]>());
 
