@@ -89,7 +89,7 @@ export default function SuggestMangaDialog({onClose, ...props}: Omit<DialogProps
             <AppSnackbar 
                 open={successSnackbarOpen}
                 onClose={() => setSuccessSnackbarOpen(false)}
-                message={"Предложение было успешно зарегистрировано"}
+                message={"Предложение успешно зарегистрировано"}
                 variant="success"
             />
         </>
