@@ -348,7 +348,7 @@ export default function InfoForm() {
                                 name="links"
                                 rules={{
                                     validate: (value) => {
-                                        for (let v of value) {
+                                        for (const v of value) {
                                             if (v.link == "" || v.name == "")
                                                 return false;
                                             
