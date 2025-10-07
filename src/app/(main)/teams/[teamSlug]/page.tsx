@@ -10,25 +10,22 @@ export async function generateMetadata({
 }): Promise<Metadata> {
     const { teamSlug } = await params;
 
-    try {
-        const team: Team = await teamServerApi.getTeam(teamSlug)
+    const team: Team = await teamServerApi.getTeam(teamSlug)
 
-        return {
+    if (!team)
+        return notFound();
+
+    return {
+        title: `Команда ${team.name} | kanwoo`,
+        description: team.about,
+        openGraph: {
+            type: "profile",
+            url: `https://kanwoo.ru/teams/${team.slug}`,
             title: `Команда ${team.name} | kanwoo`,
             description: team.about,
-            openGraph: {
-                type: "profile",
-                url: `https://kanwoo.ru/teams/${team.slug}`,
-                title: `Команда ${team.name} | kanwoo`,
-                description: team.about,
-                images: [{url: team.avatar}],
-                siteName: "Kanwoo"
-            }
+            images: [{url: team.avatar}],
+            siteName: "Kanwoo"
         }
-    }
-    catch (e) {
-        console.log(e)
-        return notFound();
     }
 }
 

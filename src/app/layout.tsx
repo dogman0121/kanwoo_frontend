@@ -22,7 +22,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" type="image/svg+xml" href="/logo.svg" />
       </head>
-      <body>
+      <body style={{overflow: "auto"}}>
         <AppRouterCacheProvider>
           <InitColorSchemeScript attribute="class" />
           <ThemeProvider theme={theme}>

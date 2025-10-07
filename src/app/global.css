@@ -4,11 +4,13 @@ a {
 }
 
 .dark {
+  --knw-palette-customBackgrounds-header: #06090E;
   --knw-typography-body1-color: #E1E1E0;
   --knw-typography-caption-color: #BCBCBC;
 }
 
 .light {
+  --knw-palette-customBackgrounds-header: #FFF1AA;
   --knw-typography-body1-color: #000000;
   --knw-typography-caption-color: #606060;
 }

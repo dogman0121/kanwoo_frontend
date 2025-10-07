@@ -1,10 +1,14 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import authUserReducer from './features/auth_user/authUserSlice'
-import mangaReduces from './features/manga/mangaSlice'
+import mangaReducer from './features/manga/mangaSlice'
+import listReducer from './features/list/listSlice'
+import teamReducer from './features/team/teamSlice'
 
 const rootReducers = combineReducers({
   authUser: authUserReducer,
-  manga: mangaReduces
+  manga: mangaReducer,
+  list: listReducer,
+  team: teamReducer
 })
 
 export const makeStore = () => {

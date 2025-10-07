@@ -91,7 +91,6 @@ const theme = createTheme({
           variants: [{
              props: { variant: 'contained' },
               style: ({ theme }) => ({
-                backgroundColor: theme.palette.primary.main,
                 "&:hover": {
                   boxShadow: "none"
                 }
@@ -124,7 +123,7 @@ const theme = createTheme({
         root: ({ theme }) => ({
           "& .MuiDialog-paper": {
             borderRadius: "20px",
-            width: "min(400px, 100vw)",
+            width: "400px",
             boxShadow: 24,
             backgroundColor: theme.vars?.palette.background.paper
           },
