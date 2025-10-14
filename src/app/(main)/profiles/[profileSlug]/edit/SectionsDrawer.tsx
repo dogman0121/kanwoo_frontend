@@ -94,7 +94,7 @@ export default function SectionsDrawer({profile}: {profile: Profile}) {
                             mt: "10px"
                         }}
                     >
-                        <Link href={`/teams/${profile.slug}/edit`}>
+                        <Link href={`/profiles/${profile.slug}/edit`}>
                             <MyListItemButton
                                 selected={selectedIndex === 0}
                                 onClick={(event) => handleListItemClick(event, 0)}
@@ -105,7 +105,7 @@ export default function SectionsDrawer({profile}: {profile: Profile}) {
                                 <ListItemText primary="Главное"/>
                             </MyListItemButton>
                         </Link>
-                        <Link href={`/teams/${profile.slug}/edit/info`}>
+                        <Link href={`/profiles/${profile.slug}/edit/info`}>
                             <MyListItemButton
                                 selected={selectedIndex === 1}
                                 onClick={(event) => handleListItemClick(event, 1)}
@@ -116,7 +116,7 @@ export default function SectionsDrawer({profile}: {profile: Profile}) {
                                 <ListItemText primary="Информация"/>
                             </MyListItemButton>
                         </Link>
-                        <Link href={`/teams/${profile.slug}/edit/translations`}>
+                        <Link href={`/profiles/${profile.slug}/edit/translations`}>
                             <MyListItemButton
                                 selected={selectedIndex === 2}
                                 onClick={(event) => handleListItemClick(event, 2)}
@@ -125,17 +125,6 @@ export default function SectionsDrawer({profile}: {profile: Profile}) {
                                     <TranslateRoundedIcon />
                                 </ListItemIcon>
                                 <ListItemText primary="Переводы"/>
-                            </MyListItemButton>
-                        </Link>
-                        <Link href={`/teams/${profile.slug}/edit/members`}>
-                            <MyListItemButton
-                                selected={selectedIndex === 3}
-                                onClick={(event) => handleListItemClick(event, 3)}
-                            >
-                                <ListItemIcon>
-                                    <PeopleRoundedIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Участники"/>
                             </MyListItemButton>
                         </Link>
                     </List>
