@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import SearchContext from "../context/SearchContext";
-import { Box, SxProps } from "@mui/material";
+import { Box, ListItem, ListItemButton, Paper, SxProps } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import SearchList from "./SearchList";
 import Poster from "@/components/Poster";
@@ -11,17 +11,14 @@ import SearchSection from "../types/searchSection";
 function MangaItem({ item }: { item: Manga }) {
     return (
         <a href={`/manga/${item.slug}`}>
-            <Box
-                sx={{
+            <ListItemButton
+                sx={(theme) => ({
+                    boxShadow: "none",
                     display: "flex",
                     flexDirection: "row",
                     p: "6px 10px",
                     borderRadius: "6px",
-                    bgcolor: "#313131",
-                    "&:hover": {
-                        bgcolor: "#393939"
-                    }
-                }}
+                })}
             >
                 <Poster 
                     src={item.main_poster?.thumbnail || ""}
@@ -36,7 +33,7 @@ function MangaItem({ item }: { item: Manga }) {
                 >
                     <Box fontSize={"15px"}>{item.name}</Box>
                 </Box>
-            </Box>
+            </ListItemButton>
         </a>
     )
 }
