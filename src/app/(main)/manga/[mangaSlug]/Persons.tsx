@@ -1,7 +1,7 @@
 "use client"
 
 import { useAppSelector } from "@/lib/state/hooks";
-import User from "@/types/user";
+import Profile from "@/types/profile";
 import { Avatar, Box, Chip, styled, SxProps, Typography } from "@mui/material";
 import Link from "next/link";
 
@@ -9,8 +9,8 @@ const MyChip = styled(Chip)(({theme}) => ({
     backgroundColor: theme.vars?.palette.secondary.main
 }))
 
-function PersonList({title, users}: {title: string, users: User[]}){
-    if (users.length == 0)
+function PersonList({title, profiles}: {title: string, profiles: Profile[]}){
+    if (profiles.length == 0)
         return null;
 
     return (
@@ -25,9 +25,9 @@ function PersonList({title, users}: {title: string, users: User[]}){
                     flexWrap: "wrap"
                 }}
             >
-                {users.map(user => (
-                    <Link href={`/users/${user.id}`} key={user.id}>
-                        <MyChip avatar={<Avatar src={user.avatar || ""}/>} label={user.login}/>
+                {profiles.map(profiles => (
+                    <Link href={`/profiles/${profiles.slug}`} key={profiles.slug}>
+                        <MyChip avatar={<Avatar src={profiles.avatar || ""}/>} label={profiles.name}/>
                     </Link> 
                 ))}
             </Box>
@@ -57,19 +57,19 @@ export default function Persons({sx}: {sx?: SxProps}) {
             {authors && (
                 <PersonList 
                     title="Авторы"
-                    users={authors}
+                    profiles={authors}
                 />
             )}
             {artists && (
                 <PersonList 
                     title="Художники"
-                    users={artists}
+                    profiles={artists}
                 />
             )}
             {publishers && (
                 <PersonList 
                     title="Издатели"
-                    users={publishers}
+                    profiles={publishers}
                 />
             )}
         </Box>

@@ -1,3 +1,4 @@
+import Profile from "./profile"
 import User from "./user"
 
 export default interface Manga {
@@ -32,7 +33,7 @@ export default interface Manga {
     }[]
     views: number,
     saves_count: number,
-    authors: User[],
-    artists: User[],
-    publishers: User[]
+    authors: Profile[],
+    artists: Profile[],
+    publishers: Profile[]
 }
