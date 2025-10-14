@@ -6,11 +6,11 @@ import HeaderAuthorizedUserNavDesktop from "./HeaderAuthorizedUserNavDesktop";
 import { Box } from "@mui/material";
 
 export default function HeaderUserNavDesktop() {
-    const authUser = useAppSelector(state => state.authUser.user)
+    const authProfile = useAppSelector(state => state.authProfile.profile)
 
     return (
         <>
-            {authUser?.id == undefined && (
+            {authProfile?.id == undefined && (
                 <Box
                     sx={{
                         width: "40px",
@@ -19,10 +19,10 @@ export default function HeaderUserNavDesktop() {
                     }}
                 ></Box>
             )}
-            {authUser == null && (
+            {authProfile == null && (
                 <HeaderAnonymusNavDesktop />
             )}
-            {authUser && (
+            {authProfile && (
                 <HeaderAuthorizedUserNavDesktop/>
             )}
         </>

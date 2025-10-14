@@ -26,6 +26,7 @@ export default function AuthLogin({onSuccess}: {onSuccess?: () => void}) {
             setWrongForm(true);
         }
         else {
+            setPanel(AuthPanel.CHOOSE_PROFILE)
             onSuccess?.()
         }
 

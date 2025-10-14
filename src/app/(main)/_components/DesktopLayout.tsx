@@ -2,11 +2,12 @@
 
 import HeaderUserNavDesktop from "@/components/HeaderUserNavDesktop"
 import SearchModalDesktop from "@/features/search/components/SearchModalDesktop"
-import { setAuthUser } from "@/lib/state/features/auth_user/authUserSlice"
+import { setAuthProfile } from "@/lib/state/features/auth_profile/authProfileSlice"
 import { useAppStore } from "@/lib/state/hooks"
 import theme from "@/theme"
-import AuthUser from "@/types/authUser"
-import { AppBar, Avatar, Box, SvgIcon, Typography } from "@mui/material"
+import AuthProfile from "@/types/authProfile"
+import Profile from "@/types/profile"
+import { AppBar, Avatar, Box, Container, SvgIcon, Typography } from "@mui/material"
 import Link from "next/link"
 import { Suspense, useRef, useState } from "react"
 
@@ -20,14 +21,14 @@ function Header() {
                     position: "sticky",
                     top: 0,
                     width: "100%",
-                    bgcolor: theme.vars?.palette.customBackgrounds.footer,
+                    bgcolor: theme.vars?.palette.customBackgrounds.header,
                     zIndex: theme.zIndex.drawer + 1
                 }}
             >
                 <Box
                     sx={{
-                        px: "20px",
                         py: "7px",
+                        px: theme.spacing(3),
                         display: "flex",
                         flexDirection: "row",
                         justifyContent: "space-between"
@@ -92,11 +93,11 @@ function Footer() {
     )
 }
 
-export default function DesktopLayout({children, user}: {children: React.ReactNode, user: AuthUser | null}) {
+export default function DesktopLayout({children, profile}: {children: React.ReactNode, profile: AuthProfile | null}) {
     const store = useAppStore()
     const initialized = useRef(false)
     if (!initialized.current) {
-        store.dispatch(setAuthUser(user))
+        store.dispatch(setAuthProfile(profile))
         initialized.current = true
     }
     return (

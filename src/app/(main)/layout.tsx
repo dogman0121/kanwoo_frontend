@@ -1,5 +1,5 @@
-import StoreProvider from './StoreProvider';
-import MainLayout from './MainLayout';
+import StoreProvider from './_components/StoreProvider';
+import MainLayout from './_components/MainLayout';
 
 export default function RootLayout({
   children,

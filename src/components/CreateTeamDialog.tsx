@@ -2,7 +2,7 @@
 
 import { Button, Dialog, DialogActions, DialogContent, DialogProps, DialogTitle, IconButton, TextField } from "@mui/material";
 import { ChangeEvent, useState } from "react";
-import { teamClientApi } from "@/lib/api/features/team/client";
+import { profileClientApi } from "@/lib/api/features/profile/client";
 import AppSnackbar from "./AppSnackbar";
 import { useRouter } from "next/navigation";
 
@@ -15,7 +15,7 @@ export default function CreateTeamDialog({onClose, ...props}: DialogProps){
 
     const handleAddTeam = async() => {
         try {
-            const team = await teamClientApi.addTeam(teamName);
+            const team = await profileClientApi.addProfile(teamName);
 
             router.push(`/teams/${team.slug}`)
 

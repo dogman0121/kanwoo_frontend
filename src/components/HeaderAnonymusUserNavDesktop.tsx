@@ -14,7 +14,8 @@ export default function HeaderAnonymusUserNavDesktop() {
                 onClick={() => {setAuthModalOpened(true)}}
                 variant="contained"
                 sx={{
-                    height: "40px"
+                    width: "100px",
+                    mx: "10px"
                 }}
             >
                 Войти

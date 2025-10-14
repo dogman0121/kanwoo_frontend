@@ -6,16 +6,23 @@ import AuthPanelProvider from "./AuthPanelProvider"
 import { useEffect, useState } from "react"
 import { AuthPanel } from "../types/AuthPanel"
 import { useAppDispatch } from "@/lib/state/hooks"
-import { userClientApi } from "@/lib/api/features/user/client"
-import { setAuthUser } from "@/lib/state/features/auth_user/authUserSlice"
+import { setAuthProfile } from "@/lib/state/features/auth_profile/authProfileSlice"
 import AuthWrapper from "./AuthWrapper"
 import AuthLogin from "./AuthLogin"
 import AuthRegister from "./AuthRegister"
 import AuthForgot from "./AuthForgot"
+import AuthProfileSelector from "./AuthProfileSelector"
+import Profile from "@/types/profile"
+import { profileClientApi } from "@/lib/api/features/profile/client"
+import AppSnackbar from "@/components/AppSnackbar"
 
 
 export default function AuthModal({open, onClose}: {open: boolean, onClose: () => void}) {
+    const [profiles, setProfiles] = useState([]);
+    
     const [currentPanel, setCurrentPanel] = useState(AuthPanel.LOGIN);
+
+    const [errorOpen, setErrorOpen] = useState(false)
 
     const dispatch = useAppDispatch()
 
@@ -24,22 +31,42 @@ export default function AuthModal({open, onClose}: {open: boolean, onClose: () =
     }, [open])
 
     const onLogin = async () => {
-        const {data: user} = await userClientApi.getCurrentUser();
+        const profiles = await profileClientApi.getProfiles()
 
-        if (user) {
-            dispatch(setAuthUser(user))
+        setProfiles(profiles)
+    }
+
+    const onSelectProfile = async (profile: Profile) => {
+        try{
+            profileClientApi.selectProfile(profile.id)
+
+            dispatch(setAuthProfile(profile))
+
+            onClose()
+        }
+        catch (e) {
+            setErrorOpen(true)
         }
     }
 
     return (
-        <Modal open={open} onClose={onClose}>
-            <AuthPanelProvider panel={currentPanel} setPanel={setCurrentPanel}>
-                <AuthWrapper>
-                    <AuthLogin onSuccess={onLogin}/>
-                    <AuthRegister />
-                    <AuthForgot />
-                </AuthWrapper>
-            </AuthPanelProvider>
-        </Modal>
+        <>
+            <Modal open={open} onClose={onClose}>
+                <AuthPanelProvider panel={currentPanel} setPanel={setCurrentPanel}>
+                    <AuthWrapper>
+                        <AuthLogin onSuccess={onLogin}/>
+                        <AuthRegister />
+                        <AuthForgot />
+                        <AuthProfileSelector profiles={profiles} onSuccess={onSelectProfile}/>
+                    </AuthWrapper>
+                </AuthPanelProvider>
+            </Modal>
+            <AppSnackbar
+                open={errorOpen} 
+                onClose={() => setErrorOpen(false)} 
+                variant="error" 
+                message="Произошла ошибка"
+            />
+        </>
     )
 }

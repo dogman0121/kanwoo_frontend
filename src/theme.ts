@@ -84,6 +84,15 @@ const theme = createTheme({
     }
   },
   spacing: 5,
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1240,
+      xl: 1536,
+    }
+  },
   components: {
     MuiButton: {
       styleOverrides: {
@@ -147,6 +156,16 @@ const theme = createTheme({
               borderRadius: "12px",
           },
         }
+      }
+    },
+    MuiSkeleton: {
+      defaultProps: {
+        animation: false
+      },
+      styleOverrides: {
+        root: ({theme}) => ({
+          backgroundColor: theme.vars?.palette.background.paper
+        })
       }
     }
   }

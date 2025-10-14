@@ -1,4 +1,5 @@
-export default interface Team {
+export default interface Profile {
+    id: number,
     avatar: string
     slug: string
     name: string

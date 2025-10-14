@@ -2,7 +2,7 @@
 
 import Poster from "@/components/Poster";
 import { useAppSelector, useAppStore } from "@/lib/state/hooks";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import Description from "./Description";
@@ -37,161 +37,158 @@ export default function MangaPageDesktop({manga}: {manga: Manga}) {
                     flexGrow: 1 
                 }}
             >
-                <Grid
-                    sx={{
-                        maxWidth: "1240px",
-                        margin: "auto",
-                        p: "0 20px"
-                    }}
-                    container 
-                    columns={{lg: 15, md: 13, sm: 8}} 
-                    spacing={3} 
-                >
-                    <Grid size={{lg: 3, md: 3, sm: 2}}>
-                        <Poster 
-                            src={manga?.main_poster.medium || ""}   
-                        />
-                        <Box
-                            sx={{
-                                mt: "10px",
-                                display: "flex",
-                                flexDirection: "column",
-                                rowGap: "5px"
-                            }}
-                        >
-                            <Button
+                <Container maxWidth="lg">
+                    <Grid
+                        container 
+                        columns={{lg: 15, md: 13, sm: 8}} 
+                        spacing={3} 
+                    >
+                        <Grid size={{lg: 3, md: 3, sm: 2}}>
+                            <Poster 
+                                src={manga?.main_poster.medium || ""}   
+                            />
+                            <Box
                                 sx={{
-                                    padding: "5px 0"
+                                    mt: "10px",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    rowGap: "5px"
                                 }}
-                                fullWidth
-                                variant="contained"
                             >
-                                Сохранить
-                            </Button>
-                            <Button
-                                fullWidth
-                                color="secondary"
-                                sx={(theme) =>({
-                                    color: theme.typography.caption.color
-                                })}
-                                variant="text"
-                                onClick={() => setReportDialogOpen(true)}
-                            >
-                                Пожаловаться
-                            </Button>
-                        </Box>
-                    </Grid>
-                    <Grid size={{lg: 12, md: 10, sm:6}}>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                justifyContent: "space-between"
-                            }}
-                        >
-                            <Box sx={{
-                                display: "flex",
-                                flexDirection: "column"
-                            }}>
-                                <Typography
-                                    lineHeight={"1.2"}
+                                <Button
+                                    sx={{
+                                        padding: "5px 0"
+                                    }}
+                                    fullWidth
+                                    variant="contained"
                                 >
-                                    {manga?.type.name} / {manga?.year} / {manga?.status.name}
-                                </Typography>
-                                <Typography
-                                    fontWeight={600}
-                                    fontSize={"24px"}
-                                    lineHeight={"1.2"}
-                                    mt={"5px"}
+                                    Сохранить
+                                </Button>
+                                <Button
+                                    fullWidth
+                                    color="secondary"
+                                    sx={(theme) =>({
+                                        color: theme.typography.caption.color
+                                    })}
+                                    variant="text"
+                                    onClick={() => setReportDialogOpen(true)}
                                 >
-                                    {manga?.name}
-                                </Typography>
+                                    Пожаловаться
+                                </Button>
                             </Box>
-                            <Button 
+                        </Grid>
+                        <Grid size={{lg: 12, md: 10, sm:6}}>
+                            <Box
                                 sx={{
-                                    py: "5px",
-                                    px: "50px",
-                                    fontSize: "16px"
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: "space-between"
                                 }}
-                                variant="contained"
                             >
-                                Читать
-                            </Button>
-                        </Box>
-                        <Grid 
-                            sx={{
-                                mt: "15px"
-                            }}
-                            container 
-                            columns={{lg: 12, md: 8}}
-                        >
-                            <Grid size={similar.length == 0 ? 12 : 8}>
-                                <Box
-                                    sx={{
-                                        mt: "5px",
-                                        display: "flex",
-                                        flexDirection: "row",
-                                        columnGap: "15px"
-                                    }}
-                                >
-                                    <Typography 
-                                        variant="caption"
-                                        sx={{
-                                            fontSize: "14px",
-                                            display: "flex",
-                                            flexDirection: "row",
-                                            alignItems: "center"
-                                        }}
+                                <Box sx={{
+                                    display: "flex",
+                                    flexDirection: "column"
+                                }}>
+                                    <Typography
+                                        lineHeight={"1.2"}
                                     >
-                                        <BookmarkBorderRoundedIcon 
-                                            sx={{
-                                                width: "22px",
-                                                height: "22px",
-                                                mr: "3px"
-                                            }}
-                                        /> 
-                                        {0} сохранений
+                                        {manga?.type.name} / {manga?.year} / {manga?.status.name}
                                     </Typography>
-                                    <Typography 
-                                        variant="caption"
-                                        sx={{
-                                            fontSize: "14px",
-                                            display: "flex",
-                                            flexDirection: "row",
-                                            alignItems: "center"
-                                        }}
+                                    <Typography
+                                        fontWeight={600}
+                                        fontSize={"24px"}
+                                        lineHeight={"1.2"}
+                                        mt={"5px"}
                                     >
-                                        <VisibilityOutlinedIcon 
-                                            sx={{
-                                                width: "22px",
-                                                height: "22px",
-                                                mr: "3px"
-                                            }}
-                                        /> 
-                                        {manga?.views} просмотров
+                                        {manga?.name}
                                     </Typography>
                                 </Box>
-                                <Box
+                                <Button 
                                     sx={{
-                                        mt: "15px",
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        rowGap: "20px"
+                                        py: "5px",
+                                        px: "50px",
+                                        fontSize: "16px"
                                     }}
+                                    variant="contained"
                                 >
-                                    <Description />
-                                    <Genres />
-                                    <NameTranslations />
-                                    <Persons />
-                                    <SectionsDesktop />
-                                </Box>
-                            </Grid>
-                            <Grid size={4}>
-                                <Similar />
+                                    Читать
+                                </Button>
+                            </Box>
+                            <Grid 
+                                sx={{
+                                    mt: "15px"
+                                }}
+                                container 
+                                columns={{lg: 12, md: 8}}
+                            >
+                                <Grid size={similar.length == 0 ? 12 : 8}>
+                                    <Box
+                                        sx={{
+                                            mt: "5px",
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            columnGap: "15px"
+                                        }}
+                                    >
+                                        <Typography 
+                                            variant="caption"
+                                            sx={{
+                                                fontSize: "14px",
+                                                display: "flex",
+                                                flexDirection: "row",
+                                                alignItems: "center"
+                                            }}
+                                        >
+                                            <BookmarkBorderRoundedIcon 
+                                                sx={{
+                                                    width: "22px",
+                                                    height: "22px",
+                                                    mr: "3px"
+                                                }}
+                                            /> 
+                                            {0} сохранений
+                                        </Typography>
+                                        <Typography 
+                                            variant="caption"
+                                            sx={{
+                                                fontSize: "14px",
+                                                display: "flex",
+                                                flexDirection: "row",
+                                                alignItems: "center"
+                                            }}
+                                        >
+                                            <VisibilityOutlinedIcon 
+                                                sx={{
+                                                    width: "22px",
+                                                    height: "22px",
+                                                    mr: "3px"
+                                                }}
+                                            /> 
+                                            {manga?.views} просмотров
+                                        </Typography>
+                                    </Box>
+                                    <Box
+                                        sx={{
+                                            mt: "15px",
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            rowGap: "20px"
+                                        }}
+                                    >
+                                        <Description />
+                                        <Genres />
+                                        <NameTranslations />
+                                        <Persons />
+                                        <SectionsDesktop />
+                                    </Box>
+                                </Grid>
+                                <Grid size={4}>
+                                    <Similar />
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
-                </Grid>
+                </Container>
                 {manga?.background && (
                     <Box
                     sx={{

@@ -5,7 +5,7 @@ import SearchContext from "../context/SearchContext";
 import { searchService } from "../services/api/searchService";
 import Manga from "@/types/manga";
 import Sections from "../types/searchSection";
-import Team from "@/types/team";
+import Team from "@/types/profile";
 import SearchSection from "../types/searchSection";
 
 

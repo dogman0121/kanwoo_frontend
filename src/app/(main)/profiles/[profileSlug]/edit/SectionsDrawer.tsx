@@ -1,7 +1,7 @@
 "use client"
 
 import theme from "@/theme";
-import Team from "@/types/team"
+import Team from "@/types/profile"
 import { Avatar, Box, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, styled, Toolbar, Typography } from "@mui/material"
 import InfoOutlineRoundedIcon from '@mui/icons-material/InfoOutlineRounded';
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
@@ -11,7 +11,8 @@ import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useAppSelector, useAppStore } from "@/lib/state/hooks";
-import { setTeam } from "@/lib/state/features/team/teamSlice";
+import { setProfile } from "@/lib/state/features/profile/profileSlice";
+import Profile from "@/types/profile";
 
 const drawerWidth = 260;
 
@@ -25,16 +26,16 @@ const MyListItemButton = styled(ListItemButton)(({theme}) =>({
     }
 }))
 
-export default function SectionsDrawer({team}: {team: Team}) {
+export default function SectionsDrawer({profile}: {profile: Profile}) {
     const store = useAppStore()
 
-    const currTeam = useAppSelector(state => state.team.team)
+    const currTeam = useAppSelector(state => state.profile.profile)
 
     const [selectedIndex, setSelectedIndex] = useState(0);
 
     useEffect(() => {
-        store.dispatch(setTeam(team))
-    }, [team])
+        store.dispatch(setProfile(profile))
+    }, [profile])
 
     const handleListItemClick = (
         event: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -93,7 +94,7 @@ export default function SectionsDrawer({team}: {team: Team}) {
                             mt: "10px"
                         }}
                     >
-                        <Link href={`/teams/${team.slug}/edit`}>
+                        <Link href={`/teams/${profile.slug}/edit`}>
                             <MyListItemButton
                                 selected={selectedIndex === 0}
                                 onClick={(event) => handleListItemClick(event, 0)}
@@ -104,7 +105,7 @@ export default function SectionsDrawer({team}: {team: Team}) {
                                 <ListItemText primary="Главное"/>
                             </MyListItemButton>
                         </Link>
-                        <Link href={`/teams/${team.slug}/edit/info`}>
+                        <Link href={`/teams/${profile.slug}/edit/info`}>
                             <MyListItemButton
                                 selected={selectedIndex === 1}
                                 onClick={(event) => handleListItemClick(event, 1)}
@@ -115,7 +116,7 @@ export default function SectionsDrawer({team}: {team: Team}) {
                                 <ListItemText primary="Информация"/>
                             </MyListItemButton>
                         </Link>
-                        <Link href={`/teams/${team.slug}/edit/translations`}>
+                        <Link href={`/teams/${profile.slug}/edit/translations`}>
                             <MyListItemButton
                                 selected={selectedIndex === 2}
                                 onClick={(event) => handleListItemClick(event, 2)}
@@ -126,7 +127,7 @@ export default function SectionsDrawer({team}: {team: Team}) {
                                 <ListItemText primary="Переводы"/>
                             </MyListItemButton>
                         </Link>
-                        <Link href={`/teams/${team.slug}/edit/members`}>
+                        <Link href={`/teams/${profile.slug}/edit/members`}>
                             <MyListItemButton
                                 selected={selectedIndex === 3}
                                 onClick={(event) => handleListItemClick(event, 3)}

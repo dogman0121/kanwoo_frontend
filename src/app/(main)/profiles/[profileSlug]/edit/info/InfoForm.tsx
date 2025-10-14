@@ -14,11 +14,12 @@ import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import { throttle } from "lodash";
-import { teamClientApi } from "@/lib/api/features/team/client";
+import { profileClientApi } from "@/lib/api/features/profile/client";
 import Links from "./Links";
-import { setTeam } from "@/lib/state/features/team/teamSlice";
-import Team from "@/types/team";
+import { setProfile } from "@/lib/state/features/profile/profileSlice";
+import Team from "@/types/profile";
 import { useRouter } from "next/navigation";
+import Profile from "@/types/profile";
 
 export const TextInputLabel = styled(Typography)(() => ({
     fontSize: "16px",
@@ -46,13 +47,13 @@ interface TeamInfoForm {
     links: {name: string, link: string}[]
 }
 
-const toForm = (team: Team | undefined | null) => {
+const toForm = (profile: Profile | undefined | null) => {
     return {
-        avatar: team?.avatar || null,
-        slug: team?.slug || "",
-        name: team?.name || "",
-        about: team?.about || "",
-        links: team?.links || []
+        avatar: profile?.avatar || null,
+        slug: profile?.slug || "",
+        name: profile?.name || "",
+        about: profile?.about || "",
+        links: profile?.links || []
     }
 }
 
@@ -65,7 +66,7 @@ export default function InfoForm() {
 
     const [slugChecking, setSlugChecking] = useState(false);
 
-    const team = useAppSelector(state => state.team.team)
+    const profile = useAppSelector(state => state.profile.profile)
     
     const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
         setSection(newValue);
@@ -73,11 +74,11 @@ export default function InfoForm() {
 
     const { control, handleSubmit, formState: {isValid, isDirty, defaultValues}, reset } = useForm<TeamInfoForm>({
         mode: "onChange",
-        defaultValues: toForm(team)
+        defaultValues: toForm(profile)
     });
 
     const onSubmit = async (data: TeamInfoForm) => {
-        if (!team)
+        if (!profile)
             return;
 
         let avatarAction: "update" | "keep" | "remove";
@@ -90,8 +91,8 @@ export default function InfoForm() {
             avatarAction = "keep"
 
         try {
-            const updated_team = await teamClientApi.updateTeam(
-                team,
+            const updated_profile = await profileClientApi.updateProfile(
+                profile,
                 data.name,
                 data.slug,
                 avatarAction,
@@ -100,9 +101,9 @@ export default function InfoForm() {
                 (data.avatar instanceof File) ? data.avatar : undefined,
             )
 
-            dispatch(setTeam(updated_team))
+            dispatch(setProfile(updated_profile))
 
-            router.replace(`/teams/${updated_team.slug}/edit/info`)
+            router.replace(`/profiles/${updated_profile.slug}/edit/info`)
 
         } catch (_) {
 
@@ -110,10 +111,10 @@ export default function InfoForm() {
     }
 
     useEffect(() => {
-        reset(toForm(team))
-    }, [team])
+        reset(toForm(profile))
+    }, [profile])
 
-    if (!team)
+    if (!profile)
         return null;
 
     return (
@@ -173,7 +174,7 @@ export default function InfoForm() {
                                     variant="contained"
                                     disabled={(!isValid || !isDirty)}
                                     type="submit"
-                                    form="team-info"
+                                    form="profile-info"
                                 >
                                     Сохранить
                                 </Button>
@@ -187,7 +188,7 @@ export default function InfoForm() {
                         p: "30px 25px"
                     }}
                 >
-                    <form id="team-info" onSubmit={handleSubmit(onSubmit)}>
+                    <form id="profile-info" onSubmit={handleSubmit(onSubmit)}>
                         <Box
                             sx={{
                                 display: "flex",
@@ -239,12 +240,12 @@ export default function InfoForm() {
                                 rules={{
                                     required: "Это поле не должно быть пустым",
                                     validate: throttle(async (value) => {
-                                        if (value == team.slug)
+                                        if (value == profile.slug)
                                             return true
 
                                         setSlugChecking(true)
                                         
-                                        const res = await teamClientApi.checkTeamSlug(value);
+                                        const res = await profileClientApi.checkTeamSlug(value);
 
                                         setSlugChecking(false)
 
@@ -279,10 +280,10 @@ export default function InfoForm() {
                                                                     size={"20px"}
                                                                 />
                                                             ) }
-                                                            {(!slugChecking && value != "" && value != team.slug && !invalid) && (
+                                                            {(!slugChecking && value != "" && value != profile.slug && !invalid) && (
                                                                 <CheckCircleRoundedIcon color="success"/>
                                                             )}
-                                                            {(!slugChecking && value != "" && value != team.slug && invalid) && (
+                                                            {(!slugChecking && value != "" && value != profile.slug && invalid) && (
                                                                 <ErrorRoundedIcon color="error"/>
                                                             )}
                                                         </InputAdornment>

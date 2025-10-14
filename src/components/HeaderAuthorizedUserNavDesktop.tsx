@@ -1,17 +1,22 @@
 "use client"
 
-import { Avatar, Badge, Box, Button, IconButton, List, ListItemIcon, Menu, MenuItem } from "@mui/material"
+import { Avatar, Badge, Box, Button, Divider, IconButton, List, ListItemIcon, ListItemText, Menu, MenuItem, Typography, useColorScheme } from "@mui/material"
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
-import PeopleAltRoundedIcon from '@mui/icons-material/PeopleAltRounded';
 import MenuBookRoundedIcon from '@mui/icons-material/MenuBookRounded';
 import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
+import SwitchAccountRoundedIcon from '@mui/icons-material/SwitchAccountRounded';
+import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
+import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
+import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
+import ContrastRoundedIcon from '@mui/icons-material/ContrastRounded';
+import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import CreateListDialog from "./CreateListDialog";
 import { clientFetch } from "@/lib/api/clientFetch";
-import { setAuthUser } from "@/lib/state/features/auth_user/authUserSlice";
-import CreateTeamDialog from "./CreateTeamDialog";
+import { setAuthProfile } from "@/lib/state/features/auth_profile/authProfileSlice";
 
 
 function ContentCreatingButton() {
@@ -30,18 +35,20 @@ function ContentCreatingButton() {
     // Dialog states
     const [listDialogOpen, setListDialogOpen] = useState(false);
 
-    const [teamDialogOpen, setTeamDialogOpen] = useState(false);
-
 
     return (
         <>
             <Button
                 variant="contained"
                 onClick={handleOpenCreateContentMenu}
-                sx={(theme) => ({
-                    bgcolor: theme.vars?.palette.secondary.main,
-                    color: theme.typography.body1.color
-                })}
+                sx={[(theme) => ({
+                        bgcolor: "background.paper",
+                        color: theme.typography.body1.color,        
+                    }),
+                    (theme) => theme.applyStyles("dark", {
+                        backgroundColor: "secondary.main"
+                    })
+                ]}
             >
                 <AddRoundedIcon 
                     sx={{
@@ -77,14 +84,6 @@ function ContentCreatingButton() {
                     </ListItemIcon>
                     Коллекция
                 </MenuItem>
-                <MenuItem
-                    onClick={() => setTeamDialogOpen(true)}
-                >
-                    <ListItemIcon>
-                        <PeopleAltRoundedIcon/>
-                    </ListItemIcon>
-                    Команда
-                </MenuItem>
                 <MenuItem>
                     <ListItemIcon>
                         <MenuBookRoundedIcon />
@@ -93,15 +92,16 @@ function ContentCreatingButton() {
                 </MenuItem>
             </Menu>
             <CreateListDialog open={listDialogOpen} onClose={() => setListDialogOpen(false)}/>
-            <CreateTeamDialog open={teamDialogOpen} onClose={() => setTeamDialogOpen(false)}/>
         </>
     )
 }
 
 function UserMenuButton() {
-    const user = useAppSelector(state => state.authUser.user);
+    const {mode, setMode} = useColorScheme()
 
-    const [userMenuAnchorEl, setUserMenuAnchorEl] = useState<HTMLButtonElement | null>(null);
+    const profile = useAppSelector(state => state.authProfile.profile);
+
+    const [profileMenuAnchorEl, setUserMenuAnchorEl] = useState<HTMLButtonElement | null>(null);
     
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
         setUserMenuAnchorEl(event.currentTarget);
@@ -111,38 +111,53 @@ function UserMenuButton() {
         setUserMenuAnchorEl(null);
     };
 
-    const userMenuOpen = Boolean(userMenuAnchorEl);
+    const profileMenuOpen = Boolean(profileMenuAnchorEl);
 
     const dispatch = useAppDispatch()
 
     const handleLogout = async() => {
         await clientFetch.post("/auth/logout");
 
-        dispatch(setAuthUser(null))
+        dispatch(setAuthProfile(null))
     }
 
-    if (!user)
+    const handleSwitchTheme = () => {
+        if (mode == "system")
+            setMode("light")
+        else if (mode == "light")
+            setMode("dark")
+        else
+            setMode("system")
+    }
+
+    if (!profile)
         return null;
 
     return (
         <>
-            <IconButton
+            <Box
                 sx={{
-                    p: "0"
+                    mx: "10px"
                 }}
-                onClick={handleOpenUserMenu} 
             >
-                <Avatar
+                <IconButton
                     sx={{
-                        cursor: "pointer"
+                        p: "0",
                     }}
-                    src={user.avatar}
-                />
-            </IconButton>
+                    onClick={handleOpenUserMenu} 
+                >
+                    <Avatar
+                        sx={{
+                            cursor: "pointer"
+                        }}
+                        src={profile.avatar}
+                    />
+                </IconButton>
+            </Box>
             <Menu 
-                open={userMenuOpen}
+                open={profileMenuOpen}
                 onClose={handleCloseUserMenu}
-                anchorEl={userMenuAnchorEl}
+                anchorEl={profileMenuAnchorEl}
                 anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'right',
@@ -153,6 +168,7 @@ function UserMenuButton() {
                 }}
                 sx={{
                     "& .MuiPopover-paper": {
+                        minWidth: "250px",
                         borderRadius: "12px",
                         mt: "5px"
                     }
@@ -160,38 +176,91 @@ function UserMenuButton() {
             >
                 <MenuItem
                     sx={{
-                        display: "flex",
-                        columnGap: "10px"
+                        gap: "15px"
                     }}
                 >
-                    <CollectionsBookmarkIcon
-                    /> Коллекция
+                    <Avatar 
+                        src={profile.avatar}
+                        sx={{
+                            width: "50px",
+                            height: "50px"
+                        }}
+                    />
+                    <Box>
+                        <Typography variant="caption">Ваш профиль</Typography>
+                        <Box>
+                            <Typography fontWeight={600} fontSize={"16px"}>{profile.name}</Typography>
+                            <Typography>@{profile.slug}</Typography>
+                        </Box>
+                        
+                    </Box>
                 </MenuItem>
+                <Divider sx={{my: 1}}/>
+                <MenuItem>
+                    <ListItemIcon>
+                        <NotificationsRoundedIcon />
+                    </ListItemIcon>
+                    <ListItemText>
+                        Уведомления
+                    </ListItemText>
+                </MenuItem>
+                <MenuItem>
+                    <ListItemIcon>
+                        <HistoryRoundedIcon />
+                    </ListItemIcon>
+                    <ListItemText>
+                        История
+                    </ListItemText>
+                </MenuItem>
+                <Divider sx={{my: 1}}/>
                 <MenuItem
-                    sx={{
-                        display: "flex",
-                        columnGap: "10px"
-                    }}
+                    onClick={handleSwitchTheme}
                 >
-                    <PeopleAltRoundedIcon
-                    /> Команда
+                    <ListItemIcon>
+                        <ContrastRoundedIcon />
+                    </ListItemIcon>
+                    <ListItemText>
+                        Тема
+                    </ListItemText>
+                    <Typography variant="caption">
+                        {mode == "system" && "системная"}
+                        {mode == "dark" && "темная"}
+                        {mode == "light" && "светлая"}
+                    </Typography>
                 </MenuItem>
+                <MenuItem>
+                    <ListItemIcon>
+                        <SettingsRoundedIcon />
+                    </ListItemIcon>
+                    <ListItemText>
+                        Настройки
+                    </ListItemText>
+                </MenuItem>
+                <MenuItem>
+                    <ListItemIcon>
+                        <SwitchAccountRoundedIcon />
+                    </ListItemIcon>
+                    <ListItemText>
+                        Сменить аккаунт
+                    </ListItemText>
+                    <ArrowForwardIosRoundedIcon 
+                        sx={{
+                            width: "20px",
+                            height: "20px"
+                        }}
+                    />
+                </MenuItem>
+                <Divider sx={{my: 1}}/>
                 <MenuItem
-                    sx={{
-                        display: "flex",
-                        columnGap: "10px"
-                    }}
-                >
-                    <MenuBookRoundedIcon /> Тайтл
-                </MenuItem>
-                <Button
-                    fullWidth
-                    variant="text"
-                    color="error"
                     onClick={handleLogout}
-                > 
-                    Выйти
-                </Button>
+                >
+                    <ListItemIcon>
+                        <LogoutRoundedIcon />
+                    </ListItemIcon>
+                    <ListItemText>
+                        Выйти
+                    </ListItemText>
+                </MenuItem>
             </Menu>
         </>
     )
@@ -199,14 +268,14 @@ function UserMenuButton() {
 
 
 export default function HeaderAuthorizedUserNavDesktop() {
-    const notificationsCount = useAppSelector(state => state.authUser.user?.notifications_count);
+    const notificationsCount = useAppSelector(state => state.authProfile.profile?.notifications_count);
 
     return (
         <Box
             sx={{
                 display: "flex",
                 flexDirection: "row",
-                columnGap: "15px",
+                columnGap: "10px",
                 alignItems: "center"
             }}
         >

@@ -8,14 +8,15 @@ import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import { useRef, useState } from "react"
 import Link from "next/link";
 import { useAppStore } from "@/lib/state/hooks";
-import { setAuthUser } from "@/lib/state/features/auth_user/authUserSlice";
-import AuthUser from "@/types/authUser";
+import { setAuthProfile } from "@/lib/state/features/auth_profile/authProfileSlice";
+import Profile from "@/types/profile";
+import AuthProfile from "@/types/authProfile";
 
-export default function MobileLayout({children, user}: {children: React.ReactNode, user: AuthUser | null}) {
+export default function MobileLayout({children, profile}: {children: React.ReactNode, profile: AuthProfile | null}) {
     const store = useAppStore()
     const initialized = useRef(false)
     if (!initialized.current) {
-        store.dispatch(setAuthUser(user))
+        store.dispatch(setAuthProfile(profile))
         initialized.current = true
     }
 

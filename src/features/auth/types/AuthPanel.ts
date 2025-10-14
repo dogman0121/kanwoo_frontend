@@ -3,5 +3,6 @@ export enum AuthPanel {
     LOGIN,
     VERIFY,
     RECOVERY,
-    FORGOT
+    FORGOT,
+    CHOOSE_PROFILE
 }

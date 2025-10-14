@@ -1,7 +1,7 @@
 "use client"
 
 import theme from "@/theme";
-import Team from "@/types/team"
+import Team from "@/types/profile"
 import { Avatar, Box, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, styled, Toolbar, Typography } from "@mui/material"
 import InfoOutlineRoundedIcon from '@mui/icons-material/InfoOutlineRounded';
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
@@ -9,6 +9,7 @@ import TranslateRoundedIcon from '@mui/icons-material/TranslateRounded';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import { useState } from "react";
+import Profile from "@/types/profile";
 
 const drawerWidth = 260;
 
@@ -22,7 +23,7 @@ const MyListItemButton = styled(ListItemButton)(({theme}) =>({
     }
 }))
 
-export default function TeamEditPage({team}: {team: Team}) {
+export default function TeamEditPage({profile}: {profile: Profile}) {
     const [selectedIndex, setSelectedIndex] = useState(1);
 
     const handleListItemClick = (
@@ -71,7 +72,6 @@ export default function TeamEditPage({team}: {team: Team}) {
                                 mt: "15px"
                             }}
                         >
-                            324234243
                         </Typography>
                         <Typography variant="caption">@dfdfgdfg</Typography>
                     </Box>

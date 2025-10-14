@@ -1,8 +1,8 @@
 import { Box } from "@mui/material"
 import SectionsDrawer from "./SectionsDrawer";
-import Team from "@/types/team";
-import { teamServerApi } from "@/lib/api/features/team/server";
+import { profileServerApi } from "@/lib/api/features/profile/server";
 import { notFound } from "next/navigation";
+import Profile from "@/types/profile";
 
 const drawerWidth = 260;
 
@@ -11,13 +11,13 @@ export default async function Layout({
   params
 }: Readonly<{
   children: React.ReactNode,
-  params: Promise<{teamSlug: string}>
+  params: Promise<{profileSlug: string}>
 }>) {
-    const { teamSlug } = await params;
+    const { profileSlug } = await params;
     
-    const team: Team = await teamServerApi.getTeam(teamSlug)
+    const profile: Profile = await profileServerApi.getProfile(profileSlug)
 
-    if (!team)
+    if (!profile)
         return notFound();
 
     return (
@@ -26,7 +26,7 @@ export default async function Layout({
                 display: "flex"
             }}
         >
-            <SectionsDrawer team={team}/>
+            <SectionsDrawer profile={profile}/>
             <Box
                 sx={{ flexGrow: 1, bgcolor: 'background.default' }}
             >

@@ -1,11 +1,8 @@
-export default async function Page({
-    searchParams
-}: {
-    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
-}) {
-    const filters = (await searchParams).viewport
+import HeroSlider from "./_components/HeroSlider";
+
+export default async function Page() {
 
     return(
-        <div>{filters}dfgdfg</div>
+        <div><HeroSlider/></div>
     )
 }

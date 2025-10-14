@@ -1,21 +1,21 @@
 import MobileLayout from "./MobileLayout";
 import DesktopLayout from "./DesktopLayout";
 import { headers } from "next/headers";
-import { serverFetch } from "@/lib/api/serverFetch";
+import { profileServerApi } from "@/lib/api/features/profile/server";
 
 export default async function MainLayout({children}: {children: React.ReactNode}) {
     const device = (await headers()).get("X-Device-Type")
 
-    const {data: user} = await serverFetch.get("/users/me")
+    const profile = await profileServerApi.getCurrentProfile()
 
     return (
         <>  
             { device == "mobile" ? 
-                <MobileLayout user={user}>
+                <MobileLayout profile={profile}>
                     {children}
                 </MobileLayout>
                 :
-                <DesktopLayout user={user}>
+                <DesktopLayout profile={profile}>
                     {children}
                 </DesktopLayout>
             }
