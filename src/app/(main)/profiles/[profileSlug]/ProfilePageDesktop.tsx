@@ -92,7 +92,7 @@ export default function ProfilePageDesktop({profile}: {profile: Profile}) {
                                 }}
                                 ref={aboutRef}
                             >
-                                {profile.about}
+                                {profile.about || "Подробнее о профиле"}
                             </Typography>
                             <Typography 
                                 sx={{
