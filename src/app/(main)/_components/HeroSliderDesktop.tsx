@@ -32,6 +32,7 @@ function HeroManga({manga}: {manga: Manga}) {
             <Box
                 sx={{
                     height :"100%",
+                    width: "100%",
                     transform: "translateY(10px)",
                     maxWidth: "860px",
                     mx: "auto",
