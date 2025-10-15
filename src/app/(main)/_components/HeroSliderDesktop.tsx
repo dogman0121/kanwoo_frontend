@@ -13,6 +13,8 @@ function HeroManga({manga}: {manga: Manga}) {
     return (
         <Box
             sx={(theme) => ({
+                height :"100%",
+                width: "100%",
                 background: `
                     linear-gradient(
                     rgba(${theme.vars?.palette.background.defaultChannel} / 0.8), 
