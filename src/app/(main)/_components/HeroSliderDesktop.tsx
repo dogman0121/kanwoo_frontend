@@ -13,8 +13,9 @@ function HeroManga({manga}: {manga: Manga}) {
     return (
         <Box
             sx={(theme) => ({
-                height :"100%",
-                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
                 background: `
                     linear-gradient(
                     rgba(${theme.vars?.palette.background.defaultChannel} / 0.8), 
@@ -29,7 +30,7 @@ function HeroManga({manga}: {manga: Manga}) {
         >
             <Box
                 sx={{
-                    py: theme.spacing(20),
+                    transform: "translateY(10px)",
                     maxWidth: "860px",
                     mx: "auto",
 
