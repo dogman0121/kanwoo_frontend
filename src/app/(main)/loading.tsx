@@ -2,6 +2,7 @@ import { Container, Skeleton } from "@mui/material";
 import MangaCarouselSkeleton from "./_components/MangaCarouselSkeleton";
 
 export default async function Loading() {
+
     return (
         <Container 
             maxWidth="lg"
