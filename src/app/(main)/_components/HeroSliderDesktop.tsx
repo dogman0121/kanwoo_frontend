@@ -14,8 +14,9 @@ function HeroManga({manga}: {manga: Manga}) {
         <Box
             sx={(theme) => ({
                 display: "flex",
-                justifyContent: "center",
                 alignItems: "center",
+                height: "100%",
+                width: "100%",
                 background: `
                     linear-gradient(
                     rgba(${theme.vars?.palette.background.defaultChannel} / 0.8), 
@@ -30,6 +31,7 @@ function HeroManga({manga}: {manga: Manga}) {
         >
             <Box
                 sx={{
+                    height :"100%",
                     transform: "translateY(10px)",
                     maxWidth: "860px",
                     mx: "auto",
@@ -138,8 +140,7 @@ export default function HeroSliderDesktop() {
             <Swiper
                 style={{
                     borderRadius: "16px",
-                    height: "100%",
-                    width: "100%"
+                    height: "100%"
                 }}
                 modules={[Navigation, EffectFade, Pagination, Autoplay]}
                 pagination={{
