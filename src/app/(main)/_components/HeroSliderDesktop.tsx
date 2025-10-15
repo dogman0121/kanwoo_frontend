@@ -118,9 +118,6 @@ export default function HeroSliderDesktop() {
     return (
         <Box
             sx={(theme) => ({
-                borderRadius: "16px",
-                aspectRatio: "2/1",
-                width: "100%",
                 "& .swiper-pagination-bullet": {
                     bgcolor: `${theme.vars?.palette.secondary.main}`,
                     opacity: "1",
@@ -135,6 +132,11 @@ export default function HeroSliderDesktop() {
             })}
         >
             <Swiper
+                style={{
+                    borderRadius: "16px",
+                    aspectRatio: "2/1",
+                    width: "100%"
+                }}
                 modules={[Navigation, EffectFade, Pagination, Autoplay]}
                 pagination={{
                     clickable: true

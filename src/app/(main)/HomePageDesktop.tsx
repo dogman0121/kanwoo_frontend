@@ -17,7 +17,14 @@ export default function HomePageDesktop({home}: {home: Home}) {
     }
 
     return (
-        <Container maxWidth="lg">
+        <Container maxWidth="lg"
+            sx={{
+                mt: "15px",
+                display: "flex",
+                flexDirection: "column",
+                rowGap: "25px"
+            }}
+        >
             <HeroSliderDesktop />
         </Container>
     )
