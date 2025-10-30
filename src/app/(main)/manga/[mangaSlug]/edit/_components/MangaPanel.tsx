@@ -51,7 +51,7 @@ export default function MangaPanel({manga}: {manga: Manga}) {
                     </IconButton>
                     <Poster
                         width="60px"
-                        src={currManga.poster.small}
+                        src={currManga.poster?.small}
                     />
                     <Box>
                         <Typography
