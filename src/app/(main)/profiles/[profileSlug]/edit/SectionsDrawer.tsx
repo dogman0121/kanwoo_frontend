@@ -1,14 +1,12 @@
 "use client"
 
 import theme from "@/theme";
-import Team from "@/types/profile"
-import { Avatar, Box, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, styled, Toolbar, Typography } from "@mui/material"
+import { Avatar, Box, Divider, Drawer, List, ListItemButton, ListItemIcon, ListItemText, styled, Toolbar, Typography } from "@mui/material"
 import InfoOutlineRoundedIcon from '@mui/icons-material/InfoOutlineRounded';
-import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
 import TranslateRoundedIcon from '@mui/icons-material/TranslateRounded';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAppSelector, useAppStore } from "@/lib/state/hooks";
 import { setProfile } from "@/lib/state/features/profile/profileSlice";

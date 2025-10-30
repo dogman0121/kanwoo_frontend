@@ -19,7 +19,8 @@ export default function AvatarCropper({
     src, 
     open, 
     onClose, 
-    width, 
+    width,
+    aspectRatio, 
     height, 
     onCrop
 }: AvatarCropperProps) {
@@ -63,7 +64,7 @@ export default function AvatarCropper({
             <DialogContent >
                 <Cropper
                     style={{height: "400px", width: "100%"}} 
-                    aspectRatio={1}
+                    aspectRatio={aspectRatio}
                     ref={cropperRef}
                     cropBoxResizable={false}
                     cropBoxMovable={false}

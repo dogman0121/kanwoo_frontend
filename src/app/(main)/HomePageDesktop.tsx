@@ -1,7 +1,6 @@
 "use client"
 
 import { setHome } from "@/lib/state/features/home/homeSlice";
-import { setManga } from "@/lib/state/features/manga/mangaSlice";
 import { useAppStore } from "@/lib/state/hooks";
 import Home from "@/types/home";
 import { Container } from "@mui/material";

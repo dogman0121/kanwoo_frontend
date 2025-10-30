@@ -10,7 +10,7 @@ export default function Poster({
     return (
         <img
             draggable={false}
-            src={src}
+            src={src || "https://cdn.kanwoo.ru/manga/default.jpg"}
             alt="poster"
             style={{
                 aspectRatio: "2/3",

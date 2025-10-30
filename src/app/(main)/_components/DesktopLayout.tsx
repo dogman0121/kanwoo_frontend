@@ -6,8 +6,7 @@ import { setAuthProfile } from "@/lib/state/features/auth_profile/authProfileSli
 import { useAppStore } from "@/lib/state/hooks"
 import theme from "@/theme"
 import AuthProfile from "@/types/authProfile"
-import Profile from "@/types/profile"
-import { AppBar, Avatar, Box, Container, SvgIcon, Typography } from "@mui/material"
+import { AppBar, Avatar, Box, Container, SvgIcon, Toolbar, Tooltip, Typography } from "@mui/material"
 import Link from "next/link"
 import { Suspense, useRef, useState } from "react"
 
@@ -18,11 +17,12 @@ function Header() {
         <>
             <Box
                 sx={{
-                    position: "sticky",
+                    position: "fixed",
                     top: 0,
                     width: "100%",
                     bgcolor: theme.vars?.palette.customBackgrounds.header,
-                    zIndex: theme.zIndex.drawer + 1
+                    zIndex: theme.zIndex.drawer + 10
+
                 }}
             >
                 <Box
@@ -93,16 +93,11 @@ function Footer() {
     )
 }
 
-export default function DesktopLayout({children, profile}: {children: React.ReactNode, profile: AuthProfile | null}) {
-    const store = useAppStore()
-    const initialized = useRef(false)
-    if (!initialized.current) {
-        store.dispatch(setAuthProfile(profile))
-        initialized.current = true
-    }
+export default function DesktopLayout({children}: {children: React.ReactNode}) {
     return (
         <>
             <Header />
+            <Toolbar />
             <Box
                 component={"main"}
             >

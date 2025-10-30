@@ -8,7 +8,7 @@ import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import Poster from "@/components/Poster";
-import SectionsMobile from "./SectionsMobile";
+import SectionsMobile from "./_components/SectionsMobile";
 import Manga from "@/types/manga";
 import { useRef } from "react";
 import { setManga } from "@/lib/state/features/manga/mangaSlice";
@@ -72,7 +72,7 @@ export default function MangaPageMobile({manga}: {manga: Manga}) {
                     }}
                 >
                     <Poster 
-                        src={manga?.main_poster.small || ""}
+                        src={manga?.poster.small || ""}
                     />
                 </Box>
                 <Box

@@ -26,7 +26,7 @@ export async function generateMetadata({
             url: `https://kanwoo.ru/manga/${manga.slug}`,
             title: `Читать ${manga.type.name} ${manga.name} онлайн | kanwoo`,
             description: manga.description,
-            images: [{url: manga.main_poster.medium}],
+            images: [{url: manga.main_poster?.medium || "https://cdn.kanwoo.ru/manga/default"}],
             siteName: "Kanwoo"
         },
     }

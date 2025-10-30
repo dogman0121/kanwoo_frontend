@@ -99,7 +99,7 @@ const theme = createTheme({
         root: {
           variants: [{
              props: { variant: 'contained' },
-              style: ({ theme }) => ({
+              style: () => ({
                 "&:hover": {
                   boxShadow: "none"
                 }
@@ -158,6 +158,13 @@ const theme = createTheme({
         }
       }
     },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          borderRadius: "12px"
+        }
+      }
+    },
     MuiSkeleton: {
       defaultProps: {
         animation: false
@@ -166,6 +173,16 @@ const theme = createTheme({
         root: ({theme}) => ({
           backgroundColor: theme.vars?.palette.background.paper
         })
+      }
+    },
+    MuiToolbar: {
+      defaultProps: {
+        variant: "dense"
+      },
+      styleOverrides: {
+        root: {
+          minHeight: "54px"
+        }
       }
     }
   }

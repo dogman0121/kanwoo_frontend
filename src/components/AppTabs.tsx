@@ -19,6 +19,6 @@ export const AppTabList = TabList
 
 export const AppTabPanel = styled(TabPanel)(({theme}) => ({
     padding: 0,
-    paddingTop: theme.spacing(3)
+    marginTop: theme.spacing(3)
 }))
 

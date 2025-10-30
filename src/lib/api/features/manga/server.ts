@@ -3,6 +3,11 @@ import { serverFetch } from "@/lib/api/serverFetch";
 
 export const mangaServerApi = {
     getManga: async (slug: string): Promise<Manga> => {
-        return serverFetch.get(`https://kanwoo.ru/api/v1/manga/${slug}`);
+        const {data, error}  = await serverFetch.get(`/manga/${slug}`);
+
+        if (error)
+            throw new Error("Failed to fetch manga")
+        else
+            return data
     },
 }

@@ -4,13 +4,15 @@ import mangaReducer from './features/manga/mangaSlice'
 import listReducer from './features/list/listSlice'
 import profileReducer from './features/profile/profileSlice'
 import homeReducer from './features/home/homeSlice'
+import metaReducer from './features/meta/metaSlice'
 
 const rootReducers = combineReducers({
   authProfile: authProfileReducer,
   manga: mangaReducer,
   list: listReducer,
   profile: profileReducer,
-  home: homeReducer
+  home: homeReducer,
+  meta: metaReducer
 })
 
 export const makeStore = () => {

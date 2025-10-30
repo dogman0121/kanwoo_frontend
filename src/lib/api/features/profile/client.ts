@@ -1,6 +1,4 @@
-import Team from "@/types/profile";
 import { clientFetch } from "../../clientFetch";
-import { error, profile } from "console";
 import Profile from "@/types/profile";
 
 export const profileClientApi = { 
@@ -21,7 +19,7 @@ export const profileClientApi = {
         }
     },
 
-    async checkTeamSlug(slug: string) {
+    async checkProfileSlug(slug: string) {
         const response = await clientFetch.get(`/profiles/check_slug?slug=${slug}`);
 
         const {data} = await response.json()

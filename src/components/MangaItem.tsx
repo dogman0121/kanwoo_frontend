@@ -29,7 +29,7 @@ function MangaItemSquare({manga, rightTopAdornment}: MangaItemProps) {
                 }}
             >
                 <Poster
-                    src={manga.main_poster?.small || ""} 
+                    src={manga.poster?.small || ""} 
                     width="100%"
                 />
                 <Box

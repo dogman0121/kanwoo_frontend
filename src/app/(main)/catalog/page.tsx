@@ -3,5 +3,11 @@ export default async function Page({
 }: {
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
-    return (<>catalog</>)
+    const params = await searchParams;
+    return (
+        <>
+            catalog
+            {params}
+        </>
+    )
 }

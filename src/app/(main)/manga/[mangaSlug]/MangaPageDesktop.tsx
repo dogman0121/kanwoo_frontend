@@ -5,13 +5,13 @@ import { useAppSelector, useAppStore } from "@/lib/state/hooks";
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import Description from "./Description";
-import Genres from "./Genres";
-import NameTranslations from "./NameTranslations";
-import Persons from "./Persons";
-import Similar from "./Similar";
+import Description from "./_components/Description";
+import Genres from "./_components/Genres";
+import NameTranslations from "./_components/NameTranslations";
+import Persons from "./_components/Persons";
+import Similar from "./_components/Similar";
 import theme from "@/theme";
-import SectionsDesktop from "./SectionsDesktop";
+import SectionsDesktop from "./_components/SectionsDesktop";
 import Manga from "@/types/manga";
 import { useRef, useState } from "react";
 import { setManga } from "@/lib/state/features/manga/mangaSlice";
@@ -29,6 +29,9 @@ export default function MangaPageDesktop({manga}: {manga: Manga}) {
 
     const [reportDialogOpen, setReportDialogOpen] = useState(false);
 
+    if (!manga) 
+        return null;
+
     return (
         <>
             <Box 
@@ -41,11 +44,11 @@ export default function MangaPageDesktop({manga}: {manga: Manga}) {
                     <Grid
                         container 
                         columns={{lg: 15, md: 13, sm: 8}} 
-                        spacing={3} 
+                        spacing={4} 
                     >
                         <Grid size={{lg: 3, md: 3, sm: 2}}>
                             <Poster 
-                                src={manga?.main_poster.medium || ""}   
+                                src={manga.poster?.medium || ""}   
                             />
                             <Box
                                 sx={{
@@ -92,7 +95,7 @@ export default function MangaPageDesktop({manga}: {manga: Manga}) {
                                     <Typography
                                         lineHeight={"1.2"}
                                     >
-                                        {manga?.type.name} / {manga?.year} / {manga?.status.name}
+                                        {manga.type.name} / {manga.year} / {manga.status.name}
                                     </Typography>
                                     <Typography
                                         fontWeight={600}
@@ -164,7 +167,7 @@ export default function MangaPageDesktop({manga}: {manga: Manga}) {
                                                     mr: "3px"
                                                 }}
                                             /> 
-                                            {manga?.views} просмотров
+                                            {manga.views} просмотров
                                         </Typography>
                                     </Box>
                                     <Box
@@ -189,7 +192,7 @@ export default function MangaPageDesktop({manga}: {manga: Manga}) {
                         </Grid>
                     </Grid>
                 </Container>
-                {manga?.background && (
+                {manga.background && (
                     <Box
                     sx={{
                         position: "absolute",
@@ -211,7 +214,7 @@ export default function MangaPageDesktop({manga}: {manga: Manga}) {
                 >
                 </Box>
                 )}
-                {!manga?.background && manga?.main_poster.medium && (
+                {!manga.background && manga.poster?.medium && (
                     <Box
                         sx={{
                             position: "absolute",
@@ -223,7 +226,7 @@ export default function MangaPageDesktop({manga}: {manga: Manga}) {
                             background: `
                                 linear-gradient(rgba(${theme.vars?.palette.background.defaultChannel} / 0.9), 
                                 rgba(${theme.vars?.palette.background.defaultChannel} / 1)), 
-                                url('${manga.main_poster.medium}')
+                                url('${manga.poster?.medium}')
                             `,
                             backgroundSize: "cover",
                             backgroundPosition: "center",

@@ -15,7 +15,7 @@ function SimilarItem({ manga }: {manga: Manga}) {
                 alignItems: "center"
             }}
         >
-            <Poster width="60px" src={manga.main_poster?.small || ""}/>
+            <Poster width="60px" src={manga.poster?.small || ""}/>
             <Box>
                 <Typography fontSize={"15px"}>{manga.name}</Typography>
                 <Box

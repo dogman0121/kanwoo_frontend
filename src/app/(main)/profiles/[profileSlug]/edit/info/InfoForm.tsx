@@ -17,7 +17,6 @@ import { throttle } from "lodash";
 import { profileClientApi } from "@/lib/api/features/profile/client";
 import Links from "./Links";
 import { setProfile } from "@/lib/state/features/profile/profileSlice";
-import Team from "@/types/profile";
 import { useRouter } from "next/navigation";
 import Profile from "@/types/profile";
 
@@ -39,7 +38,7 @@ export const TextInput = styled(TextField)(() => ({
     }
 }))
 
-interface TeamInfoForm {
+interface ProfileInfoForm {
     slug: string
     name: string,
     avatar: File | string | null,
@@ -72,12 +71,12 @@ export default function InfoForm() {
         setSection(newValue);
     };
 
-    const { control, handleSubmit, formState: {isValid, isDirty, defaultValues}, reset } = useForm<TeamInfoForm>({
+    const { control, handleSubmit, formState: {isValid, isDirty, defaultValues}, reset } = useForm<ProfileInfoForm>({
         mode: "onChange",
         defaultValues: toForm(profile)
     });
 
-    const onSubmit = async (data: TeamInfoForm) => {
+    const onSubmit = async (data: ProfileInfoForm) => {
         if (!profile)
             return;
 
@@ -106,7 +105,7 @@ export default function InfoForm() {
             router.replace(`/profiles/${updated_profile.slug}/edit/info`)
 
         } catch (_) {
-
+            throw new Error("Failed to update")
         }
     }
 
@@ -119,16 +118,7 @@ export default function InfoForm() {
 
     return (
         <>
-            <Typography 
-                variant="h1"
-                sx={{
-                    p: "25px 25px 10px"
-                }}
-            >
-                Основная информация
-            </Typography>
-            <Box
-            >
+            <form id="profile-info" onSubmit={handleSubmit(onSubmit)}>
                 <AppTabContext 
                     value={section}
                 >
@@ -188,190 +178,187 @@ export default function InfoForm() {
                         p: "30px 25px"
                     }}
                 >
-                    <form id="profile-info" onSubmit={handleSubmit(onSubmit)}>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                rowGap: "20px"
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            rowGap: "20px"
+                        }}
+                    >
+                        <Controller 
+                            control={control}
+                            name="avatar"
+                            render={({field: {value, onChange}}) => (
+                                <TeamAvatar
+                                    value={value}
+                                    onChange={onChange}
+                                />
+                            )}
+                        />
+                        <Controller
+                            control={control}
+                            name="name"
+                            rules={{
+                                required: "Это поле не должно быть пустым",
                             }}
-                        >
-                            <Controller 
-                                control={control}
-                                name="avatar"
-                                render={({field: {value, onChange}}) => (
-                                    <TeamAvatar
-                                        value={value}
-                                        onChange={onChange}
+                            render={({field, fieldState: {invalid, error}}) => (
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        flexDirection: "column"
+                                    }}
+                                >
+                                    <TextInputLabel>Название профиля</TextInputLabel>
+                                    <TextInputCaption>
+                                        Отображается рядом с аватаром.
+                                    </TextInputCaption>
+                                    <TextInput
+                                        error={invalid}
+                                        helperText={error?.message}
+                                        sx={{
+                                            mt: "10px"
+                                        }}
+                                        {...field}
                                     />
-                                )}
-                            />
-                            <Controller
-                                control={control}
-                                name="name"
-                                rules={{
-                                    required: "Это поле не должно быть пустым",
-                                }}
-                                render={({field, fieldState: {invalid, error}}) => (
-                                    <Box
-                                        sx={{
-                                            display: "flex",
-                                            flexDirection: "column"
-                                        }}
-                                    >
-                                        <TextInputLabel>Название команды</TextInputLabel>
-                                        <TextInputCaption>
-                                            Отображается рядом с аватаром.
-                                        </TextInputCaption>
-                                        <TextInput
-                                            error={invalid}
-                                            helperText={error?.message}
-                                            sx={{
-                                                mt: "10px"
-                                            }}
-                                            {...field}
-                                        />
-                                    </Box>
-                                )}
-                            />
-                            <Controller
-                                control={control}
-                                name="slug"
-                                rules={{
-                                    required: "Это поле не должно быть пустым",
-                                    validate: throttle(async (value) => {
-                                        if (value == profile.slug)
-                                            return true
+                                </Box>
+                            )}
+                        />
+                        <Controller
+                            control={control}
+                            name="slug"
+                            rules={{
+                                required: "Это поле не должно быть пустым",
+                                validate: throttle(async (value) => {
+                                    if (value == profile.slug)
+                                        return true
 
-                                        setSlugChecking(true)
-                                        
-                                        const res = await profileClientApi.checkTeamSlug(value);
+                                    setSlugChecking(true)
+                                    
+                                    const res = await profileClientApi.checkProfileSlug(value);
 
-                                        setSlugChecking(false)
+                                    setSlugChecking(false)
 
-                                        if (res)
-                                            return true
-                                        else
-                                            return "Данный тег команды занят"
-                                    }, 500)
-                                }}
-                                render={({field: {value, ...props}, fieldState: {error, invalid}}) => (
-                                    <Box
+                                    if (res)
+                                        return true
+                                    else
+                                        return "Данный тег профиля занят"
+                                }, 500)
+                            }}
+                            render={({field: {value, ...props}, fieldState: {error, invalid}}) => (
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        flexDirection: "column"
+                                    }}
+                                >
+                                    <TextInputLabel>Тег команды</TextInputLabel>
+                                    <TextInputCaption>
+                                        Уникальная последовательность из цифр и латинских букв.
+                                        Является уникальным идентификатором.
+                                    </TextInputCaption>
+                                    <TextInput
                                         sx={{
-                                            display: "flex",
-                                            flexDirection: "column"
+                                            mt: "10px"
                                         }}
-                                    >
-                                        <TextInputLabel>Тег команды</TextInputLabel>
-                                        <TextInputCaption>
-                                            Уникальная последовательность из цифр и латинских букв.
-                                            Является уникальным идентификатором.
-                                        </TextInputCaption>
-                                        <TextInput
-                                            sx={{
-                                                mt: "10px"
-                                            }}
-                                            slotProps={{
-                                                input: {
-                                                    endAdornment: 
-                                                        <InputAdornment position="end">
-                                                            {(slugChecking) && (
-                                                                <CircularProgress
-                                                                    size={"20px"}
-                                                                />
-                                                            ) }
-                                                            {(!slugChecking && value != "" && value != profile.slug && !invalid) && (
-                                                                <CheckCircleRoundedIcon color="success"/>
-                                                            )}
-                                                            {(!slugChecking && value != "" && value != profile.slug && invalid) && (
-                                                                <ErrorRoundedIcon color="error"/>
-                                                            )}
-                                                        </InputAdornment>
-                                                }
-                                            }} 
-                                            error={error?.type == "required"}
-                                            helperText={error?.message}
-                                            value={value}
-                                            {...props}
-                                        />
-                                    </Box>
-                                )}
-                            />
-                            <Controller
-                                control={control}
-                                name="about"
-                                render={({field: {value, ...props}}) => (
-                                    <Box
-                                        sx={{
-                                            display: "flex",
-                                            flexDirection: "column"
-                                        }}
-                                    >
-                                        <TextInputLabel>Описание команды</TextInputLabel>
-                                        <TextInputCaption>
-                                            Помогает читателям узнать о команде побольше. Лучше не прикреплять контактную информацию.
-                                        </TextInputCaption>
-                                        <TextInput
-                                            placeholder="Введите описание"
-                                            minRows={5}
-                                            multiline
-                                            sx={{
-                                                mt: "10px",
-                                                "& .MuiOutlinedInput-root": {
-                                                    flexDirection: "column",
-                                                    p: "10px 14px 5px"
-                                                }
-                                            }}
-                                            slotProps={{
-                                                input: {
-                                                    endAdornment: 
-                                                        <InputAdornment position="end"
-                                                            sx={{
-                                                                alignSelf: "end"
-                                                            }}
-                                                        >
-                                                            <Typography
-                                                                variant="caption"
-                                                            >
-                                                                {value?.length}/1000
-                                                            </Typography>
-                                                        </InputAdornment>
-                                                }
-                                            }}
-                                            value={value || ""}
-                                            {...props}
-                                        />
-                                    </Box>
-                                )}
-                            />
-                            <Controller
-                                control={control}
-                                name="links"
-                                rules={{
-                                    validate: (value) => {
-                                        for (const v of value) {
-                                            if (v.link == "" || v.name == "")
-                                                return false;
-                                            
-                                            try {
-                                                new URL(v.link);
-                                            } catch (e) {
-                                                return false;
+                                        slotProps={{
+                                            input: {
+                                                endAdornment: 
+                                                    <InputAdornment position="end">
+                                                        {(slugChecking) && (
+                                                            <CircularProgress
+                                                                size={"20px"}
+                                                            />
+                                                        ) }
+                                                        {(!slugChecking && value != "" && value != profile.slug && !invalid) && (
+                                                            <CheckCircleRoundedIcon color="success"/>
+                                                        )}
+                                                        {(!slugChecking && value != "" && value != profile.slug && invalid) && (
+                                                            <ErrorRoundedIcon color="error"/>
+                                                        )}
+                                                    </InputAdornment>
                                             }
+                                        }} 
+                                        error={error?.type == "required"}
+                                        helperText={error?.message}
+                                        value={value}
+                                        {...props}
+                                    />
+                                </Box>
+                            )}
+                        />
+                        <Controller
+                            control={control}
+                            name="about"
+                            render={({field: {value, ...props}}) => (
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        flexDirection: "column"
+                                    }}
+                                >
+                                    <TextInputLabel>Описание команды</TextInputLabel>
+                                    <TextInputCaption>
+                                        Помогает читателям узнать о команде побольше. Лучше не прикреплять контактную информацию.
+                                    </TextInputCaption>
+                                    <TextInput
+                                        placeholder="Введите описание"
+                                        minRows={5}
+                                        multiline
+                                        sx={{
+                                            "& .MuiOutlinedInput-root": {
+                                                flexDirection: "column",
+                                                p: "10px 14px 5px"
+                                            }
+                                        }}
+                                        slotProps={{
+                                            input: {
+                                                endAdornment: 
+                                                    <InputAdornment position="end"
+                                                        sx={{
+                                                            alignSelf: "end"
+                                                        }}
+                                                    >
+                                                        <Typography
+                                                            variant="caption"
+                                                        >
+                                                            {value?.length}/1000
+                                                        </Typography>
+                                                    </InputAdornment>
+                                            }
+                                        }}
+                                        value={value || ""}
+                                        {...props}
+                                    />
+                                </Box>
+                            )}
+                        />
+                        <Controller
+                            control={control}
+                            name="links"
+                            rules={{
+                                validate: (value) => {
+                                    for (const v of value) {
+                                        if (v.link == "" || v.name == "")
+                                            return false;
+                                        
+                                        try {
+                                            new URL(v.link);
+                                        } catch (e) {
+                                            return false;
                                         }
                                     }
-                                }}
-                                render={({field: {value, onChange}}) => (
-                                    <Links
-                                        value={value}
-                                        onChange={onChange}
-                                    />
-                                )}
-                            />
-                        </Box>
-                    </form>
+                                }
+                            }}
+                            render={({field: {value, onChange}}) => (
+                                <Links
+                                    value={value}
+                                    onChange={onChange}
+                                />
+                            )}
+                        />
+                    </Box>
                 </Box>
-            </Box>
+            </form>
         </>
     )
 }

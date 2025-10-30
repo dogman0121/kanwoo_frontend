@@ -21,7 +21,7 @@ function MangaItem({ item }: { item: Manga }) {
                 })}
             >
                 <Poster 
-                    src={item.main_poster?.thumbnail || ""}
+                    src={item.poster?.thumbnail || ""}
                     width="50px"
                 />
                 <Box

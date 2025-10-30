@@ -1,5 +1,5 @@
+import Adult from "./manga/adult"
 import Profile from "./profile"
-import User from "./user"
 
 export default interface Manga {
     id: number,
@@ -10,7 +10,7 @@ export default interface Manga {
         name: string
     }[],
     description: string,
-    main_poster: {
+    poster: {
         orig: string,
         large: string,
         medium: string,
@@ -27,6 +27,7 @@ export default interface Manga {
         id: number,
         name: string
     },
+    adult: Adult,
     genres: {
         id: number,
         name: string
@@ -35,5 +36,11 @@ export default interface Manga {
     saves_count: number,
     authors: Profile[],
     artists: Profile[],
-    publishers: Profile[]
+    publishers: Profile[],
+    promo_name: string,
+    promo_logo: string,
+    promo_background: string,
+    creator: Profile,
+    created_at: string,
+    updated_ad: string
 }

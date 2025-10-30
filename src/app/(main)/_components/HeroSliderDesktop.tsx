@@ -22,7 +22,7 @@ function HeroManga({manga}: {manga: Manga}) {
                     rgba(${theme.vars?.palette.background.defaultChannel} / 0.8), 
                     rgba(${theme.vars?.palette.background.defaultChannel} / 0.8)
                     ),
-                    url(${manga.background ? manga.background : manga.main_poster?.large})
+                    url(${manga.background ? manga.background : manga.poster?.large})
                 `,
                 backgroundSize: 'cover',
                 backgroundPositionX: 'center',
@@ -44,7 +44,7 @@ function HeroManga({manga}: {manga: Manga}) {
                 }}
             >
                 <Poster 
-                    src={manga.main_poster?.medium || ""}
+                    src={manga.poster?.medium || ""}
                     style={{
                         maxWidth: "200px"
                     }}

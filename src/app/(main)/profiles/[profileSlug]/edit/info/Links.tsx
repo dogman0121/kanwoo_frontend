@@ -5,6 +5,7 @@ import { TextInput, TextInputCaption, TextInputLabel } from "./InfoForm"
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import DragIndicatorRoundedIcon from '@mui/icons-material/DragIndicatorRounded';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import {v4 as uuid} from "uuid";
 import {
   DndContext,
   closestCenter,
@@ -125,13 +126,14 @@ function SortableLink({
                     width: "500px"
                 }}
             />
-            { closeOpen && (
-                <IconButton 
-                    onClick={() => onRemove(index)}
-                >
-                    <ClearRoundedIcon />
-                </IconButton>
-            )}
+            <IconButton 
+                sx={{
+                    visibility: closeOpen ? "none" : "hidden"
+                }}
+                onClick={() => onRemove(index)}
+            >
+                <ClearRoundedIcon />
+            </IconButton>
         </Box>
     );
 }

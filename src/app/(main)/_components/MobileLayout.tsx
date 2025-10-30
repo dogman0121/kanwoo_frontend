@@ -5,21 +5,10 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
-import { useRef, useState } from "react"
+import { useState } from "react"
 import Link from "next/link";
-import { useAppStore } from "@/lib/state/hooks";
-import { setAuthProfile } from "@/lib/state/features/auth_profile/authProfileSlice";
-import Profile from "@/types/profile";
-import AuthProfile from "@/types/authProfile";
 
-export default function MobileLayout({children, profile}: {children: React.ReactNode, profile: AuthProfile | null}) {
-    const store = useAppStore()
-    const initialized = useRef(false)
-    if (!initialized.current) {
-        store.dispatch(setAuthProfile(profile))
-        initialized.current = true
-    }
-
+export default function MobileLayout({children}: {children: React.ReactNode}) {
     const [value, setValue] = useState(0);
 
     return (
