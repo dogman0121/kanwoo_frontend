@@ -72,7 +72,7 @@ function toForm(manga?: Manga | null) {
         genres: manga?.genres.map(genre => genre.id) || [],
         year: manga?.year || new Date().getFullYear(),
         background: manga?.background,
-        poster: manga?.poster.medium || null,
+        poster: manga?.poster?.medium || null,
         promoBackground: manga?.promo_background || null,
         promoName: manga?.promo_name || null,
         promoLogo: manga?.promo_logo || null,
