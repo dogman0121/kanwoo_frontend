@@ -72,7 +72,7 @@ export default function MangaPageMobile({manga}: {manga: Manga}) {
                     }}
                 >
                     <Poster 
-                        src={manga?.poster.small || ""}
+                        src={manga?.poster.medium || ""}
                     />
                 </Box>
                 <Box
