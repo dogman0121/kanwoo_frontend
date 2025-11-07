@@ -38,7 +38,7 @@ function HeroManga({manga}: {manga: HeroBlock}) {
                     backgroundPositionY: "0"
                 }}
             >
-                <img src={manga.data.logo} style={{padding: "20px 0"}}/>
+                <img src={manga.data.logo} style={{padding: "20px 0 0"}}/>
             </Box>
             <Box
                 sx={{
