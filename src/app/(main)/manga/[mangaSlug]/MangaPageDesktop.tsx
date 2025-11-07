@@ -95,7 +95,7 @@ export default function MangaPageDesktop({manga}: {manga: Manga}) {
                                     <Typography
                                         lineHeight={"1.2"}
                                     >
-                                        {manga.type.name} / {manga.year} / {manga.status.name}
+                                        {manga.type?.name} / {manga.year} / {manga.status?.name}
                                     </Typography>
                                     <Typography
                                         fontWeight={600}

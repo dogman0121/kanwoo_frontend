@@ -19,12 +19,12 @@ export async function generateMetadata({
     }
  
     return {
-        title: `Читать ${manga.type.name} ${manga.name} онлайн | kanwoo`,
+        title: `Читать ${manga.type?.name} ${manga.name} онлайн | kanwoo`,
         description: manga.description,
         openGraph: {
             type: "book",
             url: `https://kanwoo.ru/manga/${manga.slug}`,
-            title: `Читать ${manga.type.name} ${manga.name} онлайн | kanwoo`,
+            title: `Читать ${manga.type?.name} ${manga.name} онлайн | kanwoo`,
             description: manga.description,
             images: [{url: manga.main_poster?.medium || "https://cdn.kanwoo.ru/manga/default"}],
             siteName: "Kanwoo"

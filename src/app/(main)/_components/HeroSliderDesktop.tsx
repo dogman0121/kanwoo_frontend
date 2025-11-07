@@ -1,130 +1,91 @@
+"use client"
+
 import { useAppSelector } from "@/lib/state/hooks"
 import { Box, Button, Typography } from "@mui/material"
 import { Swiper, SwiperSlide } from 'swiper/react';
 import "./slider.css"
 
 import { Navigation, EffectFade, Autoplay, Pagination } from 'swiper/modules';
-import Manga from "@/types/manga";
-import theme from "@/theme";
-import Poster from "@/components/Poster";
-import Link from "next/link";
+import { Vibrant } from "node-vibrant/browser";
+import HeroBlock from "@/types/home/heroBlock";
+import { useState } from "react";
 
-function HeroManga({manga}: {manga: Manga}) {
+function HeroManga({manga}: {manga: HeroBlock}) {
+    const [mainColor, setMainColor] = useState<string | null>(null);
+
+    Vibrant.from(manga.data.background)
+        .getPalette()
+        .then((palette) => setMainColor(palette.Vibrant?.hex || null));
+
     return (
         <Box
-            sx={(theme) => ({
-                display: "flex",
-                alignItems: "center",
-                height: "100%",
+            sx={{
+                position: "relative",
                 width: "100%",
-                background: `
-                    linear-gradient(
-                    rgba(${theme.vars?.palette.background.defaultChannel} / 0.8), 
-                    rgba(${theme.vars?.palette.background.defaultChannel} / 0.8)
-                    ),
-                    url(${manga.background ? manga.background : manga.poster?.large})
-                `,
-                backgroundSize: 'cover',
-                backgroundPositionX: 'center',
-                backgroundRepeat: 'no-repeat',
-            })}
+                height: "100%"
+            }}
         >
             <Box
                 sx={{
-                    height :"100%",
+                    height: "100%",
                     width: "100%",
-                    transform: "translateY(10px)",
-                    maxWidth: "860px",
-                    mx: "auto",
-
                     display: "flex",
-                    flexDirection: "row",
-                    gap: "50px",
-                    alignItems: "center"
+                    justifyContent: "center",
+                    background: `url('${manga.data.background}')`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundPositionY: "0"
                 }}
             >
-                <Poster 
-                    src={manga.poster?.medium || ""}
-                    style={{
-                        maxWidth: "200px"
-                    }}
-                />
-                <Box>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            gap: theme.spacing(2)
-                        }}
-                    >
-                        <Typography 
-                            fontSize={"16px"}
-                            variant="caption"
-                        >
-                            {manga.type?.name}
-                        </Typography>
-                        <Typography 
-                            fontSize={"16px"}
-                            variant="caption"
-                        >
-                            {manga.year}
-                        </Typography>
-                    </Box>
-                    <Typography
-                        fontSize={"24px"}
-                        fontWeight={600}
-                        lineHeight={"1"}
-                    >
-                        {manga.name}
-                    </Typography>
-                    <Typography
-                        fontSize={"16px"}
-                        lineHeight={"1.5"}
-                        sx={{
-                            mt: theme.spacing(4),
-                            height: "7.5em",
-                            display: "-webkit-box",
-                            WebkitLineClamp: "5",
-                            WebkitBoxOrient: "vertical",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis"
-                        }}
-                    >
-                        {manga.description}
-                    </Typography>
-                    <Link
-                        href={`/manga/${manga.slug}`}
-                        style={{
-                            marginTop: theme.spacing(3)
-                        }}
-                    >
-                        <Button
-                            variant="contained"
-                            sx={{
-                                mt: theme.spacing(3),
-                                width: "150px",
-                                height: "45px"
-                            }}
-                        >
-                            Читать
-                        </Button>
-                    </Link>
-                </Box>
+                <img src={manga.data.logo} style={{padding: "20px 0"}}/>
             </Box>
+            <Box
+                sx={{
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                    background: `
+                        linear-gradient(rgba(0, 0, 0, 0) 60%, 
+                        ${mainColor} 100%)
+                    `,
+                    width: "100%",
+                    height: "100%"
+                }}
+            >
+            </Box>  
+            <img src={manga.data.name} 
+                style={{
+                    position: "absolute",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    bottom: "20px"
+                }}
+            />
         </Box>
+              
     )
 }
 
 
 export default function HeroSliderDesktop() {
     const slides = useAppSelector(state => state.home.home?.hero)
-    
+
     return (
         <Box
             sx={(theme) => ({
+                position: "relative",
                 width :"100%",
                 aspectRatio: "2/1",
                 
+                "& .swiper-pagination-bullets": {
+                    display: "flex",
+                    justifyContent: "end",
+                    bottom: "10%",
+                    left: "auto",
+                    right: "10%"
+                },
+
                 "& .swiper-pagination-bullet": {
                     bgcolor: `${theme.vars?.palette.secondary.main}`,
                     opacity: "1",
@@ -156,7 +117,7 @@ export default function HeroSliderDesktop() {
                 }}
             >
                 {slides?.slice(0, 5).map((slice) => (
-                    <SwiperSlide key={`hero_${slice.slug}`}><HeroManga manga={slice}/></SwiperSlide>
+                    <SwiperSlide key={`hero_${slice.type}_${new Date().getMilliseconds()}`}><HeroManga manga={slice}/></SwiperSlide>
                 ))}
             </Swiper>
         </Box>
