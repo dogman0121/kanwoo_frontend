@@ -1,9 +1,10 @@
-import { profileServerApi } from "@/lib/api/features/profile/server";
+import { profileServerApi } from "@/lib/fetch/features/profile/server";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Profile from "@/types/profile";
+import Profile from "@/types/profile/profile";
 import ProfilePageDesktop from "./ProfilePageDesktop";
 import ProfilePageMobile from "./ProfilePageMobile";
+import { serverFetch } from "@/lib/fetch/serverFetch";
 
 export async function generateMetadata({
     params 
@@ -12,7 +13,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
     const { profileSlug } = await params;
 
-    const profile: Profile = await profileServerApi.getProfile(profileSlug)
+    const {data: profile} = await serverFetch.get<Profile>(`/profiles/${profileSlug}/get`)
 
     if (!profile)
         return notFound();
@@ -43,7 +44,7 @@ export default async function Page({
 
     const {profileSlug} = await params;
 
-    const profile = await profileServerApi.getProfile(profileSlug);
+    const {data: profile} = await serverFetch.get<Profile>(`/profiles/${profileSlug}/get`)
 
     if (!profile)
         return notFound()

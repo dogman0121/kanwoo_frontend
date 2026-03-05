@@ -2,7 +2,7 @@
 
 import { setProfile } from "@/lib/state/features/profile/profileSlice"
 import { useAppStore } from "@/lib/state/hooks"
-import Profile from "@/types/profile"
+import Profile from "@/types/profile/profile"
 import { useRef } from "react"
 
 export default function ProfilePageMobile({profile}: {profile: Profile}) {

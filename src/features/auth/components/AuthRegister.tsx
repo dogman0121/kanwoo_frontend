@@ -8,11 +8,10 @@ import AuthLink from "./ui/AuthLink";
 import authPanelContext from "../context/authPanelContext";
 import { AuthPanel } from "../types/AuthPanel";
 import AuthMessage from "./ui/AuthMessage";
+import { ApiError } from "@/lib/fetch/apiResponse";
 
 export default function AuthRegister({onSuccess}: {onSuccess?: () => void}) {
     const [emailSent, setEmailSent] = useState(false);
-
-    const [login, setLogin] = useState("");
     
     const [email, setEmail] = useState("");
 
@@ -26,35 +25,26 @@ export default function AuthRegister({onSuccess}: {onSuccess?: () => void}) {
 
     const handleRegister = async() => {
         if (password == repeatPassword){
-            const {data, error} = await authService.register(login, email, password);
+            try {
+                await authService.register(email, password);
 
-            if (data?.msg == "Email sent"){
                 setEmailSent(true);
                 onSuccess?.()
                 return;
-            }
-
-            
-            if (error){
-                if (error.detail.login){
-                    switch (error.detail.login){
-                        case "Login already taken":
-                            setWrongForm(3);
-                            break;
+                
+            } catch (error) {
+                if (error instanceof ApiError){
+                    if (error.code == "login_taken"){
+                        setWrongForm(3);
+                    }
+                    else if (error.code == "email_taken") {
+                        setWrongForm(2);
+                    }
+                    else {
+                        setWrongForm(10);
                     }
                 }
-                else if (error.detail.email) {
-                    switch (error.detail.email){
-                        case "Email already taken":
-                            setWrongForm(2);
-                            break;
-                    }
-                }
-                else {
-                    setWrongForm(10);
-                }
             }
-
         }
         else {
             setWrongForm(1);
@@ -86,13 +76,7 @@ export default function AuthRegister({onSuccess}: {onSuccess?: () => void}) {
             <AuthForm>
                 <AuthInput
                     error={wrongForm !== 0}
-                    label="Login"
-                    variant="outlined"
-                    onInput={(e) => {setLogin((e.target as HTMLInputElement).value)}}
-                />
-                <AuthInput
-                    error={wrongForm !== 0}
-                    label="Email"
+                    label="Почта"
                     variant="outlined"
                     type="email"
 
@@ -100,14 +84,14 @@ export default function AuthRegister({onSuccess}: {onSuccess?: () => void}) {
                 />
                 <AuthInput
                     error={wrongForm !== 0}
-                    label="Password"
+                    label="Пароль"
                     variant="outlined"
                     type="password"
                     onInput={(e) => {setPassword((e.target as HTMLInputElement).value)}}
                 />
                 <AuthInput
                     error={wrongForm !== 0}
-                    label="Repeat password"
+                    label="Повтор пароля"
                     variant="outlined"
                     type="password"
                     onInput={(e) => {setRepeatPassword((e.target as HTMLInputElement).value)}}

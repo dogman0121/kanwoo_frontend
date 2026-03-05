@@ -1,6 +1,6 @@
 enum SearchSection {
     MANGA = "manga",
-    TEAM = "team"
+    PROFILE = "profile"
 }
 
 export default SearchSection

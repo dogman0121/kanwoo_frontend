@@ -22,12 +22,12 @@ export default function AuthVerify({onSuccess}: {onSuccess?: () => void}) {
     useEffect(() => {
         if (token){
             authService.verify(token)
-                .then(({error}) => {
-                    if (error.detail.token == "Token already user")
-                        setError(VERIFY_STATUS.TOKEN_USED)
-                })
                 .then(() => {
                     onSuccess?.()
+                })
+                .catch(error => {
+                    if (error.code == "token_used")
+                        setError(VERIFY_STATUS.TOKEN_USED)
                 })
         }
         else {

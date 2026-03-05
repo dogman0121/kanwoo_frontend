@@ -45,7 +45,7 @@ function SearchSectionSelector({ sx }: BoxProps) {
             }}
         >
             <SectionToggleButton value={SearchSection.MANGA}>манга</SectionToggleButton>
-            <SectionToggleButton value={SearchSection.TEAM}>команды</SectionToggleButton>
+            <SectionToggleButton value={SearchSection.PROFILE}>профили</SectionToggleButton>
         </SectionToggleGroup>
     )
 }

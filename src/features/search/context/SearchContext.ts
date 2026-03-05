@@ -1,10 +1,10 @@
 "use client"
 
 import { createContext } from "react";
-import Manga from "@/types/manga";
 import Sections from "../types/searchSection";
-import Team from "@/types/profile";
+import Team from "@/types/profile/profile";
 import SearchSection from "../types/searchSection";
+import Manga from "@/types/manga/manga";
 
 interface SearchContextProps {
     query: string,

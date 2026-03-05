@@ -1,52 +1,53 @@
 "use client"
 
-import { clientFetch } from "@/lib/api/clientFetch";
+import { ApiResponse } from "@/lib/fetch/apiResponse";
+import { clientFetch } from "@/lib/fetch/clientFetch";
 
 
 export const authService = {
-    async login(login: string, password: string) {
+    async login(email: string, password: string) {
         const response = await clientFetch.post("/auth/login", {
             credentials: "include",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({login, password})
+            body: JSON.stringify({email, password})
         }, false);
 
-        return await response.json();
+        return response;
     },
     
-    async register(login: string, email: string, password: string) {
+    async register(email: string, password: string) {
         const response = await clientFetch.post("/auth/register", {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({login, email, password})
+            body: JSON.stringify({email, password})
         })
 
-        return await response.json();
+        return response;
     },
 
     async forgot(email: string) {
-        const response = await clientFetch.post("/auth/forgot", {
+        const response = await clientFetch.post<{success: boolean}>("/auth/forgot", {
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({email})
         })
 
-        return await response.json();
+        return response;
     },
 
     async recovery(token: string, password: string) {
-        const response = await clientFetch.post("/auth/recovery", {
+        const response = await clientFetch.post<{success: boolean}>("/auth/recovery", {
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({token, password})
-        })
+        }, false)
         
-        return await response.json();
+        return await response;
     },
 
     async verify(token: string) {
@@ -57,6 +58,6 @@ export const authService = {
             body: JSON.stringify({token})
         })
 
-        return await response.json();
+        return await response;
     },
 }

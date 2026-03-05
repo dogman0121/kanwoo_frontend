@@ -2,28 +2,6 @@
 
 import { createTheme } from '@mui/material/styles';
 
-declare module '@mui/material/styles' {
-    interface TypeBackground {
-        defaultChannel?: string;
-    }
-
-    interface Palette {
-        background: TypeBackground
-        customBackgrounds: {
-            header: string,
-            footer: string,
-        }
-    }
-
-    interface PaletteOptions {
-        background?: Partial<TypeBackground>
-        customBackgrounds: {
-            header: string,
-            footer: string,
-        }
-    }
-}
-
 
 const theme = createTheme({
   cssVariables: {
@@ -38,7 +16,8 @@ const theme = createTheme({
     },
     h1: {
       fontWeight: "600",
-      fontSize: "24px"
+      fontSize: "24px",
+      lineHeight: "2"
     },
     caption: {
       fontSize: "12px",
@@ -58,10 +37,6 @@ const theme = createTheme({
           default: "#121212",
           paper: "#1c1c1c"
         },
-        customBackgrounds: {
-          header: "#06090E",
-          footer: "#06090E",
-        },
       },
     },
     light: {
@@ -75,10 +50,6 @@ const theme = createTheme({
         background: {
           default: "#F2F2F3",
           paper: "#FFFFFF"
-        },
-        customBackgrounds: {
-          header: "#FFF1AA",
-          footer: "#FFC200",
         },
       } 
     }
@@ -94,30 +65,36 @@ const theme = createTheme({
     }
   },
   components: {
+    MuiAppBar: {
+      defaultProps: {
+        elevation: 0
+      }
+    },
     MuiButton: {
       styleOverrides: {
         root: {
-          variants: [{
-             props: { variant: 'contained' },
-              style: () => ({
-                "&:hover": {
-                  boxShadow: "none"
-                }
-              }),
-          }],
+          variants: [
+            {
+              props: { variant: 'contained' },
+                style: () => ({
+                  "&:hover": {
+                    boxShadow: "none"
+                  }
+                }),    
+            },
+            {
+              props: {variant: "outlined"},
+                style: () => ({
+                  color: theme.typography.body1.color
+                })
+            }
+          ],
           padding: "5px 15px",
           fontWeight: "400",
           borderRadius: "40px",
           textTransform: 'none',
           boxShadow: "none"
         }
-      }
-    },
-    MuiChip: {
-      styleOverrides: {
-        root: ({ theme }) => ({
-          backgroundColor: theme.vars?.palette.secondary.main,
-        }),
       }
     },
     MuiDialog: {
@@ -165,16 +142,6 @@ const theme = createTheme({
         }
       }
     },
-    MuiSkeleton: {
-      defaultProps: {
-        animation: false
-      },
-      styleOverrides: {
-        root: ({theme}) => ({
-          backgroundColor: theme.vars?.palette.background.paper
-        })
-      }
-    },
     MuiToolbar: {
       defaultProps: {
         variant: "dense"
@@ -183,6 +150,28 @@ const theme = createTheme({
         root: {
           minHeight: "54px"
         }
+      }
+    },
+    MuiMenu: {
+      styleOverrides: {
+        root: {
+          "& .MuiPopover-paper": {
+            borderRadius: "12px",
+            marginTop: "5px"
+          }
+        }
+      }
+    },
+    MuiLink: {
+      styleOverrides: {
+        root: ({theme}) => ({
+          color: theme.typography.caption.color,
+          textDecoration: "none",
+          
+          "&:hover": {
+            textDecoration: "underline"
+          }
+        })
       }
     }
   }

@@ -3,6 +3,13 @@ import { Roboto } from 'next/font/google';
 import "./global.css"
 import theme from '@/theme';
 import { CssBaseline, InitColorSchemeScript, ThemeProvider } from '@mui/material';
+import MetaProvider from './_components/MetaProvider';
+import StoreProvider from './_components/StoreProvider';
+import { ApiError } from '@/lib/fetch/apiResponse';
+import { serverFetch } from '@/lib/fetch/serverFetch';
+import Meta from '@/types/meta';
+import AuthProfile from '@/types/authProfile';
+import ProfileProvider from './_components/ProfileProvider';
 
 
 const roboto = Roboto({
@@ -12,11 +19,29 @@ const roboto = Roboto({
   variable: '--font-roboto',
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
+  let meta;
+  try {
+    meta = (await serverFetch.get<Meta>('/getMeta')).data
+  } catch (e) {
+    if (e instanceof ApiError)
+      meta = null
+  }
+
+  let profile;
+  try {
+      profile = (await serverFetch.get<AuthProfile>(`/getCurrentProfile`)).data
+  } catch (e) {
+      if (e instanceof ApiError) {
+          profile = null;
+      }
+  }
+
   return (
     <html lang="en" className={roboto.variable} suppressHydrationWarning>
       <head>
@@ -27,10 +52,18 @@ export default function RootLayout({
           <InitColorSchemeScript attribute="class" />
           <ThemeProvider theme={theme}>
             <CssBaseline />
-              {children}
+              <StoreProvider>
+                <MetaProvider meta={meta}>
+                  <ProfileProvider profile={profile}>
+                    {children}
+                  </ProfileProvider>
+                </MetaProvider>
+              </StoreProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
+
+      
     </html>
   );
 }

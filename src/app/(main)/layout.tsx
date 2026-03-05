@@ -1,4 +1,4 @@
-import StoreProvider from './_components/StoreProvider';
+import StoreProvider from '../_components/StoreProvider';
 import MainLayout from './_components/MainLayout';
 
 export default function RootLayout({
@@ -7,10 +7,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <StoreProvider>
-      <MainLayout>
-        {children}
-      </MainLayout>
-    </StoreProvider>
+    <MainLayout>
+      {children}
+    </MainLayout>
   );
 }

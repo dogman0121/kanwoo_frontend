@@ -1,34 +1,34 @@
 "use client"
 
-import HeaderUserNavDesktop from "@/components/HeaderUserNavDesktop"
 import SearchModalDesktop from "@/features/search/components/SearchModalDesktop"
-import { setAuthProfile } from "@/lib/state/features/auth_profile/authProfileSlice"
-import { useAppStore } from "@/lib/state/hooks"
-import theme from "@/theme"
-import AuthProfile from "@/types/authProfile"
-import { AppBar, Avatar, Box, Container, SvgIcon, Toolbar, Tooltip, Typography } from "@mui/material"
+import { AppBar, Avatar, Box, SvgIcon, Toolbar, Typography, useTheme } from "@mui/material"
 import Link from "next/link"
-import { Suspense, useRef, useState } from "react"
+import { Suspense, useState } from "react"
+import UserNav from "./UserNav"
 
 function Header() {
+    const theme = useTheme()
+
     const [searchOpen, setSearchOpen] = useState(false);
 
     return (
         <>
-            <Box
-                sx={{
-                    position: "fixed",
-                    top: 0,
-                    width: "100%",
-                    bgcolor: theme.vars?.palette.customBackgrounds.header,
-                    zIndex: theme.zIndex.drawer + 10
-
-                }}
+            <AppBar
+                component="nav"
+                sx={[
+                    {
+                        zIndex: theme.zIndex.drawer + 1
+                    },
+                    theme.applyStyles("dark", {
+                        backgroundColor: "#06090E"
+                    }),
+                    theme.applyStyles("light", {
+                        backgroundColor: "#FFF1AA"
+                    })
+                ]}
             >
-                <Box
+                <Toolbar
                     sx={{
-                        py: "7px",
-                        px: theme.spacing(3),
                         display: "flex",
                         flexDirection: "row",
                         justifyContent: "space-between"
@@ -78,20 +78,15 @@ function Header() {
                         </Box>
                     </Box>
                     <Suspense fallback={<Avatar/>}>
-                        <HeaderUserNavDesktop />
+                        <UserNav />
                     </Suspense>
-                </Box>
-            </Box>
+                </Toolbar>
+            </AppBar>
             <SearchModalDesktop open={searchOpen} onClose={() => setSearchOpen(false)} />
         </>
     )
 }
 
-function Footer() {
-    return (
-        <></>
-    )
-}
 
 export default function DesktopLayout({children}: {children: React.ReactNode}) {
     return (
@@ -103,7 +98,6 @@ export default function DesktopLayout({children}: {children: React.ReactNode}) {
             >
                 {children}
             </Box>
-            <Footer />
         </>
     )
 }

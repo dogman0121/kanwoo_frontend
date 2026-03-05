@@ -35,9 +35,9 @@ export default function AuthRecovery({onSuccess}: {onSuccess?: () => void}) {
             return router.push(process.env.NEXT_PUBLIC_SITE_URL)
         }
 
-        const response = await authService.recovery(token, password);
+        const {data} = await authService.recovery(token, password);
 
-        if (response.msg === "Password updated"){
+        if (data.success){
             onSuccess?.()
             setPanel(AuthPanel.LOGIN);
         }

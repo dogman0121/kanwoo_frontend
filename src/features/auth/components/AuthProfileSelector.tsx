@@ -1,6 +1,6 @@
 "use client"
 
-import Profile from "@/types/profile";
+import Profile from "@/types/profile/profile";
 import { Avatar, Box, CircularProgress, List, ListItemAvatar, ListItemButton, ListItemText, Paper, Typography } from "@mui/material";
 import { useContext } from "react"
 import authPanelContext from "../context/authPanelContext";

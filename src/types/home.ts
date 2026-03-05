@@ -1,5 +1,5 @@
 import HeroBlock from "./home/heroBlock";
-import Manga from "./manga";
+import Manga from "./manga/manga";
 
 export default interface Home {
     hero: HeroBlock[],

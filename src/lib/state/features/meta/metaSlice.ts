@@ -1,4 +1,3 @@
-import Manga from "@/types/manga";
 import Meta from "@/types/meta";
 import { createSlice } from "@reduxjs/toolkit";
 

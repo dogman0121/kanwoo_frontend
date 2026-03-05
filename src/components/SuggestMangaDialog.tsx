@@ -1,36 +1,36 @@
 "use client"
 
-import { clientFetch } from "@/lib/api/clientFetch";
+import { clientFetch } from "@/lib/fetch/clientFetch";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogProps, DialogTitle, TextField } from "@mui/material";
 import { ChangeEvent, useState } from "react";
 import AppSnackbar from "./AppSnackbar";
+import { Controller, useForm } from "react-hook-form";
+
+export interface SuggestMangaForm {
+    name: string,
+    link: string,
+    comment: string
+}
 
 export default function SuggestMangaDialog({onClose, ...props}: Omit<DialogProps, "children">) {
-    const [name, setName] = useState("")
-
-    const [link, setLink] = useState("")
-
-    const [comment, setComment] = useState("")
 
     const [successSnackbarOpen, setSuccessSnackbarOpen] = useState(false)
 
-    const handleSuggest = async () => {
-        const formData = new FormData();
+    const {handleSubmit, control, formState: {errors}} = useForm<SuggestMangaForm>({
+        mode: "onChange"
+    })
 
-        formData.append("name", name);
-        formData.append("link", link)
-        formData.append("comment", comment);
-
-        const response = await clientFetch.post("/manga/suggestions", {
-            body: formData
+    const handleSuggest = async (data: SuggestMangaForm) => {
+        await clientFetch.post("/manga/suggest", {
+            body: JSON.stringify({
+                name: data.name,
+                link: data.link,
+                comment: data.comment
+            })
         })
 
-        const {data} = await response.json()
-
-        if (data?.success) {
-            setSuccessSnackbarOpen(true)
-            onClose?.({}, "escapeKeyDown")
-        }
+        setSuccessSnackbarOpen(true)
+        onClose?.({}, "escapeKeyDown")
     } 
     
     return (
@@ -38,52 +38,80 @@ export default function SuggestMangaDialog({onClose, ...props}: Omit<DialogProps
             <Dialog onClose={onClose} {...props}>
                 <DialogTitle>Предложение манги</DialogTitle>
                 <DialogContent
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        rowGap: "15px"
-                    }}
                 >
-                    <TextField
-                        required
-                        fullWidth 
-                        label="Название"
-                        value={name}
-                        helperText="Названиие манги"
-                        onInput={(event: ChangeEvent<HTMLInputElement>) => {
-                            setName(event.target.value)
-                        }}
-                    />
-                    <TextField 
-                        fullWidth
-                        required
-                        label="Ссылка"
-                        type="url"
-                        helperText="Ссылка на источник (MAL и др.)"
-                        value={link}
-                        onInput={(event: ChangeEvent<HTMLInputElement>) => {
-                            setLink(event.target.value)
-                        }}
-                    />
-                    <TextField 
-                        fullWidth
-                        label="Комментарий"
-                        helperText="Комментарий к тайтлу (все, что может быть полезно)"
-                        multiline
-                        rows={3}
-                        value={comment}
-                        onInput={(event: ChangeEvent<HTMLInputElement>) => {
-                            setComment(event.target.value)
-                        }}
-                    />
+                    <form id="manga-suggest-form" onSubmit={handleSubmit(handleSuggest)}>
+                        <Box
+                            sx={{
+                               display: "flex",
+                                flexDirection: "column",
+                                rowGap: "15px" 
+                            }}
+                        >
+                            <Controller 
+                                name="name"
+                                control={control}
+                                rules={{
+                                    required: true
+                                }}
+                                render={({field}) => (
+                                    <TextField
+                                        required
+                                        fullWidth 
+                                        label="Название"
+                                        helperText={ errors.name ? "Это поле должно быть запонено" : "Названиие манги" }
+                                        error={errors.name ? true : false}
+                                        {...field}
+                                    />
+                                )}
+                            />
+                            <Controller 
+                                name="link"
+                                control={control}
+                                rules={{
+                                    required: true
+                                }}
+                                render={({field}) => (
+                                    <TextField 
+                                        fullWidth
+                                        required
+                                        label="Ссылка"
+                                        type="url"
+                                        helperText={ errors.link ? "Это поле должно быть заполнено" : "Ссылка на источник (MAL и др.)" }
+                                        error={errors.link ? true : false}
+                                        {...field}
+                                    />
+                                )}
+                            />
+                            <Controller 
+                                name="comment"
+                                control={control}
+                                render={({field}) => (
+                                    <TextField 
+                                        fullWidth
+                                        label="Комментарий"
+                                        helperText="Комментарий к тайтлу (все, что может быть полезно)"
+                                        multiline
+                                        rows={3}
+                                        {...field}
+                                    />
+                                )}
+                            />
+                        </Box>
+                    </form>
                 </DialogContent>
                 <DialogActions>
                     <Button variant="outlined"
                         onClick={() => onClose?.({}, "escapeKeyDown")}
-                    >Отмена</Button>
-                    <Button variant="contained"
-                        onClick={handleSuggest}
-                    >Отправить</Button>
+                    >
+                        Отмена
+                    </Button>
+                    <Button 
+                        variant="contained"
+                        form="manga-suggest-form"
+                        type="submit"
+                    >
+                        Отправить
+                    </Button>
                 </DialogActions>
             </Dialog>
             <AppSnackbar 

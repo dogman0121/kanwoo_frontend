@@ -1,15 +1,14 @@
 "use client"
 
-import { clientFetch } from "@/lib/api/clientFetch";
+import { clientFetch } from "@/lib/fetch/clientFetch";
+import Manga from "@/types/manga/manga";
 
 
 class SearchService {    
     async search(query: string, section: string, filters?: Map<string, string[]>) {
         const params = this.compileParams(query, section, filters);
         
-        const response = await clientFetch.get("/search?" + new URLSearchParams(params).toString())
-        
-        return response.json();
+        return await clientFetch.get<Manga[]>("/search?" + new URLSearchParams(params).toString())
     }
 
     compileParams(query: string, section: string, filters?: Map<string, string[]>) {

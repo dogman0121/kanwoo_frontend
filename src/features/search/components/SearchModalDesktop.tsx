@@ -50,16 +50,18 @@ export default function SearchModalDesktop({onClose, ...props}: Omit<ModalProps,
                                     padding: "10px",
                                 }}
                             >
-                                <SearchInputDesktop/>
-                                <SearchSectionSelector 
+                                <SearchInputDesktop
+                                    fullWidth
+                                />
+                                {/* <SearchSectionSelector 
                                     sx={{
                                         mt: "5px"
                                     }}
-                                />
+                                /> */}
                             </Box>
                             <ScrollableBox
                                 sx={{
-                                    p: "5px 10px",
+                                    p: "5px 10px 10px",
                                     flexGrow: 1,
                                     overflowY: "auto"
                                 }}

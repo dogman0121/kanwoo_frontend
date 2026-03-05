@@ -1,11 +1,9 @@
 import { useContext } from "react";
 import SearchContext from "../context/SearchContext";
-import { Box, ListItem, ListItemButton, Paper, SxProps } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { Box, ListItemButton, SxProps } from "@mui/material";
 import SearchList from "./SearchList";
 import Poster from "@/components/Poster";
-import Manga from "@/types/manga";
-import SearchSection from "../types/searchSection";
+import Manga from "@/types/manga/manga";
 
 
 function MangaItem({ item }: { item: Manga }) {

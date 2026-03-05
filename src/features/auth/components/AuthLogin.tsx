@@ -20,14 +20,14 @@ export default function AuthLogin({onSuccess}: {onSuccess?: () => void}) {
     const {panel, setPanel} = useContext(authPanelContext);
 
     const handleLogin = async() => {
-        const {error} = await authService.login(login, password);
+        try {
+            await authService.login(login, password);
 
-        if (error) {
-            setWrongForm(true);
-        }
-        else {
             setPanel(AuthPanel.CHOOSE_PROFILE)
             onSuccess?.()
+        }
+        catch (_error) {
+            setWrongForm(true)
         }
 
     }
@@ -40,13 +40,13 @@ export default function AuthLogin({onSuccess}: {onSuccess?: () => void}) {
             <h2>Авторизация</h2>
             { wrongForm && (
                 <AuthError>
-                    Неправильное имя или пароль
+                    Неправильная почта или пароль
                 </AuthError>
             )}
             <AuthForm>
                 <AuthInput
                     error={wrongForm}
-                    label="Login"
+                    label="Почта"
                     variant="outlined"
                     fullWidth
                     onInput={(e) => {setLogin((e.target as HTMLInputElement).value)}}
@@ -54,7 +54,7 @@ export default function AuthLogin({onSuccess}: {onSuccess?: () => void}) {
 
                 <AuthInput
                     error={wrongForm}
-                    label="Password"
+                    label="Пароль"
                     variant="outlined"
                     type="password"
                     fullWidth

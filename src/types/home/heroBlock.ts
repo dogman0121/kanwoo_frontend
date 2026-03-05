@@ -1,7 +1,8 @@
 interface HeroBlockManga {
     logo: string,
     name: string,
-    background: string
+    background: string,
+    slug: string
 }
 
 export default interface HeroBlock {

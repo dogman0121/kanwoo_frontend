@@ -18,8 +18,8 @@ export default function AuthForgot() {
     const { setPanel, panel } = useContext(authPanelContext)
 
     const handleForgot = async () => {
-        const response = await authService.forgot(email);
-        if (response.msg === "Email sent") {
+        const {data} = await authService.forgot(email);
+        if (data.success) {
             setEmailSent(true);
         }
     }

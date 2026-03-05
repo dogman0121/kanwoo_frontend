@@ -1,16 +1,16 @@
 import Home from "@/types/home";
 import { createSlice } from "@reduxjs/toolkit";
 
-export interface HomeState {
+export interface HomePageState {
     home: Home | null | undefined
 }
 
-const initialState: HomeState = {
+const initialState: HomePageState = {
     home: undefined
 }
 
-export const homeSlice = createSlice({
-    name: "home",
+export const homePageSlice = createSlice({
+    name: "home_page",
     initialState,
     reducers: {
         setHome: (state, action) => {
@@ -19,6 +19,6 @@ export const homeSlice = createSlice({
     }
 })
 
-export const { setHome } = homeSlice.actions
+export const { setHome } = homePageSlice.actions
 
-export default homeSlice.reducer
+export default homePageSlice.reducer

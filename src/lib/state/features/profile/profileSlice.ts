@@ -1,4 +1,4 @@
-import Profile from "@/types/profile";
+import Profile from "@/types/profile/profile";
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface ProfileState {

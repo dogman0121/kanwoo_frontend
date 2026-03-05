@@ -3,7 +3,7 @@
 import { AppTab, AppTabContext, AppTabList, AppTabPanel } from "@/components/AppTabs"
 import { setProfile } from "@/lib/state/features/profile/profileSlice"
 import { useAppStore } from "@/lib/state/hooks"
-import Profile from "@/types/profile"
+import Profile from "@/types/profile/profile"
 import { Avatar, Box, Button, Chip, Container, Typography } from "@mui/material"
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"

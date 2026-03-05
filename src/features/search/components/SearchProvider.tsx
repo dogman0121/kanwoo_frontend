@@ -3,10 +3,9 @@
 import { useEffect, useState, useRef } from "react";
 import SearchContext from "../context/SearchContext";
 import { searchService } from "../services/api/searchService";
-import Manga from "@/types/manga";
-import Sections from "../types/searchSection";
-import Team from "@/types/profile";
+import Team from "@/types/profile/profile";
 import SearchSection from "../types/searchSection";
+import Manga from "@/types/manga/manga";
 
 
 function SearchProvider({ children, emptyQuery}: { children: React.ReactNode, emptyQuery: boolean }) {
@@ -34,7 +33,7 @@ function SearchProvider({ children, emptyQuery}: { children: React.ReactNode, em
         timerId.current = setTimeout(async () => {
             const {data} = await searchService.search(query, section, filters);
 
-            setResults([...data, ...data, ...data, ...data, ...data]);
+            setResults(data);
 
             setIsLoading(false);
         }, 500);

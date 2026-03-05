@@ -1,7 +1,6 @@
 "use client"
 
 import { Modal } from "@mui/material"
-import Auth from "./AuthWrapper"
 import AuthPanelProvider from "./AuthPanelProvider"
 import { useEffect, useState } from "react"
 import { AuthPanel } from "../types/AuthPanel"
@@ -12,13 +11,14 @@ import AuthLogin from "./AuthLogin"
 import AuthRegister from "./AuthRegister"
 import AuthForgot from "./AuthForgot"
 import AuthProfileSelector from "./AuthProfileSelector"
-import Profile from "@/types/profile"
-import { profileClientApi } from "@/lib/api/features/profile/client"
+import Profile from "@/types/profile/profile"
+import { profileClientApi } from "@/lib/fetch/features/profile/client"
 import AppSnackbar from "@/components/AppSnackbar"
+import { clientFetch } from "@/lib/fetch/clientFetch"
 
 
 export default function AuthModal({open, onClose}: {open: boolean, onClose: () => void}) {
-    const [profiles, setProfiles] = useState([]);
+    const [profiles, setProfiles] = useState<Profile[]>([]);
     
     const [currentPanel, setCurrentPanel] = useState(AuthPanel.LOGIN);
 
@@ -31,7 +31,7 @@ export default function AuthModal({open, onClose}: {open: boolean, onClose: () =
     }, [open])
 
     const onLogin = async () => {
-        const profiles = await profileClientApi.getProfiles()
+        const {data: profiles} = await clientFetch.get<Profile[]>("/auth/getProfiles")
 
         setProfiles(profiles)
     }

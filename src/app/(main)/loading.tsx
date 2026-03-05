@@ -1,31 +1,26 @@
 import { Container, Skeleton } from "@mui/material";
-import MangaCarouselSkeleton from "./_components/MangaCarouselSkeleton";
+import MangaCarouselSkeleton from "./(with_footer)/_components/MangaCarouselSkeleton";
+import DesktopHeroSliderSkeleton from "./(with_footer)/_components/DesktopHeroSliderSkeleton";
 
 export default async function Loading() {
 
     return (
-        <Container 
-            maxWidth="lg"
-            sx={{
-                mt: "15px",
-                display: "flex",
-                flexDirection: "column",
-                rowGap: "25px"
-            }}
-        >
-            <Skeleton 
-                variant="rectangular"
-                width={"100%"}
-                height={"auto"}
+        <>
+            <DesktopHeroSliderSkeleton />
+            <Container 
+                maxWidth="lg"
                 sx={{
-                    borderRadius: "16px",
-                    aspectRatio: "2/1"
+                    mt: "15px",
+                    display: "flex",
+                    flexDirection: "column",
+                    rowGap: "25px"
                 }}
-            />
-            <MangaCarouselSkeleton />
-            <MangaCarouselSkeleton />
-            <MangaCarouselSkeleton />
-            <MangaCarouselSkeleton />
-        </Container>
+            >
+                <MangaCarouselSkeleton />
+                <MangaCarouselSkeleton />
+                <MangaCarouselSkeleton />
+                <MangaCarouselSkeleton />
+            </Container>
+        </>
     )
 }

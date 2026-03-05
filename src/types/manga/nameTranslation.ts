@@ -1,4 +1,6 @@
+import Language from "../language";
+
 export default interface NameTranslation {
-    lang: string,
+    lang: Language,
     name: string
 }

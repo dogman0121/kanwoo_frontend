@@ -1,7 +1,7 @@
-import Manga from "@/types/manga";
-import { Box, styled, Typography, useTheme } from "@mui/material";
+import { Box, styled, SxProps, Typography, useTheme } from "@mui/material";
 import Link from "next/link";
 import Poster from "./Poster";
+import Manga from "@/types/manga/manga";
 
 const TitleItemSquareText = styled(Typography)(() => ({
     lineHeight: "1.3",
@@ -10,16 +10,17 @@ const TitleItemSquareText = styled(Typography)(() => ({
 
 export interface MangaItemProps {
     manga: Manga,
+    sx?: SxProps,
     rightTopAdornment?: React.ReactElement
 }
 
-function MangaItemSquare({manga, rightTopAdornment}: MangaItemProps) {
+export function MangaItemSquare({manga, sx, rightTopAdornment}: MangaItemProps) {
     const theme = useTheme();
 
     return (
         <Box 
             className="TitleItem"
-            sx={{position: "relative"}}
+            sx={{position: "relative", ...sx}}
         >
             <Link 
                 draggable={false}
@@ -29,7 +30,7 @@ function MangaItemSquare({manga, rightTopAdornment}: MangaItemProps) {
                 }}
             >
                 <Poster
-                    src={manga.poster?.small || ""} 
+                    src={manga.poster?.medium || ""} 
                     width="100%"
                 />
                 <Box
@@ -84,13 +85,14 @@ function MangaItemRect({manga}: MangaItemProps) {
 
 export default function MangaItem({
     manga,
+    sx,
     rightTopAdornment, 
     form
 }: {form: "square" | "rectangle"} & MangaItemProps) {
     return (
         <>
             {form == "square" ?
-                <MangaItemSquare manga={manga} rightTopAdornment={rightTopAdornment}/>
+                <MangaItemSquare manga={manga} sx={sx} rightTopAdornment={rightTopAdornment}/>
                 :
                 <MangaItemRect manga={manga} rightTopAdornment={rightTopAdornment}/>
             }

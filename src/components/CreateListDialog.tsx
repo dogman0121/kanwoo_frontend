@@ -21,7 +21,6 @@ import PublicRoundedIcon from '@mui/icons-material/PublicRounded';
 import LockRoundedIcon from '@mui/icons-material/LockRounded';
 import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
 import { ChangeEvent, useState } from "react";
-import { listClientApi } from "@/lib/api/features/list/client";
 import { useRouter } from "next/navigation";
 import List from "@/types/list";
 import AppSnackbar from "./AppSnackbar";
@@ -40,13 +39,7 @@ export default function CreateListDialog({onClose, ...props}: Omit<DialogProps, 
 
     const handleAddList = async () => {
         try {
-            const list: List = await listClientApi.addList(listName, listVisibility);
-
-            router.push(`/lists/${list.id}`)
-
-            setListName("")
-            setListVisibility("private")
-
+            
             onClose?.({}, "backdropClick")
         }
         catch (e) {
@@ -66,7 +59,7 @@ export default function CreateListDialog({onClose, ...props}: Omit<DialogProps, 
                         fullWidth
                         value={listName}
                         label="Название"
-                        onInput={(event: ChangeEvent<HTMLInputElement>) => {
+                        onChange={(event: ChangeEvent<HTMLInputElement>) => {
                             setListName(event.target.value)
                         }}
                     />
