@@ -6,7 +6,7 @@ import StudioMangaProvider from "./_components/StudioMangaProvider";
 import { Box } from "@mui/material";
 import StudioMangaDrawer from "./_components/StudioMangaDrawer";
 import { serverFetch } from "@/lib/fetch/serverFetch";
-import { GetStudioPageManga } from "@/app/api/studio/manga/[mangaSlug]/getManga/route";
+import { GetStudioPageManga } from "@/app/api/studio/manga/[mangaSlug]/route";
 
 export default async function Layout({
     children,

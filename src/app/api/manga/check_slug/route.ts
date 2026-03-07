@@ -1,4 +1,4 @@
-import { fetchApi } from "@/lib/api/fetchApi";
+import { fetchApi, HTTP_METHODS } from "@/lib/api/fetchApi";
 import { NextRequest } from "next/server";
 
 export async function GET(
@@ -7,5 +7,5 @@ export async function GET(
     const searchParams = request.nextUrl.searchParams;
     const slug = searchParams.get('slug');
 
-    return await fetchApi(request, `/manga/check_slug?slug=${slug}`, {method: "GET"})
+    return await fetchApi(request, `/manga/check_slug?slug=${slug}`, HTTP_METHODS.GET)
 }

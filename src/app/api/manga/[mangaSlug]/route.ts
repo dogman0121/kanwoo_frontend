@@ -1,4 +1,4 @@
-import { fetchManyApi } from "@/lib/api/fetchApi";
+import { fetchManyApi, HTTP_METHODS } from "@/lib/api/fetchApi";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest,
@@ -9,8 +9,9 @@ export async function GET(request: NextRequest,
     return await fetchManyApi(
         request, 
         [
-            {name: "manga", url: `/manga/${mangaSlug}`, options: { method: "GET" }},
-            {name: "mangaPermission", url: `/manga/${mangaSlug}/permissions`, options: { method: "GET" }}
+            {name: "manga", url: `/manga/${mangaSlug}`, method: HTTP_METHODS.GET},
+            {name: "mangaPermission", url: `/manga/${mangaSlug}/permissions`, method: HTTP_METHODS.GET},
+            {name: "readingProgress", url: `/manga/${mangaSlug}/progress`, method: HTTP_METHODS.GET}
         ]
     )
 }

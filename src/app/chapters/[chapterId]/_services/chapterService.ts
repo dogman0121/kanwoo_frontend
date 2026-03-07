@@ -1,6 +1,6 @@
 "use client"
 
-import { GetChapterResponse } from "@/app/api/chapters/[chapterId]/getChapter/route";
+import { GetChapterResponse } from "@/app/api/chapters/[chapterId]/route";
 import { clientFetch } from "@/lib/fetch/clientFetch";
 import Chapter from "@/types/chapter/chapter";
 

@@ -1,5 +1,5 @@
 import { fetchApi, HTTP_METHODS } from "@/lib/api/fetchApi";
 
 export async function POST(request: Request) {
-    return fetchApi(request, "/manga/suggestions", HTTP_METHODS.POST)
+    return fetchApi(request, "/feedbacks", HTTP_METHODS.POST)
 }

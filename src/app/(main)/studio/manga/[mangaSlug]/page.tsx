@@ -25,10 +25,10 @@ import MangaPromoBackground from "../../_features/manga/components/MangaPromoBac
 import MangaPromoLogo from "../../_features/manga/components/MangaPromoLogo";
 import { useEffect, useState } from "react";
 import { clientFetch } from "@/lib/fetch/clientFetch";
-import { GetStudioMangaEditData } from "@/app/api/studio/manga/[mangaSlug]/getEditData/route";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import MangaEditData from "@/types/manga/mangaEditData";
 import Manga from "@/types/manga/manga";
+import { GetStudioMangaEditData } from "@/app/api/studio/manga/[mangaSlug]/forms/edit/route";
 
 interface MangaEditForm {
     slug: string,

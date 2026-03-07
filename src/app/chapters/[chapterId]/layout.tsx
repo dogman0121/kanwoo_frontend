@@ -4,7 +4,7 @@ import ChapterProvider from "./_components/ChapterProvider";
 import { AppBar, Container, CssBaseline, ThemeProvider, Toolbar } from "@mui/material";
 import { chapterTheme } from "./theme";
 import ReadingProgress from "@/types/manga/readingProgress";
-import { GetChapterResponse } from "@/app/api/chapters/[chapterId]/getChapter/route";
+import { GetChapterResponse } from "@/app/api/chapters/[chapterId]/route";
 
 export default async function Layout({
     children,

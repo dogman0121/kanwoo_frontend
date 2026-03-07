@@ -5,7 +5,7 @@ export async function POST(request: Request, {
 }: {
     params: Promise<{chapterId: string}>
 }) {
-    const {chapterId} = await params
+    const {chapterId} = await params;
 
-    return fetchApi(request, `/chapters/${chapterId}/reports`, HTTP_METHODS.POST)
+    return fetchApi(request, `/chapters/${chapterId}/progress`, HTTP_METHODS.POST)
 }

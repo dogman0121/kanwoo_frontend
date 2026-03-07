@@ -21,10 +21,7 @@ export async function fetchApi(request: Request, url: string, method: HTTP_METHO
         method: method
     })
 
-    const res = await fetch(proxyRequest)
-    console.log('Status:', res.status, res.statusText);
-
-    return res
+    return await fetch(proxyRequest)
 }
 
 export async function fetchManyApi(request: Request, requests: RequestApiSchema[]) {

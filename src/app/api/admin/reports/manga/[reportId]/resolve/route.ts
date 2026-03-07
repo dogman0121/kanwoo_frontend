@@ -1,4 +1,9 @@
-import { fetchApi } from "@/lib/api/fetchApi";
+import { fetchApi, HTTP_METHODS } from "@/lib/api/fetchApi";
+import { NextRequest } from "next/server";
+
+export async function GET(request: NextRequest) {
+    return fetchApi(request, "/admin/manga/reports", HTTP_METHODS.GET)
+}
 
 export async function POST(
     request: Request, 
@@ -10,11 +15,5 @@ export async function POST(
 
     const {reportId} = await params
 
-    return fetchApi(request, `/admin/manga/reports/${reportId}`, {
-        method: "DELETE",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: request.body
-    })
+    return fetchApi(request, `/admin/manga/reports/${reportId}`, HTTP_METHODS.POST)
 }

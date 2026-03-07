@@ -1,4 +1,4 @@
-import { fetchApi } from "@/lib/api/fetchApi"
+import { fetchApi, HTTP_METHODS } from "@/lib/api/fetchApi"
 
 export async function POST(request: Request, {
     params
@@ -7,11 +7,5 @@ export async function POST(request: Request, {
 }) {
     const {feedbackId} = await params
 
-    return fetchApi(request, `/admin/feedbacks/${feedbackId}`, {
-        method: "DELETE",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: request.body
-    })
+    return fetchApi(request, `/admin/feedbacks/${feedbackId}`, HTTP_METHODS.DELETE)
 }
