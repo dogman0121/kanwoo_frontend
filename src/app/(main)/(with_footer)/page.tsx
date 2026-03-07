@@ -12,7 +12,7 @@ export default async function Page({
 }) {
     const { viewport } = await searchParams;
 
-    const {data: home} = await serverFetch.get<Home>("/getHome")
+    const {data: home} = await serverFetch.get<Home>("/home")
 
     return (
         <HomeProvider home={home}>
