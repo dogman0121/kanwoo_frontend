@@ -1,9 +1,11 @@
 "use client"
 
-import AuthModal from "@/features/auth/components/AuthModal";
-import { Button } from "@mui/material";
+import { AuthSection } from "@/features/auth/types/AuthPanel";
+import { Box, Button, Dialog, Modal } from "@mui/material";
+import dynamic from "next/dynamic";
 import { useState } from "react"
-import CreateListDialog from "../../../components/CreateListDialog";
+
+const Auth = dynamic(() => import("@/features/auth/components/Auth"))
 
 export default function AnonymusUserNav() {
     const [authModalOpened, setAuthModalOpened] = useState(false);
@@ -20,10 +22,14 @@ export default function AnonymusUserNav() {
             >
                 Войти
             </Button>
-            <AuthModal 
+            <Dialog
                 open={authModalOpened}
-                onClose={() => {setAuthModalOpened(false)}}
-            />
+                onClose={() => setAuthModalOpened(false)}
+            >
+                <Auth 
+                    defaultSection={AuthSection.LOGIN}
+                />
+            </Dialog>
         </>
     )
 }

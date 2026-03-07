@@ -1,99 +1,107 @@
-import { NextRequest, NextResponse, userAgent } from 'next/server'
+import { NextRequest, NextResponse, userAgent } from "next/server"
 import * as jose from "jose"
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+    const { pathname } = request.nextUrl
 
-  let response: NextResponse;
+    let response: NextResponse
 
-  // Recursion protect
-  if (pathname.includes("/auth/refresh")) {
-    return NextResponse.next();
-  }
+    const headers = new Headers(request.headers)
+    let setCookieHeaders: string[] = []
 
-  const headers = new Headers(request.headers);
-  let setCookieHeaders: string[] = [];
-
-  // Refreshing tokens if expired
-  const accessTokenCookie = request.cookies.get("access_token_cookie");
-
-  if (accessTokenCookie) {
-    try {
-      const jwtData = jose.decodeJwt(accessTokenCookie.value);
-      const exp = jwtData.exp;
-
-      if (exp && exp * 1000 < Date.now()) {
-        const csrfRefreshToken = request.cookies.get("csrf_refresh_token")?.value;
-        
-        const refreshResponse = await fetch(new URL("/api/auth/refresh", request.url), {
-          method: "POST",
-          headers: { 
-            ...request.headers,
-            "X-CSRF-TOKEN": csrfRefreshToken || "",
-            "Cookie": request.cookies.toString()
-          },
-        });
-
-        if (refreshResponse.ok) {
-          setCookieHeaders = refreshResponse.headers.getSetCookie();
-          
-          // Set updated cookies
-          for (const cookieHeader of setCookieHeaders) {
-            const [part] = cookieHeader.split(";");
-            const [name, value] = part.split("=").map(s => s.trim());
-
-            request.cookies.set(name, value);
-          }
-          headers.set("cookie", request.cookies.toString());
-
-          const newCSRF = request.cookies.get("csrf_access_token")?.value;
-          if (newCSRF) headers.set("X-CSRF-TOKEN", newCSRF);
-        }
-      }
-    } catch (e) {
-      console.error("JWT Error:", e);
+    // При обоновлении токена отключаем middleware 
+    if (pathname.includes("/auth/refresh")) {
+        return NextResponse.next()
     }
-  }
-  
-  
-  // If page, detect client device
-  if (!pathname.startsWith("/api")) {
-    const url = request.nextUrl.clone();
-    const { device } = userAgent(request);
-    const viewport = device.type || 'desktop';
 
-    // Add device in searchParams
-    url.searchParams.set('viewport', viewport);
+    // Получаем токен
+    const accessTokenCookie = request.cookies.get("access_token_cookie")
 
-    response = NextResponse.rewrite(url, {
-      request: { headers }
-    });
-    response.headers.set("X-Device-Type", viewport);
-  } else {
-    response = NextResponse.next({
-      request: { headers }
-    });
-  }
+    if (accessTokenCookie != undefined) {
+        try {
+            // Получаем дату истечения jwt-токена
+            const exp = jose.decodeJwt(accessTokenCookie.value).exp
 
-  // Add Set-Cookie
-  if (setCookieHeaders.length > 0) {
-    setCookieHeaders.forEach(cookie => {
-      response.headers.append("Set-Cookie", cookie);
-    });
-  }
+            // Если токен истек
+            if (exp && exp * 1000 < Date.now()) {
+                const csrfRefreshToken = request.cookies.get("csrf_refresh_token")?.value
 
-  return response;
+                // Запрос на обновление токена
+                const refreshResponse = await fetch(new URL("/api/auth/refresh", request.url), {
+                    method: "POST",
+                    headers: {
+                        ...request.headers,
+                        "X-CSRF-TOKEN": csrfRefreshToken || "",
+                        "Cookie": request.cookies.toString(),
+                    },
+                })
+
+                // Проверяем успшность запроса
+                if (refreshResponse.ok) {
+                    setCookieHeaders = refreshResponse.headers.getSetCookie()
+
+                    for (const cookieHeader of setCookieHeaders) {
+                        const [part] = cookieHeader.split(";")
+                        const [name, value] = part.split("=").map((s) => s.trim())
+
+                        request.cookies.set(name, value)
+                    }
+                    headers.set("cookie", request.cookies.toString())
+
+                    if (["POST", "PUT", "DELETE", "PATCH"].indexOf(request.method)) {
+                        const newCSRF = request.cookies.get("csrf_access_token")?.value
+
+                        if (newCSRF) 
+                            headers.set("X-CSRF-TOKEN", newCSRF)
+                    }
+                } else {
+                    setCookieHeaders.push("access_token_cookie=;max-age=-1;")
+                    setCookieHeaders.push("csrf_access_token=;max-age=-1;")
+                    setCookieHeaders.push("csrf_refresh_token=;max-age=-1;")
+                    setCookieHeaders.push("resfresh_token_cookie=;max-age=-1;")
+                }
+            }
+        } catch (e) {
+            console.error("JWT Error:", e)
+        }
+    }
+
+    if (!pathname.startsWith("/api")) {
+        const url = request.nextUrl.clone()
+        const { device } = userAgent(request)
+        const viewport = device.type || "desktop"
+
+        url.searchParams.set("viewport", viewport)
+
+        response = NextResponse.rewrite(url, {
+            request: { headers },
+        })
+
+        response.headers.set("X-Device-Type", viewport)
+    } else {
+        response = NextResponse.next({
+            request: { headers },
+        })
+    }
+
+    if (setCookieHeaders.length > 0) {
+        setCookieHeaders.forEach((cookie) => {
+            response.headers.append("Set-Cookie", cookie)
+        })
+    }
+
+    return response
 }
 
 // Конфигурация матчера (оптимизация производительности)
 export const config = {
-  matcher: [
-    /*
-     * Исключаем:
-     * 1. /api/auth/refresh (чтобы не было рекурсии на уровне Next.js)
-     * 2. /_next (статика и чанки)
-     * 3. изображения, фавиконки и т.д.
-     */
-    '/((?!api/auth/refresh|_next/static|_next/image|favicon.ico|.*\\..*).*)',
-  ],
+    matcher: [
+        /*
+         * Исключаем:
+         * 1. /api/auth/refresh (чтобы не было рекурсии на уровне Next.js)
+         * 2. /_next (статика и чанки)
+         * 3. изображения, фавиконки и т.д.
+         */
+        "/((?!api/auth/refresh|_next/static|_next/image|favicon.ico|.*\\..*).*)",
+    ],
 }

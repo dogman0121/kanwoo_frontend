@@ -3,55 +3,45 @@ import { authService } from "../api/services/authService";
 import AuthError from "./ui/AuthError";
 import AuthForm from "./ui/AuthForm";
 import AuthInput from "./ui/AuthInput";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import AuthLink from "./ui/AuthLink";
-import authPanelContext from "../context/authPanelContext";
-import { AuthPanel } from "../types/AuthPanel";
 import AuthMessage from "./ui/AuthMessage";
 import { ApiError } from "@/lib/fetch/apiResponse";
+import authSectionContext from "../context/authSectionContext";
+import { AuthSection } from "../types/AuthPanel";
+import AppSnackbar from "@/components/AppSnackbar";
 
-export default function AuthRegister({onSuccess}: {onSuccess?: () => void}) {
+export default function AuthRegister() {
     const [emailSent, setEmailSent] = useState(false);
     
     const [email, setEmail] = useState("");
-
     const [password, setPassword] = useState("");
 
-    const [repeatPassword, setRepeatPassword] = useState("");
+    const [wrongForm, setWrongForm] = useState(false);
 
-    const [wrongForm, setWrongForm] = useState(0);
+    const [errorSnackbar, setErrorSnackbar] = useState(false)
 
-    const {panel, setPanel} = useContext(authPanelContext);
+    const {section, setSection} = useContext(authSectionContext);
 
     const handleRegister = async() => {
-        if (password == repeatPassword){
-            try {
-                await authService.register(email, password);
+        try {
+            await authService.register(email, password);
 
-                setEmailSent(true);
-                onSuccess?.()
-                return;
-                
-            } catch (error) {
-                if (error instanceof ApiError){
-                    if (error.code == "login_taken"){
-                        setWrongForm(3);
-                    }
-                    else if (error.code == "email_taken") {
-                        setWrongForm(2);
-                    }
-                    else {
-                        setWrongForm(10);
-                    }
+            setEmailSent(true);
+            return;
+            
+        } catch (error) {
+            if (error instanceof ApiError){
+                if (error.code == "email_taken") {
+                    setWrongForm(true);
+                } else {
+
                 }
             }
         }
-        else {
-            setWrongForm(1);
-        }
     }
 
-    if (panel != AuthPanel.REGISTER)
+    if (section != AuthSection.REGISTER)
         return null;
 
     if (emailSent)
@@ -64,37 +54,27 @@ export default function AuthRegister({onSuccess}: {onSuccess?: () => void}) {
 
     return (
         <>
-            <h2>Регистрация</h2>
-            { wrongForm !== 0 && (
+            <Typography variant="h2">Регистрация</Typography>
+            { wrongForm && (
                 <AuthError>
-                    {wrongForm === 1 && <>Пароли не совпадают</>}
-                    {wrongForm === 2 && <>Пользователь с такой почтой уже существует</>}
-                    {wrongForm === 3 && <>Данное имя пользователя занято</>}
-                    {wrongForm === 10 && <>Ошибка</>}
+                    Пользователь с такой почтой уже существует
                 </AuthError>
             )}
             <AuthForm>
                 <AuthInput
-                    error={wrongForm !== 0}
+                    error={wrongForm}
                     label="Почта"
                     variant="outlined"
                     type="email"
 
-                    onInput={(e) => {setEmail((e.target as HTMLInputElement).value)}}
+                    onChange={(e) => {setEmail(e.target.value)}}
                 />
                 <AuthInput
-                    error={wrongForm !== 0}
+                    error={wrongForm}
                     label="Пароль"
                     variant="outlined"
                     type="password"
-                    onInput={(e) => {setPassword((e.target as HTMLInputElement).value)}}
-                />
-                <AuthInput
-                    error={wrongForm !== 0}
-                    label="Повтор пароля"
-                    variant="outlined"
-                    type="password"
-                    onInput={(e) => {setRepeatPassword((e.target as HTMLInputElement).value)}}
+                    onChange={(e) => {setPassword(e.target.value)}}
                 />
             </AuthForm>
             <Button
@@ -102,7 +82,7 @@ export default function AuthRegister({onSuccess}: {onSuccess?: () => void}) {
                 variant="contained"
                 onClick={handleRegister}
                 sx={{
-                    mt: "10px"
+                    mt: "20px"
                 }}
             >
                 Зарегестрироваться
@@ -115,11 +95,19 @@ export default function AuthRegister({onSuccess}: {onSuccess?: () => void}) {
             >
                 Уже есть аккаунт? 
                 <AuthLink
-                    onClick={()=>{setPanel(AuthPanel.LOGIN)}}
+                    onClick={()=>{
+                        setSection(AuthSection.LOGIN)
+                    }}
                 >
                     Войти
                 </AuthLink>
             </Box>
+            <AppSnackbar 
+                open={errorSnackbar}
+                onClose={() => setErrorSnackbar(false)}
+                variant="error"
+                message="При отправке данных произошла ошибка"
+            />
         </>
     )
 }

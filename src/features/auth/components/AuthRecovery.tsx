@@ -2,28 +2,30 @@
 
 import { useContext, useState } from "react";
 import { authService } from "../api/services/authService";
-import authPanelContext from "../context/authPanelContext";
-import { AuthPanel } from "../types/AuthPanel";
-import { Button } from "@mui/material";
+import authPanelContext from "../context/authSectionContext";
+import { Button, Typography } from "@mui/material";
 import AuthError from "./ui/AuthError";
 import AuthForm from "./ui/AuthForm";
 import AuthInput from "./ui/AuthInput";
 import { useRouter, useSearchParams } from "next/navigation";
+import authSectionContext from "../context/authSectionContext";
+import { AuthSection } from "../types/AuthPanel";
 
-export default function AuthRecovery({onSuccess}: {onSuccess?: () => void}) {
+export default function AuthRecovery() {
+    const router = useRouter()
+    
     const [wrongForm, setWrongForm] = useState(false);
 
     const [password, setPassword] = useState("");
-
     const [repeatPassword, setRepeatPassword] = useState("");
 
-    const { setPanel } = useContext(authPanelContext);
-
-    const router = useRouter()
+    const { section, setSection } = useContext(authSectionContext);
 
     const urlParams = useSearchParams();
-        
     const token = urlParams.get("t");
+
+    if (section != AuthSection.RECOVERY) 
+        return null
 
     const handleRecovery = async () => {
         if (password !== repeatPassword)
@@ -35,11 +37,12 @@ export default function AuthRecovery({onSuccess}: {onSuccess?: () => void}) {
             return router.push(process.env.NEXT_PUBLIC_SITE_URL)
         }
 
-        const {data} = await authService.recovery(token, password);
+        try {
+            await authService.recovery(token, password);
 
-        if (data.success){
-            onSuccess?.()
-            setPanel(AuthPanel.LOGIN);
+            setSection(AuthSection.LOGIN);
+        } catch (_e) {
+            throw new Error("Failed to recovery")
         }
     }
 
@@ -51,7 +54,7 @@ export default function AuthRecovery({onSuccess}: {onSuccess?: () => void}) {
 
     return (
         <>
-            <h2>Восстановление пароля</h2>
+            <Typography variant="h2">Восстановление пароля</Typography>
             { wrongForm && (
                 <AuthError>
                     Пароли не совпадают
@@ -63,7 +66,7 @@ export default function AuthRecovery({onSuccess}: {onSuccess?: () => void}) {
                     label="Пароль"
                     variant="outlined"
                     type="password"
-                    onInput={(e) => {setPassword((e.target as HTMLInputElement).value)}}
+                    onChange={(e) => {setPassword(e.target.value)}}
                 />
 
                 <AuthInput
@@ -71,7 +74,7 @@ export default function AuthRecovery({onSuccess}: {onSuccess?: () => void}) {
                     label="Повтор пароля"
                     variant="outlined"
                     type="password"
-                    onInput={(e) => {setRepeatPassword((e.target as HTMLInputElement).value)}}
+                    onChange={(e) => {setRepeatPassword(e.target.value)}}
                 />
             </AuthForm>
             <Button
@@ -79,7 +82,7 @@ export default function AuthRecovery({onSuccess}: {onSuccess?: () => void}) {
                 variant="contained"
                 onClick={handleRecovery}
                 sx={{
-                    mt: "15px"
+                    mt: "20px"
                 }}
             >
                 Восстановить

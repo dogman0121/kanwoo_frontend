@@ -2,36 +2,52 @@
 
 import Profile from "@/types/profile/profile";
 import { Avatar, Box, CircularProgress, List, ListItemAvatar, ListItemButton, ListItemText, Paper, Typography } from "@mui/material";
-import { useContext } from "react"
-import authPanelContext from "../context/authPanelContext";
-import { AuthPanel } from "../types/AuthPanel";
+import { useContext, useEffect, useState } from "react"
+import { AuthSection } from "../types/AuthPanel";
+import authSectionContext from "../context/authSectionContext";
+import AuthProfile from "@/types/authProfile";
+import { authService } from "../api/services/authService";
+import LoadingBox from "@/components/LoadingBox";
 
-export default function AuthProfileSelector({
-    profiles,
-    onSuccess
-}: {
-    profiles: Profile[],
-    onSuccess?: (profile: Profile) => void
-}) {
-    const {panel} = useContext(authPanelContext);
+export default function AuthProfileSelector() {
+    const {section, setSection} = useContext(authSectionContext);
 
-    if (panel != AuthPanel.CHOOSE_PROFILE)
+    const [profiles, setProfiles] = useState<AuthProfile[]>([]);
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (section == AuthSection.CHOOSE_PROFILE) {
+            setIsLoading(true)
+
+            authService.getProfiles()
+                .then(resp => {
+                    const profiles = resp.data
+
+                    if (profiles.length == 0) {
+                        setSection(AuthSection.CREATE_PROFILE)
+                    }
+                    else {
+                        setProfiles(resp.data)
+                    }
+                })
+                .finally(() => {
+                    setIsLoading(false)
+                })
+        }
+
+        return () => {}
+    }, [section])
+
+    if (section != AuthSection.CHOOSE_PROFILE)
         return null;
 
     return (
         <>
-            <h2>Выбор профиля</h2>
-            {profiles.length == 0 ?
-                <Box
-                    sx={{
-                        py: "20px",
-                        display: "flex",
-                        justifyContent: "center"
-                    }}
-                >
-                    <CircularProgress/>
-                </Box> 
-                :
+            <Typography>Выбор профиля</Typography>
+            <LoadingBox
+                loading={isLoading}
+            >
                 <List
                     sx={{
                         py: 0
@@ -39,8 +55,7 @@ export default function AuthProfileSelector({
                 >
                     {profiles.map((profile: Profile, ind) => (
                         <Paper
-                            key={`profile_${ind}`}
-                            elevation={2}
+                            key={`auth_profile_${ind}`}
                             sx={[
                                 {
                                     boxShadow: "none",
@@ -53,7 +68,6 @@ export default function AuthProfileSelector({
                             ]}
                         >
                             <ListItemButton
-                                onClick={() => onSuccess?.(profile)}
                                 sx={{
                                     borderRadius: "10px"
                                 }}
@@ -69,7 +83,7 @@ export default function AuthProfileSelector({
                         </Paper>
                     ))}
                 </List>
-            }
+            </LoadingBox>
         </>
     )
 }

@@ -1,8 +1,9 @@
-export enum AuthPanel {
+export enum AuthSection {
     REGISTER,
     LOGIN,
     VERIFY,
     RECOVERY,
     FORGOT,
-    CHOOSE_PROFILE
+    CHOOSE_PROFILE,
+    CREATE_PROFILE
 }

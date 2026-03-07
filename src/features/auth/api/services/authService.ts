@@ -2,6 +2,7 @@
 
 import { ApiResponse } from "@/lib/fetch/apiResponse";
 import { clientFetch } from "@/lib/fetch/clientFetch";
+import AuthProfile from "@/types/authProfile";
 
 
 export const authService = {
@@ -60,4 +61,23 @@ export const authService = {
 
         return await response;
     },
+
+    async getProfiles() {
+        const response = await clientFetch.get<AuthProfile[]>('/profiles/get')
+
+        return response
+    },
+
+    async createProfile(name: string, slug: string) {
+        return await clientFetch.get<AuthProfile>("/profiles/create", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: name,
+                slug: slug
+            })
+        })
+    }
 }

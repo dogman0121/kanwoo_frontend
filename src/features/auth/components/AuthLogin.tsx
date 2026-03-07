@@ -1,30 +1,29 @@
 "use client"
 
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useContext, useState } from "react";
 import AuthError from "./ui/AuthError";
 import AuthForm from "./ui/AuthForm";
 import AuthLink from "./ui/AuthLink";
-import authPanelContext from "../context/authPanelContext";
-import { AuthPanel } from "../types/AuthPanel";
 import { authService } from "../api/services/authService";
 import AuthInput from "./ui/AuthInput";
+import authSectionContext from "../context/authSectionContext";
+import { AuthSection } from "../types/AuthPanel";
 
-export default function AuthLogin({onSuccess}: {onSuccess?: () => void}) {
+export default function AuthLogin() {
     const [wrongForm, setWrongForm] = useState(false);
 
-    const [login, setLogin] = useState("");
+    const [email, setEmail] = useState("");
 
     const [password, setPassword] = useState("");
 
-    const {panel, setPanel} = useContext(authPanelContext);
+    const {section, setSection} = useContext(authSectionContext);
 
     const handleLogin = async() => {
         try {
-            await authService.login(login, password);
+            await authService.login(email, password);
 
-            setPanel(AuthPanel.CHOOSE_PROFILE)
-            onSuccess?.()
+            setSection(AuthSection.CHOOSE_PROFILE)
         }
         catch (_error) {
             setWrongForm(true)
@@ -32,12 +31,12 @@ export default function AuthLogin({onSuccess}: {onSuccess?: () => void}) {
 
     }
 
-    if (panel != AuthPanel.LOGIN)
+    if (section != AuthSection.LOGIN)
         return null;
 
     return (
         <>
-            <h2>Авторизация</h2>
+            <Typography variant="h2">Авторизация</Typography>
             { wrongForm && (
                 <AuthError>
                     Неправильная почта или пароль
@@ -49,7 +48,7 @@ export default function AuthLogin({onSuccess}: {onSuccess?: () => void}) {
                     label="Почта"
                     variant="outlined"
                     fullWidth
-                    onInput={(e) => {setLogin((e.target as HTMLInputElement).value)}}
+                    onChange={(e) => {setEmail(e.target.value)}}
                 />
 
                 <AuthInput
@@ -58,7 +57,7 @@ export default function AuthLogin({onSuccess}: {onSuccess?: () => void}) {
                     variant="outlined"
                     type="password"
                     fullWidth
-                    onInput={(e) => {setPassword((e.target as HTMLInputElement).value)}}
+                    onChange={(e) => {setPassword(e.target.value)}}
                 />
             </AuthForm>
             <AuthLink
@@ -66,7 +65,9 @@ export default function AuthLogin({onSuccess}: {onSuccess?: () => void}) {
                     textAlign: "center",
                     marginTop: "10px"
                 }}
-                onClick={()=>{setPanel(AuthPanel.FORGOT)}}
+                onClick={()=>{
+                    setSection(AuthSection.FORGOT)
+                }}
             >
                 Забыли пароль?
             </AuthLink>
@@ -88,7 +89,9 @@ export default function AuthLogin({onSuccess}: {onSuccess?: () => void}) {
             >
                 Нет учетной записи? 
                 <AuthLink
-                    onClick={() => setPanel(AuthPanel.REGISTER)}
+                    onClick={() => setSection(
+                        AuthSection.REGISTER
+                    )}
                 >
                     Зарегестрироваться
                 </AuthLink>

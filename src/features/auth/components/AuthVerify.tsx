@@ -5,7 +5,7 @@ import { authService } from "../api/services/authService";
 import AuthMessage from "./ui/AuthMessage";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function AuthVerify({onSuccess}: {onSuccess?: () => void}) {
+export default function AuthVerify() {
     enum VERIFY_STATUS {
         OK,
         TOKEN_USED,
@@ -16,15 +16,11 @@ export default function AuthVerify({onSuccess}: {onSuccess?: () => void}) {
     const router = useRouter();
 
     const urlParams = useSearchParams();
-        
     const token = urlParams.get("t");
 
     useEffect(() => {
         if (token){
             authService.verify(token)
-                .then(() => {
-                    onSuccess?.()
-                })
                 .catch(error => {
                     if (error.code == "token_used")
                         setError(VERIFY_STATUS.TOKEN_USED)

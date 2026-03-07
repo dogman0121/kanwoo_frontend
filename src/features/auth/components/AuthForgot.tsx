@@ -2,29 +2,35 @@
 
 import { useContext, useState } from "react";
 import { authService } from "../api/services/authService";
-import { Box, Button, IconButton } from "@mui/material";
+import { Button, IconButton, Typography } from "@mui/material";
 import AuthForm from "./ui/AuthForm";
 import AuthInput from "./ui/AuthInput";
 import AuthMessage from "./ui/AuthMessage";
-import authPanelContext from "../context/authPanelContext";
-import { AuthPanel } from "../types/AuthPanel";
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+import authSectionContext from "../context/authSectionContext";
+import { AuthSection } from "../types/AuthPanel";
+import AppSnackbar from "@/components/AppSnackbar";
 
 export default function AuthForgot() {
     const [email, setEmail] = useState("");
 
     const [emailSent, setEmailSent] = useState(false);
 
-    const { setPanel, panel } = useContext(authPanelContext)
+    const { section, setSection } = useContext(authSectionContext)
+
+    const [reponseError, setResponseError] = useState(false)
 
     const handleForgot = async () => {
-        const {data} = await authService.forgot(email);
-        if (data.success) {
+        try {
+            await authService.forgot(email);
+
             setEmailSent(true);
+        } catch (e) {
+
         }
     }
 
-    if (panel != AuthPanel.FORGOT)
+    if (section != AuthSection.FORGOT)
         return null;
 
     if (emailSent)
@@ -37,19 +43,21 @@ export default function AuthForgot() {
 
     return (
         <>
-            <h2>
+            <Typography variant="h2">
                 <IconButton sx={{mr: "5px"}}
-                    onClick={() => setPanel(AuthPanel.LOGIN)}
+                    onClick={() => setSection(AuthSection.LOGIN)}
                 >
                     <ArrowBackRoundedIcon />
                 </IconButton>
                 Восстановление пароля
-            </h2>
+            </Typography>
             <AuthForm>
                 <AuthInput
                     label="Email"
                     variant="outlined"
-                    onInput={(e) => {setEmail((e.target as HTMLInputElement).value)}}
+                    onChange={(event) => {
+                        setEmail(event.target.value)
+                    }}
                 />
             </AuthForm>
             <Button
@@ -57,11 +65,17 @@ export default function AuthForgot() {
                 variant="contained"
                 onClick={handleForgot}
                 sx={{
-                    mt: "10px"
+                    mt: "20px"
                 }}
             >
                 Отправить
             </Button>
+            <AppSnackbar 
+                variant="error"
+                message="При отправке письма произошла ошибка. Попробуйте позже!"
+                open={reponseError}
+                onClose={() => setResponseError(false)}
+            />
         </>
     )
 }
