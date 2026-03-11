@@ -5,7 +5,8 @@ const nextConfig: NextConfig = {
   // reactStrictMode: false,
   experimental: {
     middlewareClientMaxBodySize: "100mb"
-  }
+  },
+  output: "standalone"
 };
 
 export default nextConfig;
