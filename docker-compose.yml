@@ -1,8 +1,8 @@
 services:
   # Node.js service (use with: docker compose up nextjs-standalone --build)
   kanwoo-frontend:
-    image: nextjs-standalone-image
-    container_name: "cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:kanwoo-backend-$IMAGE_TAG"
+    image: "cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:kanwoo-backend-$IMAGE_TAG"
+    container_name: kanwoo-frontend
     environment:
       NODE_ENV: production
       PORT: "3000"
