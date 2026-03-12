@@ -15,7 +15,7 @@ export interface RequestApiSchema {
 
 export async function fetchApi(request: Request, url: string, method: HTTP_METHODS) {
 
-    const proxyURL = process.env.NEXT_PUBLIC_API_URL + url
+    const proxyURL = process.env.API_URL + url
     const proxyRequest = new Request(proxyURL, {
         ...request,
         method: method
