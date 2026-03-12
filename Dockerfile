@@ -45,7 +45,7 @@ COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
 
 ENV NODE_ENV=production
-ENV NEXT_PUBLIC_SITE_URL="http://kanwoo.ru"
+ENV NEXT_PUBLIC_SITE_URL="https://kanwoo.ru"
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
