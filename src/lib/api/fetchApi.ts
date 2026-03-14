@@ -4,7 +4,8 @@ export enum HTTP_METHODS {
     GET = "GET",
     PATCH = "PATCH",
     DELETE = "DELETE",
-    PUT = "PUT"
+    PUT = "PUT",
+    HEAD = "HEAD"
 } 
 
 export interface RequestApiSchema {
@@ -14,10 +15,16 @@ export interface RequestApiSchema {
 }
 
 export async function fetchApi(request: Request, url: string, method: HTTP_METHODS) {
+    let body;
+
+    if (method != HTTP_METHODS.GET && method != HTTP_METHODS.HEAD){
+        body = await request.clone().arrayBuffer()
+    }
 
     const proxyURL = process.env.API_URL + url
     const proxyRequest = new Request(proxyURL, {
-        ...request,
+        headers: request.headers,
+        body: body,
         method: method
     })
 

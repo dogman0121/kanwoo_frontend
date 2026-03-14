@@ -1,7 +1,7 @@
 "use client"
 
 import { Avatar, Box, Button, CircularProgress, List, ListItemAvatar, ListItemButton, ListItemText, Paper, Typography } from "@mui/material";
-import { ChangeEvent, useContext, useEffect, useState } from "react"
+import { ChangeEvent, useContext, useEffect, useMemo, useState } from "react"
 import { AuthSection } from "../types/AuthPanel";
 import authSectionContext from "../context/authSectionContext";
 import AuthForm from "./ui/AuthForm";
@@ -12,7 +12,7 @@ import AppSnackbar from "@/components/AppSnackbar";
 import { authService } from "../api/services/authService";
 
 export default function AuthCreateProfile() {
-    const {section} = useContext(authSectionContext);
+    const {section, setSection} = useContext(authSectionContext);
 
     const [slug, setSlug] = useState("")
     const [name, setName] = useState("")
@@ -25,20 +25,31 @@ export default function AuthCreateProfile() {
     const hangeCreateProfile = async () => {
         try {
             await authService.createProfile(name, slug)
-        } catch (_e) {
+
+            setSection(AuthSection.CHOOSE_PROFILE)
+        } catch (e) {
             setErrorSnackbar(true)
+
+            throw e
         }
     }
 
-    const handleInputSlug = async (event: ChangeEvent<HTMLInputElement>) => {
-        const handleValidateSlug = debounce(async () => {
+    const handleValidateSlug = useMemo(() => 
+        debounce(async (slug: string) => {
+            setSlugIsChecking(true)
+
             const available = await validateSlug(slug)
 
-            setSlugError(available)
-        })
+            setSlugError(!available)
 
-        handleValidateSlug()
+            setSlugIsChecking(false)
+        }, 500)
+    , [])
+
+    const handleInputSlug = async (event: ChangeEvent<HTMLInputElement>) => {
         setSlug(event.target.value)
+
+        handleValidateSlug(event.target.value)
     }
 
     if (section != AuthSection.CREATE_PROFILE)
@@ -46,19 +57,21 @@ export default function AuthCreateProfile() {
 
     return (
         <>
-            <Typography>Выбор профиля</Typography>
+            <Typography variant="h2">Создание профиля</Typography>
             <AuthForm>
-                <AuthInput
-                    label="Почта"
-                    variant="outlined"
-                    fullWidth
-                    onChange={(e) => {setName(e.target.value)}}
-                />
                 <SlugInput 
+                    label="Тег"
                     value={slug}
                     onChange={handleInputSlug}
                     error={slugError}
+                    helperText={slugError ? "Данный тег занят" : undefined}
                     slugChecking={slugChecking}
+                />
+                <AuthInput
+                    label="Название"
+                    variant="outlined"
+                    fullWidth
+                    onChange={(e) => {setName(e.target.value)}}
                 />
             </AuthForm>
             <Button
@@ -66,10 +79,10 @@ export default function AuthCreateProfile() {
                 variant="contained"
                 onClick={hangeCreateProfile}
                 sx={{
-                    mt: "10px"
+                    mt: "20px"
                 }}
             >
-                Войти
+                Создать
             </Button>
             <AppSnackbar 
                 variant="error"

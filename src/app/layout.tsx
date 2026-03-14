@@ -24,11 +24,11 @@ export default async function RootLayout({
     children: React.ReactNode
 }>) {
     let meta
-    // try {
-    //     meta = (await serverFetch.get<Meta>("/meta")).data
-    // } catch (e) {
-    //     if (e instanceof ApiError) meta = null
-    // }
+    try {
+        meta = (await serverFetch.get<Meta>("/meta")).data
+    } catch (e) {
+        if (e instanceof ApiError) meta = null
+    }
 
     let profile
     try {

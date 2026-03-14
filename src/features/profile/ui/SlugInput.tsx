@@ -1,9 +1,8 @@
 "use client"
 
-import { CircularProgress, InputAdornment, TextFieldProps } from "@mui/material";
+import { CircularProgress, InputAdornment, TextField, TextFieldProps } from "@mui/material";
 import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
-import { profileClientApi } from "@/lib/fetch/features/profile/client";
 import EditInput from "@/features/edit/components/EditInput";
 import { clientFetch } from "@/lib/fetch/clientFetch";
 
@@ -20,13 +19,7 @@ export async function validateSlug(slug: string) {
 
 export default function SlugInput({value, defaultValue, slugChecking, error, ...props}: TextFieldProps & {slugChecking: boolean}) {
     return (
-        <EditInput
-            label={"Тег команды"}
-            caption={`
-                Уникальная последовательность из цифр и латинских букв.
-                Является уникальным идентификатором.
-            `}
-            {...props}
+        <TextField
             sx={{
                 mt: "10px"
             }}
@@ -50,6 +43,7 @@ export default function SlugInput({value, defaultValue, slugChecking, error, ...
             }} 
             error={error}
             value={value}
+            {...props}
         />
     )
 }

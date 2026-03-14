@@ -1,6 +1,5 @@
 "use client"
 
-import { ApiResponse } from "@/lib/fetch/apiResponse";
 import { clientFetch } from "@/lib/fetch/clientFetch";
 import AuthProfile from "@/types/authProfile";
 
@@ -24,7 +23,7 @@ export const authService = {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({email, password})
-        })
+        }, false)
 
         return response;
     },
@@ -35,20 +34,18 @@ export const authService = {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({email})
-        })
+        }, false)
 
         return response;
     },
 
     async recovery(token: string, password: string) {
-        const response = await clientFetch.post<{success: boolean}>("/auth/recovery", {
+        return clientFetch.post<{success: boolean}>("/auth/recovery", {
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({token, password})
         }, false)
-        
-        return await response;
     },
 
     async verify(token: string) {
@@ -59,24 +56,35 @@ export const authService = {
             body: JSON.stringify({token})
         })
 
-        return await response;
+        return response;
     },
 
     async getProfiles() {
-        const response = await clientFetch.get<AuthProfile[]>('/profiles/get')
+        const response = await clientFetch.get<AuthProfile[]>('/profiles')
 
         return response
     },
 
     async createProfile(name: string, slug: string) {
-        return await clientFetch.get<AuthProfile>("/profiles/create", {
+        const createForm = new FormData()
+
+        createForm.append("name", name)
+        createForm.append("slug", slug)
+
+        return clientFetch.post<AuthProfile>("/profiles/create", {
             method: "POST",
+            body: createForm
+        })
+    },
+
+    async selectProfile(profileId: number) {
+        return clientFetch.put<{success: boolean}>("/profiles/current", {
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                name: name,
-                slug: slug
+                profile: profileId
             })
         })
     }

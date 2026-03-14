@@ -2,7 +2,6 @@
 
 import { useContext, useState } from "react";
 import { authService } from "../api/services/authService";
-import authPanelContext from "../context/authSectionContext";
 import { Button, Typography } from "@mui/material";
 import AuthError from "./ui/AuthError";
 import AuthForm from "./ui/AuthForm";
@@ -10,11 +9,13 @@ import AuthInput from "./ui/AuthInput";
 import { useRouter, useSearchParams } from "next/navigation";
 import authSectionContext from "../context/authSectionContext";
 import { AuthSection } from "../types/AuthPanel";
+import AuthMessage from "./ui/AuthMessage";
 
 export default function AuthRecovery() {
     const router = useRouter()
     
     const [wrongForm, setWrongForm] = useState(false);
+    const [recoveryMessageOpen, setRecoveryMessageOpen] = useState(false)
 
     const [password, setPassword] = useState("");
     const [repeatPassword, setRepeatPassword] = useState("");
@@ -23,7 +24,7 @@ export default function AuthRecovery() {
 
     const urlParams = useSearchParams();
     const token = urlParams.get("t");
-
+    
     if (section != AuthSection.RECOVERY) 
         return null
 
@@ -40,7 +41,7 @@ export default function AuthRecovery() {
         try {
             await authService.recovery(token, password);
 
-            setSection(AuthSection.LOGIN);
+            setRecoveryMessageOpen(true)
         } catch (_e) {
             throw new Error("Failed to recovery")
         }
@@ -52,6 +53,13 @@ export default function AuthRecovery() {
         router.push(process.env.NEXT_PUBLIC_SITE_URL)
     }
 
+    if (recoveryMessageOpen)
+        return (
+            <AuthMessage 
+                title="Восстановление пароля"
+                description="Ваш пароль сброшен успешно"
+            />
+        )
     return (
         <>
             <Typography variant="h2">Восстановление пароля</Typography>

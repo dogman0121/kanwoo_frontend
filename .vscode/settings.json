@@ -1,3 +1,14 @@
 {
-  "css.customData": [".vscode/tailwind.json"]
+  "css.customData": [".vscode/tailwind.json"],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[typescript]": {
+      "prettier.printWidth": 120,
+      "prettier.tabWidth": 4,
+      "prettier.semi": false
+  },
+  "[typescriptreact]": {
+      "prettier.printWidth": 120,
+      "prettier.tabWidth": 4,
+      "prettier.semi": false
+  },
 }

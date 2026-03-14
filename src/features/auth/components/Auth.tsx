@@ -8,6 +8,7 @@ import AuthRegister from "./AuthRegister"
 import AuthForgot from "./AuthForgot"
 import AuthProfileSelector from "./AuthProfileSelector"
 import AuthCreateProfile from "./AuthCreateProfile"
+import AuthRecovery from "./AuthRecovery"
 
 export default function Auth({
     defaultSection
@@ -31,6 +32,7 @@ export default function Auth({
                 <AuthForgot />
                 <AuthProfileSelector />
                 <AuthCreateProfile />
+                <AuthRecovery />
             </Paper>
         </AuthProvider>
     )

@@ -1,4 +1,6 @@
-import { Box, SvgIcon } from "@mui/material"
+"use client"
+
+import { AppBar, Box, SvgIcon, Toolbar, useTheme } from "@mui/material"
 import Link from "next/link"
 
 export default function Layout({
@@ -6,22 +8,29 @@ export default function Layout({
 }: {
     children: React.ReactNode
 }) {
+    const theme = useTheme()
+
     return (
         <>
-            <Box
-                component={"header"} 
-                sx={{
-                    bgcolor: "var(--knw-palette-customBackgrounds-header)",
-                }}
+            <AppBar
+                component="nav"
+                sx={[
+                    {
+                        zIndex: theme.zIndex.drawer + 1
+                    },
+                    theme.applyStyles("dark", {
+                        backgroundColor: "#06090E"
+                    }),
+                    theme.applyStyles("light", {
+                        backgroundColor: "#FFF1AA"
+                    })
+                ]}
             >
-                <Box
+                <Toolbar
                     sx={{
-                        px: "20px",
-                        py: "7px",
                         display: "flex",
                         flexDirection: "row",
-                        justifyContent: "space-between",
-                        height: "54px"
+                        justifyContent: "space-between"
                     }}
                 >
                     <Link href={"/"}>
@@ -41,9 +50,16 @@ export default function Layout({
                             </g>
                         </SvgIcon>
                     </Link>
-                </Box>
-            </Box>
-            <Box>
+                </Toolbar>
+            </AppBar>
+            <Box
+                sx={{
+                    height: "100vh",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center"
+                }}
+            >
                 {children}
             </Box>
         </>

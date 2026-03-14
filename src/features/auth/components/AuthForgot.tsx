@@ -26,7 +26,7 @@ export default function AuthForgot() {
 
             setEmailSent(true);
         } catch (e) {
-
+            throw e
         }
     }
 

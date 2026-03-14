@@ -8,9 +8,17 @@ import authSectionContext from "../context/authSectionContext";
 import AuthProfile from "@/types/authProfile";
 import { authService } from "../api/services/authService";
 import LoadingBox from "@/components/LoadingBox";
+import AuthForm from "./ui/AuthForm";
+import { useAppDispatch } from "@/lib/state/hooks";
+import { setAuthProfile } from "@/lib/state/features/auth_profile/authProfileSlice";
+import AppSnackbar from "@/components/AppSnackbar";
 
 export default function AuthProfileSelector() {
+    const dispatch = useAppDispatch()
+
     const {section, setSection} = useContext(authSectionContext);
+
+    const [errorOpen, setErrorOpen] = useState(false)
 
     const [profiles, setProfiles] = useState<AuthProfile[]>([]);
 
@@ -44,32 +52,31 @@ export default function AuthProfileSelector() {
 
     return (
         <>
-            <Typography>Выбор профиля</Typography>
-            <LoadingBox
-                loading={isLoading}
-            >
-                <List
-                    sx={{
-                        py: 0
-                    }}
+            <Typography variant="h2">Выбор профиля</Typography>
+            <AuthForm>
+                <LoadingBox
+                    loading={isLoading}
                 >
-                    {profiles.map((profile: Profile, ind) => (
-                        <Paper
-                            key={`auth_profile_${ind}`}
-                            sx={[
-                                {
-                                    boxShadow: "none",
-                                    borderRadius: "10px",
-                                },
-                                (theme) => 
-                                    theme.applyStyles("light", {
-                                        backgroundColor: "#f4f4f4"
-                                    })
-                            ]}
-                        >
+                    <List
+                        sx={{
+                            py: 0
+                        }}
+                    >
+                        {profiles.map((profile: Profile, ind) => (
                             <ListItemButton
+                                key={`auth_profile_${ind}`}
                                 sx={{
                                     borderRadius: "10px"
+                                }}
+
+                                onClick={async () => {
+                                    try {
+                                        await authService.selectProfile(profile.id)
+
+                                        dispatch(setAuthProfile(profile))
+                                    } catch (e) {
+
+                                    }
                                 }}
                             >
                                 <ListItemAvatar>
@@ -80,10 +87,16 @@ export default function AuthProfileSelector() {
                                     <Typography variant="caption">0 подписчиков</Typography>
                                 </ListItemText>
                             </ListItemButton>
-                        </Paper>
-                    ))}
-                </List>
-            </LoadingBox>
+                        ))}
+                    </List>
+                </LoadingBox>
+            </AuthForm>
+            <AppSnackbar 
+                variant="error"
+                message="При выборе профиля произошла ошибка."
+                open={errorOpen}
+                onClose={() => setErrorOpen(false)}
+            />
         </>
     )
 }
