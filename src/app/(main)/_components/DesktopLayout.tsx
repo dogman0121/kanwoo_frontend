@@ -77,9 +77,7 @@ function Header() {
                             </Typography>
                         </Box>
                     </Box>
-                    <Suspense fallback={<></>}>
-                        <UserNav />
-                    </Suspense>
+                    <UserNav />
                 </Toolbar>
             </AppBar>
             <SearchModalDesktop open={searchOpen} onClose={() => setSearchOpen(false)} />

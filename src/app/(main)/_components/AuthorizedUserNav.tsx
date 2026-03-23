@@ -12,7 +12,8 @@ import {
     Menu, 
     MenuItem, 
     Typography, 
-    useColorScheme 
+    useColorScheme, 
+    useTheme
 } from "@mui/material"
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
@@ -36,6 +37,7 @@ import { ROUTES } from "@/routes";
 
 
 function ContentCreatingButton() {
+    const theme = useTheme()
     
     const [createContentMenuAnchorEl, setCreateContentMenuAnchorEl] = useState<HTMLButtonElement | null>(null);
     
@@ -57,13 +59,15 @@ function ContentCreatingButton() {
         <>
             <Button
                 variant="contained"
+                color="secondary"
                 startIcon={<AddRoundedIcon />}
                 onClick={handleOpenCreateContentMenu}
-                sx={[(theme) => ({
-                        bgcolor: "background.paper",
-                        color: theme.typography.body1.color,        
-                    })
-                ]}
+                sx={[theme.applyStyles("light", {
+                    backgroundColor: "background.paper",
+                    "&:hover": {
+                        backgroundColor: theme.palette.grey[200]
+                    }
+                })]}
             >
                 Добавить
             </Button>
