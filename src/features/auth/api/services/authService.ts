@@ -72,7 +72,7 @@ export const authService = {
         createForm.append("name", name)
         createForm.append("slug", slug)
 
-        return clientFetch.post<AuthProfile>("/profiles/create", {
+        return clientFetch.post<AuthProfile>("/profiles", {
             method: "POST",
             body: createForm
         })

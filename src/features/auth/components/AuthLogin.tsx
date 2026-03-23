@@ -189,7 +189,7 @@ export default function AuthLogin({
                         alignItems: "center"
                     }}
                 >
-                    <IconButton onClick={() => setChooseProfileOpen(false)}>
+                    <IconButton onClick={() => setCreateProfileOpen(false)}>
                         <ArrowBackRoundedIcon />
                     </IconButton>
                     <Typography variant="h2">Создание профиля</Typography>
@@ -256,12 +256,12 @@ export default function AuthLogin({
     return (
         <form onSubmit={loginForm.handleSubmit(handleLogin)}>
             <Typography variant="h2">Авторизация</Typography>
-            { loginForm.formState.errors.root && (
-                <AuthError>
-                    {loginForm.formState.errors.root.message}
-                </AuthError>
-            )}
             <AuthForm>
+                { loginForm.formState.errors.root && (
+                    <AuthError>
+                        {loginForm.formState.errors.root.message}
+                    </AuthError>
+                )}
                 <Controller 
                     name="email"
                     control={loginForm.control}
