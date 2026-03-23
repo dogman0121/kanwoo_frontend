@@ -69,6 +69,8 @@ export default function AuthLogin({
 }) {
     const theme = useTheme()
 
+    const [isFetching, setIsFetching] = useState(false)
+
     const [profiles, setProfiles] = useState<AuthProfile[]>([])
 
     const [chooseProfileOpen, setChooseProfileOpen] = useState(false)
@@ -88,6 +90,8 @@ export default function AuthLogin({
 
     const handleLogin = async(data: LoginForm) => {
         try {
+            setIsFetching(true)
+
             const response = await authService.login(data.email, data.password);
 
             setProfiles(response.data)
@@ -106,12 +110,24 @@ export default function AuthLogin({
             }
 
             throw error
+        } finally {
+            setIsFetching(false)
         }
 
     }
 
     const handleCreateProfile = async(data: CreateProfileForm) => {
+        try {
+            setIsFetching(true)
 
+            const response = await authService.createProfile(data.name, data.slug)
+
+            onLogin?.(response.data)
+        } catch(e) {
+            throw e
+        } finally {
+            setIsFetching(false)
+        }
     }
 
     if (section != AuthSection.LOGIN)
@@ -226,6 +242,7 @@ export default function AuthLogin({
                     fullWidth
                     variant="contained"
                     type="submit"
+                    loading={isFetching}
                     sx={{
                         mt: "20px"
                     }}
@@ -292,6 +309,7 @@ export default function AuthLogin({
                 fullWidth
                 variant="contained"
                 type="submit"
+                loading={isFetching}
                 sx={{
                     mt: "10px"
                 }}
