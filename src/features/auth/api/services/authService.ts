@@ -2,11 +2,12 @@
 
 import { clientFetch } from "@/lib/fetch/clientFetch";
 import AuthProfile from "@/types/authProfile";
+import Profile from "@/types/profile/profile";
 
 
 export const authService = {
     async login(email: string, password: string) {
-        const response = await clientFetch.post("/auth/login", {
+        const response = await clientFetch.post<AuthProfile[]>("/auth/login", {
             credentials: "include",
             headers: {
                 "Content-Type": "application/json"
@@ -17,12 +18,12 @@ export const authService = {
         return response;
     },
     
-    async register(email: string, password: string) {
-        const response = await clientFetch.post("/auth/register", {
+    async register(code: number, login: string, email: string, password: string) {
+        const response = await clientFetch.post<Profile>("/auth/register", {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({email, password})
+            body: JSON.stringify({code, login, email, password})
         }, false)
 
         return response;
@@ -54,7 +55,7 @@ export const authService = {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({token})
-        })
+        }, false)
 
         return response;
     },
@@ -87,5 +88,9 @@ export const authService = {
                 profile: profileId
             })
         })
+    },
+
+    async getRegisterCode(email: string) {
+        return clientFetch.get(`/auth/register/code?email=${email}`)
     }
 }

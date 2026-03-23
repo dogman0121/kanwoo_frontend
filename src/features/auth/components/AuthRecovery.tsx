@@ -5,53 +5,56 @@ import { authService } from "../api/services/authService";
 import { Button, Typography } from "@mui/material";
 import AuthError from "./ui/AuthError";
 import AuthForm from "./ui/AuthForm";
-import AuthInput from "./ui/AuthInput";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import authSectionContext from "../context/authSectionContext";
 import { AuthSection } from "../types/AuthPanel";
 import AuthMessage from "./ui/AuthMessage";
+import { Controller, useForm } from "react-hook-form";
+import AuthPasswordInput from "./ui/AuthPasswordInput";
 
-export default function AuthRecovery() {
-    const router = useRouter()
-    
-    const [wrongForm, setWrongForm] = useState(false);
+interface RecoveryForm {
+    password: string,
+    repeatPassword: string
+}
+
+export default function AuthRecovery({
+    onRecovery
+}: {
+    onRecovery?: () => void
+}) {
     const [recoveryMessageOpen, setRecoveryMessageOpen] = useState(false)
-
-    const [password, setPassword] = useState("");
-    const [repeatPassword, setRepeatPassword] = useState("");
 
     const { section, setSection } = useContext(authSectionContext);
 
     const urlParams = useSearchParams();
     const token = urlParams.get("t");
     
+    const {control, handleSubmit, formState: {errors}, setError} = useForm<RecoveryForm>({
+        mode: "onSubmit"
+    })
+
     if (section != AuthSection.RECOVERY) 
         return null
 
-    const handleRecovery = async () => {
-        if (password !== repeatPassword)
-            return setWrongForm(true);
+    const handleRecovery = async (data: RecoveryForm) => {
+        if (data.password !== data.repeatPassword)
+            return setError("root", {message: "Пароли не совпадают"});
 
         if (!token){
-            if (!process.env.NEXT_PUBLIC_SITE_URL)
-                throw Error("Env variable 'NEXT_PUBLIC_SITE_URL' not found")
-            return router.push(process.env.NEXT_PUBLIC_SITE_URL)
+            throw Error("Env variable 'NEXT_PUBLIC_SITE_URL' not found")
         }
 
         try {
-            await authService.recovery(token, password);
+            await authService.recovery(token, data.password);
 
             setRecoveryMessageOpen(true)
+
+            onRecovery?.()
         } catch (_e) {
             throw new Error("Failed to recovery")
         }
     }
 
-    if (!token){
-        if (!process.env.NEXT_PUBLIC_SITE_URL)
-            throw Error("Env variable 'NEXT_PUBLIC_SITE_URL' not found")
-        router.push(process.env.NEXT_PUBLIC_SITE_URL)
-    }
 
     if (recoveryMessageOpen)
         return (
@@ -61,40 +64,47 @@ export default function AuthRecovery() {
             />
         )
     return (
-        <>
+        <form onSubmit={handleSubmit(handleRecovery)}>
             <Typography variant="h2">Восстановление пароля</Typography>
-            { wrongForm && (
+            { errors.root && (
                 <AuthError>
-                    Пароли не совпадают
+                    {errors.root.message}
                 </AuthError>
             )}
             <AuthForm>
-                <AuthInput
-                    error={wrongForm}
-                    label="Пароль"
-                    variant="outlined"
-                    type="password"
-                    onChange={(e) => {setPassword(e.target.value)}}
+                <Controller 
+                    name="password"
+                    control={control}
+                    render={({field}) => (
+                        <AuthPasswordInput
+                            error={errors.root || errors.password ? true : false}
+                            helperText={errors.password?.message} 
+                            {...field}  
+                        />
+                    )}
                 />
-
-                <AuthInput
-                    error={wrongForm}
-                    label="Повтор пароля"
-                    variant="outlined"
-                    type="password"
-                    onChange={(e) => {setRepeatPassword(e.target.value)}}
+                <Controller 
+                    name="repeatPassword"
+                    control={control}
+                    render={({field}) => (
+                        <AuthPasswordInput
+                            error={errors.root || errors.repeatPassword ? true : false}
+                            helperText={errors.repeatPassword?.message} 
+                            {...field}  
+                        />
+                    )}
                 />
             </AuthForm>
             <Button
                 fullWidth
                 variant="contained"
-                onClick={handleRecovery}
+                type="submit"
                 sx={{
                     mt: "20px"
                 }}
             >
                 Восстановить
             </Button>
-        </>
+        </form>
     )
 }

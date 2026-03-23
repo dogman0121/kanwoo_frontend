@@ -6,15 +6,23 @@ import AuthProvider from "./AuthProvider"
 import AuthLogin from "./AuthLogin"
 import AuthRegister from "./AuthRegister"
 import AuthForgot from "./AuthForgot"
-import AuthProfileSelector from "./AuthProfileSelector"
-import AuthCreateProfile from "./AuthCreateProfile"
 import AuthRecovery from "./AuthRecovery"
+import Profile from "@/types/profile/profile"
 
 export default function Auth({
-    defaultSection
+    defaultSection,
+    onRegister,
+    onLogin,
+    onForgot,
+    onRecovery
 }: {
-    defaultSection?: AuthSection
+    defaultSection?: AuthSection,
+    onRegister?: (profile: Profile) => void,
+    onLogin?: (profile: Profile) => void,
+    onForgot?: () => void,
+    onRecovery?: () => void
 }) {
+
     return (
         <AuthProvider
             defaultSection={defaultSection}
@@ -27,12 +35,10 @@ export default function Auth({
                     borderRadius: "20px",
                 }}
             >
-                <AuthLogin />
-                <AuthRegister />
+                <AuthLogin onLogin={onLogin}/>
+                <AuthRegister onRegister={onRegister}/>
                 <AuthForgot />
-                <AuthProfileSelector />
-                <AuthCreateProfile />
-                <AuthRecovery />
+                <AuthRecovery onRecovery={onRecovery}/>
             </Paper>
         </AuthProvider>
     )

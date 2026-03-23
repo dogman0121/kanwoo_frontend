@@ -26,19 +26,26 @@ export default function SlugInput({value, defaultValue, slugChecking, error, ...
             slotProps={{
                 input: {
                     endAdornment: 
-                        <InputAdornment position="end">
-                            {(slugChecking) && (
-                                <CircularProgress
-                                    size={"20px"}
-                                />
-                            ) }
-                            {(!slugChecking && value != "" && value != defaultValue && !error) && (
-                                <CheckCircleRoundedIcon color="success"/>
+                        <>
+                            {value != defaultValue && (
+                                <InputAdornment position="end">
+                                    {slugChecking ? 
+                                        <CircularProgress
+                                            size={"20px"}
+                                        />
+                                        :
+                                        <>
+                                            {(!error) && (
+                                                <CheckCircleRoundedIcon color="success"/>
+                                            )}
+                                            {(error) && (
+                                                <ErrorRoundedIcon color="error"/>
+                                            )}
+                                        </>
+                                    }
+                                </InputAdornment>
                             )}
-                            {(!slugChecking && value != "" && value != defaultValue && error) && (
-                                <ErrorRoundedIcon color="error"/>
-                            )}
-                        </InputAdornment>
+                        </>
                 }
             }} 
             error={error}
