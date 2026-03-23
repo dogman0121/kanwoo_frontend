@@ -208,7 +208,7 @@ export default function AuthLogin({
                     />
                     <Controller 
                         control={createProfileForm.control}
-                        name="slug"
+                        name="name"
                         rules={{
                             required: true
                         }}
