@@ -66,12 +66,12 @@ export default function AuthRecovery({
     return (
         <form onSubmit={handleSubmit(handleRecovery)}>
             <Typography variant="h2">Восстановление пароля</Typography>
-            { errors.root && (
-                <AuthError>
-                    {errors.root.message}
-                </AuthError>
-            )}
             <AuthForm>
+                { errors.root && (
+                    <AuthError>
+                        {errors.root.message}
+                    </AuthError>
+                )}
                 <Controller 
                     name="password"
                     control={control}
