@@ -64,6 +64,7 @@ export default function AuthForgot() {
                 fullWidth
                 variant="contained"
                 onClick={handleForgot}
+                autoFocus
                 sx={{
                     mt: "20px"
                 }}

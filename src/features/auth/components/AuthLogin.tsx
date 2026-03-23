@@ -17,6 +17,7 @@ import Profile from "@/types/profile/profile";
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import SlugInput, { validateSlug } from "@/features/profile/ui/SlugInput";
 import { debounce } from "lodash";
+import AuthTextButton from "./ui/AuthTextButton";
 
 interface LoginForm {
     email: string,
@@ -255,81 +256,91 @@ export default function AuthLogin({
 
     return (
         <form onSubmit={loginForm.handleSubmit(handleLogin)}>
-            <Typography variant="h2">Авторизация</Typography>
-            <AuthForm>
-                { loginForm.formState.errors.root && (
-                    <AuthError>
-                        {loginForm.formState.errors.root.message}
-                    </AuthError>
-                )}
-                <Controller 
-                    name="email"
-                    control={loginForm.control}
-                    rules={{
-                        required: true
-                    }}
-                    render={({field}) => (
-                        <AuthInput
-                            type="email"
-                            label="Почта"
-                            variant="outlined"
-                            fullWidth
-                            error={loginForm.formState.errors.root ? true : false}
-                            {...field}
-                        />
-                    )}
-                />
-                <Controller 
-                    name="password"
-                    control={loginForm.control}
-                    rules={{
-                        required: true,
-                    }}
-                    render={({field}) => (
-                        <AuthPasswordInput
-                            fullWidth
-                            error={loginForm.formState.errors.root ? true : false}
-                            {...field}
-                        />
-                    )}
-                />
-            </AuthForm>
-            <AuthLink
-                sx={{
-                    textAlign: "center",
-                    marginTop: "10px"
-                }}
-                onClick={()=>{
-                    setSection(AuthSection.FORGOT)
-                }}
-            >
-                Забыли пароль?
-            </AuthLink>
-            <Button
-                fullWidth
-                variant="contained"
-                type="submit"
-                loading={isFetching}
-                sx={{
-                    mt: "10px"
-                }}
-            >
-                Войти
-            </Button>
             <Box
                 sx={{
-                    textAlign: "center",
-                    mt: "5px"
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center"
                 }}
             >
-                Нет учетной записи? 
-                <AuthLink
-                    onClick={() => setSection(
-                        AuthSection.REGISTER
+                <Typography variant="h2">Авторизация</Typography>
+                <AuthForm>
+                    { loginForm.formState.errors.root && (
+                        <AuthError>
+                            {loginForm.formState.errors.root.message}
+                        </AuthError>
                     )}
+                    <Controller 
+                        name="email"
+                        control={loginForm.control}
+                        rules={{
+                            required: true
+                        }}
+                        render={({field}) => (
+                            <AuthInput
+                                type="email"
+                                label="Почта"
+                                variant="outlined"
+                                fullWidth
+                                error={loginForm.formState.errors.root ? true : false}
+                                {...field}
+                            />
+                        )}
+                    />
+                    <Controller 
+                        name="password"
+                        control={loginForm.control}
+                        rules={{
+                            required: true,
+                        }}
+                        render={({field}) => (
+                            <AuthPasswordInput
+                                fullWidth
+                                error={loginForm.formState.errors.root ? true : false}
+                                {...field}
+                            />
+                        )}
+                    />
+                </AuthForm>
+                <AuthTextButton
+                    sx={{
+                        mt: "10px",
+                    }}
+                    onClick={()=>{
+                        setSection(AuthSection.FORGOT)
+                    }}
                 >
-                    Зарегестрироваться
-                </AuthLink>
+                    Забыли пароль?
+                </AuthTextButton>
+                <Button
+                    fullWidth
+                    variant="contained"
+                    type="submit"
+                    loading={isFetching}
+                    autoFocus
+                    sx={{
+                        mt: "10px"
+                    }}
+                >
+                    Войти
+                </Button>
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        flexDirection: "column",
+                        mt: "5px"
+                    }}
+                >
+                    <Typography textAlign={"center"}>Нет учетной записи?</Typography> 
+                    <AuthTextButton
+                        onClick={() => setSection(
+                            AuthSection.REGISTER
+                        )}
+                    >
+                        Зарегестрироваться
+                    </AuthTextButton>
+                </Box>
             </Box>
         </form>
     )

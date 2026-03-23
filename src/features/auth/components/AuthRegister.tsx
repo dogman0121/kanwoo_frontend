@@ -17,6 +17,7 @@ import { debounce } from "lodash";
 import AuthTotpInput from "./ui/AuthTotpInput";
 import useTimer from "../hooks/useTimer";
 import Profile from "@/types/profile/profile";
+import AuthTextButton from "./ui/AuthTextButton";
 
 
 interface RegisterForm {
@@ -210,81 +211,92 @@ export default function AuthRegister({
 
     return (
         <form onSubmit={handleSubmit(onRegisterSubmit)}>
-            <Typography variant="h2">Регистрация</Typography>
-            <AuthForm>
-                <Controller 
-                    control={control}
-                    name="login"
-                    rules={{
-                        validate: (value) => new Promise((resolve) => validateLoginRef.current(value, resolve))
-                    }}
-                    render={({field}) => (
-                        <SlugInput 
-                            label="Логин"
-                            type="text"
-                            slugChecking={slugChecking}
-                            error={errors.login ? true : false}
-                            helperText={errors.login?.message}
-                            {...field}
-                        />
-                    )}
-                />
-                <Controller 
-                    control={control}
-                    name="email"
-                    render={({field}) => (
-                        <AuthInput 
-                            label="Почта"
-                            type="email"
-                            error={errors.email ? true : false}
-                            helperText={errors.email?.message}
-                            {...field}
-                        />
-                    )}
-                />
-                <Controller 
-                    control={control}
-                    name="password"
-                    render={({field}) => (
-                        <AuthPasswordInput 
-                            error={errors.password ? true : false}
-                            {...field}
-                        />
-                    )}
-                />
-            </AuthForm>
-            <Button
-                fullWidth
-                type="submit"
-                variant="contained"
-                loading={isFetching}
-                sx={{
-                    mt: "20px"
-                }}
-            >
-                Зарегестрироваться
-            </Button>
             <Box
                 sx={{
-                    textAlign: "center",
-                    mt: "5px"    
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center"
                 }}
             >
-                Уже есть аккаунт? 
-                <AuthLink
-                    onClick={()=>{
-                        setSection(AuthSection.LOGIN)
+                <Typography variant="h2">Регистрация</Typography>
+                <AuthForm>
+                    <Controller 
+                        control={control}
+                        name="login"
+                        rules={{
+                            validate: (value) => new Promise((resolve) => validateLoginRef.current(value, resolve))
+                        }}
+                        render={({field}) => (
+                            <SlugInput 
+                                label="Логин"
+                                type="text"
+                                slugChecking={slugChecking}
+                                error={errors.login ? true : false}
+                                helperText={errors.login?.message}
+                                {...field}
+                            />
+                        )}
+                    />
+                    <Controller 
+                        control={control}
+                        name="email"
+                        render={({field}) => (
+                            <AuthInput 
+                                label="Почта"
+                                type="email"
+                                error={errors.email ? true : false}
+                                helperText={errors.email?.message}
+                                {...field}
+                            />
+                        )}
+                    />
+                    <Controller 
+                        control={control}
+                        name="password"
+                        render={({field}) => (
+                            <AuthPasswordInput 
+                                error={errors.password ? true : false}
+                                {...field}
+                            />
+                        )}
+                    />
+                </AuthForm>
+                <Button
+                    fullWidth
+                    type="submit"
+                    variant="contained"
+                    loading={isFetching}
+                    autoFocus
+                    sx={{
+                        mt: "20px"
                     }}
                 >
-                    Войти
-                </AuthLink>
+                    Зарегестрироваться
+                </Button>
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        mt: "5px"    
+                    }}
+                >
+                    <Typography textAlign={"center"}>Уже есть аккаунт?</Typography> 
+                    <AuthTextButton
+                        onClick={()=>{
+                            setSection(AuthSection.LOGIN)
+                        }}
+                    >
+                        Войти
+                    </AuthTextButton>
+                </Box>
+                <AppSnackbar 
+                    open={errorSnackbarOpen}
+                    onClose={() => setErrorSnackbarOpen(false)}
+                    variant="error"
+                    message="При отправке данных произошла ошибка"
+                />   
             </Box>
-            <AppSnackbar 
-                open={errorSnackbarOpen}
-                onClose={() => setErrorSnackbarOpen(false)}
-                variant="error"
-                message="При отправке данных произошла ошибка"
-            />   
         </form>
     )
 }

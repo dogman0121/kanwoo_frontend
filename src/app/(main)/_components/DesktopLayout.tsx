@@ -77,7 +77,7 @@ function Header() {
                             </Typography>
                         </Box>
                     </Box>
-                    <Suspense fallback={<Avatar/>}>
+                    <Suspense fallback={<></>}>
                         <UserNav />
                     </Suspense>
                 </Toolbar>
