@@ -45,7 +45,7 @@ export default function Page() {
     const mainDashboard = useAppSelector(state => state.adminPage.mainDashboard)
 
     useEffect(() => {
-        clientFetch.get(`/admin/getMainDashboard`)
+        clientFetch.get(`/admin/dashboards/main`)
         .then(resp => {
             dispatch(setAdminPageMainDashboard(resp.data))
         })

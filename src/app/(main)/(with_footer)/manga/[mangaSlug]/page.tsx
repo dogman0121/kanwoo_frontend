@@ -7,6 +7,7 @@ import ReadingProgress from "@/types/manga/readingProgress";
 import MobileMangaPage from "./_components/MobileMangaPage";
 import DesktopMangaPage from "./_components/DesktopMangaPage";
 import Manga from "@/types/manga/manga";
+import { ApiError } from "@/lib/fetch/apiResponse";
 
 interface MangaSchema {
     manga: Manga,
@@ -21,19 +22,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
     const { mangaSlug } = await params;
 
-    const {data: mangaData} = await serverFetch.get<MangaSchema>(`/manga/${mangaSlug}/getManga`)
+    const {data: mangaData} = await serverFetch.get<MangaSchema>(`/manga/${mangaSlug}`)
 
     if (!mangaData.manga){
-        return notFound();
+        return notFound()
     }
- 
+
     return {
-        title: `Читать ${mangaData.manga.type?.name} ${mangaData.manga.name} онлайн | kanwoo`,
+        title: `Читать ${mangaData.manga.type.name} ${mangaData.manga.name} онлайн | kanwoo`,
         description: mangaData.manga.description,
         openGraph: {
             type: "book",
             url: `https://kanwoo.ru/manga/${mangaData.manga.slug}`,
-            title: `Читать ${mangaData.manga.type?.name} ${mangaData.manga.name} онлайн | kanwoo`,
+            title: `Читать ${mangaData.manga.type.name} ${mangaData.manga.name} онлайн | kanwoo`,
             description: mangaData.manga.description,
             images: [{url: mangaData.manga.poster?.medium || "https://cdn.kanwoo.ru/manga/default"}],
             siteName: "Kanwoo"
@@ -52,24 +53,28 @@ export default async function Page({
 }) {
     const { mangaSlug } = await params;
 
-    const {data: mangaData} = await serverFetch.get<MangaSchema>(`/manga/${mangaSlug}/getManga`)
-
     const { viewport } = await searchParams;
 
-    if (!mangaData.manga)
-        return notFound();
+    try {
+        const {data: mangaData} = await serverFetch.get<MangaSchema>(`/manga/${mangaSlug}`)
 
-    return ( 
-        <MangaProvider 
-            manga={mangaData.manga}
-            mangaPermission={mangaData.mangaPermissions}
-            readingProgress={mangaData.readingProgress}
-        >
-            {viewport == "mobile" ?
-                <MobileMangaPage/>
-                :
-                <DesktopMangaPage/>
-            }
-        </MangaProvider>
-    )
+        return ( 
+            <MangaProvider 
+                manga={mangaData.manga}
+                mangaPermission={mangaData.mangaPermissions}
+                readingProgress={mangaData.readingProgress}
+            >
+                {viewport == "mobile" ?
+                    <MobileMangaPage/>
+                    :
+                    <DesktopMangaPage/>
+                }
+            </MangaProvider>
+        )
+    } catch (e) {
+        if (e instanceof ApiError) {
+            if (e.code == "not_found")
+                return notFound();
+        }
+    }
 }

@@ -20,6 +20,8 @@ import MessageRoundedIcon from '@mui/icons-material/MessageRounded';
 import { useEffect } from "react"
 import useSection from "./_hooks/useSection"
 import AddRoundedIcon from "@mui/icons-material/AddRounded"
+import SiteLogo from "@/components/SiteLogo";
+import Link from "next/link";
 
 
 function NavigationDrawer() {
@@ -134,23 +136,27 @@ function Header() {
                     gap: "15px"
                 }}
             >
-                <Button
-                    variant="contained"
-                    startIcon={<WestRoundedIcon />}
-                    onClick={() => router.push(ROUTES.HOME)}
+                <Box
                     sx={{
-                        bgcolor: "background.paper",
-                        color: theme.typography.body1.color
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: theme.spacing(5),
+                        alignItems: "center"
                     }}
                 >
-                    На сайт
-                </Button>
-                <SearchInputDesktop 
-                    sx={{
-                        width: "600px",
-                        bgcolor: "background.paper"
-                    }}
-                />
+                    <Link href={"/"}>
+                        <SiteLogo />
+                    </Link>
+                    <Link href={"/admin"}>
+                        <Typography
+                            fontWeight={"600"}
+                            fontSize={"24px"}
+                            lineHeight={1}
+                        >
+                            Admin
+                        </Typography>
+                    </Link>
+                </Box>
                 <Box
                     sx={{
                         display: "flex",

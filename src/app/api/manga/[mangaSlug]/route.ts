@@ -6,7 +6,7 @@ export async function GET(request: NextRequest,
 ) {
     const {mangaSlug} = await params;
 
-    return await fetchManyApi(
+    return fetchManyApi(
         request, 
         [
             {name: "manga", url: `/manga/${mangaSlug}`, method: HTTP_METHODS.GET},

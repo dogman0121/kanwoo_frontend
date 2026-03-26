@@ -42,11 +42,13 @@ export async function fetchManyApi(request: Request, requests: RequestApiSchema[
 
     for (let i = 0; i < apiResponses.length; i++) {
         const responseName = requests[i].name
-        const apiJSON = await apiResponses[i].json()
+        const response = apiResponses[i]
 
-        responseJSON.data[responseName] = apiJSON.data
-        responseJSON.meta[responseName] = apiJSON.meta
-        responseJSON.error[responseName] = apiJSON.error
+        const apiJSON = await response.json()
+
+        responseJSON.data[responseName] = apiJSON?.data
+        responseJSON.meta[responseName] = apiJSON?.meta
+        responseJSON.error[responseName] = apiJSON?.error
     }
 
     return new Response(JSON.stringify(responseJSON), {

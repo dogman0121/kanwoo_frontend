@@ -13,7 +13,7 @@ export default function Poster({
     return (
         <>
             {src ?
-                <Image
+                <img
                     draggable={false}
                     src={src || "https://cdn.kanwoo.ru/manga/default.jpg"}
                     alt="poster"

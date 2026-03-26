@@ -56,7 +56,7 @@ export default function Page() {
         if (data.promoBackground)
             formData.append("promoBackground", data.promoBackground);
 
-        const response = await clientFetch.post<AdminManga>(`/admin/manga/create`, {
+        const response = await clientFetch.post<AdminManga>(`/admin/manga`, {
             body: formData
         })
 

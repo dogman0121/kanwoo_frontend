@@ -29,7 +29,7 @@ export default function Page() {
 
         const urlSearchParams = resolveService.compileParams(filters)
 
-        clientFetch.get<AdminMangaSuggestion[]>("/admin/manga/getSuggestions?" + urlSearchParams.toString())
+        clientFetch.get<AdminMangaSuggestion[]>("/admin/manga/suggestions?" + urlSearchParams.toString())
             .then(resp => {
                 setResults(resp.data)
             })

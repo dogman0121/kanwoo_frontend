@@ -23,6 +23,7 @@ import LoadingBox from "../_features/LoadingBox";
 import EmptyTitle from "../_features/EmptyTitle";
 import ModerationFiltersGroup, { ModerationFilterType } from "../_components/ModerationFiltersGroup";
 import Image from "next/image";
+import ModerationStatus from "@/types/manga/moderationStatus";
 
 const compileColor = (moderation_status: AdminMangaModerationStatus | null) => {
     if (!moderation_status)
@@ -205,7 +206,7 @@ function MangaCardFullData({sx}: {sx?: SxProps}) {
                 }
             </Grid>
             <Grid
-                size={3}
+                size={2}
             >
                 <Typography fontWeight={600}>Постер</Typography>
                 {manga.poster ?
@@ -220,11 +221,11 @@ function MangaCardFullData({sx}: {sx?: SxProps}) {
                 }
             </Grid>
             <Grid
-                size={8}
+                size={5}
             >
                 <Typography fontWeight={600}>Задний фон</Typography>
                 {manga.background ?
-                    <Image
+                    <img
                         alt="background"
                         src={manga.background}
                         style={{
@@ -242,7 +243,7 @@ function MangaCardFullData({sx}: {sx?: SxProps}) {
             >
                 <Typography fontWeight={600}>Промо лого</Typography>
                 {manga.background ?
-                    <Image
+                    <img
                         alt="background"
                         src={manga.promo_logo}
                         style={{
@@ -260,7 +261,7 @@ function MangaCardFullData({sx}: {sx?: SxProps}) {
             >
                 <Typography fontWeight={600}>Промо название</Typography>
                 {manga.promo_name ?
-                    <Image
+                    <img
                         alt="promo_name"
                         src={manga.promo_name}
                         style={{
@@ -278,7 +279,7 @@ function MangaCardFullData({sx}: {sx?: SxProps}) {
             >
                 <Typography fontWeight={600}>Промо задний фон</Typography>
                 {manga.promo_background ?
-                    <Image
+                    <img
                         alt="promo_background"
                         src={manga.promo_background}
                         style={{
@@ -323,10 +324,10 @@ function MangaModerationStatusHistory({sx}: {sx?: SxProps}) {
         >
             <Typography fontWeight={600}>История модерации</Typography>
             <ModerationStatusGrid>
-                <Grid size={1}><Typography variant="caption">Дата</Typography></Grid>
+                <Grid size={2}><Typography variant="caption">Дата</Typography></Grid>
                 <Grid size={1}><Typography variant="caption">Статус</Typography></Grid>
                 <Grid size={1}><Typography variant="caption">Автор</Typography></Grid>
-                <Grid size={5}><Typography variant="caption">Сообщение</Typography></Grid>
+                <Grid size={4}><Typography variant="caption">Сообщение</Typography></Grid>
             </ModerationStatusGrid>
             {manga.moderation_history.length > 0 ? 
                 <Box
@@ -342,7 +343,7 @@ function MangaModerationStatusHistory({sx}: {sx?: SxProps}) {
                             key={`moderation_status_${status.id}`}
                         >
                             <Grid
-                                size={1}
+                                size={2}
                             >
                                 <Typography>
                                     {new Date(status.created_at).toLocaleString("ru-RU")}
@@ -365,7 +366,7 @@ function MangaModerationStatusHistory({sx}: {sx?: SxProps}) {
                                 />
                             </Grid>
                             <Grid
-                                size={5}
+                                size={4}
                             >
                                 {status.message ?
                                     <Typography>
@@ -381,7 +382,13 @@ function MangaModerationStatusHistory({sx}: {sx?: SxProps}) {
                     ))}
                 </Box>
                 :
-                <Typography>История пуста</Typography>
+                <Typography
+                    sx={{
+                        py: theme.spacing(2),
+                    }}
+                >
+                    История пуста
+                </Typography>
             }
         </Box>
     )
@@ -393,9 +400,21 @@ function MangaCard({manga}: {manga: AdminManga}) {
     const [accordionExpanded, setAccordionExpanded] = useState(false)
 
     const updateModeration = async (status_id: number, message?: string) => {
-        const {data: moderationStatus} = await adminMangaService.setMangaStatus(manga, status_id, message)
+        const {data: moderationStatus} = await clientFetch.post<AdminMangaModerationStatus>(
+            `/admin/manga/${manga.slug}/update-moderation`, 
+            {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    status_type: status_id, 
+                    message: message
+                })
+            }
+        )
 
         manga.moderation_status = moderationStatus
+        manga.moderation_history.push(moderationStatus)
 
         setAccordionExpanded(false)
     }
@@ -457,7 +476,7 @@ export default function Page() {
         if (query)
             urlSearchParams.append("query", query)
 
-        clientFetch.get<AdminManga[]>("/admin/manga/getMangaList?" + urlSearchParams.toString())
+        clientFetch.get<AdminManga[]>("/admin/manga?" + urlSearchParams.toString())
             .then(resp => {
                 setResults(resp.data)
                 

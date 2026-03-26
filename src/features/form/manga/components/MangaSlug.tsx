@@ -5,10 +5,11 @@ import { CircularProgress, InputAdornment, TextFieldProps } from "@mui/material"
 import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import { studioClientApi } from "@/lib/fetch/features/studio/client";
+import { clientFetch } from "@/lib/fetch/clientFetch";
 
 
 export async function validateSlug(slug: string) {
-    const response = await studioClientApi.checkMangaSlug(slug)
+    const response = await clientFetch.get<{available: boolean}>(`/manga/check_slug?slug=${slug}`)
 
     return response.data.available;
 }
