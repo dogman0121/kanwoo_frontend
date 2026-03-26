@@ -42,7 +42,7 @@ function HeroManga({manga}: {manga: HeroBlock}) {
                     backgroundPositionY: "0"
                 }}
             >
-                <Image
+                <img
                     alt="manga_logo" 
                     style={{
                         margin: "0 auto",
@@ -52,7 +52,7 @@ function HeroManga({manga}: {manga: HeroBlock}) {
                     src={manga.data.logo}
                     />
 
-                <Image
+                <img
                     alt="manga_name" 
                     src={manga.data.name}
                     style={{

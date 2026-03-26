@@ -36,9 +36,12 @@ export default function MobileLayout({children}: {children: React.ReactNode}) {
                     left: 0, 
                     right: 0, 
                     zIndex: 1000, 
+                    px: theme.spacing(2),
 
-                    ".MuiBottomNavigationAction-root.Mui-selected": {
-                        color: theme.typography.body1.color,
+                    ".MuiBottomNavigationAction-root": {
+                        "&.Mui-selected": {
+                            color: theme.typography.body1.color
+                        },
                     },
                     ".MuiBottomNavigationAction-label.Mui-selected": {
                         color: theme.typography.body1.color

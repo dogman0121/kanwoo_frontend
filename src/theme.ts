@@ -116,7 +116,8 @@ const theme = createTheme({
             borderRadius: "20px",
             width: "400px",
             boxShadow: 24,
-            backgroundColor: theme.vars?.palette.background.paper
+            margin: theme.spacing(4),
+            backgroundColor: "background.paper"
           },
           "& .MuiDialogTitle-root": {
             padding: "16px 24px 8px"
