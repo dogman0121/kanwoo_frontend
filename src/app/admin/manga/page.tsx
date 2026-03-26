@@ -10,7 +10,6 @@ import EditPageContainer from "@/features/edit/components/EditPageContainer";
 import AdminManga from "@/types/admin/manga/manga";
 import Poster from "@/components/Poster";
 import AdminMangaContext from "./_contexts/mangaContext";
-import { adminMangaService } from "./_services/mangaService";
 import AdminMangaModerationStatus from "@/types/admin/manga/moderationStatus";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "@/routes";
@@ -22,8 +21,6 @@ import { adminModerationService } from "../_services/moderationService";
 import LoadingBox from "../_features/LoadingBox";
 import EmptyTitle from "../_features/EmptyTitle";
 import ModerationFiltersGroup, { ModerationFilterType } from "../_components/ModerationFiltersGroup";
-import Image from "next/image";
-import ModerationStatus from "@/types/manga/moderationStatus";
 
 const compileColor = (moderation_status: AdminMangaModerationStatus | null) => {
     if (!moderation_status)
@@ -62,7 +59,7 @@ function MangaCardShortData() {
             />
             <Grid
                 container
-                columns={4}
+                columns={5}
                 sx={{
                     width: "100%",
                     alignItems: "center"
@@ -73,6 +70,13 @@ function MangaCardShortData() {
                 >
                     <Typography>
                         {manga.name}
+                    </Typography>
+                </Grid>
+                <Grid
+                    size={1}
+                >
+                    <Typography>
+                        {manga.privacy?.name || "нет"}
                     </Typography>
                 </Grid>
                 <Grid
@@ -95,7 +99,7 @@ function MangaCardShortData() {
                     size={1}
                 >
                     <ProfileWidget 
-                        profile={manga.creator}
+                        profile={manga.author}
                     />
                 </Grid>
             </Grid>
@@ -154,14 +158,20 @@ function MangaCardFullData({sx}: {sx?: SxProps}) {
             <Grid
                 size={3}
             >
-                <Typography fontWeight={600}>Тип</Typography>
-                <Typography>{manga.type?.name || "нет"}</Typography>
+                <Typography fontWeight={600}>Приватность</Typography>
+                <Typography>{manga.privacy?.name || "нет"}</Typography>
             </Grid>
             <Grid
                 size={12}
             >
                 <Typography fontWeight={600}>Описание</Typography>
                 <Typography>{manga.description || "нет"}</Typography>
+            </Grid>
+            <Grid
+                size={3}
+            >
+                <Typography fontWeight={600}>Тип</Typography>
+                <Typography>{manga.type?.name || "нет"}</Typography>
             </Grid>
             <Grid
                 size={3}
@@ -182,7 +192,7 @@ function MangaCardFullData({sx}: {sx?: SxProps}) {
                 <Typography>{manga.year}</Typography>
             </Grid>
             <Grid
-                size={3}
+                size={12}
             >
                 <Typography fontWeight={600}>Жанры</Typography>
                 {manga.genres.length > 0 ?
@@ -438,7 +448,24 @@ function MangaCard({manga}: {manga: AdminManga}) {
                         }}
                     />
                 </AdminAccordionDetails>
-                <AdminAccordionActions>
+                <AdminAccordionActions
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        pl: theme.spacing(4)
+                    }}
+                >
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            gap: theme.spacing(3),
+                            alignItems: "center"
+                        }}
+                    >
+                        <Typography>Создано:</Typography>
+                        <ProfileWidget profile={manga.creator}/>
+                    </Box>
                     <ModerationActions 
                         value={manga.moderation_status?.status_type.id}
                         onApprove={(msg) => updateModeration(MODERATION_STATUS.APPROVED, msg)}

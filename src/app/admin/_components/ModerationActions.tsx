@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogProps, DialogTitle, TextField } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogProps, DialogTitle, TextField, useTheme } from "@mui/material";
 import { MODERATION_STATUS } from "../_types/moderationStatus";
 import { useAppSelector } from "@/lib/state/hooks";
 import { useState } from "react";
@@ -59,35 +59,45 @@ export default function ModerationActions({
     onApprove: (message?: string) => void,
     onWaiting: (message?: string) => void
 }) {
+    const theme = useTheme()
+
     const [moderateDialogOpen, setModerateDialogOpen] = useState(false)
     const [declineDialogOpen, setDeclineDialogOpen] = useState(false)
 
 
     return (
         <>
-            {value == MODERATION_STATUS.WAITING ?
-                <>
-                    <ButtonWithConfirm
-                        variant="outlined"
-                        onClick={() => onApprove()}
-                    >
-                        Одобрить
-                    </ButtonWithConfirm>
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: theme.spacing(1)
+                }}
+            >
+                {value == MODERATION_STATUS.WAITING ?
+                    <>
+                        <ButtonWithConfirm
+                            variant="outlined"
+                            onClick={() => onApprove()}
+                        >
+                            Одобрить
+                        </ButtonWithConfirm>
+                        <Button
+                            variant="contained"
+                            onClick={() => setDeclineDialogOpen(true)}
+                        >
+                            Отклонить
+                        </Button>
+                    </>
+                    :
                     <Button
-                        variant="contained"
-                        onClick={() => setDeclineDialogOpen(true)}
+                        variant="outlined"
+                        onClick={() => setModerateDialogOpen(true)}
                     >
-                        Отклонить
+                        На модерацию
                     </Button>
-                </>
-                :
-                <Button
-                    variant="outlined"
-                    onClick={() => setModerateDialogOpen(true)}
-                >
-                    На модерацию
-                </Button>
-            }
+                }
+            </Box>
             <ModeraionDialog 
                 open={moderateDialogOpen}
                 onClose={() => setModerateDialogOpen(false)}

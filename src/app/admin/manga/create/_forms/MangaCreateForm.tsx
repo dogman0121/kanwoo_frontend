@@ -17,6 +17,7 @@ import MangaNameTranslations from "@/features/form/manga/components/MangaNameTra
 import { useState } from "react"
 import { throttle } from "lodash"
 import MangaPromoName from "@/features/form/manga/components/MangaPromoName"
+import PrivacySelect, { Privacy } from "@/components/PrivacySelect"
 
 export function getDefaultValues() {
     return {
@@ -46,7 +47,7 @@ export interface MangaCreateForm {
     promoBackground: File,
     promoName: File,
     promoLogo: File,
-    privacy: number
+    privacy: number,
 }
 
 export default function AdminMangaCreateForm({
@@ -96,6 +97,19 @@ export default function AdminMangaCreateForm({
                             {...props}
                             error={invalid}
                             helperText={error?.message}
+                        />
+                    )}
+                />
+                <Controller 
+                    control={control}
+                    name="privacy"
+                    defaultValue={Privacy.PRIVATE}
+                    render={({field}) => (
+                        <PrivacySelect 
+                            sx={{
+                                maxWidth: "400px"
+                            }}
+                            {...field}
                         />
                     )}
                 />

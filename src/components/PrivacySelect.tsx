@@ -4,8 +4,8 @@ import LockRoundedIcon from '@mui/icons-material/LockRounded';
 import LinkRoundedIcon from '@mui/icons-material/LinkRounded';
 
 export enum Privacy{
-    PUBLIC = 1,
-    PRIVATE = 2,
+    PUBLIC = 2,
+    PRIVATE = 1,
     LINK = 3
 };
 

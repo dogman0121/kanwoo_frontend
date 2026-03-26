@@ -39,7 +39,7 @@ export default function ProfileWidget({profile}: {profile?: Profile}) {
                     </Typography>
                 </Box>
                 :
-                <Typography>нет</Typography>
+                <Typography>Нет</Typography>
             }
         </>
     )

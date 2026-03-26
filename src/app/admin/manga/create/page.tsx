@@ -36,23 +36,19 @@ export default function Page() {
         formData.append("status", data.status.toString());
         formData.append("adult", data.adult.toString());
         formData.append("year", data.year.toString())
+        formData.append("privacy", data.privacy.toString())
 
         // setting genres
         for (const genre of data.genres)
             formData.append("genre", genre.toString());
-
         if (data.poster)
             formData.append("poster", data.poster);
-        
         if (data.background)
             formData.append("background", data.background);
-        
         if (data.promoName)
             formData.append("promoName", data.promoName);
-        
         if (data.promoLogo)
             formData.append("promoLogo", data.promoLogo);
-        
         if (data.promoBackground)
             formData.append("promoBackground", data.promoBackground);
 

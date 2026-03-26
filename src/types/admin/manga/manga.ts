@@ -5,6 +5,7 @@ import Status from "@/types/manga/status"
 import Type from "@/types/manga/type"
 import Profile from "@/types/profile/profile"
 import AdminMangaModerationStatus from "./moderationStatus"
+import Privacy from "@/types/privacy"
 
 export default interface AdminManga {
     id: number,
@@ -31,8 +32,10 @@ export default interface AdminManga {
     promo_logo: string,
     promo_background: string,
     creator: Profile,
+    author: Profile,
     created_at: string,
     updated_ad: string,
+    privacy: Privacy,
     moderation_status: AdminMangaModerationStatus,
     moderation_history: AdminMangaModerationStatus[]
 }
