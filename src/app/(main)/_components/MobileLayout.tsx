@@ -39,12 +39,15 @@ export default function MobileLayout({children}: {children: React.ReactNode}) {
                     px: theme.spacing(2),
 
                     ".MuiBottomNavigationAction-root": {
+                        px: theme.spacing(2),
+                        minWidth: "72px",
                         "&.Mui-selected": {
                             color: theme.typography.body1.color
                         },
                     },
                     ".MuiBottomNavigationAction-label.Mui-selected": {
-                        color: theme.typography.body1.color
+                        color: theme.typography.body1.color,
+                        fontSize: "13px"
                     }
                 }}
                 value={value}
