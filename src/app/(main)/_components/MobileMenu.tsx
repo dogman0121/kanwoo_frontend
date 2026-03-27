@@ -16,6 +16,8 @@ const MobileMenuItem = styled(ListItem)({
 const MobileMenuNav = styled(Box)(({theme}) => ({
     display: "flex",
     justifyContent: "end",
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
     paddingLeft: "16px",
     paddingRight: "16px"
 }))
@@ -47,8 +49,8 @@ export default function MobileMenu({...props}: DrawerProps) {
                                 <SettignsRoundedIcon />
                             </IconButton>
                         </MobileMenuNav>
+                        <Profile profile={authProfile}/>
                         <MobileMenuList>
-                            <Profile profile={authProfile}/>
                             <Logout />
                         </MobileMenuList>
                     </Box>
@@ -59,16 +61,16 @@ export default function MobileMenu({...props}: DrawerProps) {
                                 <SettignsRoundedIcon />
                             </IconButton>
                         </MobileMenuNav>
+                        <ListItem>
+                            <Button
+                                variant="contained"
+                                fullWidth
+                                onClick={() => setAuthModalOpen(true)}
+                            >
+                                Войдите или зарегисрируйтесь
+                            </Button>
+                        </ListItem>
                         <MobileMenuList>
-                            <ListItem>
-                                <Button
-                                    variant="contained"
-                                    fullWidth
-                                    onClick={() => setAuthModalOpen(true)}
-                                >
-                                    Войдите или зарегисрируйтесь
-                                </Button>
-                            </ListItem>
                         </MobileMenuList>
                         <AuthModal 
                             open={authModalOpen}
