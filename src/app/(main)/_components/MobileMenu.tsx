@@ -22,6 +22,10 @@ const MobileMenuNav = styled(Box)(({theme}) => ({
     paddingRight: "16px"
 }))
 
+const MobileMenuList = styled(List)({
+    padding: 0
+})
+
 export default function MobileMenu({...props}: DrawerProps) {
     const authProfile = useAppSelector(state => state.authProfile.profile)
 
@@ -45,10 +49,10 @@ export default function MobileMenu({...props}: DrawerProps) {
                                 <SettignsRoundedIcon />
                             </IconButton>
                         </MobileMenuNav>
-                        <List>
+                        <MobileMenuList>
                             <Profile profile={authProfile}/>
                             <Logout />
-                        </List>
+                        </MobileMenuList>
                     </Box>
                     :
                     <>
@@ -57,7 +61,7 @@ export default function MobileMenu({...props}: DrawerProps) {
                                 <SettignsRoundedIcon />
                             </IconButton>
                         </MobileMenuNav>
-                        <List>
+                        <MobileMenuList>
                             <ListItem>
                                 <Button
                                     variant="contained"
@@ -67,7 +71,7 @@ export default function MobileMenu({...props}: DrawerProps) {
                                     Войдите или зарегисрируйтесь
                                 </Button>
                             </ListItem>
-                        </List>
+                        </MobileMenuList>
                         <AuthModal 
                             open={authModalOpen}
                             onClose={() => setAuthModalOpen(false)}
