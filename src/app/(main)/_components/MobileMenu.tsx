@@ -16,8 +16,6 @@ const MobileMenuItem = styled(ListItem)({
 const MobileMenuNav = styled(Box)(({theme}) => ({
     display: "flex",
     justifyContent: "end",
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
     paddingLeft: "16px",
     paddingRight: "16px"
 }))
