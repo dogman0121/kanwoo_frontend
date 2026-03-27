@@ -23,18 +23,16 @@ import SwitchAccountRoundedIcon from '@mui/icons-material/SwitchAccountRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
-import ContrastRoundedIcon from '@mui/icons-material/ContrastRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import ManageAccountRoundedIcon from "@mui/icons-material/ManageAccountsRounded"
 import { useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
+import { useAppSelector } from "@/lib/state/hooks";
 import CreateListDialog from "../../../components/CreateListDialog";
-import { clientFetch } from "@/lib/fetch/clientFetch";
-import { setAuthProfile } from "@/lib/state/features/auth_profile/authProfileSlice";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "@/routes";
 import Profile from "./userMenu/Profile";
 import Logout from "./userMenu/Logout";
+import ThemeSwitch from "./userMenu/ThemeSwitch";
 
 
 function ContentCreatingButton() {
@@ -106,8 +104,6 @@ function ContentCreatingButton() {
 }
 
 function UserMenuButton() {
-    const {mode, setMode} = useColorScheme()
-
     const router = useRouter()
 
     const profile = useAppSelector(state => state.authProfile.profile);
@@ -123,17 +119,6 @@ function UserMenuButton() {
     };
 
     const profileMenuOpen = Boolean(profileMenuAnchorEl);
-
-    const dispatch = useAppDispatch()
-
-    const handleSwitchTheme = () => {
-        if (mode == "system")
-            setMode("light")
-        else if (mode == "light")
-            setMode("dark")
-        else
-            setMode("system")
-    }
 
     if (!profile)
         return null;
@@ -218,21 +203,7 @@ function UserMenuButton() {
                     </ListItemText>
                 </MenuItem>
                 <Divider sx={{my: 1}}/>
-                <MenuItem
-                    onClick={handleSwitchTheme}
-                >
-                    <ListItemIcon>
-                        <ContrastRoundedIcon />
-                    </ListItemIcon>
-                    <ListItemText>
-                        Тема
-                    </ListItemText>
-                    <Typography variant="caption">
-                        {mode == "system" && "системная"}
-                        {mode == "dark" && "темная"}
-                        {mode == "light" && "светлая"}
-                    </Typography>
-                </MenuItem>
+                <ThemeSwitch />
                 <MenuItem>
                     <ListItemIcon>
                         <SettingsRoundedIcon />

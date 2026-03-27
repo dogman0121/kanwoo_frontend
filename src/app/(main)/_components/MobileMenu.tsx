@@ -7,6 +7,7 @@ import SettignsRoundedIcon from "@mui/icons-material/SettingsRounded"
 import Logout from "./userMenu/Logout";
 import { useState } from "react";
 import AuthModal from "@/features/auth/components/AuthModal";
+import ThemeSwitch from "./userMenu/ThemeSwitch";
 
 const MobileMenuItem = styled(ListItem)({
     paddingLeft: 0,
@@ -51,6 +52,7 @@ export default function MobileMenu({...props}: DrawerProps) {
                         </MobileMenuNav>
                         <Profile profile={authProfile}/>
                         <MobileMenuList>
+                            <ThemeSwitch />
                             <Logout />
                         </MobileMenuList>
                     </Box>
@@ -71,6 +73,7 @@ export default function MobileMenu({...props}: DrawerProps) {
                             </Button>
                         </ListItem>
                         <MobileMenuList>
+                            <ThemeSwitch />
                         </MobileMenuList>
                         <AuthModal 
                             open={authModalOpen}
