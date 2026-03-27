@@ -1,5 +1,6 @@
 "use client"
 
+import AuthModal from "@/features/auth/components/AuthModal";
 import { AuthSection } from "@/features/auth/types/AuthPanel";
 import { setAuthProfile } from "@/lib/state/features/auth_profile/authProfileSlice";
 import { useAppDispatch } from "@/lib/state/hooks";
@@ -28,24 +29,10 @@ export default function AnonymusUserNav() {
             >
                 Войти
             </Button>
-            <Dialog
+            <AuthModal
                 open={authModalOpened}
                 onClose={() => setAuthModalOpened(false)}
-            >
-                <Auth 
-                    defaultSection={AuthSection.LOGIN}
-                    onRegister={(profile: Profile) => {
-                        dispatch(setAuthProfile(profile))
-
-                        setAuthModalOpened(false)
-                    }}
-                    onLogin={(profile: Profile) => {
-                        dispatch(setAuthProfile(profile))
-
-                        setAuthModalOpened(false)
-                    }}
-                />
-            </Dialog>
+            />
         </>
     )
 }

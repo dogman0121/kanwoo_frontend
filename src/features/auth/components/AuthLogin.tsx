@@ -66,7 +66,7 @@ function ProfileButton({profile, ...props}: ListItemButtonProps & {profile: Auth
 export default function AuthLogin({
     onLogin
 }: {
-    onLogin?: (profile: Profile) => void
+    onLogin?: (profile: AuthProfile) => void
 }) {
     const theme = useTheme()
 

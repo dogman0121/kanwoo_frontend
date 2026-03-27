@@ -25,7 +25,6 @@ import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import ContrastRoundedIcon from '@mui/icons-material/ContrastRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
-import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import ManageAccountRoundedIcon from "@mui/icons-material/ManageAccountsRounded"
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
@@ -34,6 +33,8 @@ import { clientFetch } from "@/lib/fetch/clientFetch";
 import { setAuthProfile } from "@/lib/state/features/auth_profile/authProfileSlice";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "@/routes";
+import Profile from "./userMenu/Profile";
+import Logout from "./userMenu/Logout";
 
 
 function ContentCreatingButton() {
@@ -125,12 +126,6 @@ function UserMenuButton() {
 
     const dispatch = useAppDispatch()
 
-    const handleLogout = async() => {
-        await clientFetch.post("/auth/logout");
-
-        dispatch(setAuthProfile(null))
-    }
-
     const handleSwitchTheme = () => {
         if (mode == "system")
             setMode("light")
@@ -182,27 +177,9 @@ function UserMenuButton() {
                     }
                 }}
             >
-                <MenuItem
-                    sx={{
-                        gap: "15px"
-                    }}
-                >
-                    <Avatar 
-                        src={profile.avatar}
-                        sx={{
-                            width: "50px",
-                            height: "50px"
-                        }}
-                    />
-                    <Box>
-                        <Typography variant="caption">Ваш профиль</Typography>
-                        <Box>
-                            <Typography fontWeight={600} fontSize={"16px"}>{profile.name}</Typography>
-                            <Typography>@{profile.slug}</Typography>
-                        </Box>
-                        
-                    </Box>
-                </MenuItem>
+                <Profile 
+                    profile={profile}
+                />
                 <Divider sx={{my: 1}}/>
                 <MenuItem
                     onClick={() => {
@@ -279,16 +256,7 @@ function UserMenuButton() {
                     />
                 </MenuItem>
                 <Divider sx={{my: 1}}/>
-                <MenuItem
-                    onClick={handleLogout}
-                >
-                    <ListItemIcon>
-                        <LogoutRoundedIcon />
-                    </ListItemIcon>
-                    <ListItemText>
-                        Выйти
-                    </ListItemText>
-                </MenuItem>
+                <Logout />
             </Menu>
         </>
     )

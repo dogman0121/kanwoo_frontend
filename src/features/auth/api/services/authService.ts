@@ -19,7 +19,7 @@ export const authService = {
     },
     
     async register(code: number, login: string, email: string, password: string) {
-        const response = await clientFetch.post<Profile>("/auth/register", {
+        const response = await clientFetch.post<AuthProfile>("/auth/register", {
             headers: {
                 "Content-Type": "application/json"
             },

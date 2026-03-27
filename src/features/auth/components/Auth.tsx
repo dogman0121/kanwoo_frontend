@@ -8,6 +8,7 @@ import AuthRegister from "./AuthRegister"
 import AuthForgot from "./AuthForgot"
 import AuthRecovery from "./AuthRecovery"
 import Profile from "@/types/profile/profile"
+import AuthProfile from "@/types/authProfile"
 
 export default function Auth({
     defaultSection,
@@ -17,8 +18,8 @@ export default function Auth({
     onRecovery
 }: {
     defaultSection?: AuthSection,
-    onRegister?: (profile: Profile) => void,
-    onLogin?: (profile: Profile) => void,
+    onRegister?: (profile: AuthProfile) => void,
+    onLogin?: (profile: AuthProfile) => void,
     onForgot?: () => void,
     onRecovery?: () => void
 }) {
@@ -29,7 +30,6 @@ export default function Auth({
         >
             <Paper
                 sx={{
-                    width: "min(400px, 100vw)",
                     padding: "16px 24px 20px",
                     border: "none",
                     borderRadius: "20px",

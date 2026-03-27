@@ -18,6 +18,7 @@ import AuthTotpInput from "./ui/AuthTotpInput";
 import useTimer from "../hooks/useTimer";
 import Profile from "@/types/profile/profile";
 import AuthTextButton from "./ui/AuthTextButton";
+import AuthProfile from "@/types/authProfile";
 
 
 interface RegisterForm {
@@ -30,7 +31,7 @@ interface RegisterForm {
 export default function AuthRegister({
     onRegister
 }: {
-    onRegister?: (profile: Profile) => void
+    onRegister?: (profile: AuthProfile) => void
 }) {
     const theme = useTheme()
 

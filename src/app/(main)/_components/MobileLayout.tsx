@@ -13,9 +13,12 @@ import { useState } from "react"
 import theme from "@/theme";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "@/routes";
+import MobileMenu from "./MobileMenu";
 
 export default function MobileLayout({children}: {children: React.ReactNode}) {
     const [value, setValue] = useState("");
+
+    const [menuDrawerOpen, setMenuDrawerOpen] = useState(false)
 
     const router = useRouter()
 
@@ -107,11 +110,16 @@ export default function MobileLayout({children}: {children: React.ReactNode}) {
                     label="Меню"
                     value={"menu"}
                     disableRipple
+                    onClick={() => setMenuDrawerOpen(true)}
                     icon={
                         <MenuRoundedIcon />
                     } 
                 />
             </BottomNavigation>
+            <MobileMenu
+                open={menuDrawerOpen}
+                onClose={() => setMenuDrawerOpen(false)}
+            />
         </>
     )
 }

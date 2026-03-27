@@ -179,6 +179,11 @@ const theme = createTheme({
           }
         })
       }
+    },
+    MuiDrawer: {
+      defaultProps: {
+        elevation: 0
+      }
     }
   }
 });
