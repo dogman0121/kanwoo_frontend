@@ -2,12 +2,13 @@
 
 import { EditPageHeader, EditPageNavbar, EditPageTitle } from "@/features/edit/components/EditHeader"
 import { Breadcrumbs, Button, Link, Typography, useTheme } from "@mui/material"
-import AdminMangaCreateForm, { getDefaultValues, MangaCreateForm } from "./_forms/MangaCreateForm";
+import MangaForm, { getFormDefaultValues, MangaFormSchema } from "../_forms/MangaForm"
 import { useForm } from "react-hook-form";
 import { ROUTES } from "@/routes";
 import { clientFetch } from "@/lib/fetch/clientFetch";
 import AdminManga from "@/types/admin/manga/manga";
 import { useRouter } from "next/navigation";
+
 
 export default function Page() {
     const theme = useTheme()
@@ -15,17 +16,19 @@ export default function Page() {
     const router = useRouter()
 
     const { 
+        reset,
         formState: {
             isValid,
+            isDirty
         },
         handleSubmit,
         control,
-    } = useForm<MangaCreateForm>({
+    } = useForm<MangaFormSchema>({
         mode: "onChange",
-        defaultValues: getDefaultValues()
+        defaultValues: getFormDefaultValues()
     });
 
-    const onSend = async (data: MangaCreateForm) => {
+    const onSend = async (data: MangaFormSchema) => {
         const formData = new FormData();
                     
         formData.append("slug", data.slug);
@@ -80,6 +83,8 @@ export default function Page() {
             >
                 <Button
                     variant="outlined"
+                    disabled={!isDirty}
+                    onClick={() => reset(getFormDefaultValues())}
                 >
                     Отмена
                 </Button>
@@ -92,7 +97,7 @@ export default function Page() {
                     Сохранить
                 </Button>
             </EditPageNavbar>
-            <AdminMangaCreateForm 
+            <MangaForm 
                 control={control}
                 handleSubmit={handleSubmit}
                 onSend={onSend}

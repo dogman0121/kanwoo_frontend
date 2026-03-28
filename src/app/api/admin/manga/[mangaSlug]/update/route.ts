@@ -7,5 +7,5 @@ export async function POST(request: Request, {
 }) {
     const { mangaSlug } = await params;
 
-    return fetchApi(request, `/admin/manga/${mangaSlug}/moderation`, HTTP_METHODS.PUT)
+    return fetchApi(request, `/admin/manga/${mangaSlug}`, HTTP_METHODS.PUT)
 }

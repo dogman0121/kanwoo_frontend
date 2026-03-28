@@ -3,7 +3,6 @@
 import { useAppSelector } from "@/lib/state/hooks"
 import { AppBar, Avatar, Box, Button, List, ListItemIcon, ListItemText, Toolbar, Typography, useTheme } from "@mui/material"
 import { notFound, useRouter } from "next/navigation"
-import WestRoundedIcon from '@mui/icons-material/WestRounded';
 import EditLayout from "@/features/edit/components/EditLayout"
 import EditBody from "@/features/edit/components/EditBody"
 import EditDrawer from "@/features/edit/components/EditDrawer"
@@ -26,8 +25,6 @@ import Link from "next/link";
 
 function NavigationDrawer() {
     const { section } = useSection()
-
-    useEffect(() => {console.log(section)}, [section])
 
     return (
         <EditDrawer>

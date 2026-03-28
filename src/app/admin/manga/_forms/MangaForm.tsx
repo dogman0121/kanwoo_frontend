@@ -18,8 +18,9 @@ import { useState } from "react"
 import { throttle } from "lodash"
 import MangaPromoName from "@/features/form/manga/components/MangaPromoName"
 import PrivacySelect, { Privacy } from "@/components/PrivacySelect"
+import AdminManga from "@/types/admin/manga/manga"
 
-export function getDefaultValues() {
+export function getFormDefaultValues() {
     return {
         name: "",
         description: "",
@@ -32,7 +33,29 @@ export function getDefaultValues() {
     }
 }
 
-export interface MangaCreateForm {
+export function getFormData(manga: AdminManga) {
+    return {
+        name: manga.name || "",
+        slug: manga.slug || "",
+        description: manga.description || "",
+        nameTranslations: manga.name_translations?.map(l => (
+            {lang: l.lang.id, name: l.name}
+        )) || [],
+        type: manga.type?.id || 1 ,
+        status: manga.status?.id || 1,
+        adult: manga.adult?.id || 1,
+        genres: manga.genres?.map(genre => genre.id) || [],
+        year: manga.year || new Date().getFullYear(),
+        background: manga?.background,
+        poster: manga.poster?.medium,
+        promoBackground: manga.promo_background,
+        promoName: manga.promo_name,
+        promoLogo: manga.promo_logo,
+        privacy: manga.privacy?.id || 1
+    }
+}
+
+export interface MangaFormSchema {
     slug: string,
     name: string,
     nameTranslations: {name: string, lang: number}[],
@@ -42,26 +65,28 @@ export interface MangaCreateForm {
     status: number,
     adult: number,
     genres: number[],
-    poster: File,
-    background: File, 
-    promoBackground: File,
-    promoName: File,
-    promoLogo: File,
+    poster: File | string | null,
+    background: File | string | null,
+    promoBackground: File | string | null,
+    promoName: File | string | null,
+    promoLogo: File | string | null
     privacy: number,
 }
 
-export default function AdminMangaCreateForm({
+export default function MangaForm({
     onSend,
     control,
+    manga,
     handleSubmit,
 }: {
-    onSend: (data: MangaCreateForm) => void,
-    control: Control<MangaCreateForm>,
-    handleSubmit: UseFormHandleSubmit<MangaCreateForm>
+    onSend: (data: MangaFormSchema) => void,
+    control: Control<MangaFormSchema>,
+    handleSubmit: UseFormHandleSubmit<MangaFormSchema>,
+    manga?: AdminManga
 }) {
     const [slugChecking, setSlugChecking] = useState(false)
 
-    const onSubmit = (data: MangaCreateForm) => {
+    const onSubmit = (data: MangaFormSchema) => {
         onSend(data)
     }
 
@@ -132,6 +157,8 @@ export default function AdminMangaCreateForm({
                     rules={{
                         required: "Это поле не должно быть пустым",
                         validate: throttle(async (value) => {
+                            if (manga && value == manga.slug) return;
+                            
                             setSlugChecking(true)
                             
                             const res = await validateSlug(value)
@@ -149,9 +176,9 @@ export default function AdminMangaCreateForm({
                             defaultValue={""}
                             slugChecking={slugChecking}
                             value={value}
-                            {...props}
                             error={invalid}
                             helperText={error?.message}
+                            {...props}
                         />
                     )}
                 />

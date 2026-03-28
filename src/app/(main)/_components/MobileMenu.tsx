@@ -9,11 +9,6 @@ import { useState } from "react";
 import AuthModal from "@/features/auth/components/AuthModal";
 import ThemeSwitch from "./userMenu/ThemeSwitch";
 
-const MobileMenuItem = styled(ListItem)({
-    paddingLeft: 0,
-    paddingRight: 0
-})
-
 const MobileMenuNav = styled(Box)(({theme}) => ({
     display: "flex",
     justifyContent: "end",
@@ -24,7 +19,6 @@ const MobileMenuNav = styled(Box)(({theme}) => ({
 }))
 
 const MobileMenuList = styled(List)({
-    padding: 0
 })
 
 export default function MobileMenu({...props}: DrawerProps) {
