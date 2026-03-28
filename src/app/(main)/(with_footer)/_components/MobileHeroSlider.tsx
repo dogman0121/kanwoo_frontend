@@ -21,7 +21,7 @@ function HeroManga({manga}: {manga: HeroBlock}) {
                 sx={{
                     position: "relative",
                     maxWidth: "100vw",
-                    aspectRatio: "1/1",
+                    aspectRatio: "5/4",
 
                     boxSizing: "border-box",
 

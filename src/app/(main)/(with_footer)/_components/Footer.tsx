@@ -17,6 +17,7 @@ function FeedbackDialog({onClose, ...props}: DialogProps) {
             })
         })
 
+        onClose?.({}, "backdropClick")
         setSuccessSnackbarOpen(true)
     }
 
