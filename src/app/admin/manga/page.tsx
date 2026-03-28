@@ -59,14 +59,15 @@ function MangaCardShortData() {
             />
             <Grid
                 container
-                columns={5}
+                columns={6}
                 sx={{
                     width: "100%",
                     alignItems: "center"
                 }}
             >
                 <Grid
-                    size={1}
+                    size={2}
+                    spacing={2}
                 >
                     <Typography>
                         {manga.name}
@@ -369,14 +370,14 @@ function MangaModerationStatusHistory({sx}: {sx?: SxProps}) {
                                 </Typography>
                             </Grid>
                             <Grid
-                                size={1}
+                                size={2}
                             >
                                 <ProfileWidget 
                                     profile={status.creator}
                                 />
                             </Grid>
                             <Grid
-                                size={4}
+                                size={3}
                             >
                                 {status.message ?
                                     <Typography>
