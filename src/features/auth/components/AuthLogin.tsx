@@ -338,7 +338,7 @@ export default function AuthLogin({
                             AuthSection.REGISTER
                         )}
                     >
-                        Зарегестрироваться
+                        Зарегистрироваться
                     </AuthTextButton>
                 </Box>
             </Box>

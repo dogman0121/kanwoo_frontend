@@ -59,7 +59,7 @@ export default function Page() {
             body: formData
         })
 
-        router.push(ROUTES.MANGA.MAIN(response.data.slug))
+        router.push(ROUTES.ADMIN.MANGA.MAIN)
     }
 
     return (
