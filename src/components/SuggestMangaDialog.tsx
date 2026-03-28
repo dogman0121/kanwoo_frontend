@@ -22,6 +22,9 @@ export default function SuggestMangaDialog({onClose, ...props}: Omit<DialogProps
 
     const handleSuggest = async (data: SuggestMangaForm) => {
         await clientFetch.post("/manga/suggest", {
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({
                 name: data.name,
                 link: data.link,
