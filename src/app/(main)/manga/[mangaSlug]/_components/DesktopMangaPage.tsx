@@ -11,11 +11,13 @@ import NameTranslations from "./NameTranslations";
 import Similar from "./Similar";
 import theme from "@/theme";
 import { useState } from "react";
-import ReportMangaDialog from "@/components/ReportDialog";
 import DesktopSections from "./DesktopSections";
 import DesktopReadingButton from "./DesktopReadingButton";
 import ReportDialog from "@/components/ReportDialog";
 import { mangaService } from "../_services/mangaService";
+import dynamic from "next/dynamic";
+
+const CollectionDialog = dynamic(() => import("./CollectionDialog"))
 
 export default function DesktopMangaPage() {
     const manga = useAppSelector(state => state.mangaPage.manga)
@@ -23,6 +25,8 @@ export default function DesktopMangaPage() {
     const similar = useAppSelector(state => state.mangaPage.similar);
 
     const [reportDialogOpen, setReportDialogOpen] = useState(false);
+
+    const [collectionsDialogOpen, setCollectionsDialogOpen] = useState(false)
 
     if (!manga) 
         return null;
@@ -59,12 +63,14 @@ export default function DesktopMangaPage() {
                                     }}
                                     fullWidth
                                     variant="contained"
+                                    onClick={() => setCollectionsDialogOpen(true)}
                                 >
                                     Сохранить
                                 </Button>
                                 <Button
                                     fullWidth
                                     color="secondary"
+                                    disableRipple
                                     sx={(theme) =>({
                                         color: theme.typography.caption.color
                                     })}
@@ -231,6 +237,10 @@ export default function DesktopMangaPage() {
                 onSend={async (data) => {
                     await mangaService.reportManga(manga, data.reportType, data.comment)
                 }}
+            />
+            <CollectionDialog
+                open={collectionsDialogOpen}
+                onClose={() => setCollectionsDialogOpen(false)}
             />
         </>
     )

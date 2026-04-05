@@ -9,7 +9,7 @@ import ReportRoundedIcon from "@mui/icons-material/ReportRounded"
 import ReplyRoundedIcon from "@mui/icons-material/ReplyRounded"
 import { ShareMobile } from "@/components/Share";
 import ReportDialog from "@/components/ReportDialog";
-import { mangaService } from "@/app/(main)/(with_footer)/manga/[mangaSlug]/_services/mangaService";
+import { mangaService } from "@/app/(main)/manga/[mangaSlug]/_services/mangaService";
 import { clientFetch } from "@/lib/fetch/clientFetch";
 
 function BackdropBody({sx, ...props}: BoxProps) {

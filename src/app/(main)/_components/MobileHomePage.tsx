@@ -68,7 +68,7 @@ export default function MobileHomePage() {
             </Suspense>
             <Container
                 sx={{
-                    mt: "25px",
+                    mt: theme.spacing(3),
                     display :"flex",
                     flexDirection: "column",
                     gap: "20px"

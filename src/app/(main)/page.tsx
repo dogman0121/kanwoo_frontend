@@ -1,4 +1,3 @@
-import { homeServerApi } from "@/lib/fetch/features/home/server";
 import HomePageDesktop from "./_components/DesktopHomePage";
 import HomePageMobile from "./_components/MobileHomePage";
 import { serverFetch } from "@/lib/fetch/serverFetch";

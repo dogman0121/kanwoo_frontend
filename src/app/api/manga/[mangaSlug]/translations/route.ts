@@ -1,4 +1,3 @@
-import MangaSlug from "@/app/(main)/studio/_features/manga/components/MangaSlug";
 import { fetchApi, HTTP_METHODS } from "@/lib/api/fetchApi";
 
 export async function GET(

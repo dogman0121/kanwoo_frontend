@@ -12,7 +12,6 @@ import {
     Menu, 
     MenuItem, 
     Typography, 
-    useColorScheme, 
     useTheme
 } from "@mui/material"
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -27,7 +26,7 @@ import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRound
 import ManageAccountRoundedIcon from "@mui/icons-material/ManageAccountsRounded"
 import { useState } from "react";
 import { useAppSelector } from "@/lib/state/hooks";
-import CreateListDialog from "../../../components/CreateListDialog";
+import CreateCollectionDialog from "../../../components/CreateCollectionDialog";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "@/routes";
 import Profile from "./userMenu/Profile";
@@ -50,9 +49,7 @@ function ContentCreatingButton() {
 
     const createContentMenuOpen = Boolean(createContentMenuAnchorEl);
 
-    // Dialog states
     const [listDialogOpen, setListDialogOpen] = useState(false);
-
 
     return (
         <>
@@ -98,7 +95,11 @@ function ContentCreatingButton() {
                     Тайтл
                 </MenuItem>
             </Menu>
-            <CreateListDialog open={listDialogOpen} onClose={() => setListDialogOpen(false)}/>
+            <CreateCollectionDialog 
+                open={listDialogOpen} 
+                onClose={() => setListDialogOpen(false)}
+                onCreate={() => {}}
+            />
         </>
     )
 }

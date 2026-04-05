@@ -1,7 +1,5 @@
 "use client"
 
-import MangaName from "@/app/(main)/studio/_features/manga/components/MangaName";
-import MangaNameTranslations from "@/app/(main)/studio/_features/manga/components/MangaNameTranslations";
 import EditHeader from "@/features/edit/components/EditHeader";
 import EditHeaderNav from "@/features/edit/components/EditHeaderNav";
 import EditPageContainer from "@/features/edit/components/EditPageContainer";
@@ -9,17 +7,18 @@ import { useAppSelector } from "@/lib/state/hooks";
 import { Button, Grid } from "@mui/material";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
-import MangaDescription from "@/app/(main)/studio/_features/manga/components/MangaDescription";
-import MangaType from "@/app/(main)/studio/_features/manga/components/MangaType";
-import MangaStatus from "@/app/(main)/studio/_features/manga/components/MangaStatus";
-import MangaYear from "@/app/(main)/studio/_features/manga/components/MangaYear";
-import MangaAdult from "@/app/(main)/studio/_features/manga/components/MangaAdult";
-import MangaGenres from "@/app/(main)/studio/_features/manga/components/MangaGenres";
-import MangaPoster from "@/app/(main)/studio/_features/manga/components/MangaPoster";
-import MangaBackground from "@/app/(main)/studio/_features/manga/components/MangaBackground";
+import MangaDescription from "@/app/studio/_features/manga/components/MangaDescription";
 import { clientFetch } from "@/lib/fetch/clientFetch";
 import Manga from "@/types/manga/manga";
 import { useRouter } from "next/navigation";
+import MangaPoster from "@/features/form/manga/components/MangaPoster";
+import MangaName from "@/features/form/manga/components/MangaName";
+import MangaType from "@/features/form/manga/components/MangaType";
+import MangaStatus from "@/features/form/manga/components/MangaStatus";
+import MangaYear from "@/features/form/manga/components/MangaYear";
+import MangaAdult from "@/features/form/manga/components/MangaAdult";
+import MangaGenres from "@/features/form/manga/components/MangaGenres";
+import MangaBackground from "@/features/form/manga/components/MangaBackground";
 
 interface MangaCreateForm {
     name: string,

@@ -1,6 +1,6 @@
 import { Container, Skeleton } from "@mui/material";
-import MangaCarouselSkeleton from "./(with_footer)/_components/MangaCarouselSkeleton";
-import DesktopHeroSliderSkeleton from "./(with_footer)/_components/DesktopHeroSliderSkeleton";
+import DesktopHeroSliderSkeleton from "./_components/DesktopHeroSliderSkeleton";
+import MangaCarouselSkeleton from "./_components/MangaCarouselSkeleton";
 
 export default async function Loading() {
 

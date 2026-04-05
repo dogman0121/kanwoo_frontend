@@ -1,9 +1,6 @@
-import { headers } from 'next/headers';
-import StoreProvider from '../_components/StoreProvider';
-import MainLayout from './_components/MainLayout';
-import MobileLayout from './_components/MobileLayout';
-import DesktopLayout from './_components/DesktopLayout';
-import Footer from './_components/Footer';
+import { headers } from "next/headers";
+import MobileLayout from "../(main)/_components/MobileLayout";
+import DesktopLayout from "../(main)/_components/DesktopLayout";
 
 export default async function RootLayout({
   children,
@@ -23,7 +20,6 @@ export default async function RootLayout({
                   {children}
               </DesktopLayout>
           }
-          <Footer />
       </>  
   )
 }

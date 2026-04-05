@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import Page from "@/types/chapter/page";
 import { Box } from "@mui/material";
 import { Swiper, SwiperSlide, useSwiperSlide } from "swiper/react";
-import "@/app/(main)/(with_footer)/_components/slider.css"
+import "@/app/(main)/_components/slider.css"
 import { 
     appendChapterPageChapter,
     setChapterPageCurrentChapter,
