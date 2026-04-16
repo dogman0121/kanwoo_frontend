@@ -49,7 +49,7 @@ export async function middleware(request: NextRequest) {
                     headers.set("cookie", request.cookies.toString())
 
                     if (["POST", "PUT", "DELETE", "PATCH"].indexOf(request.method)) {
-                        const newCSRF = request.cookies.get("csrf_access_token")?.value
+                        const newCSRF = request.cookies.get(process.env.NEXT_PUBLIC_CSRF_ACCESS_COOKIE_NAME || "")?.value
 
                         if (newCSRF) 
                             headers.set("X-CSRF-TOKEN", newCSRF)
