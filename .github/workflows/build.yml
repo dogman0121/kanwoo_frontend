@@ -5,10 +5,14 @@ on:
                 required: true
                 type: string
                 description: Tag for docker image
+            environment:
+                required: true
+                type: string
 
 jobs:
     build:
         runs-on: ubuntu-latest
+        environment: ${{ inputs.environment }}
         steps:
             - name: Clone repo
               uses: actions/checkout@v3
