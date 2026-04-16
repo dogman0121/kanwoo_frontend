@@ -94,7 +94,7 @@ export const clientFetch = {
             })
         }
         else {
-            return await fetch(process.env.NEXT_PUBLIC_SITE_URL + "/api" + url, {
+            return await fetch("/api" + url, {
                 credentials: "include",
                 ...payload,
             })
