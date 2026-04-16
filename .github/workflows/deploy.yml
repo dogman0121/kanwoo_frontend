@@ -45,6 +45,8 @@ jobs:
             DOCKER_COMPOSE_PATH: ${{ vars.COMPOSE_DESTINATION_PATH }}
             DOCKER_COMPOSE_FILENAME: ${{ vars.COMPOSE_FILENAME }}
             API_URL: ${{vars.API_URL}}
+            PORT: ${{vars.PORT}}
+            PROJECT_NAME: ${{vars.PROJECT_NAME}}
           with:
             host: ${{ secrets.SSH_HOST }}
             username: ${{ secrets.SSH_USER }}
@@ -55,22 +57,7 @@ jobs:
                 CR_REGISTRY, 
                 CR_REPOSITORY, 
                 IMAGE_TAG,   
-                SECRET_KEY,
-                DATABASE_URI,
-                CACHE_URI,
-                MAIL_SERVER,
-                MAIL_PORT,
-                MAIL_USERNAME,
-                MAIL_DEFAULT_SENDER,
-                MAIL_PASSWORD,
-                UPLOAD_DIR,
-                LOG_DIR,
-                CDN_URL,
-                DOMAIN,
-                FRONTEND_URL,
-                DOCKER_COMPOSE_PATH,
-                DOCKER_COMPOSE_FILENAME,
-                PORT,
+                API_URL,
                 PROJECT_NAME
             script: |
                 echo $YC_IAM_TOKEN|docker login \
