@@ -1,12 +1,10 @@
 services:
   # Node.js service (use with: docker compose up nextjs-standalone --build)
   kanwoo-frontend:
-    image: "cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:kanwoo-frontend-$IMAGE_TAG"
-    container_name: kanwoo-frontend
+    image: "cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG"
     environment:
-      NODE_ENV: production
-      PORT: "3000"
-      API_URL: "https://api.kanwoo.ru/v1"
+      PORT: 3000
+      API_URL: $API_URL
     ports:
-      - "3000:3000"
+      - "$PORT:3000"
     restart: unless-stopped
