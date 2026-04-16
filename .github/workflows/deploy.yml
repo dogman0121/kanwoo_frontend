@@ -55,7 +55,8 @@ jobs:
             envs: 
                 YC_IAM_TOKEN, 
                 CR_REGISTRY, 
-                CR_REPOSITORY, 
+                CR_REPOSITORY,
+                DOCKER_COMPOSE_FILENAME, 
                 IMAGE_TAG,   
                 API_URL,
                 PROJECT_NAME
