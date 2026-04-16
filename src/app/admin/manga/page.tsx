@@ -165,7 +165,7 @@ function MangaCardFullData({sx}: {sx?: SxProps}) {
             <Grid
                 size={12}
             >
-                <Typography fontWeight={600}>Описание</Typography>
+                <Typography whiteSpace="pre-wrap" fontWeight={600}>Описание</Typography>
                 <Typography>{manga.description || "нет"}</Typography>
             </Grid>
             <Grid
