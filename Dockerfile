@@ -6,7 +6,6 @@
 # This Dockerfile uses Node.js 24.13.0-slim, which was the latest LTS version at the time of writing.
 # To ensure security and compatibility, regularly update the NODE_VERSION ARG to the latest LTS version.
 ARG NODE_VERSION=24.13.0-slim
-ARG NEXT_PUBLIC_SITE_URL
 
 FROM node:${NODE_VERSION} AS dependencies
 
@@ -46,7 +45,6 @@ COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
 
 ENV NODE_ENV=production
-ENV NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
@@ -75,6 +73,8 @@ RUN if [ -f package-lock.json ]; then \
 
 FROM node:${NODE_VERSION} AS runner
 
+ARG NEXT_PUBLIC_SITE_URL
+
 # Set working directory
 WORKDIR /app
 
@@ -82,6 +82,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
+ENV NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
