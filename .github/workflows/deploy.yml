@@ -61,7 +61,8 @@ jobs:
                 DOCKER_COMPOSE_FILENAME, 
                 IMAGE_TAG,   
                 API_URL,
-                PROJECT_NAME
+                PROJECT_NAME,
+                PORT
             script: |
                 echo $YC_IAM_TOKEN|docker login \
                 --username iam \
