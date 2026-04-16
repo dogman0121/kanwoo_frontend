@@ -57,6 +57,7 @@ jobs:
                 YC_IAM_TOKEN, 
                 CR_REGISTRY, 
                 CR_REPOSITORY,
+                DOCKER_COMPOSE_PATH,
                 DOCKER_COMPOSE_FILENAME, 
                 IMAGE_TAG,   
                 API_URL,
