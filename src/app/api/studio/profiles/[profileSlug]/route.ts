@@ -21,5 +21,5 @@ export async function PUT(
 ) {
     const {profileSlug} = await params;
 
-    return fetchApi(request, `/profile/${profileSlug}`, HTTP_METHODS.PUT)
+    return fetchApi(request, `/profiles/${profileSlug}`, HTTP_METHODS.PUT)
 }
