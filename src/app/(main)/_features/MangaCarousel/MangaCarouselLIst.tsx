@@ -1,15 +1,21 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import "../../_components/slider.css"
 import { v4 } from "uuid";
 import { MangaItemSquare } from "@/components/MangaItem";
-import { Scrollbar } from "swiper/modules";
+import { Scrollbar, Mousewheel } from "swiper/modules";
 import Manga from "@/types/manga/manga";
+import "swiper/css"
+import "swiper/css/free-mode"
+import "swiper/css/mousewheel"
 
-export default function MangaCarouselList({manga}: {manga: Manga[]}) {
+export default function MangaCarouselList({mangaList}: {mangaList: Manga[]}) {
     return (
         <Swiper
-            modules={[Scrollbar]}
+            modules={[Mousewheel]}
             spaceBetween={15}
+            mousewheel={{
+                enabled: true,
+                forceToAxis: true
+            }}
             draggable={true}
             breakpoints={{
                 0: { slidesPerView: 3 },
@@ -22,10 +28,10 @@ export default function MangaCarouselList({manga}: {manga: Manga[]}) {
                 width: "100%",
             }}
         >
-            {manga.map(m => (
+            {mangaList.map(manga => (
                 <SwiperSlide key={`manga_carousel_slide_${v4()}`}>
                     <MangaItemSquare 
-                        manga={m} 
+                        manga={manga} 
                         sx={{
                             width: "100%"
                         }}

@@ -3,14 +3,16 @@
 import { useAppSelector } from "@/lib/state/hooks"
 import { Box } from "@mui/material"
 import { Swiper, SwiperSlide } from 'swiper/react';
-import "./slider.css"
-
 import { Navigation, EffectFade, Autoplay, Pagination } from 'swiper/modules';
 import { Vibrant } from "node-vibrant/browser";
 import HeroBlock from "@/types/home/heroBlock";
 import { useEffect, useState } from "react";
 import { v4 } from "uuid";
-import Image from "next/image";
+import "swiper/css"
+import "swiper/css/navigation"
+import "swiper/css/effect-fade"
+import "swiper/css/autoplay"
+import "swiper/css/pagination"
 
 function HeroManga({manga}: {manga: HeroBlock}) {
     const [mainColor, setMainColor] = useState<number[] | null>(null);
@@ -107,7 +109,9 @@ export default function DesktopHeroSlider() {
             <Swiper
                 style={{ height: "100%" }}
                 modules={[Navigation, EffectFade, Pagination, Autoplay]}
-                pagination={{ clickable: true }}
+                pagination={{ 
+                    clickable: true 
+                }}
                 speed={800}
                 effect={"fade"}
                 loop

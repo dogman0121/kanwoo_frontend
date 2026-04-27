@@ -9,6 +9,8 @@ import { Button, Divider, SxProps, Typography } from "@mui/material";
 import { useRef, useState } from "react";
 import CreateTranslationDialog from "./_components/CreateTransationDialog";
 import TranslationGrid from "../../../_features/translations/TranslationsGrid";
+import { clientFetch } from "@/lib/fetch/clientFetch";
+import Translation from "@/types/translation/translation";
 
 
 export default function Page() {
@@ -22,7 +24,7 @@ export default function Page() {
 
     if (!initialized.current && manga) {
         initialized.current = true
-        studioClientApi.getMangaTranslations(manga.slug)
+        clientFetch.get<Translation[]>(`/manga/${manga.slug}/translations`)
             .then((response) => {
                 store.dispatch(setStudioPageMangaTranslations(response.data))
             })

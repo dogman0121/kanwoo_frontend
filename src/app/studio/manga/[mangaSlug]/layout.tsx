@@ -18,7 +18,7 @@ export default async function Layout({
     try {
         const {mangaSlug} = await params;
 
-        const {data: studioMangaInfo} = await serverFetch.get<GetStudioPageManga>(`/studio/manga/${mangaSlug}/getManga`)
+        const {data: studioMangaInfo} = await serverFetch.get<GetStudioPageManga>(`/studio/manga/${mangaSlug}`)
 
         if (!studioMangaInfo.manga || !studioMangaInfo.mangaPermission.edit)
             return notFound()

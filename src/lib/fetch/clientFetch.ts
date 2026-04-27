@@ -68,7 +68,7 @@ export const clientFetch = {
     },
 
     async _refreshToken() {
-        const csrfRefreshToken = this._getCookie("csrf_refresh_token");
+        const csrfRefreshToken = this._getCookie(process.env.NEXT_PUBLIC_CSRF_REFRESH_COOKIE_NAME || "");
 
         if (!csrfRefreshToken)
             throw Error("Failed to fetch refresh csrf token")
