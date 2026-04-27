@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import Page from "@/types/chapter/page";
 import { Box } from "@mui/material";
 import { Swiper, SwiperSlide, useSwiperSlide } from "swiper/react";
-import "@/app/(main)/_components/slider.css"
 import { 
     appendChapterPageChapter,
     setChapterPageCurrentChapter,
@@ -19,6 +18,8 @@ import { chapterService } from "../_services/chapterService";
 import { throttle } from "lodash";
 import Chapter from "@/types/chapter/chapter";
 import Image from "next/image";
+import "swiper/css"
+import "swiper/css/navigation"
 
 function PageBlock({
     page, 

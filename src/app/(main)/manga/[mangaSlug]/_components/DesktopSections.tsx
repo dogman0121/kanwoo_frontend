@@ -18,7 +18,7 @@ export default function DesktopSections() {
     useEffect(() => {
         if (!manga) return () => {}
 
-        clientFetch.get<Translation[]>(`/manga/${manga.slug}/getTranslations`)
+        clientFetch.get<Translation[]>(`/manga/${manga.slug}/translations`)
             .then((data) => {
                 dispatch(setMangaPageTranslations(data.data))
             })
