@@ -1,3 +1,4 @@
+import Collection from "@/types/collection/collection";
 import Manga from "@/types/manga/manga";
 import Profile from "@/types/profile/profile";
 import ProfilePermission from "@/types/profile/profilePermission";
@@ -8,14 +9,16 @@ export interface StudioPageProfileState {
     profile?: Profile,
     profilePermission?: ProfilePermission,
     translations?: Translation[],
-    manga?: Manga[]
+    manga?: Manga[],
+    collections?: Collection[]
 }
 
 const initialState: StudioPageProfileState = {
     profile: undefined,
     profilePermission: undefined,
     translations: undefined,
-    manga: undefined
+    manga: undefined,
+    collections: undefined
 }
 
 export const studioPageProfileSlice = createSlice({
@@ -36,10 +39,20 @@ export const studioPageProfileSlice = createSlice({
 
         setStudioPageProfileTranslations: (state, action) => {
             state.translations = action.payload
+        },
+
+        setStudioPageProfileCollections: (state, action) => {
+            state.collections = action.payload
         }
     }
 })
 
-export const { setStudioPageProfile, setStudioPageProfilePermissions, setStudioPageProfileManga, setStudioPageProfileTranslations } = studioPageProfileSlice.actions
+export const { 
+    setStudioPageProfile, 
+    setStudioPageProfilePermissions, 
+    setStudioPageProfileManga, 
+    setStudioPageProfileTranslations,
+    setStudioPageProfileCollections
+} = studioPageProfileSlice.actions
 
 export default studioPageProfileSlice.reducer

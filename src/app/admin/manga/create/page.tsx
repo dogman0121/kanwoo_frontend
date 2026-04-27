@@ -29,6 +29,7 @@ export default function Page() {
     });
 
     const onSend = async (data: MangaFormSchema) => {
+        console.log(data)
         const formData = new FormData();
                     
         formData.append("slug", data.slug);
@@ -49,13 +50,13 @@ export default function Page() {
         if (data.background)
             formData.append("background", data.background);
         if (data.promoName)
-            formData.append("promoName", data.promoName);
+            formData.append("promo_name", data.promoName);
         if (data.promoLogo)
-            formData.append("promoLogo", data.promoLogo);
+            formData.append("promo_logo", data.promoLogo);
         if (data.promoBackground)
-            formData.append("promoBackground", data.promoBackground);
+            formData.append("promo_background", data.promoBackground);
 
-        const response = await clientFetch.post<AdminManga>(`/admin/manga`, {
+        await clientFetch.post<AdminManga>(`/admin/manga`, {
             body: formData
         })
 

@@ -1,47 +1,44 @@
 "use client"
 
-import EditDrawer from "@/features/edit/components/EditDrawer";
+import EditSectionsDrawer from "@/features/edit/components/EditDrawer";
+import EditSectionsLinkButton from "@/features/edit/components/EditSectionsLinkButton";
+import { Box, Divider, List, ListItemIcon, ListItemText, Typography } from "@mui/material";
+import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded"
+import InfoOutlineRoundedIcon from '@mui/icons-material/InfoOutlineRounded';
+import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
+import Poster from "@/components/Poster";
+import useSection from "../../../_hooks/useSection";
 import EditSectionsButton from "@/features/edit/components/EditSectionsButton";
 import { useAppSelector } from "@/lib/state/hooks";
-import { Avatar, Box, Divider, List, ListItemIcon, ListItemText, Typography } from "@mui/material";
-import InfoOutlineRoundedIcon from '@mui/icons-material/InfoOutlineRounded';
-import LibraryBooksRoundedIcon from '@mui/icons-material/LibraryBooksRounded';
-import TranslateRoundedIcon from '@mui/icons-material/TranslateRounded';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
-import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded"
-import EditSectionsLinkButton from "@/features/edit/components/EditSectionsLinkButton";
-import useSection from "../../../_hooks/useSection";
-import Poster from "@/components/Poster";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-import StudioMangaSettings from "./StudioMangaSettings";
+import StudioChapterSettings from "./StudioChapterSettings";
 import { ROUTES } from "@/routes";
 
-
-export default function StudioMangaDrawer() {
-    const profile = useAppSelector(state => state.authProfile.profile)
-    const manga = useAppSelector(state => state.studioPageManga.manga)
-
+export default function StudioChapterDrawer() {
     const { section } = useSection()
 
     const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
 
-    if (!manga || !profile) return ;
+    const chapter = useAppSelector(state => state.studioPageChapter.chapter)
+
+    if (!chapter) return;
 
     return (
         <>
-            <EditDrawer>
+            <EditSectionsDrawer>
                 <Box
                     sx={{
                         p: "20px 15px"
                     }}
                 >
-                    <EditSectionsLinkButton link={ROUTES.STUDIO.PROFILE.MAIN(profile.slug)}>
-                        <ListItemIcon>
-                            <ArrowBackRoundedIcon />
-                        </ListItemIcon>
-                        <ListItemText>В профиль</ListItemText>
-                    </EditSectionsLinkButton>
+                    {chapter.translation && (
+                        <EditSectionsLinkButton link={ROUTES.STUDIO.TRANSLATION.MAIN(chapter.translation.id)}>
+                            <ListItemIcon>
+                                <ArrowBackRoundedIcon />
+                            </ListItemIcon>
+                            <ListItemText>К переводу</ListItemText>
+                        </EditSectionsLinkButton>
+                    )}
                     <Box
                         sx={{
                             display: "flex",
@@ -51,7 +48,7 @@ export default function StudioMangaDrawer() {
                         }}
                     >
                         <Poster
-                            src={manga.poster?.medium} 
+                            src={chapter?.manga?.poster?.medium} 
                             width="140px"
                         />
                         <Box
@@ -62,14 +59,14 @@ export default function StudioMangaDrawer() {
                                 mt: "10px"
                             }}
                         >
-                            <Typography fontWeight={600}>{manga.name}</Typography>
-                            <Typography variant="caption">@{manga.slug}</Typography>
+                            <Typography fontWeight={600}>{chapter?.name}</Typography>
+                            <Typography variant="caption">Глава {chapter?.chapter}</Typography>
                         </Box>
                     </Box>
                     <Box>
                         <List>
                             <EditSectionsLinkButton 
-                                link={`/studio/manga/${manga.slug}`}
+                                link={`/studio/translation/${chapter?.id}`}
                                 selected={section == "main"}
                             >
                                 <ListItemIcon>
@@ -77,28 +74,6 @@ export default function StudioMangaDrawer() {
                                 </ListItemIcon>
                                 <ListItemText>
                                     Информация
-                                </ListItemText>
-                            </EditSectionsLinkButton>
-                            <EditSectionsLinkButton 
-                                link={`/studio/manga/${manga?.slug}/translations`}
-                                selected={section == "translations"}
-                            >
-                                <ListItemIcon>
-                                    <LibraryBooksRoundedIcon />
-                                </ListItemIcon>
-                                <ListItemText>
-                                    Главы
-                                </ListItemText>
-                            </EditSectionsLinkButton>
-                            <EditSectionsLinkButton  
-                                link={`/studio/manga/${manga.slug}/comments`}
-                                selected={section == "comments"}  
-                            >
-                                <ListItemIcon>
-                                    <TranslateRoundedIcon />
-                                </ListItemIcon>
-                                <ListItemText>
-                                    Комментарии
                                 </ListItemText>
                             </EditSectionsLinkButton>
                         </List>
@@ -129,8 +104,8 @@ export default function StudioMangaDrawer() {
                         </EditSectionsButton>
                     </List>
                 </Box>
-            </EditDrawer>
-            <StudioMangaSettings 
+            </EditSectionsDrawer>
+            <StudioChapterSettings 
                 open={settingsOpen}
                 onClose={() => setSettingsOpen(false)}
             />

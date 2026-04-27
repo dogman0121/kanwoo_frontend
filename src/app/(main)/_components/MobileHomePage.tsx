@@ -77,19 +77,19 @@ export default function MobileHomePage() {
                 <Suspense fallback={<MangaCarouselSkeleton />}>
                     <MangaCarousel>
                         <MangaCarouselTitle>Новые</MangaCarouselTitle>
-                        <MangaCarouselList manga={home?.newest || []}/>
+                        <MangaCarouselList mangaList={home?.newest || []}/>
                     </MangaCarousel>
                 </Suspense>
                 <Suspense fallback={<MangaCarouselSkeleton />}>
                     <MangaCarousel>
                         <MangaCarouselTitle>Завершенные</MangaCarouselTitle>
-                        <MangaCarouselList manga={home?.ended || []}/>
+                        <MangaCarouselList mangaList={home?.ended || []}/>
                     </MangaCarousel>
                 </Suspense>
                 <Suspense fallback={<MangaCarouselSkeleton />}>
                     <MangaCarousel>
                         <MangaCarouselTitle>Рандомные</MangaCarouselTitle>
-                        <MangaCarouselList manga={home?.random || []}/>
+                        <MangaCarouselList mangaList={home?.random || []}/>
                     </MangaCarousel>
                 </Suspense>
             </Container>

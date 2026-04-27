@@ -24,14 +24,19 @@ jobs:
                 
             - name: Build, tag, and push image to Yandex Cloud Container Registry
               env:
+                IMAGE_TAG: ${{ inputs.image-tag }}
                 CR_REGISTRY: ${{ vars.CR_REGISTRY }}
                 CR_REPOSITORY: ${{ vars.CR_REPOSITORY }}
-                IMAGE_TAG: ${{ inputs.image-tag }}
                 NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+                NEXT_PUBLIC_CSRF_ACCESS_COOKIE_NAME: ${{ vars.NEXT_PUBLIC_CSRF_ACCESS_COOKIE_NAME }}
+                NEXT_PUBLIC_CSRF_REFRESH_COOKIE_NAME: ${{ vars.NEXT_PUBLIC_CSRF_REFRESH_COOKIE_NAME }}
+
               run: |
                 echo $NEXT_PUBLIC_SITE_URL
                 docker build \
                     --build-arg NEXT_PUBLIC_SITE_URL="$NEXT_PUBLIC_SITE_URL" \
+                    --build-arg NEXT_PUBLIC_CSRF_ACCESS_COOKIE_NAME="$NEXT_PUBLIC_CSRF_ACCESS_COOKIE_NAME" \
+                    --build-arg NEXT_PUBLIC_CSRF_REFRESH_COOKIE_NAME="$NEXT_PUBLIC_CSRF_REFRESH_COOKIE_NAME" \
                     -t cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG .
 
                 docker push cr.yandex/$CR_REGISTRY/$CR_REPOSITORY:$IMAGE_TAG 

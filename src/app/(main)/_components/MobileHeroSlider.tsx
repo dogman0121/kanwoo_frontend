@@ -4,17 +4,20 @@ import { useAppSelector } from "@/lib/state/hooks";
 import { Box, Button, useTheme } from "@mui/material";
 import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import "./slider.css"
 import { v4 } from "uuid";
 import HeroBlock from "@/types/home/heroBlock";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import "swiper/css"
+import "swiper/css/navigation"
+import "swiper/css/effect-fade"
+import "swiper/css/autoplay"
+import "swiper/css/pagination"
 
 function HeroManga({manga}: {manga: HeroBlock}) {
     const theme = useTheme()
     
     const router = useRouter();
-
+//hff
     return (
         <Box>
             <Box

@@ -29,6 +29,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import MangaEditData from "@/types/manga/mangaEditData";
 import Manga from "@/types/manga/manga";
 import { GetStudioMangaEditData } from "@/app/api/studio/manga/[mangaSlug]/forms/edit/route";
+import { ROUTES } from "@/routes";
 
 interface MangaEditForm {
     slug: string,
@@ -110,7 +111,7 @@ export default function Page() {
     });
 
     useEffect(() => {
-        clientFetch.get<GetStudioMangaEditData>(`/studio/manga/${mangaSlug}/getEditData`)
+        clientFetch.get<GetStudioMangaEditData>(`/studio/manga/${mangaSlug}/forms/edit`)
             .then((response) => {
                 setMangaData(response.data)
                 setBlockedFields(response.metadata.blocked_fields as string[])
@@ -164,13 +165,13 @@ export default function Page() {
             formData.append("promoBackground", data.promoBackground);
         formData.append("promoBackgroundAction", promoBackgroundAction);
 
-        const response = await clientFetch.post<Manga>(`/studio/manga/${mangaData.slug}/updateManga`, {
+        const response = await clientFetch.put<Manga>(`/studio/manga/${mangaData.slug}`, {
             body: formData
         })
 
         dispatch(setStudioPageManga(response.data))
 
-        router.replace(`/studio/manga/${response.data.slug}`)
+        router.replace(ROUTES.STUDIO.MANGA.MAIN(response.data.slug))
 
         reset(data)
     }

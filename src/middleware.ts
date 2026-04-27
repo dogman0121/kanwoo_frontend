@@ -24,7 +24,7 @@ export async function middleware(request: NextRequest) {
 
             // Если токен истек
             if (exp && exp * 1000 < Date.now()) {
-                const csrfRefreshToken = request.cookies.get("csrf_refresh_token")?.value
+                const csrfRefreshToken = request.cookies.get(process.env.NEXT_PUBLIC_CSRF_REFRESH_COOKIE_NAME || "")?.value
 
                 // Запрос на обновление токена
                 const refreshResponse = await fetch(new URL("/api/auth/refresh", request.url), {
@@ -49,7 +49,7 @@ export async function middleware(request: NextRequest) {
                     headers.set("cookie", request.cookies.toString())
 
                     if (["POST", "PUT", "DELETE", "PATCH"].indexOf(request.method)) {
-                        const newCSRF = request.cookies.get("csrf_access_token")?.value
+                        const newCSRF = request.cookies.get(process.env.NEXT_PUBLIC_CSRF_ACCESS_COOKIE_NAME || "")?.value
 
                         if (newCSRF) 
                             headers.set("X-CSRF-TOKEN", newCSRF)
