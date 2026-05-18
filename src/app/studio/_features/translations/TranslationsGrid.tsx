@@ -1,6 +1,7 @@
 import Poster from "@/components/Poster";
 import EditPageContainer from "@/features/edit/components/EditPageContainer";
 import { useAppSelector } from "@/lib/state/hooks";
+import { ROUTES } from "@/routes";
 import Translation from "@/types/translation/translation";
 import { Box, Divider, SxProps, Typography } from "@mui/material";
 import Link from "next/link";
@@ -52,7 +53,7 @@ function TranslationGridRow({translation}: {translation: Translation}){
                             rowGap: "5px"
                         }}
                     >
-                        <Link href={`/studio/translation/${translation.id}`}>
+                        <Link href={ROUTES.STUDIO.TRANSLATION.MAIN(translation.id)}>
                             <Typography
                                 sx={{
                                     "&:hover": {
@@ -71,19 +72,25 @@ function TranslationGridRow({translation}: {translation: Translation}){
     )
 }
 
+function TranslationGridHeader(){
+    return (
+        <EditPageContainer
+            sx={{
+                ...gridRowStyle
+            }}
+        >
+            <Typography variant="caption">Название</Typography>
+            <Typography variant="caption">Язык</Typography>
+            <Typography variant="caption">Видимость</Typography>
+            <Typography variant="caption">Дата</Typography>
+        </EditPageContainer>
+    )
+}
+
 export default function TranslationGrid({translations}: {translations: Translation[]}) {
     return (
         <Box>
-            <EditPageContainer
-                sx={{
-                    ...gridRowStyle
-                }}
-            >
-                <Typography variant="caption">Название</Typography>
-                <Typography variant="caption">Язык</Typography>
-                <Typography variant="caption">Видимость</Typography>
-                <Typography variant="caption">Дата</Typography>
-            </EditPageContainer>
+            <TranslationGridHeader />
             <Divider />
             {translations?.map(translation => (
                 <TranslationGridRow key={translation.id} translation={translation} />
