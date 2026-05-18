@@ -1,7 +1,7 @@
 "use client"
 
 import Manga from "@/types/manga/manga";
-import { Autocomplete, Box, MenuItem, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, CircularProgress, MenuItem, TextField, Typography } from "@mui/material";
 import { useRef, useState } from "react";
 import Poster from "./Poster";
 import { debounce } from "lodash";
@@ -97,6 +97,18 @@ export default function MangaSelectWithSearch({
             )}
             renderInput={(params) => (<TextField {...params} label="Манга"/>)}
             getOptionLabel={(option) => option instanceof Object ? option.name : option}
+            noOptionsText={
+                <Typography 
+                    sx={{
+                        textAlign: "center"
+                    }}
+                >
+                    По вашему запросу ничего не найдено.
+                </Typography>
+            }
+            loadingText={
+                <CircularProgress />
+            }
         />
     )
 }
