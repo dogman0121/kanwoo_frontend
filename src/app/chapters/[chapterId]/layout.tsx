@@ -15,7 +15,7 @@ export default async function Layout({
 }) {
     const { chapterId } = await params;
 
-    const {data: chapterData} = await serverFetch.get<GetChapterResponse>(`/chapters/${chapterId}/getChapter`)
+    const {data: chapterData} = await serverFetch.get<GetChapterResponse>(`/chapters/${chapterId}`)
     
     return (
         <> 
