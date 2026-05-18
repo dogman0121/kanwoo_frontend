@@ -63,6 +63,7 @@ export default function MangaSelectWithSearch({
                         >
                             <Poster 
                                 width="32px"
+                                src={option.poster.thumbnail}
                             />
                             <Typography>{value.name}</Typography>
                         </Box>
