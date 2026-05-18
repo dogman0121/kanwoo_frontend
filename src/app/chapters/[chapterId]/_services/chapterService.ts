@@ -6,13 +6,13 @@ import Chapter from "@/types/chapter/chapter";
 
 class ChapterService {
     async getNextChapter(currChapter: Chapter) {
-        const response = await clientFetch.get<GetChapterResponse>(`/chapters/${currChapter.next_chapter_id}/getChapter`)
+        const response = await clientFetch.get<GetChapterResponse>(`/chapters/${currChapter.next_chapter_id}`)
 
         return response.data.chapter
     }
 
     async saveProgress(chapter: Chapter, page: number) {
-        const {data: success} = await clientFetch.post<{"success": boolean}>(`/chapters/${chapter.id}/saveProgress`, {
+        const {data: success} = await clientFetch.post<{"success": boolean}>(`/chapters/${chapter.id}/save-progress`, {
             headers: {
                 "Content-Type": "application/json"
             },

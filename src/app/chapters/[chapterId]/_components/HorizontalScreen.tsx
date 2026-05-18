@@ -54,7 +54,7 @@ function PageBlock({
                 justifyContent: "center"
             }}
         >
-            <Image
+            <img
                 alt={`page_${page.uuid}`} 
                 src={page.link}
                 style={{
