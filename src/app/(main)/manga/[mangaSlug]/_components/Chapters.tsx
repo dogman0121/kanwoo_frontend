@@ -22,7 +22,7 @@ export default function Chapters() {
     useEffect(() => {
         if (!currTranslation) return;
 
-        clientFetch.get<Chapter[]>(`/translation/${currTranslation.id}/chapters`)
+        clientFetch.get<Chapter[]>(`/translations/${currTranslation.id}/chapters`)
             .then(data => {
                 setTranslationChapters(data.data)
             })

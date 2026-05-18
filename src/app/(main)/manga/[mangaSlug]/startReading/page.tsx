@@ -16,7 +16,7 @@ export default async function Page({
         return redirect(`/manga/${mangaSlug}`)
     }
     else {
-        const {data: chapters} = await serverFetch.get<Chapter[]>(`/translation/${translations[0].id}`)
+        const {data: chapters} = await serverFetch.get<Chapter[]>(`/translations/${translations[0].id}`)
 
         return redirect(`/chapters/${chapters[0].id}`)
     }
