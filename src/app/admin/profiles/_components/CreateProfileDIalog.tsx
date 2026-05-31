@@ -103,8 +103,10 @@ export default function CreateProfileDialog({open, onClose, ...props}: DialogPro
                                 control={control}
                                 rules={{
                                     required: true,
-                                    validate: async (value: string) => {
+                                    validate: (value: string) => {
                                         validateSlug(value)
+
+                                        return true
                                     }
                                 }}
                                 render={({field, fieldState: {error}}) => (
