@@ -1,6 +1,18 @@
+export type PagePagination = {
+    page: number,
+    per_page: number,
+    total_count: number
+}
+
+export type CursorPagination = {
+    last_id: number,
+    limit: number
+}
+
 export type SuccessResponse<T> = {
     data: T,
-    metadata: Record<string, unknown>
+    metadata: Record<string, unknown>,
+    pagination?: PagePagination | CursorPagination
 }
 
 export type ErrorResponse = {

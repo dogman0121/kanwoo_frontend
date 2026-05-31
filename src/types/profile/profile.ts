@@ -4,5 +4,6 @@ export default interface Profile {
     slug: string
     name: string
     about: string,
-    links: {name: string, link: string}[]
+    links: {name: string, link: string}[],
+    created_at: string
 }

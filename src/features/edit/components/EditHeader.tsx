@@ -69,6 +69,7 @@ export function EditPageNavbar({
                     paddingBottom: theme.spacing(2),
                     display: "flex",
                     justifyContent: "end",
+                    gap: theme.spacing(2),
 
                     ...sx
                 }}
