@@ -136,7 +136,6 @@ export default function Page() {
 
     useEffect(debounce(() => {
         reset()
-        fetchProfiles()
     }, 100), [query])
 
     return (
@@ -188,7 +187,11 @@ export default function Page() {
                 </Grid>
             </EditPageContainer>
             <Divider />
-            <EditPageContainer>
+            <EditPageContainer
+                sx={{
+                    pb: 4
+                }}
+            >
                 <Typography
                     sx={{
                         mt: 3
