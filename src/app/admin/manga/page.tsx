@@ -563,7 +563,6 @@ export default function Page() {
 
     useEffect(debounce(() => {
         reset()
-        fetchManga()
     }, 100), [query, filters])
 
     return (
