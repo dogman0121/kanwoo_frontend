@@ -6,7 +6,7 @@ import Chapter from "@/types/chapter/chapter"
 import Translation from "@/types/translation/translation"
 import { Box, Paper, Typography } from "@mui/material"
 import Link from "next/link"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 
 export default function Chapters() {
     const translations = useAppSelector(state => state.mangaPage.translations)

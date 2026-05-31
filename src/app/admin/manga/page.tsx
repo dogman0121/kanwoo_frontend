@@ -1,8 +1,7 @@
 "use client"
 
 import { EditPageHeader, EditPageNavbar, EditPageTitle } from "@/features/edit/components/EditHeader";
-import { Box, Breadcrumbs, Button, Chip, Divider, FormControl, Grid, GridProps, Input, SxProps, Typography, useTheme } from "@mui/material";
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
+import { Box, Breadcrumbs, Button, Chip, CircularProgress, Divider, FormControl, Grid, GridProps, Input, SxProps, Typography, useTheme } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { debounce } from "lodash";
 import { clientFetch } from "@/lib/fetch/clientFetch";
@@ -21,6 +20,10 @@ import { adminModerationService } from "../_services/moderationService";
 import LoadingBox from "../_features/LoadingBox";
 import EmptyTitle from "../_features/EmptyTitle";
 import ModerationFiltersGroup, { ModerationFilterType } from "../_components/ModerationFiltersGroup";
+import CreateMangaDialog from "./_components/CreateMangaDialog";
+import { usePagePagination } from "@/features/pagination/hooks/usePagePagination";
+import SearchInput from "../_components/SearchInput";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const compileColor = (moderation_status: AdminMangaModerationStatus | null) => {
     if (!moderation_status)
@@ -44,67 +47,66 @@ function MangaCardShortData() {
     if (!manga) return null
 
     return (
-        <Box
+        <Grid
+            container
+            columns={7}
             sx={{
                 width: "100%",
-                display: "flex",
-                alignItems: "center",
-                flexDirection: "row",
-                gap: "25px"
+                alignItems: "center"
             }}
         >
-            <Poster 
-                src={manga.poster?.medium}
-                width="75px"
-            />
             <Grid
-                container
-                columns={6}
-                sx={{
-                    width: "100%",
-                    alignItems: "center"
-                }}
+                size={3}
+                spacing={2}
             >
-                <Grid
-                    size={2}
-                    spacing={2}
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        flexDirection: "row",
+                        gap: 4
+                    }}
                 >
+                    <Poster 
+                        src={manga.poster?.medium}
+                        width="75px"
+                    />
                     <Typography>
                         {manga.name}
                     </Typography>
-                </Grid>
-                <Grid
-                    size={1}
-                >
-                    <Typography>
-                        {manga.privacy?.name || "нет"}
-                    </Typography>
-                </Grid>
-                <Grid
-                    size={1}
-                >
-                    <Typography>
-                        {new Date(manga.created_at).toLocaleDateString("ru-RU")}
-                    </Typography>
-                </Grid>
-                <Grid
-                    size={1}
-                >
-                    <Typography
-                        color={compileColor(manga.moderation_status)}
-                    >
-                        {manga.moderation_status?.status_type.name || "нет"}
-                    </Typography>
-                </Grid>
-                <Grid
-                    size={1}
-                >
-                    <ProfileWidget 
-                        profile={manga.author}
-                    />
-                </Grid>
+                </Box>
             </Grid>
-        </Box>
+            <Grid
+                size={1}
+            >
+                <Typography>
+                    {manga.privacy?.name || "нет"}
+                </Typography>
+            </Grid>
+            <Grid
+                size={1}
+            >
+                <Typography>
+                    {new Date(manga.created_at).toLocaleDateString("ru-RU")}
+                </Typography>
+            </Grid>
+            <Grid
+                size={1}
+            >
+                <Typography
+                    color={compileColor(manga.moderation_status)}
+                >
+                    {manga.moderation_status?.status_type.name || "нет"}
+                </Typography>
+            </Grid>
+            <Grid
+                size={1}
+            >
+                <ProfileWidget 
+                    profile={manga.author}
+                />
+            </Grid>
+        </Grid>
     )
 }
 
@@ -405,9 +407,50 @@ function MangaModerationStatusHistory({sx}: {sx?: SxProps}) {
     )
 }
 
-function MangaCard({manga}: {manga: AdminManga}) {
-    const theme = useTheme()
+function MangaCardActions({
+    onApprove,
+    onReject,
+    onWaiting
+}: {
+    onApprove: (message?: string) => void,
+    onReject: (message?: string) => void,
+    onWaiting: (message?: string) => void
+}) {
+    const {manga} = useContext(AdminMangaContext)
 
+    if (!manga) return null
+
+    return (
+        <Box
+            sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "space-between",
+                pl: 3
+            }}
+        >
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: 3,
+                    alignItems: "center"
+                }}
+            >
+                <Typography>Создано:</Typography>
+                <ProfileWidget profile={manga.creator}/>
+            </Box>
+            <ModerationActions 
+                value={manga.moderation_status.status_type.id}
+                onApprove={(msg) => onApprove(msg)}
+                onReject={(msg) => onReject(msg)}
+                onWaiting={(msg) => onWaiting(msg)}
+            />
+        </Box>
+    )
+}
+
+function MangaCard({manga}: {manga: AdminManga}) {
     const [accordionExpanded, setAccordionExpanded] = useState(false)
 
     const updateModeration = async (status_id: number, message?: string) => {
@@ -450,25 +493,9 @@ function MangaCard({manga}: {manga: AdminManga}) {
                     />
                 </AdminAccordionDetails>
                 <AdminAccordionActions
-                    sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        pl: theme.spacing(4)
-                    }}
+                    
                 >
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            gap: theme.spacing(3),
-                            alignItems: "center"
-                        }}
-                    >
-                        <Typography>Создано:</Typography>
-                        <ProfileWidget profile={manga.creator}/>
-                    </Box>
-                    <ModerationActions 
-                        value={manga.moderation_status?.status_type.id}
+                    <MangaCardActions 
                         onApprove={(msg) => updateModeration(MODERATION_STATUS.APPROVED, msg)}
                         onReject={(msg) => updateModeration(MODERATION_STATUS.REJECTED, msg)}
                         onWaiting={(msg) => updateModeration(MODERATION_STATUS.WAITING, msg)}
@@ -480,12 +507,9 @@ function MangaCard({manga}: {manga: AdminManga}) {
 }
 
 export default function Page() {
-    const theme = useTheme()
-
     const router = useRouter()
 
-    const [isLoading, setIsLoading] = useState(false)
-
+    const [mangaDialogOpen, setMangaDialogOpen] = useState(false)
     const [query, setQuery] = useState("")
     
     const [filters, setFilter] = useState<ModerationFilterType>({
@@ -494,22 +518,52 @@ export default function Page() {
         waiting: false
     })
 
-    const [results, setResults] = useState<AdminManga[]>([])
+    const [loading, setLoading] = useState(false)
+    
+    const {
+        results: manga,
+        setResults: setManga,
+        page,
+        setPage,
+        perPage,
+        totalCount,
+        setTotalCount,
+        reset,
+        hasMore,
+    } = usePagePagination<AdminManga>({ perPage: 20 });
+
+
+    const fetchManga = async () => {
+        if (loading) return;
+
+        setLoading(true);
+        try {
+            const urlSearchParams = adminModerationService.compileModerationStatusFilters(filters)
+            if (query)
+                urlSearchParams.append("query", query)
+
+            urlSearchParams.append("page", page.toString())
+            urlSearchParams.append("per_page", perPage.toString())
+
+            const response = await clientFetch.get<AdminManga[]>("/admin/manga?" + urlSearchParams.toString());
+
+            const pagination = response.pagination;
+            if (!pagination ||  !("page" in pagination)) 
+                throw Error("Failed to get pagination from response!")
+
+            setPage(pagination.page+1)
+            setTotalCount(pagination.total_count)
+
+            setManga(manga => [...manga, ...response.data])
+        }
+        finally {
+            setLoading(false)
+        }
+    }
 
     useEffect(debounce(() => {
-        setIsLoading(true)
-
-        const urlSearchParams = adminModerationService.compileModerationStatusFilters(filters)
-        
-        if (query)
-            urlSearchParams.append("query", query)
-
-        clientFetch.get<AdminManga[]>("/admin/manga?" + urlSearchParams.toString())
-            .then(resp => {
-                setResults(resp.data)
-                
-                setIsLoading(false)
-            })
+        reset()
+        fetchManga()
     }, 100), [query, filters])
 
     return (
@@ -528,60 +582,90 @@ export default function Page() {
                 >
                     Предложения
                 </Button>
-            </EditPageNavbar>
-            <Box
-                sx={{
-                    p: "10px 25px"
-                }}
-            >
-                <FormControl
-                    fullWidth 
+                <Button
+                    variant="contained"
+                    onClick={() => setMangaDialogOpen(true)}
                 >
-                    <Input
-                        disableUnderline
-                        placeholder="Введите запрос"
-                        onChange={(event) => setQuery(event.target.value)}
-                        startAdornment={
-                            <SearchRoundedIcon 
-                                sx={{
-                                    marginRight: "10px",
-                                }}
-                            />
-                        }
-                    />
-                </FormControl>
-            </Box>
+                    Создать
+                </Button>
+            </EditPageNavbar>
+            <SearchInput 
+                onChange={(event) => setQuery(event.target.value)}
+            />
             <Divider />
             <EditPageContainer
                 sx={{
-                    pt: "5px",
-                    pb: "20px"
+                    py: 1
                 }}
             >
                 <ModerationFiltersGroup
                     value={filters}
                     onChange={setFilter}
                 />
-                <LoadingBox
-                    loading={isLoading}
+            </EditPageContainer>
+            <Divider />
+            <EditPageContainer
+                sx={{
+                    py: 1
+                }}
+            >
+                <Grid
+                    container
+                    columns={7}
                     sx={{
-                        mt: theme.spacing(2),
+                        pl: 3,
+                        pr: "calc(15px + 24px)"
+                    }}
+                >
+                    <Grid size={3}>
+                        <Typography variant="caption">Название</Typography>
+                    </Grid>
+                    <Grid size={1}>
+                        <Typography variant="caption">Приватность</Typography>
+                    </Grid>
+                    <Grid size={1}>
+                        <Typography variant="caption">Дата создания</Typography>
+                    </Grid>
+                    <Grid size={1}>
+                        <Typography variant="caption">Модерация</Typography>
+                    </Grid>
+                    <Grid size={1}>
+                        <Typography variant="caption">Автор</Typography>
+                    </Grid>
+                </Grid>
+            </EditPageContainer>
+            <Divider />
+            <EditPageContainer
+                sx={{
+                    pt: 2,
+                    pb: 4
+                }}
+            >
+                <Typography
+                >
+                    Найдено результатов: {totalCount}
+                </Typography>
+                <InfiniteScroll
+                    style={{
+                        marginTop: "10px",
                         display: "flex",
                         flexDirection: "column",
                         gap: "15px"
                     }}
+                    dataLength={manga.length}
+                    next={fetchManga}
+                    hasMore={hasMore}
+                    loader={<CircularProgress />}
                 >
-                    {results.length > 0 ?
-                        <>
-                            {results.map(m => (
-                                <MangaCard manga={m} key={`admin_manga_${m.id}`}/>
-                            ))}   
-                        </>
-                        :
-                        <EmptyTitle />
-                    }
-                </LoadingBox>
+                    {manga.map(m => (
+                        <MangaCard manga={m} key={`admin_manga_${m.id}`}/>
+                    ))}   
+                </InfiniteScroll>
             </EditPageContainer>
+            <CreateMangaDialog 
+                open={mangaDialogOpen}
+                onClose={() => setMangaDialogOpen(false)}
+            />
         </>
     )
 }

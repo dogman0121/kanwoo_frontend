@@ -1,6 +1,6 @@
 import EditPageContainer from "@/features/edit/components/EditPageContainer"
 import { Control, Controller, UseFormHandleSubmit, UseFormReturn } from "react-hook-form"
-import { Grid } from "@mui/material"
+import { Box, Grid } from "@mui/material"
 import MangaPoster from "@/features/form/manga/components/MangaPoster"
 import MangaName from "@/features/form/manga/components/MangaName"
 import MangaDescription from "@/features/form/manga/components/MangaDescription"
@@ -92,9 +92,8 @@ export default function MangaForm({
 
     return (
         <form id="manga-info" onSubmit={handleSubmit(onSubmit)}>
-            <EditPageContainer
+            <Box
                 sx={{
-                    py: "20px",
                     display: "flex",
                     flexDirection: "column",
                     rowGap: "15px"
@@ -305,7 +304,7 @@ export default function MangaForm({
                         />
                     )}
                 />
-            </EditPageContainer>
+            </Box>
         </form>
     )
 }
