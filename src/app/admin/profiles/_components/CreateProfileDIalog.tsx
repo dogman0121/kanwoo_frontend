@@ -1,11 +1,12 @@
 import AppSnackbar from "@/components/AppSnackbar";
 import ProfileAvatarCircleInput from "@/features/profile/profileAvatar/components/ProfileAvatarCircleInput";
 import ProfileSlugInput from "@/features/profile/profileSlug/components/profileSlugInput";
-import useProfileSlugValidator from "@/features/profile/profileSlug/hooks/useProfileSlugValidator";
+import { validateSlug } from "@/features/profile/ui/SlugInput";
 import { clientFetch } from "@/lib/fetch/clientFetch";
+import promiseDebounce from "@/lib/promiseDebounce";
 import Profile from "@/types/profile/profile";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogProps, DialogTitle, TextField } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 interface CreateProfileForm {
@@ -20,6 +21,8 @@ export default function CreateProfileDialog({open, onClose, ...props}: DialogPro
 
     const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false)
 
+    const [profileSlugChecking, setProfileSlugChecking] = useState(false);
+
     const {reset, control, setError, clearErrors, handleSubmit, formState: {isValid}} = useForm<CreateProfileForm>({
         mode: "onChange",
         defaultValues: {
@@ -29,18 +32,11 @@ export default function CreateProfileDialog({open, onClose, ...props}: DialogPro
         }
     })
 
-    const { valid, checking, validateSlug } = useProfileSlugValidator();
+    const validateProfileSlugRef = useRef(promiseDebounce((value) => {
+        const res = validateSlug(value)
 
-    useEffect(() => {
-        if (!valid)
-            setError("slug", {message: "Данный тег команды занят"})
-        else
-            clearErrors("slug")
-        
-        return () => {
-
-        }
-    }, [valid])
+        return res;
+    }, 500))
 
     useEffect(() => {
         reset()
@@ -103,17 +99,23 @@ export default function CreateProfileDialog({open, onClose, ...props}: DialogPro
                                 control={control}
                                 rules={{
                                     required: true,
-                                    validate: (value: string) => {
-                                        validateSlug(value)
+                                    validate: async (value: string) => {
+                                        try {
+                                            setProfileSlugChecking(true)
 
-                                        return true
+                                            const res = validateProfileSlugRef.current(value)
+
+                                            return res
+                                        } finally {
+                                            setProfileSlugChecking(false)
+                                        }
                                     }
                                 }}
                                 render={({field, fieldState: {error}}) => (
                                     <ProfileSlugInput
                                         label="Тег"
                                         fullWidth
-                                        slugChecking={checking}
+                                        slugChecking={profileSlugChecking}
                                         error={error && true}
                                         helperText={error?.message}
                                         {...field}
@@ -148,7 +150,7 @@ export default function CreateProfileDialog({open, onClose, ...props}: DialogPro
                         type="submit"
                         form="create-profile"
                         variant="contained"
-                        disabled={!isValid && !checking}
+                        disabled={!isValid && !profileSlugChecking}
                     >
                         Создать
                     </Button>
