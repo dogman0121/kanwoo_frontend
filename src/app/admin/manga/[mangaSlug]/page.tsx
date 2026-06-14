@@ -1,18 +1,87 @@
 "use client"
 
 import { notFound, useParams } from "next/navigation"
-import { useForm } from "react-hook-form";
-import MangaForm, { getFormData, MangaFormSchema } from "../_forms/MangaForm";
+import { Controller, useForm } from "react-hook-form";
 import { clientFetch } from "@/lib/fetch/clientFetch";
 import AdminManga from "@/types/admin/manga/manga";
 import { EditPageHeader, EditPageNavbar, EditPageTitle } from "@/features/edit/components/EditHeader";
-import { Breadcrumbs, Button, Typography, useTheme } from "@mui/material";
+import { Box, Breadcrumbs, Button, Grid, Typography, useTheme } from "@mui/material";
 import Link from "next/link";
 import { ROUTES } from "@/routes";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getDefaultValues } from "@/features/form/manga/Create";
 import FileAction from "@/types/fileAction";
 import compileFileAction from "@/utils/compileFileAction";
+import MangaPoster from "@/features/form/manga/components/MangaPoster";
+import MangaName from "@/features/form/manga/components/MangaName";
+import PrivacySelect, { Privacy } from "@/components/PrivacySelect";
+import MangaNameTranslations from "@/features/form/manga/components/MangaNameTranslations";
+import MangaSlug, { validateSlug } from "@/features/form/manga/components/MangaSlug";
+import MangaDescription from "@/features/form/manga/components/MangaDescription";
+import MangaType from "@/features/form/manga/components/MangaType";
+import MangaStatus from "@/features/form/manga/components/MangaStatus";
+import MangaAdult from "@/features/form/manga/components/MangaAdult";
+import MangaGenres from "@/features/form/manga/components/MangaGenres";
+import MangaBackground from "@/features/form/manga/components/MangaBackground";
+import MangaPromoName from "@/features/form/manga/components/MangaPromoName";
+import MangaPromoBackground from "@/features/form/manga/components/MangaPromoBackground";
+import MangaPromoLogo from "@/features/form/manga/components/MangaPromoLogo";
+import promiseDebounce from "@/lib/promiseDebounce";
+import MangaYear from "@/features/form/manga/components/MangaYear";
+
+function getFormDefaultValues() {
+    return {
+        name: "",
+        description: "",
+        nameTranslations: [],
+        type: 1,
+        status: 1,
+        adult: 1,
+        genres: [],
+        year: new Date().getFullYear()
+    }
+}
+
+function getFormData(manga: AdminManga) {
+    return {
+        name: manga.name || "",
+        slug: manga.slug || "",
+        description: manga.description || "",
+        nameTranslations: manga.name_translations?.map(l => (
+            {lang: l.lang.id, name: l.name}
+        )) || [],
+        type: manga.type?.id || 1 ,
+        status: manga.status?.id || 1,
+        adult: manga.adult?.id || 1,
+        genres: manga.genres?.map(genre => genre.id) || [],
+        year: manga.year || new Date().getFullYear(),
+        background: manga?.background,
+        poster: manga.poster?.medium,
+        promoBackground: manga.promo_background,
+        promoName: manga.promo_name,
+        promoLogo: manga.promo_logo,
+        privacy: manga.privacy?.id || 1
+    }
+}
+
+interface MangaFormSchema {
+    slug: string,
+    name: string,
+    nameTranslations: {name: string, lang: number}[],
+    description: string,
+    year: number,
+    type: number,
+    status: number,
+    adult: number,
+    genres: number[],
+    poster: File | string | null,
+    background: File | string | null,
+    promoBackground: File | string | null,
+    promoName: File | string | null,
+    promoLogo: File | string | null
+    privacy: number,
+}
+
 
 function compileFormIntoFormData(data: MangaFormSchema) {
     const formData = new FormData();
@@ -39,7 +108,7 @@ function compileFormIntoFormData(data: MangaFormSchema) {
     formData.append("privacy", data.privacy.toString())
 
     // setting genres
-    data.genres.forEach((genre) => formData.append("genre", genre.toString()))
+    data.genres.forEach((genre: number) => formData.append("genre", genre.toString()))
 
     if (data.poster && posterAction == "update")
         formData.append("poster", data.poster);
@@ -64,7 +133,15 @@ export default function Page() {
 
     const { mangaSlug } = useParams()
 
+    const [mangaSlugChecking, setMangaSlugChecking] = useState(false);
+
     const [manga, setManga] = useState<AdminManga | null>(null)
+
+    const validateMangaSlugRef = useRef(promiseDebounce(async (value) => {
+        const res = validateSlug(value)
+
+        return res
+    }, 500))
 
     const { 
         reset,
@@ -95,7 +172,7 @@ export default function Page() {
         reset(getFormData(manga))
     }, [manga])
 
-    const handleSend = async(data: MangaFormSchema) => {
+    const onSubmit = async(data: MangaFormSchema) => {
         const formData = compileFormIntoFormData(data)
 
         const {data: updatedManga} = await clientFetch.post<AdminManga>(
@@ -145,12 +222,218 @@ export default function Page() {
                     Сохранить
                 </Button>
             </EditPageNavbar>
-            <MangaForm 
-                onSend={handleSend}
-                control={control}
-                handleSubmit={handleSubmit}
-                manga={manga}
-            />
+            <form id="manga-info" onSubmit={handleSubmit(onSubmit)}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        rowGap: "15px"
+                    }}
+                >
+                    <Controller
+                        name="poster"
+                        control={control}
+                        render={({field: {value, onChange}}) => (
+                            <MangaPoster 
+                                value={value}
+                                onChange={onChange}
+                            />
+                        )}
+                    />
+                    <Controller 
+                        control={control}
+                        name="name"
+                        rules={{
+                            required: "Это поле не должно быть пустым"
+                        }}
+                        render={({field: {value, ...props}, fieldState: {invalid, error}}) => (
+                            <MangaName
+                                value={value}
+                                {...props}
+                                error={invalid}
+                                helperText={error?.message}
+                            />
+                        )}
+                    />
+                    <Controller 
+                        control={control}
+                        name="privacy"
+                        defaultValue={Privacy.PRIVATE}
+                        render={({field}) => (
+                            <PrivacySelect 
+                                sx={{
+                                    maxWidth: "400px"
+                                }}
+                                {...field}
+                            />
+                        )}
+                    />
+                    <Controller 
+                        control={control}
+                        name="nameTranslations"
+                        rules={{
+                            maxLength: 1000
+                        }}
+                        render={({field: {value, onChange}}) => (
+                            <MangaNameTranslations
+                                value={value}
+                                onChange={onChange}
+                            />
+                        )}
+                    />
+                    <Controller 
+                        control={control}
+                        name="slug"
+                        rules={{
+                            required: "Это поле не должно быть пустым",
+                            validate: async (value) => {
+                                try {
+                                    setMangaSlugChecking(true)
+
+                                    const res = await validateMangaSlugRef.current(value)
+
+                                    return res
+                                }
+                                finally {
+                                    setMangaSlugChecking(false)
+                                }
+                            }
+                        }}
+                        render={({field: {value, ...props}, fieldState: {invalid, error}}) => (
+                            <MangaSlug 
+                                slugChecking={mangaSlugChecking}
+                                value={value}
+                                error={invalid}
+                                helperText={error?.message}
+                                {...props}
+                            />
+                        )}
+                    />
+                    <Controller 
+                        control={control}
+                        name="description"
+                        rules={{
+                            maxLength: 1000
+                        }}
+                        render={({field: {value, ...props}, fieldState: {invalid, error}}) => (
+                            <MangaDescription
+                                value={value}
+                                {...props}
+                                error={invalid}
+                                helperText={error?.type == "maxLength" && "Описание не может быть больше 1000 символов"}
+                            />
+                        )}
+                    />
+                    <Grid
+                        container 
+                        columnSpacing={3} 
+                        rowSpacing={2}
+                        columns={{md: 3, xs: 1}}
+                    >
+                        <Grid size={1}>
+                            <Controller 
+                                name="type"
+                                control={control}
+                                render={({field: {value, ...props}}) => (
+                                    <MangaType
+                                        label="Тип"
+                                        value={value}
+                                        {...props}
+                                    />
+                                )}
+                            />
+                        </Grid>
+                        <Grid size={1}>
+                            <Controller 
+                                name="status"
+                                control={control}
+                                render={({field: {value, ...props}}) => (
+                                    <MangaStatus
+                                        label="Статус"
+                                        value={value}
+                                        {...props}
+                                    />
+                                )}
+                            />
+                        </Grid>
+                        <Grid size={1}>
+                            <Controller 
+                                name="year"
+                                control={control}
+                                render={({field: {value, ...props}}) => (
+                                    <MangaYear 
+                                        value={value}
+                                        {...props}
+                                    />
+                                )}
+                            />
+                        </Grid>
+                        <Grid size={1}>
+                            <Controller 
+                                name="adult"
+                                control={control}
+                                render={({field: {value, ...props}}) => (
+                                    <MangaAdult
+                                        value={value}
+                                        {...props}
+                                    />
+                                )}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Controller 
+                        name="genres"
+                        control={control}
+                        render={({field: {value, onChange, ...props}}) => (
+                            <MangaGenres
+                                value={value}
+                                onChange={onChange}
+                                {...props}
+                            />
+                        )}
+                    />
+                    <Controller 
+                        name="background"
+                        control={control}
+                        render={({field: {value, onChange}}) => (
+                            <MangaBackground
+                                value={value}
+                                onChange={onChange}
+                            />
+                        )}
+                    />
+                    <Controller 
+                        name="promoName"
+                        control={control}
+                        render={({field: {value, onChange}}) => (
+                            <MangaPromoName
+                                value={value}
+                                onChange={onChange}
+                            />
+                        )}
+                    />
+                    <Controller 
+                        name="promoBackground"
+                        control={control}
+                        render={({field: {value, onChange}}) => (
+                            <MangaPromoBackground 
+                                value={value}
+                                onChange={onChange}
+                            />
+                        )}
+                    />
+                    <Controller 
+                        name="promoLogo"
+                        control={control}
+                        render={({field: {value, onChange}}) => (
+                            <MangaPromoLogo
+                                value={value}
+                                onChange={onChange}
+                            />
+                        )}
+                    />
+                </Box>
+            </form>
         </>
     )
 }
