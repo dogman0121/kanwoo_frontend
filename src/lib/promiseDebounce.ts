@@ -5,7 +5,7 @@ export default function promiseDebounce<T>(func: (...args: any[]) => T, delay: n
     let promiseReject: null | ((value: T) => void) = null;
     let promise: null | Promise<T> = null;
 
-    const f = (...args: any[]) => {
+    const f = (...args: any[]): Promise<T> => {
         window.clearTimeout(timer);
 
         if (!promise) {
