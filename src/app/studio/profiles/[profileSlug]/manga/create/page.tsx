@@ -20,6 +20,7 @@ import MangaAdult from "@/features/form/manga/components/MangaAdult";
 import MangaGenres from "@/features/form/manga/components/MangaGenres";
 import MangaBackground from "@/features/form/manga/components/MangaBackground";
 
+
 interface MangaCreateForm {
     name: string,
     description: string,
