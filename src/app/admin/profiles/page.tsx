@@ -1,7 +1,7 @@
 "use client"
 
 import { EditPageHeader, EditPageNavbar, EditPageTitle } from "@/features/edit/components/EditHeader";
-import { AccordionActions, AccordionDetails, AccordionSummary, Avatar, Box, Breadcrumbs, Button, CircularProgress, Divider, Grid, Typography } from "@mui/material";
+import { AccordionActions, AccordionDetails, AccordionSummary, Avatar, Box, Breadcrumbs, Button, CircularProgress, Divider, Grid, SxProps, Typography } from "@mui/material";
 import CreateProfileDialog from "./_components/CreateProfileDIalog";
 import { useContext, useEffect, useState } from "react";
 import EditPageContainer from "@/features/edit/components/EditPageContainer";
@@ -13,6 +13,7 @@ import SearchInput from "../_components/SearchInput";
 import { debounce } from "lodash";
 import AdminProfileContext from "./_contexts/profileContext";
 import { AdminAccordion, AdminAccordionActions, AdminAccordionDetails, AdminAccordionSummary } from "../_features/accordion/Accordion";
+import AccordionOptionHeader from "../_components/AccordionOptionHeader";
 
 function ProfileCardShortData() {
     const {profile} = useContext(AdminProfileContext)
@@ -28,7 +29,10 @@ function ProfileCardShortData() {
                 alignItems: "center"
             }}
         >
-            <Grid size={4}>
+            <Grid 
+                size={4}
+                spacing={2}
+            >
                 <Box
                     sx={{
                         display: "flex",
@@ -56,9 +60,25 @@ function ProfileCardShortData() {
     )
 }
 
-function ProfileCardFullData() {
+function ProfileCardFullData({sx}: {sx?: SxProps}) {
+    const { profile } = useContext(AdminProfileContext)
+
+    if (!profile) return null;
+
     return (
-        <></>
+        <Grid
+            container
+            columns={12}
+            spacing={2}
+            sx={{
+                ...sx
+            }}
+        >
+            <Grid size={3}>
+                <AccordionOptionHeader>Тег</AccordionOptionHeader>
+                <Typography>{profile.slug}</Typography>
+            </Grid>
+        </Grid>
     )
 }
 
@@ -81,7 +101,7 @@ function ProfileCard({profile}: {profile: Profile}) {
                 onChange={(_event, expanded) => setAccordionExpanded(expanded)}
             >
                 <AdminAccordionSummary><ProfileCardShortData /></AdminAccordionSummary>
-                <AdminAccordionDetails><></></AdminAccordionDetails>
+                <AdminAccordionDetails><ProfileCardFullData /></AdminAccordionDetails>
                 <AdminAccordionActions><></></AdminAccordionActions>
             </AdminAccordion>
         </AdminProfileContext.Provider>
@@ -170,6 +190,7 @@ export default function Page() {
                 <Grid
                     container
                     columns={10}
+                    spacing={2}
                     sx={{
                         pl: 3,
                         pr: "calc(15px + 24px)"
