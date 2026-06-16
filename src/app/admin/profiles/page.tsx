@@ -3,7 +3,7 @@
 import { EditPageHeader, EditPageNavbar, EditPageTitle } from "@/features/edit/components/EditHeader";
 import { AccordionActions, AccordionDetails, AccordionSummary, Avatar, Box, Breadcrumbs, Button, CircularProgress, Divider, Grid, SxProps, Typography } from "@mui/material";
 import CreateProfileDialog from "./_components/CreateProfileDIalog";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import EditPageContainer from "@/features/edit/components/EditPageContainer";
 import { clientFetch } from "@/lib/fetch/clientFetch";
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -111,6 +111,7 @@ function ProfileCard({profile}: {profile: Profile}) {
 export default function Page() {
     const [profileDialogOpen, setProfileDialogOpen] = useState(false);
 
+    const firstRender = useRef(true);
     const [query, setQuery] = useState("")
     const [loading, setLoading] = useState(false)
 
@@ -126,7 +127,7 @@ export default function Page() {
         hasMore,
     } = usePagePagination<Profile>({ perPage: 20 });
 
-    const fetchProfiles = async () => {
+    const fetchProfiles = async (forcePage?: number) => {
         if (loading) return;
 
         setLoading(true);
@@ -135,7 +136,7 @@ export default function Page() {
             if (query)
                 urlSearchParams.append("query", query)
 
-            urlSearchParams.append("page", page.toString())
+            urlSearchParams.append("page", forcePage ? forcePage.toString() : page.toString())
             urlSearchParams.append("per_page", perPage.toString())
             
             const response = await clientFetch.get<Profile[]>("/admin/profiles?" + urlSearchParams.toString());
@@ -154,9 +155,23 @@ export default function Page() {
         }
     }
 
-    useEffect(debounce(() => {
-        reset()
-    }, 100), [query])
+    useEffect(() => {
+        if (firstRender.current) {
+            firstRender.current = false
+            return () => {}
+        }
+
+        const debouncedFetch = debounce(async () => {
+            reset();
+
+            await fetchProfiles(1);
+        }, 300);
+
+        debouncedFetch();
+        console.log(query)
+        
+        return () => debouncedFetch.cancel();
+    }, [query]);
 
     return (
         <>
