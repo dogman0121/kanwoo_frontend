@@ -28,6 +28,7 @@ import MangaPromoBackground from "@/features/form/manga/components/MangaPromoBac
 import MangaPromoLogo from "@/features/form/manga/components/MangaPromoLogo";
 import promiseDebounce from "@/lib/promiseDebounce";
 import MangaYear from "@/features/form/manga/components/MangaYear";
+import EditPageContainer from "@/features/edit/components/EditPageContainer";
 
 function getFormDefaultValues() {
     return {
@@ -147,7 +148,8 @@ export default function Page() {
         reset,
         formState: {
             isValid,
-            isDirty
+            isDirty, 
+            errors
         },
         handleSubmit,
         control,
@@ -184,7 +186,7 @@ export default function Page() {
 
         reset(getFormData(updatedManga))
     }
-
+    console.log(isValid, errors.name ,errors.slug, errors.root)
     if (!manga) return;
     
     return (
@@ -222,218 +224,224 @@ export default function Page() {
                     Сохранить
                 </Button>
             </EditPageNavbar>
-            <form id="manga-info" onSubmit={handleSubmit(onSubmit)}>
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        rowGap: "15px"
-                    }}
-                >
-                    <Controller
-                        name="poster"
-                        control={control}
-                        render={({field: {value, onChange}}) => (
-                            <MangaPoster 
-                                value={value}
-                                onChange={onChange}
-                            />
-                        )}
-                    />
-                    <Controller 
-                        control={control}
-                        name="name"
-                        rules={{
-                            required: "Это поле не должно быть пустым"
+            <EditPageContainer>
+                <form id="manga-info" onSubmit={handleSubmit(onSubmit)}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            rowGap: "15px"
                         }}
-                        render={({field: {value, ...props}, fieldState: {invalid, error}}) => (
-                            <MangaName
-                                value={value}
-                                {...props}
-                                error={invalid}
-                                helperText={error?.message}
-                            />
-                        )}
-                    />
-                    <Controller 
-                        control={control}
-                        name="privacy"
-                        defaultValue={Privacy.PRIVATE}
-                        render={({field}) => (
-                            <PrivacySelect 
-                                sx={{
-                                    maxWidth: "400px"
-                                }}
-                                {...field}
-                            />
-                        )}
-                    />
-                    <Controller 
-                        control={control}
-                        name="nameTranslations"
-                        rules={{
-                            maxLength: 1000
-                        }}
-                        render={({field: {value, onChange}}) => (
-                            <MangaNameTranslations
-                                value={value}
-                                onChange={onChange}
-                            />
-                        )}
-                    />
-                    <Controller 
-                        control={control}
-                        name="slug"
-                        rules={{
-                            required: "Это поле не должно быть пустым",
-                            validate: async (value) => {
-                                try {
-                                    setMangaSlugChecking(true)
-
-                                    const res = await validateMangaSlugRef.current(value)
-
-                                    return res
-                                }
-                                finally {
-                                    setMangaSlugChecking(false)
-                                }
-                            }
-                        }}
-                        render={({field: {value, ...props}, fieldState: {invalid, error}}) => (
-                            <MangaSlug 
-                                slugChecking={mangaSlugChecking}
-                                value={value}
-                                error={invalid}
-                                helperText={error?.message}
-                                {...props}
-                            />
-                        )}
-                    />
-                    <Controller 
-                        control={control}
-                        name="description"
-                        rules={{
-                            maxLength: 1000
-                        }}
-                        render={({field: {value, ...props}, fieldState: {invalid, error}}) => (
-                            <MangaDescription
-                                value={value}
-                                {...props}
-                                error={invalid}
-                                helperText={error?.type == "maxLength" && "Описание не может быть больше 1000 символов"}
-                            />
-                        )}
-                    />
-                    <Grid
-                        container 
-                        columnSpacing={3} 
-                        rowSpacing={2}
-                        columns={{md: 3, xs: 1}}
                     >
-                        <Grid size={1}>
-                            <Controller 
-                                name="type"
-                                control={control}
-                                render={({field: {value, ...props}}) => (
-                                    <MangaType
-                                        label="Тип"
-                                        value={value}
-                                        {...props}
-                                    />
-                                )}
-                            />
+                        <Controller
+                            name="poster"
+                            control={control}
+                            render={({field: {value, onChange}}) => (
+                                <MangaPoster 
+                                    value={value}
+                                    onChange={onChange}
+                                />
+                            )}
+                        />
+                        <Controller 
+                            control={control}
+                            name="name"
+                            rules={{
+                                required: "Это поле не должно быть пустым"
+                            }}
+                            render={({field: {value, ...props}, fieldState: {invalid, error}}) => (
+                                <MangaName
+                                    value={value}
+                                    {...props}
+                                    error={invalid}
+                                    helperText={error?.message}
+                                />
+                            )}
+                        />
+                        <Controller 
+                            control={control}
+                            name="privacy"
+                            defaultValue={Privacy.PRIVATE}
+                            render={({field}) => (
+                                <PrivacySelect 
+                                    sx={{
+                                        maxWidth: "400px"
+                                    }}
+                                    {...field}
+                                />
+                            )}
+                        />
+                        <Controller 
+                            control={control}
+                            name="nameTranslations"
+                            rules={{
+                                maxLength: 1000
+                            }}
+                            render={({field: {value, onChange}}) => (
+                                <MangaNameTranslations
+                                    value={value}
+                                    onChange={onChange}
+                                />
+                            )}
+                        />
+                        <Controller 
+                            control={control}
+                            name="slug"
+                            rules={{
+                                required: "Это поле не должно быть пустым",
+                                validate: async (value) => {
+                                    if (value == manga.slug)
+                                        return true
+                                    
+                                    try {
+                                        setMangaSlugChecking(true)
+
+                                        const res = await validateMangaSlugRef.current(value)
+
+                                        return res
+                                    }
+                                    finally {
+                                        setMangaSlugChecking(false)
+                                    }
+                                }
+                            }}
+                            render={({field: {value, ...props}, fieldState: {invalid, error}}) => (
+                                <MangaSlug 
+                                    defaultValue={manga.slug}
+                                    slugChecking={mangaSlugChecking}
+                                    value={value}
+                                    error={invalid}
+                                    helperText={error?.message}
+                                    {...props}
+                                />
+                            )}
+                        />
+                        <Controller 
+                            control={control}
+                            name="description"
+                            rules={{
+                                maxLength: 1000
+                            }}
+                            render={({field: {value, ...props}, fieldState: {invalid, error}}) => (
+                                <MangaDescription
+                                    value={value}
+                                    {...props}
+                                    error={invalid}
+                                    helperText={error?.type == "maxLength" && "Описание не может быть больше 1000 символов"}
+                                />
+                            )}
+                        />
+                        <Grid
+                            container 
+                            columnSpacing={3} 
+                            rowSpacing={2}
+                            columns={{md: 3, xs: 1}}
+                        >
+                            <Grid size={1}>
+                                <Controller 
+                                    name="type"
+                                    control={control}
+                                    render={({field: {value, ...props}}) => (
+                                        <MangaType
+                                            label="Тип"
+                                            value={value}
+                                            {...props}
+                                        />
+                                    )}
+                                />
+                            </Grid>
+                            <Grid size={1}>
+                                <Controller 
+                                    name="status"
+                                    control={control}
+                                    render={({field: {value, ...props}}) => (
+                                        <MangaStatus
+                                            label="Статус"
+                                            value={value}
+                                            {...props}
+                                        />
+                                    )}
+                                />
+                            </Grid>
+                            <Grid size={1}>
+                                <Controller 
+                                    name="year"
+                                    control={control}
+                                    render={({field: {value, ...props}}) => (
+                                        <MangaYear 
+                                            value={value}
+                                            {...props}
+                                        />
+                                    )}
+                                />
+                            </Grid>
+                            <Grid size={1}>
+                                <Controller 
+                                    name="adult"
+                                    control={control}
+                                    render={({field: {value, ...props}}) => (
+                                        <MangaAdult
+                                            value={value}
+                                            {...props}
+                                        />
+                                    )}
+                                />
+                            </Grid>
                         </Grid>
-                        <Grid size={1}>
-                            <Controller 
-                                name="status"
-                                control={control}
-                                render={({field: {value, ...props}}) => (
-                                    <MangaStatus
-                                        label="Статус"
-                                        value={value}
-                                        {...props}
-                                    />
-                                )}
-                            />
-                        </Grid>
-                        <Grid size={1}>
-                            <Controller 
-                                name="year"
-                                control={control}
-                                render={({field: {value, ...props}}) => (
-                                    <MangaYear 
-                                        value={value}
-                                        {...props}
-                                    />
-                                )}
-                            />
-                        </Grid>
-                        <Grid size={1}>
-                            <Controller 
-                                name="adult"
-                                control={control}
-                                render={({field: {value, ...props}}) => (
-                                    <MangaAdult
-                                        value={value}
-                                        {...props}
-                                    />
-                                )}
-                            />
-                        </Grid>
-                    </Grid>
-                    <Controller 
-                        name="genres"
-                        control={control}
-                        render={({field: {value, onChange, ...props}}) => (
-                            <MangaGenres
-                                value={value}
-                                onChange={onChange}
-                                {...props}
-                            />
-                        )}
-                    />
-                    <Controller 
-                        name="background"
-                        control={control}
-                        render={({field: {value, onChange}}) => (
-                            <MangaBackground
-                                value={value}
-                                onChange={onChange}
-                            />
-                        )}
-                    />
-                    <Controller 
-                        name="promoName"
-                        control={control}
-                        render={({field: {value, onChange}}) => (
-                            <MangaPromoName
-                                value={value}
-                                onChange={onChange}
-                            />
-                        )}
-                    />
-                    <Controller 
-                        name="promoBackground"
-                        control={control}
-                        render={({field: {value, onChange}}) => (
-                            <MangaPromoBackground 
-                                value={value}
-                                onChange={onChange}
-                            />
-                        )}
-                    />
-                    <Controller 
-                        name="promoLogo"
-                        control={control}
-                        render={({field: {value, onChange}}) => (
-                            <MangaPromoLogo
-                                value={value}
-                                onChange={onChange}
-                            />
-                        )}
-                    />
-                </Box>
-            </form>
+                        <Controller 
+                            name="genres"
+                            control={control}
+                            render={({field: {value, onChange, ...props}}) => (
+                                <MangaGenres
+                                    value={value}
+                                    onChange={onChange}
+                                    {...props}
+                                />
+                            )}
+                        />
+                        <Controller 
+                            name="background"
+                            control={control}
+                            render={({field: {value, onChange}}) => (
+                                <MangaBackground
+                                    value={value}
+                                    onChange={onChange}
+                                />
+                            )}
+                        />
+                        <Controller 
+                            name="promoName"
+                            control={control}
+                            render={({field: {value, onChange}}) => (
+                                <MangaPromoName
+                                    value={value}
+                                    onChange={onChange}
+                                />
+                            )}
+                        />
+                        <Controller 
+                            name="promoBackground"
+                            control={control}
+                            render={({field: {value, onChange}}) => (
+                                <MangaPromoBackground 
+                                    value={value}
+                                    onChange={onChange}
+                                />
+                            )}
+                        />
+                        <Controller 
+                            name="promoLogo"
+                            control={control}
+                            render={({field: {value, onChange}}) => (
+                                <MangaPromoLogo
+                                    value={value}
+                                    onChange={onChange}
+                                />
+                            )}
+                        />
+                    </Box>
+                </form>
+            </EditPageContainer>
         </>
     )
 }
