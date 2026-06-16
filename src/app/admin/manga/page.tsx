@@ -2,7 +2,7 @@
 
 import { EditPageHeader, EditPageNavbar, EditPageTitle } from "@/features/edit/components/EditHeader";
 import { Box, Breadcrumbs, Button, Chip, CircularProgress, Divider, FormControl, Grid, GridProps, Input, SxProps, Typography, useTheme } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { debounce } from "lodash";
 import { clientFetch } from "@/lib/fetch/clientFetch";
 import EditPageContainer from "@/features/edit/components/EditPageContainer";
@@ -50,6 +50,7 @@ function MangaCardShortData() {
         <Grid
             container
             columns={7}
+            spacing={2}
             sx={{
                 width: "100%",
                 alignItems: "center"
@@ -509,6 +510,7 @@ function MangaCard({manga}: {manga: AdminManga}) {
 export default function Page() {
     const router = useRouter()
 
+    const firstRender = useRef(true)
     const [mangaDialogOpen, setMangaDialogOpen] = useState(false)
     const [query, setQuery] = useState("")
     
@@ -533,7 +535,7 @@ export default function Page() {
     } = usePagePagination<AdminManga>({ perPage: 20 });
 
 
-    const fetchManga = async () => {
+    const fetchManga = async (forcePage?: number) => {
         if (loading) return;
 
         setLoading(true);
@@ -542,7 +544,7 @@ export default function Page() {
             if (query)
                 urlSearchParams.append("query", query)
 
-            urlSearchParams.append("page", page.toString())
+            urlSearchParams.append("page", forcePage ? forcePage.toString(): page.toString())
             urlSearchParams.append("per_page", perPage.toString())
 
             const response = await clientFetch.get<AdminManga[]>("/admin/manga?" + urlSearchParams.toString());
@@ -561,9 +563,23 @@ export default function Page() {
         }
     }
 
-    useEffect(debounce(() => {
-        reset()
-    }, 100), [query, filters])
+    useEffect(() => {
+        if (firstRender.current) {
+            firstRender.current = false
+            return () => {}
+        }
+
+        const debouncedFetch = debounce(async () => {
+            reset();
+
+            await fetchManga(1);
+        }, 300);
+
+        debouncedFetch();
+        console.log(query)
+        
+        return () => debouncedFetch.cancel();
+    }, [query, filters]);
 
     return (
         <>
@@ -611,6 +627,7 @@ export default function Page() {
                 <Grid
                     container
                     columns={7}
+                    spacing={2}
                     sx={{
                         pl: 3,
                         pr: "calc(15px + 24px)"

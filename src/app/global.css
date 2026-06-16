@@ -24,3 +24,7 @@ input:-webkit-autofill {
     transition-property: background-color, color;
 }
 
+::selection {
+  background: #ffd600; /* Цвет фона выделения */
+  color: #000000
+}
