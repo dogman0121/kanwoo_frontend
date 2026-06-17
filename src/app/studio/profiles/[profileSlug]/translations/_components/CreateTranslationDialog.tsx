@@ -26,6 +26,8 @@ export default function CreateTranslationDialog({
     const translations = useAppSelector(state => state.studioPageProfile.translations || [])
     const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false);
 
+    const profile = useAppSelector(state => state.studioPageProfile.profile)
+
     const {control, handleSubmit, setValue, reset} = useForm<CreateTranslationForm>({
         defaultValues: {
             manga: null,
@@ -36,9 +38,9 @@ export default function CreateTranslationDialog({
 
     const onSubmit = async (data: CreateTranslationForm) => {
         try {
-            if (!data.manga) return;
+            if (!data.manga || !profile) return;
 
-            const res = await clientFetch.post<Translation>("/studio/translations", {
+            const res = await clientFetch.post<Translation>(`/studio/profiles/${profile.slug}/translations`, {
                 headers: {
                     "Content-Type": "application/json"
                 },

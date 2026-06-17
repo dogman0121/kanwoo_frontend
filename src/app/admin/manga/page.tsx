@@ -1,7 +1,7 @@
 "use client"
 
 import { EditPageHeader, EditPageNavbar, EditPageTitle } from "@/features/edit/components/EditHeader";
-import { Box, Breadcrumbs, Button, Chip, CircularProgress, Divider, FormControl, Grid, GridProps, Input, SxProps, Typography, useTheme } from "@mui/material";
+import { Box, Breadcrumbs, Button, Chip, CircularProgress, Divider, FormControl, Grid, GridProps, SxProps, Typography, useTheme } from "@mui/material";
 import { useContext, useEffect, useRef, useState } from "react";
 import { debounce } from "lodash";
 import { clientFetch } from "@/lib/fetch/clientFetch";
@@ -17,13 +17,12 @@ import ModerationActions from "../_components/ModerationActions";
 import { AdminAccordion, AdminAccordionActions, AdminAccordionDetails, AdminAccordionSummary } from "../_features/accordion/Accordion";
 import ProfileWidget from "../_components/ProfileWidget";
 import { adminModerationService } from "../_services/moderationService";
-import LoadingBox from "../_features/LoadingBox";
-import EmptyTitle from "../_features/EmptyTitle";
 import ModerationFiltersGroup, { ModerationFilterType } from "../_components/ModerationFiltersGroup";
-import CreateMangaDialog from "./_components/CreateMangaDialog";
 import { usePagePagination } from "@/features/pagination/hooks/usePagePagination";
 import SearchInput from "../_components/SearchInput";
 import InfiniteScroll from "react-infinite-scroll-component";
+import CreateMangaDialog, { convertSchemaToFormData } from "@/features/manga/components/CreateMangaDialog";
+import { MangaFormSchema } from "./_components/CreateMangaDialog";
 
 const compileColor = (moderation_status: AdminMangaModerationStatus | null) => {
     if (!moderation_status)
@@ -563,6 +562,20 @@ export default function Page() {
         }
     }
 
+    const handleAddManga = async (data: MangaFormSchema) => {
+        const formData = convertSchemaToFormData(data)
+
+        try {
+            await clientFetch.post<AdminManga>(`/admin/manga`, {
+                body: formData
+            })
+
+            setMangaDialogOpen(false)
+        } catch (e) {
+            throw e
+        }
+}
+
     useEffect(() => {
         if (firstRender.current) {
             firstRender.current = false
@@ -576,7 +589,6 @@ export default function Page() {
         }, 300);
 
         debouncedFetch();
-        console.log(query)
         
         return () => debouncedFetch.cancel();
     }, [query, filters]);
@@ -680,6 +692,7 @@ export default function Page() {
             </EditPageContainer>
             <CreateMangaDialog 
                 open={mangaDialogOpen}
+                onSend={handleAddManga}
                 onClose={() => setMangaDialogOpen(false)}
             />
         </>

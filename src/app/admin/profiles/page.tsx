@@ -168,7 +168,6 @@ export default function Page() {
         }, 300);
 
         debouncedFetch();
-        console.log(query)
         
         return () => debouncedFetch.cancel();
     }, [query]);
