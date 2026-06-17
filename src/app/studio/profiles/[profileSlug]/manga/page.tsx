@@ -6,7 +6,7 @@ import { Box, Button, Divider, SxProps, Typography } from "@mui/material"
 import Link from "next/link"
 import { useAppSelector, useAppStore } from "@/lib/state/hooks"
 import EditPageContainer from "@/features/edit/components/EditPageContainer"
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import { studioClientApi } from "@/lib/fetch/features/studio/client"
 import { SuccessResponse } from "@/lib/fetch/apiResponse"
 import Poster from "@/components/Poster"
@@ -14,6 +14,8 @@ import { setStudioPageProfileManga } from "@/lib/state/features/studioPage/studi
 import Manga from "@/types/manga/manga"
 import { clientFetch } from "@/lib/fetch/clientFetch"
 import { ROUTES } from "@/routes"
+import CreateMangaDialog, { convertSchemaToFormData, MangaFormSchema } from "@/features/manga/components/CreateMangaDialog"
+import { MangaCreateForm } from "@/features/form/manga/Create"
 
 const gridRowStyle: SxProps = {
     display: "grid",
@@ -103,6 +105,24 @@ export default function Page() {
 
     const profile = useAppSelector(state => state.studioPageProfile.profile);
 
+    const [mangaCreateDialogOpen, setMangaCreateDialogOpen] = useState(false)
+
+    const handleAddManga = async (data: MangaFormSchema) => {
+        if (!profile) return
+        
+        const formData = convertSchemaToFormData(data)
+
+        try {
+            await clientFetch.post<Manga>(`/studio/${profile.slug}/manga`, {
+                body: formData
+            })
+
+            setMangaCreateDialogOpen(false)
+        } catch (e) {
+            throw e
+        }
+    }
+
     if (!initialized.current && profile) {
         initialized.current = true
         clientFetch.get<Manga[]>(`/studio/profiles/${profile.slug}/manga`)
@@ -126,6 +146,7 @@ export default function Page() {
                         >
                             <Button
                                 variant="contained"
+                                onClick={() => setMangaCreateDialogOpen(true)}
                             >
                                 Создать
                             </Button>
@@ -156,6 +177,11 @@ export default function Page() {
                     <TitleGridRow key={title.id} title={title}/>
                 ))}
             </Box>
+            <CreateMangaDialog 
+                open={mangaCreateDialogOpen}
+                onClose={() => setMangaCreateDialogOpen(false)}
+                onSend={handleAddManga}
+            />
         </>
     )
 }
