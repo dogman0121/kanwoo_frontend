@@ -25,6 +25,7 @@ export default function CreateTranslationDialog({
     const dispatch = useAppDispatch()
     const translations = useAppSelector(state => state.studioPageProfile.translations || [])
     const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false);
+    const [successSnackbarOpen, setSuccessSnackbarOpen] = useState(false);
 
     const profile = useAppSelector(state => state.studioPageProfile.profile)
 
@@ -52,6 +53,7 @@ export default function CreateTranslationDialog({
             })
 
             dispatch(setStudioPageProfileTranslations([...translations, res.data]))
+            onClose?.({}, "escapeKeyDown")
             reset()
         } catch (e) {
             setErrorSnackbarOpen(true)
@@ -127,6 +129,12 @@ export default function CreateTranslationDialog({
                 onClose={() => setErrorSnackbarOpen(false)}
                 variant="error"
                 message="При отправке запроса произошла ошибка."
+            />
+            <AppSnackbar 
+                open={successSnackbarOpen}
+                onClose={() => setSuccessSnackbarOpen(false)}
+                variant="error"
+                message="Перевод успешно добавлен."
             />
         </>
     )
