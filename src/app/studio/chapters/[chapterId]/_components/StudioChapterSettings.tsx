@@ -1,7 +1,7 @@
 "use client"
 
 import ButtonWithConfirm from "@/components/ButtonWithConfirm"
-import { Dialog, DialogContent, DialogContentText, DialogProps, DialogTitle, IconButton } from "@mui/material"
+import { Dialog, DialogContent, DialogProps, DialogTitle, IconButton } from "@mui/material"
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded"
 import { useAppSelector } from "@/lib/state/hooks"
 import { useRouter } from "next/navigation"

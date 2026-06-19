@@ -10,7 +10,14 @@ import { serverFetch } from "@/lib/fetch/serverFetch"
 import Meta from "@/types/meta"
 import AuthProfile from "@/types/authProfile"
 import ProfileProvider from "./_components/ProfileProvider"
-import YandexMetrica from "@/yandex-metrica/YandexMetrica"
+import dynamic from "next/dynamic"
+
+
+const YandexMetrikaContainer = dynamic(
+  () => import('@/yandex-metrica/YandexMetricaContainer')
+);
+
+const analyticsEnabled = !!(process.env.NODE_ENV === "production");
 
 const roboto = Roboto({
     weight: ["300", "400", "500", "700"],
@@ -18,8 +25,6 @@ const roboto = Roboto({
     display: "swap",
     variable: "--font-roboto",
 })
-
-const YANDEX_METRICA_COUNTER = 110001347
 
 export default async function RootLayout({
     children,
@@ -46,19 +51,7 @@ export default async function RootLayout({
         <html lang="en" className={roboto.variable} suppressHydrationWarning>
             <head>
                 <link rel="icon" type="image/svg+xml" href="/logo.svg" />
-                <YandexMetrica 
-                    id={YANDEX_METRICA_COUNTER}
-                    initParameters={{
-                        ssr:true, 
-                        webvisor:true, 
-                        clickmap:true, 
-                        ecommerce:"dataLayer", 
-                        referrer: document.referrer, 
-                        url: location.href, 
-                        accurateTrackBounce:true, 
-                        trackLinks:true
-                    }}
-                />
+                
             </head>
             <body style={{ overflow: "auto" }}>
                 <AppRouterCacheProvider>
@@ -73,6 +66,7 @@ export default async function RootLayout({
                     </ThemeProvider>
                 </AppRouterCacheProvider>
             </body>
+            <YandexMetrikaContainer enabled={analyticsEnabled} />
         </html>
     )
 }
