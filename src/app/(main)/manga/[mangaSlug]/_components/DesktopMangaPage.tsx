@@ -173,9 +173,7 @@ export default function DesktopMangaPage() {
                                         <Description />
                                         <Genres />
                                         <NameTranslations />
-                                        <Box>
-                                            <DesktopSections />
-                                        </Box>
+                                        <DesktopSections />
                                     </Box>
                                 </Grid>
                                 <Grid size={4}>

@@ -11,5 +11,7 @@ export default interface Translation {
     lang: Language,
     created_at: string,
     creator: Profile,
+    owner: Profile,
+    chapters_count: number,
     is_official: boolean,
 }
