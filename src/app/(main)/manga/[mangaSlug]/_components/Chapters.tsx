@@ -4,9 +4,9 @@ import { clientFetch } from "@/lib/fetch/clientFetch"
 import { useAppSelector } from "@/lib/state/hooks"
 import Chapter from "@/types/chapter/chapter"
 import Translation from "@/types/translation/translation"
-import { Box, Paper, Typography } from "@mui/material"
+import { Avatar, Box, Paper, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { MouseEvent, useEffect, useState } from "react"
 
 export default function Chapters() {
     const translations = useAppSelector(state => state.mangaPage.translations)
@@ -14,6 +14,10 @@ export default function Chapters() {
     const [currTranslation, setCurrTranslation] = useState<Translation | null>(null)
 
     const [translationChapters, setTranslationChapters] = useState<Chapter[]>([]);
+
+    const handleTranslation = (event: MouseEvent<HTMLElement>, newTranslation: Translation) => {
+        setCurrTranslation(newTranslation)
+    }
 
     useEffect(() => {
         setCurrTranslation(translations.find(t => t.is_official) || translations?.[0] || null)
@@ -33,9 +37,52 @@ export default function Chapters() {
             {currTranslation ?
                 <>
                     {!currTranslation.is_official && (
-                        <></>
+                        <ToggleButtonGroup
+                            exclusive
+                            onChange={handleTranslation}
+                            value={currTranslation}
+
+                            sx={{
+                                columnGap: 2,
+
+                                "& .MuiToggleButton-root": {
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    columnGap: 2,
+                                    textAlign: "left",
+
+                                    px: 2,
+
+                                    borderRadius: "8px",
+                                    borderLeft: 0,
+                                    borderRight: 0,
+                                    borderTop: 0,
+                                    borderBottom: 0,
+
+                                    textTransform: "none"
+                                }
+                            }}
+                        >
+                            {translations.map(translation => (
+                                <ToggleButton
+                                    size={"small"}
+                                    value={translation}
+                                    key={`manga_page_translation_${translation.id}`}  
+                                >
+                                    <Avatar src={translation.owner.avatar}/>
+                                    <Box>
+                                        <Typography>{translation.owner.name}</Typography>
+                                        <Typography variant="caption">Кол-во глав: {translation.chapters_count}</Typography>
+                                    </Box>
+                                </ToggleButton>
+                            ))}
+                        </ToggleButtonGroup>
                     )}
-                    <Box>
+                    <Box
+                        sx={{
+                            mt: 1
+                        }}
+                    >
                         <Box
                             sx={{
                                 display: "flex",

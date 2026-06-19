@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import Translation from "@/types/translation/translation";
 import { setMangaPageTranslations } from "@/lib/state/features/mangaPage/mangaSlice";
 import { clientFetch } from "@/lib/fetch/clientFetch";
+import { Box } from "@mui/material";
 
 export default function DesktopSections() {
     const dispatch = useAppDispatch()
@@ -29,13 +30,15 @@ export default function DesktopSections() {
     };
 
     return (
-        <AppTabContext value={section}>
-            <AppTabList onChange={handleChange}>
-                <AppTab value={"1"} label="Главы" />
-            </AppTabList>
-            <AppTabPanel value={"1"}>
-                <Chapters />
-            </AppTabPanel>
-        </AppTabContext>
+        <Box>
+            <AppTabContext value={section}>
+                <AppTabList onChange={handleChange}>
+                    <AppTab value={"1"} label="Главы" />
+                </AppTabList>
+                <AppTabPanel value={"1"}>
+                    <Chapters />
+                </AppTabPanel>
+            </AppTabContext>
+        </Box>
     )
 }
