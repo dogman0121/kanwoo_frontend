@@ -2,7 +2,7 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter"
 import { Roboto } from "next/font/google"
 import "./global.css"
 import theme from "@/theme"
-import { CssBaseline, GlobalStyles, InitColorSchemeScript, ThemeProvider } from "@mui/material"
+import { CssBaseline, InitColorSchemeScript, ThemeProvider } from "@mui/material"
 import MetaProvider from "./_components/MetaProvider"
 import StoreProvider from "./_components/StoreProvider"
 import { ApiError } from "@/lib/fetch/apiResponse"
@@ -10,6 +10,14 @@ import { serverFetch } from "@/lib/fetch/serverFetch"
 import Meta from "@/types/meta"
 import AuthProfile from "@/types/authProfile"
 import ProfileProvider from "./_components/ProfileProvider"
+import dynamic from "next/dynamic"
+
+
+const YandexMetrikaContainer = dynamic(
+  () => import('@/yandex-metrica/YandexMetricaContainer')
+);
+
+const analyticsEnabled = !!(process.env.NODE_ENV === "production");
 
 const roboto = Roboto({
     weight: ["300", "400", "500", "700"],
@@ -43,6 +51,7 @@ export default async function RootLayout({
         <html lang="en" className={roboto.variable} suppressHydrationWarning>
             <head>
                 <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+                
             </head>
             <body style={{ overflow: "auto" }}>
                 <AppRouterCacheProvider>
@@ -57,6 +66,7 @@ export default async function RootLayout({
                     </ThemeProvider>
                 </AppRouterCacheProvider>
             </body>
+            <YandexMetrikaContainer enabled={analyticsEnabled} />
         </html>
     )
 }
