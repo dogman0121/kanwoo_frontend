@@ -11,11 +11,8 @@ import Meta from "@/types/meta"
 import AuthProfile from "@/types/authProfile"
 import ProfileProvider from "./_components/ProfileProvider"
 import dynamic from "next/dynamic"
+import YandexMetrikaContainer from "@/yandex-metrica/YandexMetricaContainer"
 
-
-const YandexMetrikaContainer = dynamic(
-  () => import('@/yandex-metrica/YandexMetricaContainer')
-);
 
 const analyticsEnabled = !!(process.env.NODE_ENV === "production");
 
