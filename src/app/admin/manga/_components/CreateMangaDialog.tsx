@@ -128,7 +128,6 @@ export default function CreateMangaDialog({open, onClose, sx, ...props}: DialogP
             })
 
             setSuccessSnackbarOpen(true)
-            onClose?.({}, "backdropClick")
         } catch (e) {
             setErrorSnackbarOpen(true)
             throw e

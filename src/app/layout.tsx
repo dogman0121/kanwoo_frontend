@@ -2,7 +2,7 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter"
 import { Roboto } from "next/font/google"
 import "./global.css"
 import theme from "@/theme"
-import { CssBaseline, GlobalStyles, InitColorSchemeScript, ThemeProvider } from "@mui/material"
+import { CssBaseline, InitColorSchemeScript, ThemeProvider } from "@mui/material"
 import MetaProvider from "./_components/MetaProvider"
 import StoreProvider from "./_components/StoreProvider"
 import { ApiError } from "@/lib/fetch/apiResponse"
@@ -10,6 +10,7 @@ import { serverFetch } from "@/lib/fetch/serverFetch"
 import Meta from "@/types/meta"
 import AuthProfile from "@/types/authProfile"
 import ProfileProvider from "./_components/ProfileProvider"
+import YandexMetrica from "@/yandex-metrica/YandexMetrica"
 
 const roboto = Roboto({
     weight: ["300", "400", "500", "700"],
@@ -17,6 +18,8 @@ const roboto = Roboto({
     display: "swap",
     variable: "--font-roboto",
 })
+
+const YANDEX_METRICA_COUNTER = 110001347
 
 export default async function RootLayout({
     children,
@@ -43,6 +46,19 @@ export default async function RootLayout({
         <html lang="en" className={roboto.variable} suppressHydrationWarning>
             <head>
                 <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+                <YandexMetrica 
+                    id={YANDEX_METRICA_COUNTER}
+                    initParameters={{
+                        ssr:true, 
+                        webvisor:true, 
+                        clickmap:true, 
+                        ecommerce:"dataLayer", 
+                        referrer: document.referrer, 
+                        url: location.href, 
+                        accurateTrackBounce:true, 
+                        trackLinks:true
+                    }}
+                />
             </head>
             <body style={{ overflow: "auto" }}>
                 <AppRouterCacheProvider>
