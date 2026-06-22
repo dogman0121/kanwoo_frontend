@@ -423,6 +423,7 @@ function MangaCardActions({
     return (
         <Box
             sx={{
+                alignItems: "center",
                 width: "100%",
                 display: "flex",
                 justifyContent: "space-between",
