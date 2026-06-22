@@ -5,6 +5,7 @@ import { AppBar, Avatar, Box, SvgIcon, Toolbar, Typography, useTheme } from "@mu
 import Link from "next/link"
 import { Suspense, useState } from "react"
 import UserNav from "./UserNav"
+import Footer from "./Footer"
 
 function Header() {
     const theme = useTheme()
@@ -96,6 +97,7 @@ export default function DesktopLayout({children}: {children: React.ReactNode}) {
             >
                 {children}
             </Box>
+            <Footer />
         </>
     )
 }
