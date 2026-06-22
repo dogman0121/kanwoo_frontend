@@ -14,6 +14,7 @@ import theme from "@/theme";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "@/routes";
 import MobileMenu from "./MobileMenu";
+import Footer from "./Footer";
 
 export default function MobileLayout({children}: {children: React.ReactNode}) {
     const [value, setValue] = useState("");
@@ -30,6 +31,7 @@ export default function MobileLayout({children}: {children: React.ReactNode}) {
                 }}
             >
                 {children}
+                <Footer />
             </Box>
             <BottomNavigation
                 showLabels
