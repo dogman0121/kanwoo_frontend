@@ -48,7 +48,7 @@ export default async function RootLayout({
         <html lang="en" className={roboto.variable} suppressHydrationWarning>
             <head>
                 <link rel="icon" type="image/svg+xml" href="/logo.svg" />
-                
+                <YandexMetrikaContainer enabled={analyticsEnabled} />
             </head>
             <body style={{ overflow: "auto" }}>
                 <AppRouterCacheProvider>
@@ -63,7 +63,6 @@ export default async function RootLayout({
                     </ThemeProvider>
                 </AppRouterCacheProvider>
             </body>
-            <YandexMetrikaContainer enabled={analyticsEnabled} />
         </html>
     )
 }
