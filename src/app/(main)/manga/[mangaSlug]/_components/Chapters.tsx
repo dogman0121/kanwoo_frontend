@@ -15,7 +15,7 @@ export default function Chapters() {
 
     const [translationChapters, setTranslationChapters] = useState<Chapter[]>([]);
 
-    const handleTranslation = (event: MouseEvent<HTMLElement>, newTranslation: Translation) => {
+    const handleTranslation = (_event: MouseEvent<HTMLElement>, newTranslation: Translation) => {
         setCurrTranslation(newTranslation)
     }
 
@@ -106,11 +106,11 @@ export default function Chapters() {
                             }}
                         >
                             {translationChapters.map(chapter => (
-                                <Box
+                                <Paper
                                     key={`chapter_${chapter.id}`}
                                     sx={{
                                         borderRadius: "12px",
-                                        bgcolor: "secondary.main",
+                                        boxShadow: "none",
                                         p: "10px 25px",
 
                                         display: "flex",
@@ -132,7 +132,7 @@ export default function Chapters() {
                                     <Typography>
                                         {new Date(chapter.created_at).toLocaleDateString()}
                                     </Typography>
-                                </Box>
+                                </Paper>
                             ))}
                         </Box>
                     </Box>

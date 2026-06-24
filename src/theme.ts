@@ -36,10 +36,10 @@ const theme = createTheme({
           main: "#FFD600"
         },
         secondary: {
-          main: "#282828"
+          main: "#202020"
         },
         background: {
-          default: "#121212",
+          default: "#1d1d1d",
           paper: "#1c1c1c"
         },
       },

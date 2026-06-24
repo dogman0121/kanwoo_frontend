@@ -12,7 +12,7 @@ class ChapterService {
     }
 
     async saveProgress(chapter: Chapter, page: number) {
-        const {data: success} = await clientFetch.post<{"success": boolean}>(`/chapters/${chapter.id}/save-progress`, {
+        const {data: success} = await clientFetch.post<{"success": boolean}>(`/chapters/${chapter.id}/progress`, {
             headers: {
                 "Content-Type": "application/json"
             },
