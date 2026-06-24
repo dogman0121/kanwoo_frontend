@@ -2,7 +2,7 @@ import Home from "@/types/home";
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface HomePageState {
-    home: Home | null | undefined
+    home?: Home | null
 }
 
 const initialState: HomePageState = {
@@ -15,10 +15,15 @@ export const homePageSlice = createSlice({
     reducers: {
         setHome: (state, action) => {
             state.home = action.payload
+        },
+
+        setProgresses: (state, action) => {
+            if (state.home)
+                state.home.progress = action.payload
         }
     }
 })
 
-export const { setHome } = homePageSlice.actions
+export const { setHome, setProgresses } = homePageSlice.actions
 
 export default homePageSlice.reducer

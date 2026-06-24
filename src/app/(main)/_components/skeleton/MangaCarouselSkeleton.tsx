@@ -1,11 +1,12 @@
 import { Box, Skeleton } from "@mui/material";
+import { random, range } from "lodash";
 
 
 const MangaSkeleton = () => (
     <Skeleton 
         variant="rectangular"
         sx={{
-            minWidth: "max(120px, calc((100% - 15px * 7) / 8))",
+            minWidth: "max(120px, calc((100% - 15px * 6) / 7))",
             height: "auto",
             aspectRatio: "2/3",
             borderRadius: "8px"
@@ -29,14 +30,7 @@ export default function MangaCarouselSkeleton() {
                     mt: "10px"
                 }}
             >
-                <MangaSkeleton />
-                <MangaSkeleton />
-                <MangaSkeleton />
-                <MangaSkeleton />
-                <MangaSkeleton />
-                <MangaSkeleton />
-                <MangaSkeleton />
-                <MangaSkeleton />
+                {range(0, 7).map((idx) => <MangaSkeleton key={`manga_carousel_item_${idx}_${Math.random()}`}/>)}
             </Box>
         </Box>
     )

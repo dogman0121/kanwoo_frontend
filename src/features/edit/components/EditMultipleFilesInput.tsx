@@ -2,7 +2,7 @@
 
 import { closestCenter, DndContext, DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core"
 import {CSS} from '@dnd-kit/utilities';
-import { Box, SxProps, Typography } from "@mui/material";
+import { Box, Paper, SxProps, Typography } from "@mui/material";
 import UploadFileRoundedIcon from "@mui/icons-material/UploadFileRounded"
 import { useDropzone } from "react-dropzone";
 import { v4 } from "uuid";
@@ -46,10 +46,13 @@ function EditFileInput({
     return (
         <>
 
-            <Box
+            <Paper
                 {...getRootProps()}
                 sx={{
-                    backgroundColor: "background.paper",
+                    boxShadow: "none",
+                    // border: "solid 2px",
+                    // borderStyle: "dashed",
+                    // borderColor: "divider",
                     aspectRatio: "2/3",
                     borderRadius: "8px",
                     display: "flex",
@@ -73,7 +76,7 @@ function EditFileInput({
                 >
                     Нажмите или перенести файлы (.jpg, .png)
                 </Typography>
-            </Box>
+            </Paper>
             <input {...getInputProps()} type="file" />
         </>
     )

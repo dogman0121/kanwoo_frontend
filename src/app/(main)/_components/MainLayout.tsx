@@ -1,7 +1,7 @@
-import MobileLayout from "./MobileLayout";
-import DesktopLayout from "./DesktopLayout";
+import MobileLayout from "../../_layouts/MobileLayout";
+import DesktopLayout from "../../_layouts/DesktopLayout";
 import { headers } from "next/headers";
-import Footer from "./Footer";
+import Footer from "../../_layouts/Footer";
 
 
 export default async function MainLayout({children}: {children: React.ReactNode}) {

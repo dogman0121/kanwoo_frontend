@@ -4,7 +4,7 @@ import SearchModalDesktop from "@/features/search/components/SearchModalDesktop"
 import { AppBar, Avatar, Box, SvgIcon, Toolbar, Typography, useTheme } from "@mui/material"
 import Link from "next/link"
 import { Suspense, useState } from "react"
-import UserNav from "./UserNav"
+import UserNav from "../(main)/_components/UserNav"
 import Footer from "./Footer"
 
 function Header() {
@@ -97,7 +97,6 @@ export default function DesktopLayout({children}: {children: React.ReactNode}) {
             >
                 {children}
             </Box>
-            <Footer />
         </>
     )
 }

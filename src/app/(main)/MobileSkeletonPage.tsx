@@ -1,12 +1,11 @@
-import { Container, Skeleton } from "@mui/material";
-import DesktopHeroSliderSkeleton from "./_components/DesktopHeroSliderSkeleton";
-import MangaCarouselSkeleton from "./_components/MangaCarouselSkeleton";
+import { Container } from "@mui/material";
+import MangaCarouselSkeleton from "./_components/skeleton/MangaCarouselSkeleton";
+import MobileHeroSliderSkeleton from "./_components/skeleton/MobileHeroSliderSkeleton";
 
-export default async function Loading() {
-
+export default function MobileSkeletonPage() {
     return (
         <>
-            <DesktopHeroSliderSkeleton />
+            <MobileHeroSliderSkeleton />
             <Container 
                 maxWidth="lg"
                 sx={{

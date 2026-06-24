@@ -1,9 +1,12 @@
-import HomePageDesktop from "./_components/DesktopHomePage";
-import HomePageMobile from "./_components/MobileHomePage";
 import { serverFetch } from "@/lib/fetch/serverFetch";
 import Home from "@/types/home";
 import HomeProvider from "./_components/HomeProvider";
 import { Metadata } from "next";
+import { Suspense } from "react";
+import MobileSkeletonPage from "./MobileSkeletonPage";
+import DesktopSkeletonPage from "./DesktopSkeletonPage";
+import MobileHomePage from "./MobileHomePage";
+import DesktopHomePage from "./DesktopHomePage";
 
 export async function generateMetadata(): Promise<Metadata> {
     const title = `Kanwoo - лучший сайт по чтению манги`;
@@ -34,9 +37,13 @@ export default async function Page({
     return (
         <HomeProvider home={home}>
             {viewport == "mobile" ?
-                <HomePageMobile />
+                <Suspense fallback={<MobileSkeletonPage />}>
+                    <MobileHomePage />
+                </Suspense>
                 :
-                <HomePageDesktop/>
+                <Suspense fallback={<DesktopSkeletonPage />}>
+                    <DesktopHomePage/>
+                </Suspense>
             }
         </HomeProvider>
     )

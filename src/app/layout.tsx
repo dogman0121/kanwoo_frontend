@@ -57,7 +57,9 @@ export default async function RootLayout({
                         <CssBaseline />
                         <StoreProvider>
                             <MetaProvider meta={meta}>
-                                <ProfileProvider profile={profile}>{children}</ProfileProvider>
+                                <ProfileProvider profile={profile}>
+                                    {children}
+                                </ProfileProvider>
                             </MetaProvider>
                         </StoreProvider>
                     </ThemeProvider>

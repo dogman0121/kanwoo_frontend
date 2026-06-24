@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
-import MobileLayout from "../(main)/_components/MobileLayout";
-import DesktopLayout from "../(main)/_components/DesktopLayout";
+import MobileLayout from "../_layouts/MobileLayout";
+import DesktopLayout from "../_layouts/DesktopLayout";
 
 export default async function RootLayout({
   children,

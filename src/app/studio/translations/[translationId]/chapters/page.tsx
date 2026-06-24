@@ -58,10 +58,10 @@ export default function Page() {
                 }}
             >
                 {chapters?.map(chapter => (
-                    <Box
+                    <Paper
                         key={`chapter_${chapter.id}`}
                         sx={{
-                            bgcolor: "background.paper",
+                            boxShadow: "none",
                             borderRadius: "8px",
                             p: "10px 15px",
                             display: "flex",
@@ -69,10 +69,11 @@ export default function Page() {
                             columnGap: "20px"
                         }}
                     >
-                        <Typography>{chapter.chapter}</Typography>
+
                         <Link
                             href={ROUTES.STUDIO.CHAPTER.MAIN(chapter.id)}
                         >
+                            <Typography>{chapter.chapter}</Typography>
                             <Typography
                                 sx={{
                                     "&:hover": {
@@ -81,7 +82,7 @@ export default function Page() {
                                 }}
                             >{chapter.name}</Typography>
                         </Link>
-                    </Box>
+                    </Paper>
                 ))}
             </EditPageContainer>
         </>
