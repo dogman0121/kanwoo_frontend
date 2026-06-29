@@ -4,4 +4,10 @@ declare global {
   }
 }
 
+declare global {
+  interface Window {
+    YaAuthSuggest: any; // или более точный тип
+  }
+}
+
 export {}
