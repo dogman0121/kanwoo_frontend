@@ -1,5 +1,5 @@
-import { Avatar, Box } from "@mui/material"
-import { ChangeEvent, useEffect, useState } from "react"
+import { Avatar } from "@mui/material"
+import { useEffect, useState } from "react"
 import useAvatarInput from "../hooks/useAvatarInput"
 import AvatarCropper from "@/components/AvatarCropper";
 
