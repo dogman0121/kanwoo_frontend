@@ -20,8 +20,8 @@ export default function YandexOauthScript() {
             buttonBorderRadius: 0
         }
         )
-        .then(function(result: any) {
-            return result.handler()
+        .then(function({handler}: {handler: () => void}) {
+            return handler()
         })
         .then(function(data: unknown) {
             console.log('Сообщение с токеном: ', data);
