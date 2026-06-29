@@ -10,8 +10,8 @@ import { serverFetch } from "@/lib/fetch/serverFetch"
 import Meta from "@/types/meta"
 import AuthProfile from "@/types/authProfile"
 import ProfileProvider from "./_components/ProfileProvider"
-import dynamic from "next/dynamic"
-import YandexMetrikaContainer from "@/yandex-metrica/YandexMetricaContainer"
+import YandexMetrikaContainer from "@/lib/yandex-metrica/YandexMetricaContainer"
+import Script from "next/script"
 
 
 const analyticsEnabled = !!(process.env.NODE_ENV === "production");
@@ -28,27 +28,27 @@ export default async function RootLayout({
 }: Readonly<{
     children: React.ReactNode
 }>) {
-    let meta
+    let meta = null
+
     try {
         meta = (await serverFetch.get<Meta>("/meta")).data
     } catch (e) {
-        if (e instanceof ApiError) meta = null
     }
 
-    let profile
+    let profile =  null
     try {
         profile = (await serverFetch.get<AuthProfile>(`/profiles/current`)).data
     } catch (e) {
-        if (e instanceof ApiError) {
-            profile = null
-        }
     }
 
     return (
         <html lang="en" className={roboto.variable} suppressHydrationWarning>
             <head>
                 <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+                {/* Яндекс метрика */}
                 <YandexMetrikaContainer enabled={analyticsEnabled} />
+                {/* Яндекс авторизация */}
+                <script src="https://yastatic.net/s3/passport-sdk/autofill/v1/sdk-suggest-with-polyfills-latest.js"></script>
             </head>
             <body style={{ overflow: "auto" }}>
                 <AppRouterCacheProvider>
