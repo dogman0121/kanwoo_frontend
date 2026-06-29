@@ -41,7 +41,7 @@ function SearchProvider({ children, emptyQuery}: { children: React.ReactNode, em
         return () => {
             clearTimeout(timerId.current);
         }
-    }, [query, section, filters])
+    }, [emptyQuery, query, section, filters])
 
     return (
         <SearchContext.Provider

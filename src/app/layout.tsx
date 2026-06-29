@@ -48,7 +48,7 @@ export default async function RootLayout({
                 {/* Яндекс метрика */}
                 <YandexMetrikaContainer enabled={analyticsEnabled} />
                 {/* Яндекс авторизация */}
-                <script src="https://yastatic.net/s3/passport-sdk/autofill/v1/sdk-suggest-with-polyfills-latest.js"></script>
+                <Script src="https://yastatic.net/s3/passport-sdk/autofill/v1/sdk-suggest-with-polyfills-latest.js" />
             </head>
             <body style={{ overflow: "auto" }}>
                 <AppRouterCacheProvider>

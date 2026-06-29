@@ -2,7 +2,7 @@ export default function promiseDebounce<T>(func: (...args: any[]) => T, delay: n
     let timer: number;
 
     let promiseResolve: null | ((value: T) => void) = null; 
-    let promiseReject: null | ((value: T) => void) = null;
+    // let promiseReject: null | ((value: T) => void) = null;
     let promise: null | Promise<T> = null;
 
     const f = (...args: any[]): Promise<T> => {
@@ -11,7 +11,7 @@ export default function promiseDebounce<T>(func: (...args: any[]) => T, delay: n
         if (!promise) {
             promise = new Promise((resolve, reject) => {
                 promiseResolve = resolve
-                promiseReject = reject
+                // promiseReject = reject
             })
         }
         
@@ -22,7 +22,7 @@ export default function promiseDebounce<T>(func: (...args: any[]) => T, delay: n
                 promiseResolve(res)
 
             promise = null;
-            promiseReject = null;
+            // promiseReject = null;
             promiseResolve = null;
         }, delay);
 
