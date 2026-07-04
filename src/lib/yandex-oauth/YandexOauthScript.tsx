@@ -7,13 +7,14 @@ export default function YandexOauthScript() {
     
     useEffect(() => {
         window.YaAuthSuggest.init({
-            client_id: '60a4f1a51d3341c8973244bde329fe8d',
+            client_id:  process.env.NEXT_PUBLIC_YANDEX_OAUTH_CLIENT_ID,
             response_type: 'token',
-            redirect_uri: "https://kanwoo.ru/auth/oauth/yandex" //`${process.env.NEXT_PUBLIC_SITE_URL}/auth/oauth/yandex`
+            redirect_uri: process.env.NEXT_PUBLIC_YANDEX_OAUTH_REDIRECT_URL
         },
-        'https://examplesite.com', {
+        'http://localhost:3000', 
+        {
             view: 'button',
-            parentId: {YANDEX_OAUTH_CONTAINER_ID},
+            parentId: YANDEX_OAUTH_CONTAINER_ID,
             buttonView: 'main',
             buttonTheme: 'light',
             buttonSize: 'm',
@@ -31,6 +32,11 @@ export default function YandexOauthScript() {
             console.log('Что-то пошло не так: ', error);
             document.body.innerHTML += "Что-то пошло не так:" + JSON.stringify(error);
         });
+
+        return () => {
+            console.log(window.YaAuthSuggest)
+            // window.YaAuthSuggest.destroy()
+        }
     }, [])
 
     return (

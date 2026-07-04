@@ -39,8 +39,8 @@ export default function Auth({
                 >
                     <AuthLogin onLogin={onLogin}/>
                     <AuthRegister onRegister={onRegister}/>
-                    <AuthForgot />
                     <AuthRecovery onRecovery={onRecovery}/>
+                    <AuthForgot />
                     <Box id={YANDEX_OAUTH_CONTAINER_ID}></Box>
                 </Paper>
             </AuthProvider>
