@@ -44,6 +44,7 @@ export default async function RootLayout({
     return (
         <html lang="en" className={roboto.variable} suppressHydrationWarning>
             <head>
+                <meta httpEquiv='X-UA-Compatible' content='ie=edge' />
                 <link rel="icon" type="image/svg+xml" href="/logo.svg" />
                 {/* Яндекс метрика */}
                 <YandexMetrikaContainer enabled={analyticsEnabled} />
