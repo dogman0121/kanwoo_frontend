@@ -41,10 +41,8 @@ export default function Auth({
                     <AuthRegister onRegister={onRegister}/>
                     <AuthRecovery onRecovery={onRecovery}/>
                     <AuthForgot />
-                    <Box id={YANDEX_OAUTH_CONTAINER_ID}></Box>
                 </Paper>
             </AuthProvider>
-            <YandexOauthScript />
         </>
     )
 }

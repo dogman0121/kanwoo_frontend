@@ -1,10 +1,9 @@
 "use client"
 
-import { Avatar, Box, Button, IconButton, List, ListItemAvatar, ListItemButton, ListItemButtonProps, ListItemText, Typography, useTheme } from "@mui/material";
+import { Avatar, Box, Button, IconButton, ListItemAvatar, ListItemButton, ListItemButtonProps, ListItemText, Typography, useTheme } from "@mui/material";
 import { useContext, useState } from "react";
 import AuthError from "./ui/AuthError";
 import AuthForm from "./ui/AuthForm";
-import AuthLink from "./ui/AuthLink";
 import { authService } from "../api/services/authService";
 import AuthInput from "./ui/AuthInput";
 import authSectionContext from "../context/authSectionContext";
@@ -13,11 +12,12 @@ import { Controller, useForm } from "react-hook-form";
 import AuthPasswordInput from "./ui/AuthPasswordInput";
 import { ApiError } from "@/lib/fetch/apiResponse";
 import AuthProfile from "@/types/authProfile";
-import Profile from "@/types/profile/profile";
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import SlugInput, { validateSlug } from "@/features/profile/ui/SlugInput";
 import { debounce } from "lodash";
 import AuthTextButton from "./ui/AuthTextButton";
+import AuthOr from "./ui/AuthOr";
+import AuthOauth from "./AuthOauth";
 
 interface LoginForm {
     email: string,
@@ -302,6 +302,8 @@ export default function AuthLogin({
                         )}
                     />
                 </AuthForm>
+                <AuthOr />
+                <AuthOauth />
                 <AuthTextButton
                     sx={{
                         mt: "10px",
