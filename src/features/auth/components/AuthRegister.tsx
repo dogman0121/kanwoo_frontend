@@ -4,7 +4,6 @@ import AuthError from "./ui/AuthError";
 import AuthForm from "./ui/AuthForm";
 import AuthInput from "./ui/AuthInput";
 import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
-import AuthLink from "./ui/AuthLink";
 import { ApiError } from "@/lib/fetch/apiResponse";
 import authSectionContext from "../context/authSectionContext";
 import { AuthSection } from "../types/AuthPanel";
@@ -19,6 +18,8 @@ import useTimer from "../hooks/useTimer";
 import Profile from "@/types/profile/profile";
 import AuthTextButton from "./ui/AuthTextButton";
 import AuthProfile from "@/types/authProfile";
+import AuthOr from "./ui/AuthOr";
+import AuthOauth from "./AuthOauth";
 
 
 interface RegisterForm {
@@ -262,6 +263,8 @@ export default function AuthRegister({
                         )}
                     />
                 </AuthForm>
+                <AuthOr />
+                <AuthOauth />
                 <Button
                     fullWidth
                     type="submit"

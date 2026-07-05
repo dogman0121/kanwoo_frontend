@@ -11,14 +11,14 @@ export default function YandexOauthScript() {
             response_type: 'token',
             redirect_uri: process.env.NEXT_PUBLIC_YANDEX_OAUTH_REDIRECT_URL
         },
-        'http://localhost:3000', 
+        process.env.NEXT_PUBLIC_YANDEX_OAUTH_ORIGIN, 
         {
             view: 'button',
             parentId: YANDEX_OAUTH_CONTAINER_ID,
             buttonView: 'main',
             buttonTheme: 'light',
-            buttonSize: 'm',
-            buttonBorderRadius: 0
+            buttonSize: 's',
+            buttonBorderRadius: 22
         }
         )
         .then(function({handler}: {handler: () => void}) {
@@ -34,8 +34,6 @@ export default function YandexOauthScript() {
         });
 
         return () => {
-            console.log(window.YaAuthSuggest)
-            // window.YaAuthSuggest.destroy()
         }
     }, [])
 
