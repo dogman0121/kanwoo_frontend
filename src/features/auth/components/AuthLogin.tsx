@@ -18,6 +18,8 @@ import { debounce } from "lodash";
 import AuthTextButton from "./ui/AuthTextButton";
 import AuthOr from "./ui/AuthOr";
 import AuthOauth from "./AuthOauth";
+import { YandexOauthResponse } from "@/lib/yandex-oauth/YandexOauthScript";
+import { clientFetch } from "@/lib/fetch/clientFetch";
 
 interface LoginForm {
     email: string,
@@ -123,11 +125,37 @@ export default function AuthLogin({
 
             const response = await authService.createProfile(data.name, data.slug)
 
-            onLogin?.(response.data)
+            if (onLogin)
+                onLogin(response.data)
         } catch(e) {
             throw e
         } finally {
             setIsFetching(false)
+        }
+    }
+
+    const handleYandexAuth = async(data: YandexOauthResponse) => {
+        const response = await clientFetch.post<AuthProfile[]>("/auth/oauth/yandex", {
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                access_token: data.access_token,
+                expires_in: data.expires_in,
+                extra_data: data.extraData,
+                token_type: data.token_type
+            })
+        }, false)
+
+        if (response.metadata?.created) {
+            onLogin?.(response.data[0])
+        } else {
+            if (response.data.length == 0) 
+                return setCreateProfileOpen(true)
+            
+            setProfiles(response.data)
+            setChooseProfileOpen(true)
+            
         }
     }
 
@@ -303,7 +331,7 @@ export default function AuthLogin({
                     />
                 </AuthForm>
                 <AuthOr />
-                <AuthOauth />
+                <AuthOauth onYandexAuth={handleYandexAuth}/>
                 <AuthTextButton
                     sx={{
                         mt: "10px",

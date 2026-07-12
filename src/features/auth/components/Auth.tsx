@@ -8,7 +8,6 @@ import AuthRegister from "./AuthRegister"
 import AuthForgot from "./AuthForgot"
 import AuthRecovery from "./AuthRecovery"
 import AuthProfile from "@/types/authProfile"
-import YandexOauthScript from "@/lib/yandex-oauth/YandexOauthScript"
 
 export const YANDEX_OAUTH_CONTAINER_ID = "yandex_oauth_container"
 
