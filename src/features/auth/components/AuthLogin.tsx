@@ -145,7 +145,7 @@ export default function AuthLogin({
                 extra_data: data.extraData,
                 token_type: data.token_type
             })
-        })
+        }, false)
 
         if (response.metadata?.created) {
             onLogin?.(response.data[0])
