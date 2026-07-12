@@ -263,8 +263,6 @@ export default function AuthRegister({
                         )}
                     />
                 </AuthForm>
-                <AuthOr />
-                <AuthOauth />
                 <Button
                     fullWidth
                     type="submit"

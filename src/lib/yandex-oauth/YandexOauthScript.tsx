@@ -3,7 +3,21 @@
 import { YANDEX_OAUTH_CONTAINER_ID } from "@/features/auth/components/Auth";
 import { useEffect } from "react";
 
-export default function YandexOauthScript() {
+
+export interface YandexOauthResponse {
+    access_token: string,
+    cid: string,
+    expires_in: string,
+    extraData: Record<string, unknown>,
+    token_type: "bearer" | "jwt"
+}
+
+
+export default function YandexOauthScript({
+    onAuth
+}: {
+    onAuth: (response: YandexOauthResponse) => void
+}) {
     
     useEffect(() => {
         window.YaAuthSuggest.init({
@@ -24,9 +38,9 @@ export default function YandexOauthScript() {
         .then(function({handler}: {handler: () => void}) {
             return handler()
         })
-        .then(function(data: unknown) {
-            console.log('Сообщение с токеном: ', data);
-            document.body.innerHTML += "Сообщение с токеном:" + JSON.stringify(data);
+        .then(function(data: YandexOauthResponse) {
+            // console.log('Сообщение с токеном: ', data);
+            onAuth(data)
         })
         .catch(function(error: unknown) {
             console.log('Что-то пошло не так: ', error);

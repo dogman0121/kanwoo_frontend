@@ -14,7 +14,7 @@ import YandexMetrikaContainer from "@/lib/yandex-metrica/YandexMetricaContainer"
 import Script from "next/script"
 
 
-const analyticsEnabled = !!(process.env.NODE_ENV === "production");
+const analyticsEnabled = !(process.env.NODE_ENV === "production");
 
 const roboto = Roboto({
     weight: ["300", "400", "500", "700"],
