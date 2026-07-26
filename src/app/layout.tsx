@@ -14,7 +14,7 @@ import YandexMetrikaContainer from "@/lib/yandex-metrica/YandexMetricaContainer"
 import Script from "next/script"
 
 
-const analyticsEnabled = !(process.env.NODE_ENV === "production");
+const analyticsEnabled = !!(process.env.NODE_ENV === "production");
 
 const roboto = Roboto({
     weight: ["300", "400", "500", "700"],
@@ -46,12 +46,12 @@ export default async function RootLayout({
             <head>
                 <meta httpEquiv='X-UA-Compatible' content='ie=edge' />
                 <link rel="icon" type="image/svg+xml" href="/logo.svg" />
-                {/* Яндекс метрика */}
-                <YandexMetrikaContainer enabled={analyticsEnabled} />
                 {/* Яндекс авторизация */}
                 <Script src="https://yastatic.net/s3/passport-sdk/autofill/v1/sdk-suggest-with-polyfills-latest.js" />
             </head>
             <body style={{ overflow: "auto" }}>
+                {/* Яндекс метрика */}
+                <YandexMetrikaContainer enabled={analyticsEnabled} />
                 <AppRouterCacheProvider>
                     <InitColorSchemeScript attribute="class" />
                     <ThemeProvider theme={theme}>

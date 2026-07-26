@@ -13,7 +13,7 @@ import { useState } from "react"
 import theme from "@/theme";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "@/routes";
-import MobileMenu from "../(main)/_components/MobileMenu";
+import MobileMenu from "../(with-header-and-footer)/_components/MobileMenu";
 import Footer from "./Footer";
 
 export default function MobileLayout({children}: {children: React.ReactNode}) {

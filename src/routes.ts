@@ -43,5 +43,12 @@ export const ROUTES = {
     },
     MANGA: {
         MAIN: (mangaSlug: string) => `/manga/${mangaSlug}`
+    },
+    SETTINGS: {
+        MAIN: "/settings/security",
+        SECUTIRY: "/settings/security"
+    },
+    PROFILE: {
+        MAIN: (profileSlug: string) => `/profile/${profileSlug}`
     }
 }
