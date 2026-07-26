@@ -99,6 +99,7 @@ export default function CommentsModal({onClose, ...props}: Omit<ModalProps, "chi
                     sx={{
                         pt: 3,
                         pb: 2,
+                        px: 1,
                         
                         maxWidth: "800px",
                         mx: "auto",

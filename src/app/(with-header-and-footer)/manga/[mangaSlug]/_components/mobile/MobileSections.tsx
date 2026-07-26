@@ -37,8 +37,9 @@ export default function MobileSections() {
             value={section}
         >
             <AppTabList onChange={handleChange}>
-                <AppTab label="Информация" value="1"></AppTab>
-                <AppTab label="Главы" value="2"></AppTab>
+                <AppTab label="Информация" value="info"></AppTab>
+                <AppTab label="Главы" value="chapters"></AppTab>
+                <AppTab label="Комментарии" value="comments"/>
             </AppTabList>
             <AppTabPanel value="info">
                 <Box
