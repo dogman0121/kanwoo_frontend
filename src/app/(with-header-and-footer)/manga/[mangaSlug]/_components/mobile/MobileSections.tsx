@@ -10,9 +10,10 @@ import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import Translation from "@/types/translation/translation";
 import { clientFetch } from "@/lib/fetch/clientFetch";
 import { setMangaPageTranslations } from "@/lib/state/features/mangaPage/mangaSlice";
+import CommentsSection from "../CommentSection";
 
 export default function MobileSections() {
-    const [section, setSection] = useState('1');
+    const [section, setSection] = useState("info");
 
     const dispatch = useAppDispatch()
 
@@ -39,7 +40,7 @@ export default function MobileSections() {
                 <AppTab label="Информация" value="1"></AppTab>
                 <AppTab label="Главы" value="2"></AppTab>
             </AppTabList>
-            <AppTabPanel value="1">
+            <AppTabPanel value="info">
                 <Box
                     sx={{
                         display: "flex",
@@ -53,8 +54,11 @@ export default function MobileSections() {
                     <Similar />
                 </Box>
             </AppTabPanel>
-            <AppTabPanel value="2">
+            <AppTabPanel value="chapters">
                 <Chapters />
+            </AppTabPanel>
+            <AppTabPanel value="comments">
+                <CommentsSection />
             </AppTabPanel>
         </AppTabContext>
     )
