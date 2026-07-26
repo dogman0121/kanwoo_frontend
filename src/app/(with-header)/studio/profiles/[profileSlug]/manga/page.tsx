@@ -14,8 +14,8 @@ import { setStudioPageProfileManga } from "@/lib/state/features/studioPage/studi
 import Manga from "@/types/manga/manga"
 import { clientFetch } from "@/lib/fetch/clientFetch"
 import { ROUTES } from "@/routes"
-import CreateMangaDialog, { convertSchemaToFormData, MangaFormSchema } from "@/features/manga/components/CreateMangaDialog"
 import { MangaCreateForm } from "@/features/form/manga/Create"
+import CreateMangaDialog, { convertSchemaToFormData, MangaFormSchema } from "./_components/CreateMangaDialog"
 
 const gridRowStyle: SxProps = {
     display: "grid",
@@ -141,16 +141,12 @@ export default function Page() {
             <EditHeaderNav 
                 buttons={
                     <>
-                        <Link
-                            href={ROUTES.STUDIO.PROFILE.MANGA.CREATE(profile.slug)}
+                        <Button
+                            variant="contained"
+                            onClick={() => setMangaCreateDialogOpen(true)}
                         >
-                            <Button
-                                variant="contained"
-                                onClick={() => setMangaCreateDialogOpen(true)}
-                            >
-                                Создать
-                            </Button>
-                        </Link>
+                            Создать
+                        </Button>
                     </>
                 }
             />

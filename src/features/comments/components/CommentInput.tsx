@@ -5,6 +5,7 @@ import { Box, BoxProps, Button, FormControl, FormControlProps, InputBase, Paper,
 import { useState } from "react"
 import SendRoundedIcon from "@mui/icons-material/SendRounded"
 import AuthModal from "@/features/auth/components/AuthModal"
+import theme from "@/theme"
 
 export function CommentAuthorizedInput({
     onSend,
@@ -34,7 +35,8 @@ export function CommentAuthorizedInput({
                     border: "1px solid",
                     borderColor: "divider",
 
-                    p: 2,
+                    py: 2,
+                    px: `${theme.spacing(2)} ${theme.spacing(1)}`,
                     display: "flex",
                     flexDirection: "column",
                     rowGap: 1

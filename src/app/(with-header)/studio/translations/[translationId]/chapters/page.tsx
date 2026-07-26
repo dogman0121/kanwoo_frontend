@@ -5,20 +5,43 @@ import EditHeaderNav from "@/features/edit/components/EditHeaderNav"
 import EditPageContainer from "@/features/edit/components/EditPageContainer"
 import { clientFetch } from "@/lib/fetch/clientFetch"
 import { setStudioPageTranslationChapters } from "@/lib/state/features/studioPage/studioPageTranslationSlice"
-import { useAppSelector, useAppStore } from "@/lib/state/hooks"
+import { useAppDispatch, useAppSelector, useAppStore } from "@/lib/state/hooks"
 import { ROUTES } from "@/routes"
 import Chapter from "@/types/chapter/chapter"
 import { Box, Button, Paper, Typography } from "@mui/material"
 import Link from "next/link"
-import { useRef } from "react"
+import { useRef, useState } from "react"
+import CreateChapterDialog, { ChapterCreateForm, convertSchemaToFormData } from "./_components/CreateChapterDialog"
+import { setStudioPageChapter } from "@/lib/state/features/studioPage/studioPageChapterSlice"
 
 export default function Page() {
     const store = useAppStore()
 
+    const [createDialogOpen, setCreateDialogOpen] = useState(false)
+
     const translation = useAppSelector(state => state.studioPageTranslation.translation)    
 
+    const dispatch = useAppDispatch()
     const chapters = useAppSelector(state => state.studioPageTranslation.chapters)
+
     const initialized = useRef(false);
+
+    const handleAddChapter = async(data: ChapterCreateForm) => {
+        if (!translation) return;
+        
+        const formData = convertSchemaToFormData(data)
+
+        const response = await clientFetch.post<Chapter>(`/studio/translations/${translation.id}/chapters`, {
+            body: formData
+        })
+        
+        if (chapters)
+            dispatch(setStudioPageTranslationChapters([response.data, ...chapters]))
+        else
+            dispatch(setStudioPageTranslationChapters([response.data]))
+
+        setCreateDialogOpen(false)
+    }
 
     if (!initialized.current && translation) {
         initialized.current = true
@@ -36,17 +59,12 @@ export default function Page() {
             </EditHeader>
             <EditHeaderNav 
                 buttons={
-                    <>
-                        <Link
-                            href={ROUTES.STUDIO.TRANSLATION.CHAPTERS.CREATE(translation.id)}
-                        >
-                            <Button
-                                variant="contained"
-                            >
-                                Создать    
-                            </Button> 
-                        </Link>  
-                    </>
+                    <Button
+                        variant="contained"
+                        onClick={() => setCreateDialogOpen(true)}
+                    >
+                        Создать    
+                    </Button>  
                 }
             />
             <EditPageContainer
@@ -58,33 +76,48 @@ export default function Page() {
                 }}
             >
                 {chapters?.map(chapter => (
-                    <Paper
-                        key={`chapter_${chapter.id}`}
-                        sx={{
-                            boxShadow: "none",
-                            borderRadius: "8px",
-                            p: "10px 15px",
-                            display: "flex",
-                            flexDirection: "row",
-                            columnGap: "20px"
-                        }}
-                    >
+                    <Link href={ROUTES.STUDIO.CHAPTER.MAIN(chapter.id)} key={`chapter_${chapter.id}`}>
+                        <Paper
+                            sx={{
+                                boxShadow: "none",
+                                borderRadius: "8px",
 
-                        <Link
-                            href={ROUTES.STUDIO.CHAPTER.MAIN(chapter.id)}
+                                p: "10px 15px",
+                                
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "space-between"
+                            }}
                         >
-                            <Typography>{chapter.chapter}</Typography>
-                            <Typography
+                            <Box
                                 sx={{
-                                    "&:hover": {
-                                        textDecoration: "underline"
-                                    }
+                                    display: "flex",
+                                    flexDirection: "row"
                                 }}
-                            >{chapter.name}</Typography>
-                        </Link>
-                    </Paper>
+                            >
+                                <Typography>
+                                    {chapter.chapter}
+                                </Typography>
+                                <Typography
+                                    sx={{
+                                        "&:hover": {
+                                            textDecoration: "underline"
+                                        }
+                                    }}
+                                >{chapter.name}</Typography>
+                            </Box>
+                            <Typography>
+                                {new Date(chapter.created_at).toLocaleDateString()}
+                            </Typography>
+                        </Paper>
+                    </Link>
                 ))}
             </EditPageContainer>
+            <CreateChapterDialog 
+                open={createDialogOpen}
+                onClose={() => setCreateDialogOpen(false)}
+                onSend={handleAddChapter}
+            />
         </>
     )
 }
