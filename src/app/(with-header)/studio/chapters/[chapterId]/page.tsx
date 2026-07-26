@@ -28,7 +28,7 @@ function convertToForm(chapter?: Chapter | null) {
         name: chapter?.name || "",
         chapter: chapter?.chapter || 1,
         privacy: chapter?.privacy.id || Privacy.PRIVATE,
-        pages: chapter?.pages?.map(c => ({uuid: c.uuid, previewLink: c.link})) || [],
+        pages: chapter?.pages?.map(c => ({uuid: c.uuid, previewLink: c.link, name: c.orig_filename})) || [],
     }
 }
 
