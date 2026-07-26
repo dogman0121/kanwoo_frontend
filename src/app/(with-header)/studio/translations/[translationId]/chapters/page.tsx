@@ -100,6 +100,7 @@ export default function Page() {
                                 </Typography>
                                 <Typography
                                     sx={{
+                                        ml: 2,
                                         "&:hover": {
                                             textDecoration: "underline"
                                         }
