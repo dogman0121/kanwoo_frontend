@@ -2,7 +2,7 @@
 
 import { closestCenter, DndContext, DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core"
 import {CSS} from '@dnd-kit/utilities';
-import { Box, Paper, SxProps, Typography } from "@mui/material";
+import { Box, Modal, Paper, SxProps, Typography } from "@mui/material";
 import UploadFileRoundedIcon from "@mui/icons-material/UploadFileRounded"
 import { useDropzone } from "react-dropzone";
 import { v4 } from "uuid";
@@ -10,6 +10,8 @@ import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable } 
 import { useEffect, useState } from "react";
 import DragIndicatiorRoundedIcon from "@mui/icons-material/DragIndicatorRounded"
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded"
+import ZoomInRoundedIcon from "@mui/icons-material/ZoomInRounded"
+
 
 export interface EditFile {
     uuid: string,
@@ -89,6 +91,8 @@ function EditFilePreview({
     file: EditFile,
     onClose: () => void
 }) {
+    const [zoomOpen, setZoomOpen] = useState(false)
+
     const {
         attributes, 
         listeners, 
@@ -101,56 +105,96 @@ function EditFilePreview({
     });
 
     return (
-        <Box
-            ref={setNodeRef} 
-            {...attributes}
-            sx={{
-                transform: CSS.Translate.toString(transform),
-                aspectRatio: "2/3",
-                zIndex: isDragging ? 10003: 1,
-                position: "relative",
-                transition: transition
-            }}
-        >
-            <Box 
-                sx={{
-                    width: "100%",
-                    height: "100%",
-                    borderRadius: "8px",
-                    backgroundImage: `url(${file.previewLink})`
-                }}
-            />   
+        <>
             <Box
+                ref={setNodeRef} 
+                {...attributes}
                 sx={{
-                    position: "absolute",
-                    top: "5px",
-                    right: "5px",
-                    display: "flex",
-                    flexDirection: "row",
-                    columnGap: "5px"
+                    transform: CSS.Translate.toString(transform),
+                    aspectRatio: "2/3",
+                    zIndex: isDragging ? 10003: 1,
+                    position: "relative",
+                    transition: transition
                 }}
             >
-                <DragIndicatiorRoundedIcon
-                    {...listeners}  
+                <Box 
                     sx={{
-                        p: "2px",
-                        backgroundColor: "background.paper",
-                        borderRadius: "50%",
-                        cursor: isDragging ? "grabbing" : "grab"
+                        position: "relative",
+                        width: "100%",
+                        height: "100%",
+                        borderRadius: "8px",
+                        backgroundImage: `url(${file.previewLink})`
                     }}
-                />
-                <CloseRoundedIcon 
-                    sx={{
-                        p: "2px",
-                        backgroundColor: "background.paper",
-                        borderRadius: "50%",
-                        cursor: "pointer"
-                    }}
-                    onClick={onClose}
-                />
+                >
+                    <Box
+                        sx={{
+                            position: "absolute",
+                            top: "5px",
+                            right: "5px",
+                            display: "flex",
+                            flexDirection: "row",
+                            columnGap: "5px"
+                        }}
+                    >
+                        <DragIndicatiorRoundedIcon
+                            {...listeners}  
+                            sx={{
+                                p: "2px",
+                                backgroundColor: "background.paper",
+                                borderRadius: "50%",
+                                cursor: isDragging ? "grabbing" : "grab"
+                            }}
+                        />
+                        <CloseRoundedIcon 
+                            sx={{
+                                p: "2px",
+                                backgroundColor: "background.paper",
+                                borderRadius: "50%",
+                                cursor: "pointer"
+                            }}
+                            onClick={onClose}
+                        />
+                    </Box>
+                    <Box
+                        sx={{
+                            position: "absolute",
+                            bottom: "5px",
+                            right: "5px",
+
+                            display: "flex"
+                        }}
+                    >
+                        <ZoomInRoundedIcon 
+                            onClick={() => setZoomOpen(true)}
+                            sx={{
+                                p: "4px",
+                                width: "32px",
+                                height: "32px",
+                                backgroundColor: "background.paper",
+                                borderRadius: "50%",
+                                cursor: "pointer"
+                            }}
+                        />
+                    </Box>
+                </Box>  
+                <Typography>{file.name}</Typography>
             </Box>
-            <Typography>{file.name}</Typography>
-        </Box>
+            <Modal
+                open={zoomOpen}
+                onClose={() => setZoomOpen(false)}
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+
+                    overflowY: "auto"
+                }}
+            >
+                <img 
+                    src={file.previewLink}
+                />
+            </Modal>
+        </>
     )
 }
 
@@ -194,6 +238,14 @@ export default function EditMultipleFilesInput({
             }
         }
     }
+
+    useEffect(() => {
+        return () => {
+            value.forEach(page => {
+                URL.revokeObjectURL(page.previewLink)
+            });
+        }
+    }, [])
 
     return (
         <DndContext
