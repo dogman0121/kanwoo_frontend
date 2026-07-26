@@ -34,7 +34,7 @@ export default function MangaCarouselList({
             }}
             draggable={true}
             breakpoints={{
-                0: { slidesPerView: 4 },
+                0: { slidesPerView: 3 },
                 640: { slidesPerView: 6 },
                 768: { slidesPerView: 7 },
             }}
