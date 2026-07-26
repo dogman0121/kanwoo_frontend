@@ -76,7 +76,7 @@ export default function CommentItem({
                     }}
                 >
                     <Link href={ROUTES.PROFILE.MAIN(comment.creator.slug)}>
-                        <Typography>{comment.creator.name}</Typography>
+                        <Typography fontWeight={600}>{comment.creator.name}</Typography>
                     </Link>
                     <Typography variant="caption">{getPassedDateString(comment.created_at)}</Typography>
                 </Box>
