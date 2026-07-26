@@ -2,7 +2,7 @@
 
 import { closestCenter, DndContext, DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core"
 import {CSS} from '@dnd-kit/utilities';
-import { Box, Modal, Paper, SxProps, Typography } from "@mui/material";
+import { Box, Button, Modal, Paper, SxProps, Typography } from "@mui/material";
 import UploadFileRoundedIcon from "@mui/icons-material/UploadFileRounded"
 import { useDropzone } from "react-dropzone";
 import { v4 } from "uuid";
@@ -11,13 +11,15 @@ import { useEffect, useState } from "react";
 import DragIndicatiorRoundedIcon from "@mui/icons-material/DragIndicatorRounded"
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded"
 import ZoomInRoundedIcon from "@mui/icons-material/ZoomInRounded"
+import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded"
+import SortRoundedIcon from "@mui/icons-material/SortRounded"
 
 
 export interface EditFile {
     uuid: string,
     previewLink: string,
     file?: File,
-    name?: string
+    name: string
 }
 
 function EditFileInput({
@@ -177,7 +179,15 @@ function EditFilePreview({
                         />
                     </Box>
                 </Box>  
-                <Typography>{file.name}</Typography>
+                <Typography
+                    sx={{
+                        textOverflow: "ellipsis",
+                        overflow: "hidden",
+                        lineClamp: 2
+                    }}
+                >
+                    {file.name}
+                </Typography>
             </Box>
             <Modal
                 open={zoomOpen}
@@ -239,6 +249,18 @@ export default function EditMultipleFilesInput({
         }
     }
 
+    function handleDeleteFiles() {
+        value.forEach(page => URL.revokeObjectURL(page.previewLink))
+        onChange([])
+    }
+
+    function handleSortFiles() {
+        const oldValue = [...value]
+
+        const newValue = oldValue.sort((fileA, fileB) => fileA.name?.localeCompare(fileB?.name))
+        onChange(newValue)
+    }
+
     useEffect(() => {
         return () => {
             value.forEach(page => {
@@ -248,44 +270,75 @@ export default function EditMultipleFilesInput({
     }, [])
 
     return (
-        <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={handleDragEnd}
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                rowGap: 1,
+
+                ...sx
+            }}
         >
             <Box
                 sx={{
-                    border: "1px solid",
-                    borderColor: "divider",
-                    borderRadius: "12px",
-                    p: "10px 14px",
-
-                    display: "grid",
-                    columnGap: "10px",
-                    rowGap: "15px",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
-
-                    ...sx
+                    display: "flex",
+                    justifyContent: "end"
                 }}
             >
-                <SortableContext 
-                    items={items}
+                <Button
+                    variant="text"
+                    color="inherit"
+                    endIcon={<SortRoundedIcon />}
+                    onClick={handleSortFiles}
                 >
-                    {value.map((v) => (
-                        <EditFilePreview 
-                            key={v.uuid} 
-                            file={v}
-                            onClose={() => {
-                                URL.revokeObjectURL(v.previewLink)
-                                onChange(value.filter((f) => (f.uuid != v.uuid)))
-                            }}
-                        />
-                    ))}
-                </SortableContext>
-                <EditFileInput 
-                    onChange={onInputFile}
-                />
+                    Упорядочить
+                </Button>
+                <Button
+                    variant="text"
+                    color="inherit"
+                    endIcon={<DeleteRoundedIcon />}
+                    onClick={handleDeleteFiles}
+                >
+                    Очистить
+                </Button>
             </Box>
-        </DndContext>
+            <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+            >
+                <Box
+                    sx={{
+                        border: "1px solid",
+                        borderColor: "divider",
+                        borderRadius: "12px",
+                        p: "10px 14px",
+
+                        display: "grid",
+                        columnGap: "10px",
+                        rowGap: "15px",
+                        gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
+                    }}
+                >
+                    <SortableContext 
+                        items={items}
+                    >
+                        {value.map((v) => (
+                            <EditFilePreview 
+                                key={v.uuid} 
+                                file={v}
+                                onClose={() => {
+                                    URL.revokeObjectURL(v.previewLink)
+                                    onChange(value.filter((f) => (f.uuid != v.uuid)))
+                                }}
+                            />
+                        ))}
+                    </SortableContext>
+                    <EditFileInput 
+                        onChange={onInputFile}
+                    />
+                </Box>
+            </DndContext>
+        </Box>
     )
 }

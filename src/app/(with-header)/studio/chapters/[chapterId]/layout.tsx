@@ -1,45 +1,53 @@
+"use client"
+
 import { clientFetch } from "@/lib/fetch/clientFetch"
-import { serverFetch } from "@/lib/fetch/serverFetch";
 import Chapter from "@/types/chapter/chapter";
 import ChapterPermission from "@/types/chapter/chapterPermission";
-import Translation from "@/types/translation/translation";
-import TranslationPermission from "@/types/translation/translationPermission";
-import StudioChapterProvider from "./_components/StudioChapterProvider";
 import StudioChapterDrawer from "./_components/StudioChapterDrawer";
 import { Box } from "@mui/material";
 import EditLayout from "@/features/edit/components/EditLayout";
+import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
+import { useEffect } from "react";
+import { setStudioPageTranslation } from "@/lib/state/features/studioPage/studioPageTranslationSlice";
+import { setStudioPageChapter, setStudioPageChapterPermissions } from "@/lib/state/features/studioPage/studioPageChapterSlice";
+import { useParams } from "next/navigation";
 
 interface ChapterInfo {
     chapter: Chapter,
     chapterPermission: ChapterPermission
 }
 
-export default async function Layout({
-    children,
-    params
+export default function Layout({
+    children
 }: {
     children: React.ReactNode,
-    params: Promise<{chapterId: string}>
 }) {
-    const { chapterId } = await params;
+    const { chapterId } = useParams();
 
-    const { data: chapterData } = await serverFetch.get<ChapterInfo>(`/studio/chapters/${chapterId}`)
+    const dispatch = useAppDispatch()
+    const chapter = useAppSelector(state => state.studioPageChapter.chapter)
+
+
+    useEffect(() => {
+        clientFetch.get<ChapterInfo>(`/studio/chapters/${chapterId}`)
+            .then(response => {
+                dispatch(setStudioPageChapter(response.data.chapter))
+                dispatch(setStudioPageChapterPermissions(response.data.chapterPermission))
+            })
+    }, [chapterId])
+
+    if (!chapter) return;
     
     return (
         <EditLayout>
-            <StudioChapterProvider
-                chapter={chapterData.chapter}
-                chapterPermission={chapterData.chapterPermission}
+            <StudioChapterDrawer />
+            <Box
+                sx={{
+                    width: "100%"    
+                }}
             >
-                <StudioChapterDrawer />
-                <Box
-                    sx={{
-                        width: "100%"    
-                    }}
-                >
-                    {children}
-                </Box>
-            </StudioChapterProvider>
+                {children}
+            </Box>
         </EditLayout>
     )
 }
