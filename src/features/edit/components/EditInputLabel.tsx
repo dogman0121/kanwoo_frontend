@@ -2,7 +2,7 @@ import { styled, TextField, Typography } from "@mui/material";
 
 
 export const EditInputLabel = styled(Typography)(() => ({
-    fontSize: "16px",
+    fontSize: "14px",
     fontWeight: "600"
 }));
 

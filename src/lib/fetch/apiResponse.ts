@@ -7,6 +7,7 @@ export type PagePagination = {
 export type CursorPagination = {
     last_id: number,
     limit: number
+    total_count: number
 }
 
 export type SuccessResponse<T> = {

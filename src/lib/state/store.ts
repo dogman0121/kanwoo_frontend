@@ -13,6 +13,7 @@ import studioPageChapterReducer from './features/studioPage/studioPageChapterSli
 import readingSettingsReducer from './features/readingSettings/readingSettingsSlice'
 import historyPageReducer from './features/historyPage/historyPageSlice'
 import adminPageReducer from './features/adminPage/adminPageSlice'
+import settingsPageReducer from './features/settingsPage/settingsPageSlice'
 
 
 const rootReducers = combineReducers({
@@ -29,7 +30,8 @@ const rootReducers = combineReducers({
   studioPageChapter: studioPageChapterReducer,
   studioPageTranslation: studioPageTranslationReducer,
   historyPage: historyPageReducer,
-  adminPage: adminPageReducer
+  adminPage: adminPageReducer,
+  settingsPage: settingsPageReducer
 })
 
 export const makeStore = () => {

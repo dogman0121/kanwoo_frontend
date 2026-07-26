@@ -24,6 +24,11 @@ const theme = createTheme({
       fontSize: "20px",
       lineHeight: "1.7"
     },
+    h3: {
+      fontWeight: "600",
+      fontSize: "18px",
+      lineHeight: "1.7"
+    },
     caption: {
       fontSize: "12px",
       color: 'var(--knw-typography-caption-color)'
@@ -60,6 +65,9 @@ const theme = createTheme({
     }
   },
   spacing: 5,
+  shape: {
+    borderRadius: "6px"
+  },
   breakpoints: {
     values: {
       xs: 0,
