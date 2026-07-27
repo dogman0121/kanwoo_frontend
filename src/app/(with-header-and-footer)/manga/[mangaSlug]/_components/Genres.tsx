@@ -1,24 +1,14 @@
 "use client"
 
 import { useAppSelector } from "@/lib/state/hooks"
-import theme from "@/theme";
-import { Box } from "@mui/material";
+import { Box, Chip } from "@mui/material";
 import Link from "next/link";
 
 function GenreItem({genre}: {genre: {id: number, name: string}}) {
     return (
         <Link href={`/catalog?genre=${genre.id}`}>
-            <Box
-                sx={{
-                    padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
-                    borderRadius: "6px",
-
-                    bgcolor: "secondary.main",
-                    lineHeight: "1em"
-                }}
-            >
-                {genre.name}
-            </Box>
+            <Chip label={genre.name}
+            />
         </Link>
     )
 }

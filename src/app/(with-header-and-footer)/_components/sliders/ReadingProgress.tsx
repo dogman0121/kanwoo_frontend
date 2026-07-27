@@ -8,6 +8,7 @@ import "swiper/css"
 import "swiper/css/free-mode"
 import "swiper/css/mousewheel"
 import "swiper/css/navigation"
+import "swiper/css/free-mode"
 import { v4 } from "uuid";
 import ReadingProgressItem from "./ReadingProgressItem";
 import { clientFetch } from "@/lib/fetch/clientFetch";
@@ -68,8 +69,9 @@ export default function ReadingProgresss() {
                     draggable={true}
                     breakpoints={{
                         0: { slidesPerView: 1 },
-                        640: { slidesPerView: 2 },
-                        768: { slidesPerView: 4 },
+                        600: { slidesPerView: 2 },
+                        900: { slidesPerView: 3 },
+                        1200: {slidesPerView: 4}
                     }}
                     style={{
                         width: "100%",

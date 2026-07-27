@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
-import { Box, useTheme } from "@mui/material";
+import { Box, Button, useTheme } from "@mui/material";
 import { useAppSelector } from "@/lib/state/hooks";
 
 export default function Description() {
@@ -56,35 +56,46 @@ export default function Description() {
                 {description}
             </Box>
             { isFullText && (
-                <Box
-                    sx={{
-                        display: "inline-flex",
-                        padding: `${theme.spacing(0.8)} ${theme.spacing(1.6)}`,
-                        borderRadius: "6px",
-
-                        alignItems: "center",
-
-                        backgroundColor: theme.vars?.palette.secondary.main,
-
-                        marginTop: theme.spacing(2),
-                        lineHeight: "1.5",
-                        fontSize: "14px",
-                        cursor: "pointer"
-                    }} 
+                <Button
+                    variant="contained"
+                    color="inherit"
                     onClick={handleShow}
+                    endIcon={open ? <ExpandLessRoundedIcon /> : <ExpandMoreRoundedIcon />}
+                    sx={{
+                        mt: 2
+                    }}
                 >
-                    {open ?
-                        <>
-                            Скрыть
-                            <ExpandLessRoundedIcon />
-                        </>
-                        :
-                        <>
-                            Показать
-                            <ExpandMoreRoundedIcon />
-                        </>
-                    }
-                </Box>
+                    {open ? "Скрыть" : "Показать"}
+                </Button>
+                // <Box
+                //     sx={{
+                //         display: "inline-flex",
+                //         padding: `${theme.spacing(0.8)} ${theme.spacing(1.6)}`,
+                //         borderRadius: "6px",
+
+                //         alignItems: "center",
+
+                //         backgroundColor: theme.vars?.palette.secondary.main,
+
+                //         marginTop: theme.spacing(2),
+                //         lineHeight: "1.5",
+                //         fontSize: "14px",
+                //         cursor: "pointer"
+                //     }} 
+                //     onClick={handleShow}
+                // >
+                //     {open ?
+                //         <>
+                //             Скрыть
+                //             <ExpandLessRoundedIcon />
+                //         </>
+                //         :
+                //         <>
+                //             Показать
+                //             <ExpandMoreRoundedIcon />
+                //         </>
+                //     }
+                // </Box>
             )}
         </Box>
     )
