@@ -51,7 +51,7 @@ export default function Page() {
         formData.append("name", data.name)
         formData.append("privacy", data.privacy.toString())
 
-        const response = await clientFetch.post<Translation>(`/studio/translation/${translation?.id}/updateTranslation`, {
+        const response = await clientFetch.put<Translation>(`/studio/translations/${translation?.id}`, {
             body: formData
         })
 
