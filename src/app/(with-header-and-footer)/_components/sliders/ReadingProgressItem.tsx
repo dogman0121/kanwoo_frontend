@@ -35,6 +35,7 @@ export default function ReadingProgressItem({
 
                     p: 2,
                     pr: 8,
+                    width: "300px",
                     borderRadius: "12px"
                 }}
             >
