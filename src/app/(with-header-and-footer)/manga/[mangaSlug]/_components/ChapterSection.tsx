@@ -107,6 +107,7 @@ export default function ChaptersSection() {
                         >
                             {translationChapters.map(chapter => (
                                 <Paper
+                                    elevation={3}
                                     key={`chapter_${chapter.id}`}
                                     sx={{
                                         borderRadius: "12px",
