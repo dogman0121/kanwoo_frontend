@@ -36,7 +36,8 @@ export function CommentAuthorizedInput({
                     borderColor: "divider",
 
                     py: 2,
-                    px: `${theme.spacing(2)} ${theme.spacing(1)}`,
+                    pl: 2,
+                    pr: 1,
                     display: "flex",
                     flexDirection: "column",
                     rowGap: 1
