@@ -33,9 +33,8 @@ export default function ReadingProgressItem({
                     display: "flex",
                     flexDirection: "row",
 
-
-
                     p: 2,
+                    pr: 8,
                     borderRadius: "12px"
                 }}
             >
