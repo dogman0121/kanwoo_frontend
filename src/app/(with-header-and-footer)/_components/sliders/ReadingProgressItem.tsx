@@ -35,7 +35,6 @@ export default function ReadingProgressItem({
 
                     p: 2,
                     pr: 8,
-                    width: "300px",
                     borderRadius: "12px"
                 }}
             >
@@ -54,7 +53,15 @@ export default function ReadingProgressItem({
                         justifyContent: "space-between"
                     }}
                 >
-                    <Typography>{readingProgress.manga.name}</Typography>
+                    <Typography
+                        sx={{
+                            lineClamp: 2,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis"
+                        }}
+                    >
+                        {readingProgress.manga.name}
+                    </Typography>
                     <Box>
                         <Typography variant="caption">Глава {readingProgress.chapter.chapter} из {readingProgress.chapters_count}</Typography>
                         <LinearProgress 
