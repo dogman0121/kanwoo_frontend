@@ -66,11 +66,11 @@ export default function ReadingProgresss() {
                         disabledClass: "Mui-disabled"
                     }}
                     draggable={true}
-                    // breakpoints={{
-                    //     0: { slidesPerView: 2 },
-                    //     640: { slidesPerView: 3 },
-                    //     768: { slidesPerView: 4 },
-                    // }}
+                    breakpoints={{
+                        0: { slidesPerView: 1 },
+                        640: { slidesPerView: 2 },
+                        768: { slidesPerView: 4 },
+                    }}
                     style={{
                         width: "100%",
                     }}
