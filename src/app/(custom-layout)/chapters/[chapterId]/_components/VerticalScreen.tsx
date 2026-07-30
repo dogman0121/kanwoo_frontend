@@ -16,9 +16,14 @@ import ChapterEnd from "./ChapterEnd"
 import { NavigationButtonsShadow } from "./NavigationButtons"
 import NavOpenContext from "../_contexts/navOpenContext"
 
-function PageBlock({page, ...props}: {page: Page} & BoxProps) {
+function PageBlock({page, sx, ...props}: {page: Page} & BoxProps) {
     return (
         <Box
+            sx={{
+                display: "flex",
+                
+                ...sx
+            }}
             {...props}
         >
             <img 
@@ -72,7 +77,6 @@ function ChapterBlock({chapter, ...props}: BoxProps & {chapter: Chapter}) {
             sx={{
                 display: "flex",
                 flexDirection: "column",
-                gap: "5px"
             }}
             {...props}
         >
