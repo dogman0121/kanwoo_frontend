@@ -8,7 +8,7 @@ export default function WrappedText({lines, sx, ...props}: TypographyProps & Wra
     return (
         <Typography 
             sx={{
-                lineClamp: lines,
+                lineClamp: `${lines}`,
                 "-webkit-line-clamp": lines,
                 textOverflow: "ellipsis",
                 overflow: "hidden",
