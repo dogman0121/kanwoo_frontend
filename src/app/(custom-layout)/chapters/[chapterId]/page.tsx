@@ -16,7 +16,7 @@ function getAligment(chapter: Chapter, readingSettings: ReadingSettingsState){
     if (readingSettings.aligment == "auto") {
         const mangaType = chapter?.manga?.type.id;
     
-        if (mangaType == 1)
+        if (mangaType == 3)
             return "vertical"
         else
             return "horizontal"
