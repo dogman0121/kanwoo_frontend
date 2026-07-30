@@ -5,6 +5,7 @@ import { Box, IconButton, LinearProgress, Link, Paper, Typography } from "@mui/m
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded"
 import { useState } from "react";
 import { ROUTES } from "@/routes";
+import WrappedText from "@/components/WrapperTypography";
 
 export default function ReadingProgressItem({
     readingProgress,
@@ -32,6 +33,7 @@ export default function ReadingProgressItem({
                     position: "relative",
                     display: "flex",
                     flexDirection: "row",
+                    boxShadow: "none",
 
                     p: 2,
                     pr: 8,
@@ -53,15 +55,11 @@ export default function ReadingProgressItem({
                         justifyContent: "space-between"
                     }}
                 >
-                    <Typography
-                        sx={{
-                            lineClamp: 2,
-                            overflow: "hidden",
-                            textOverflow: "ellipsis"
-                        }}
+                    <WrappedText
+                        lines={2}
                     >
                         {readingProgress.manga.name}
-                    </Typography>
+                    </WrappedText>
                     <Box>
                         <Typography variant="caption">Глава {readingProgress.chapter.chapter} из {readingProgress.chapters_count}</Typography>
                         <LinearProgress 

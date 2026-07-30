@@ -24,7 +24,7 @@ export async function DELETE(request: Request, {
     return await fetchApi(request, `/translations/${translationId}`, HTTP_METHODS.DELETE)
 }
 
-export async function POST(request: Request, {
+export async function PUT(request: Request, {
     params
 }: {
     params: Promise<{translationId: string}>

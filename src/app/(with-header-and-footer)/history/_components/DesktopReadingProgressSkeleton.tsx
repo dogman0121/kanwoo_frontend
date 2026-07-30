@@ -2,7 +2,7 @@
 
 import Poster from "@/components/Poster";
 import ProfileReadingProgress from "@/types/profile/profileReadingProgress";
-import { Box, IconButton, Skeleton, Typography, useTheme } from "@mui/material";
+import { Box, IconButton, Paper, Skeleton, Typography, useTheme } from "@mui/material";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded"
 import PosterSkeleton from "@/components/PosterSkeleton";
 
@@ -10,11 +10,11 @@ export default function DesktopReadingProgressSkeleton() {
     const theme = useTheme()
 
     return (
-        <Box
+        <Paper
             sx={{
                 mt: "10px",
-                bgcolor: "background.paper",
                 p: "12px 25px 12px 15px",
+                boxShadow: "none",  
                 borderRadius: "12px",
 
                 display: "flex",
@@ -45,6 +45,6 @@ export default function DesktopReadingProgressSkeleton() {
                     <Skeleton variant="text" width={"100px"}/>
                 </Box>
             </Box>
-        </Box>
+        </Paper>
     )
 }

@@ -52,11 +52,12 @@ function EditFileInput({
 
             <Paper
                 {...getRootProps()}
+                elevation={1}
                 sx={{
                     boxShadow: "none",
-                    // border: "solid 2px",
-                    // borderStyle: "dashed",
-                    // borderColor: "divider",
+                    border: "solid 2px",
+                    borderStyle: "dashed",
+                    borderColor: "divider",
                     aspectRatio: "2/3",
                     borderRadius: "8px",
                     display: "flex",
