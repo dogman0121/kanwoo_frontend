@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: /admin
 Disallow: /*?query=
-Disallow: /teams/*/edit
+Disallow: /studio

@@ -44,16 +44,21 @@ export default function CreateChapterDialog({
     onSend,
     ...props
 }: DialogProps & {onSend: (data: ChapterCreateForm) => void}) {
+    const [chapterIsAdding, setChapterIsAdding] = useState(false)
     const [successSnackbarOpen, setSuccessSnackbarOpen] = useState(false)
     const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false)
 
     const onSubmit = async (data: ChapterCreateForm) => {
         try {
+            setChapterIsAdding(true)
+
             await onSend(data)
 
             setSuccessSnackbarOpen(true)
         } catch(e) {
             setErrorSnackbarOpen(true)
+        } finally {
+            setChapterIsAdding(false)
         }
     }
 
@@ -157,6 +162,7 @@ export default function CreateChapterDialog({
                         variant="contained"
                         type="submit"
                         form="chapter-info"
+                        loading={chapterIsAdding}
                     >
                         Создать
                     </Button>
