@@ -14,6 +14,6 @@ export async function GET(request: Request,
 
     return fetchManyApi(request, [
         {name: "chapter", url: `/chapters/${chapterId}`, method: HTTP_METHODS.GET},
-        {name: "reading_progress", url: `/chapters/${chapterId}/progress`, method: HTTP_METHODS.GET}
+        {name: "readingProgress", url: `/chapters/${chapterId}/progress`, method: HTTP_METHODS.GET}
     ])
 }

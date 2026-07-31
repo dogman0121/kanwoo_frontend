@@ -7,5 +7,5 @@ export async function POST(request: Request, {
 }) {
     const {mangaSlug} = await params
 
-    return fetchApi(request, `/manga/${mangaSlug}/reports`, HTTP_METHODS.POST)
+    return fetchApi(request, `/manga/${mangaSlug}/views`, HTTP_METHODS.POST)
 }

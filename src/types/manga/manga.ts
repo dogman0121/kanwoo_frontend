@@ -27,7 +27,7 @@ export default interface Manga {
     adult: Adult,
     genres: Genre[]
     views: number,
-    saves_count: number,
+    saves: number,
     promo_name: string,
     promo_logo: string,
     promo_background: string,

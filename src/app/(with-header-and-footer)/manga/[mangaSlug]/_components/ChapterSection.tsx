@@ -1,83 +1,115 @@
 "use client"
 
+import WrappedText from "@/components/WrapperTypography"
 import { clientFetch } from "@/lib/fetch/clientFetch"
-import { useAppSelector } from "@/lib/state/hooks"
+import { setMangaPageCurrentTranslation, setMangaPageTranslationChapters } from "@/lib/state/features/mangaPage/mangaSlice"
+import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import Chapter from "@/types/chapter/chapter"
 import Translation from "@/types/translation/translation"
-import { Avatar, Box, Paper, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material"
+import { Avatar, Box, Button, IconButton, Paper, ToggleButton, ToggleButtonGroup, Tooltip, Typography } from "@mui/material"
 import Link from "next/link"
-import { MouseEvent, useEffect, useState } from "react"
+import { MouseEvent, useEffect } from "react"
+import SwapVertRoundedIcon from "@mui/icons-material/SwapVertRounded"
+import NotificationRoundedIcon from "@mui/icons-material/NotificationsRounded"
 
 export default function ChaptersSection() {
+    const dispatch = useAppDispatch()
+
     const translations = useAppSelector(state => state.mangaPage.translations)
+    const currentTranslation = useAppSelector(state => state.mangaPage.currentTranslation)
+    const chapters = useAppSelector(state => state.mangaPage.chapters)
 
-    const [currTranslation, setCurrTranslation] = useState<Translation | null>(null)
-
-    const [translationChapters, setTranslationChapters] = useState<Chapter[]>([]);
 
     const handleTranslation = (_event: MouseEvent<HTMLElement>, newTranslation: Translation) => {
-        setCurrTranslation(newTranslation)
+        dispatch(setMangaPageCurrentTranslation(newTranslation))
     }
 
     useEffect(() => {
-        setCurrTranslation(translations.find(t => t.is_official) || translations?.[0] || null)
+        dispatch(setMangaPageCurrentTranslation(translations.find(t => t.is_official) || translations?.[0] || null))
     }, [translations])
 
     useEffect(() => {
-        if (!currTranslation) return;
+        if (!currentTranslation || chapters[currentTranslation.id]) return;
 
-        clientFetch.get<Chapter[]>(`/translations/${currTranslation.id}/chapters`)
-            .then(data => {
-                setTranslationChapters(data.data)
+        clientFetch.get<Chapter[]>(`/translations/${currentTranslation.id}/chapters`)
+            .then(response => {
+                console.log(currentTranslation, response.data)
+                dispatch(setMangaPageTranslationChapters({
+                    translation: currentTranslation, 
+                    chapters: response.data
+                }))
             })
-    }, [currTranslation])
+    }, [currentTranslation])
+
+    useEffect(() => {
+        console.log(chapters)
+    }, [chapters])
     
     return (
         <>
-            {currTranslation ?
+            {currentTranslation ?
                 <>
-                    {!currTranslation.is_official && (
-                        <ToggleButtonGroup
-                            exclusive
-                            onChange={handleTranslation}
-                            value={currTranslation}
+                    {!currentTranslation.is_official ? (
+                            <ToggleButtonGroup
+                                exclusive
+                                onChange={handleTranslation}
+                                value={currentTranslation}
 
-                            sx={{
-                                columnGap: 2,
-
-                                "& .MuiToggleButton-root": {
-                                    display: "flex",
-                                    flexDirection: "row",
+                                sx={{
                                     columnGap: 2,
-                                    textAlign: "left",
 
-                                    px: 2,
+                                    "& .MuiToggleButton-root": {
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        columnGap: 2,
+                                        textAlign: "left",
 
-                                    borderRadius: "8px",
-                                    borderLeft: 0,
-                                    borderRight: 0,
-                                    borderTop: 0,
-                                    borderBottom: 0,
+                                        px: 2,
 
-                                    textTransform: "none"
-                                }
-                            }}
-                        >
-                            {translations.map(translation => (
-                                <ToggleButton
-                                    size={"small"}
-                                    value={translation}
-                                    key={`manga_page_translation_${translation.id}`}  
+                                        borderRadius: "8px",
+                                        borderLeft: 0,
+                                        borderRight: 0,
+                                        borderTop: 0,
+                                        borderBottom: 0,
+
+                                        textTransform: "none"
+                                    }
+                                }}
+                            >
+                                {translations.map(translation => (
+                                    <ToggleButton
+                                        size={"small"}
+                                        value={translation}
+                                        key={`manga_page_translation_${translation.id}`}  
+                                    >
+                                        <Avatar src={translation.owner.avatar}/>
+                                        <Box>
+                                            <Typography>{translation.owner.name}</Typography>
+                                            <Typography variant="caption">Кол-во глав: {translation.chapters_count}</Typography>
+                                        </Box>
+                                    </ToggleButton>
+                                ))}
+                            </ToggleButtonGroup>
+                        )
+                        :
+                        (
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    justifyContent: "end"
+                                }}
+                            >
+                                <Button
+                                    variant="contained"
+                                    color="inherit"
+                                    size="small"
+                                    endIcon={<NotificationRoundedIcon />}
                                 >
-                                    <Avatar src={translation.owner.avatar}/>
-                                    <Box>
-                                        <Typography>{translation.owner.name}</Typography>
-                                        <Typography variant="caption">Кол-во глав: {translation.chapters_count}</Typography>
-                                    </Box>
-                                </ToggleButton>
-                            ))}
-                        </ToggleButtonGroup>
-                    )}
+                                    Уведомления вкл.
+                                </Button>
+                            </Box>
+                        )
+                    }
                     <Box
                         sx={{
                             mt: 1
@@ -93,7 +125,11 @@ export default function ChaptersSection() {
                         >
                             <Typography>Список глав</Typography>
                             <Box>
-
+                                <Tooltip title="Сортировать">
+                                    <IconButton size="small">
+                                        <SwapVertRoundedIcon />
+                                    </IconButton>
+                                </Tooltip>
                             </Box>
                         </Box>
                         <Box
@@ -105,7 +141,7 @@ export default function ChaptersSection() {
                                 gap: "5px"
                             }}
                         >
-                            {translationChapters.map(chapter => (
+                            {chapters[currentTranslation.id]?.map(chapter => (
                                 <Paper
                                     elevation={3}
                                     key={`chapter_${chapter.id}`}
@@ -120,15 +156,25 @@ export default function ChaptersSection() {
                                     }}
                                 >
                                     <Link href={`/chapters/${chapter.id}`}>
-                                        <Typography
+                                        <Box
                                             sx={{
-                                                "&:hover": {
-                                                    textDecoration :"underline"
-                                                }
+                                                display: "flex",
+                                                flexDirection: "row",
+                                                columnGap: 2
                                             }}
                                         >
-                                            Глава {chapter.chapter}
-                                        </Typography>
+                                            <Typography>
+                                                Глава {chapter.chapter}
+                                            </Typography>
+                                            {chapter.name && (
+                                                <WrappedText
+                                                    lines={1}
+                                                    variant="caption"
+                                                >
+                                                    {chapter.name}
+                                                </WrappedText>
+                                            )}
+                                        </Box>
                                     </Link>
                                     <Typography>
                                         {new Date(chapter.created_at).toLocaleDateString()}

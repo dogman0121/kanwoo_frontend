@@ -9,7 +9,6 @@ import ReportRoundedIcon from "@mui/icons-material/ReportRounded"
 import ReplyRoundedIcon from "@mui/icons-material/ReplyRounded"
 import { ShareMobile } from "@/components/Share";
 import ReportDialog from "@/components/ReportDialog";
-import { mangaService } from "@/app/(with-header-and-footer)/manga/[mangaSlug]/_services/mangaService";
 import { clientFetch } from "@/lib/fetch/clientFetch";
 
 function BackdropBody({sx, ...props}: BoxProps) {
@@ -51,9 +50,9 @@ export default function ReadingSettings({open, onClose}: AppBackdropProps) {
     const [shareOpen, setShareOpen] = useState(false);
     const [reportDialogOpen, setReportDialogOpen] = useState(false)
 
-    const chapter = useAppSelector(state => state.chapterPage.currentChapter)
+    const currentChapter = useAppSelector(state => state.chapterPage.currentChapter)
 
-    if (!chapter)
+    if (!currentChapter)
         return
     
     return (
@@ -200,7 +199,7 @@ export default function ReadingSettings({open, onClose}: AppBackdropProps) {
                 </Box>
             </Backdrop>
             <ShareMobile 
-                link={`/chapters/${chapter?.id}`}
+                link={`/chapters/${currentChapter.id}`}
                 open={shareOpen}
                 onClose={() => setShareOpen(false)}
             />
@@ -208,7 +207,7 @@ export default function ReadingSettings({open, onClose}: AppBackdropProps) {
                 open={reportDialogOpen}
                 onClose={() => setReportDialogOpen(false)}
                 onSend={async (data) => {
-                    await clientFetch.post(`/chapters/${chapter.id}/report`, {
+                    await clientFetch.post(`/chapters/${currentChapter.id}/report`, {
                         body: JSON.stringify({
                             type: data.reportType,
                             comment: data.comment

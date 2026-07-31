@@ -20,6 +20,7 @@ import Chapter from "@/types/chapter/chapter";
 import Image from "next/image";
 import "swiper/css"
 import "swiper/css/navigation"
+import { Swiper as SwiperType } from "swiper/types";
 
 function PageBlock({
     page, 
@@ -121,9 +122,11 @@ export default function HorizontalScreen() {
 
     const chaptersList = useAppSelector(state => state.chapterPage.chaptersList)
     const currentChapter = useAppSelector(state => state.chapterPage.currentChapter)
-
+    const readingProgress = useAppSelector(state => state.chapterPage.readingProgress)
 
     const {setOpen, setEndOpen} = useContext(NavOpenContext)
+
+    const swiperRef = useRef<SwiperType | null>(null);
 
     const handleSwipe = throttle(async (chapter: Chapter, page: number) => {
         await chapterService.saveProgress(chapter, page)
@@ -150,7 +153,9 @@ export default function HorizontalScreen() {
         >
             <Swiper
                 modules={[Controller]}
+                initialSlide={readingProgress?.page}
                 direction="horizontal"
+                onSwiper={(swiper) => {swiperRef.current = swiper}}
                 style={{
                     minWidth: "100vw",
                     minHeight: "100vh"
