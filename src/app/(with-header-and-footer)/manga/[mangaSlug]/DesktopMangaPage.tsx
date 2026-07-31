@@ -1,7 +1,7 @@
 "use client"
 
 import Poster from "@/components/Poster";
-import { useAppSelector, useAppStore } from "@/lib/state/hooks";
+import { useAppSelector } from "@/lib/state/hooks";
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
@@ -10,12 +10,13 @@ import Genres from "./_components/Genres";
 import NameTranslations from "./_components/NameTranslations";
 import Similar from "./_components/Similar";
 import theme from "@/theme";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DesktopSections from "./_components/desktop/DesktopSections";
 import DesktopReadingButton from "./_components/desktop/DesktopReadingButton";
 import ReportDialog from "@/components/ReportDialog";
 import { mangaService } from "./_services/mangaService";
 import dynamic from "next/dynamic";
+import formatViews from "./_utils/formatViews"
 
 const CollectionDialog = dynamic(() => import("./_components/CollectionDialog"))
 
@@ -28,57 +29,69 @@ export default function DesktopMangaPage() {
 
     const [collectionsDialogOpen, setCollectionsDialogOpen] = useState(false)
 
+
+    useEffect(() => {
+        if (!manga) return () => {};
+
+        navigator.sendBeacon(`/api/manga/${manga.slug}/views`)
+
+    }, [manga])
+
     if (!manga) 
         return null;
 
     return (
         <>
-            <Box 
-                sx={{
-                    mt: "55px", 
-                    flexGrow: 1 
-                }}
-            >
-                <Container maxWidth="lg">
+                <Container 
+                    maxWidth="lg"
+                    sx={{
+                        mt: 10,
+                        flexGrow: 1
+                    }}
+                >
                     <Grid
                         container 
                         columns={{lg: 15, md: 13, sm: 8}} 
                         spacing={4} 
                     >
-                        <Grid size={{lg: 3, md: 3, sm: 2}}>
-                            <Poster 
-                                src={manga.poster?.medium || ""}   
-                            />
-                            <Box
-                                sx={{
-                                    mt: "10px",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    rowGap: "5px"
-                                }}
-                            >
-                                <Button
+                        <Grid 
+                            size={{lg: 3, md: 3, sm: 2}}
+                        >
+                            <Box>
+                                <Poster 
+                                    src={manga.poster?.medium || ""}   
+                                />
+                                <Box
                                     sx={{
-                                        padding: "5px 0"
+                                        mt: "10px",
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        rowGap: "5px"
                                     }}
-                                    fullWidth
-                                    variant="contained"
-                                    onClick={() => setCollectionsDialogOpen(true)}
                                 >
-                                    Сохранить
-                                </Button>
-                                <Button
-                                    fullWidth
-                                    color="secondary"
-                                    disableRipple
-                                    sx={(theme) =>({
-                                        color: theme.typography.caption.color
-                                    })}
-                                    variant="text"
-                                    onClick={() => setReportDialogOpen(true)}
-                                >
-                                    Пожаловаться
-                                </Button>
+                                    <Button
+                                        sx={{
+                                            padding: "5px 0"
+                                        }}
+                                        fullWidth
+                                        variant="contained"
+                                        onClick={() => setCollectionsDialogOpen(true)}
+                                    >
+                                        Сохранить
+                                    </Button>
+                                    <Button
+                                        fullWidth
+                                        color="secondary"
+                                        disableRipple
+                                        sx={(theme) =>({
+                                            color: theme.typography.caption.color
+                                        })}
+                                        variant="text"
+                                        onClick={() => setReportDialogOpen(true)}
+                                    >
+                                        Пожаловаться
+                                    </Button>
+                                </Box>
                             </Box>
                         </Grid>
                         <Grid size={{lg: 12, md: 10, sm:6}}>
@@ -141,7 +154,7 @@ export default function DesktopMangaPage() {
                                                     mr: "3px"
                                                 }}
                                             /> 
-                                            {0} сохранений
+                                            {manga.saves} сохранений
                                         </Typography>
                                         <Typography 
                                             variant="caption"
@@ -159,7 +172,7 @@ export default function DesktopMangaPage() {
                                                     mr: "3px"
                                                 }}
                                             /> 
-                                            {manga.views} просмотров
+                                            {formatViews(manga.views)} просмотров
                                         </Typography>
                                     </Box>
                                     <Box
@@ -228,7 +241,6 @@ export default function DesktopMangaPage() {
                     </Box>
                 )}
         
-            </Box>
             <ReportDialog
                 open={reportDialogOpen}
                 onClose={() => setReportDialogOpen(false)}

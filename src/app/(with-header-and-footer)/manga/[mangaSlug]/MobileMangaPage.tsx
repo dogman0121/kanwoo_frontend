@@ -8,12 +8,13 @@ import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import Poster from "@/components/Poster";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MobileOptions from "./_components/mobile/MobileOptions";
 import { useRouter } from "next/navigation";
 import MobileSections from "./_components/mobile/MobileSections";
 import MobileReadingButton from "./_components/mobile/MobileReadingButton";
-import { mangaService } from "./_services/mangaService";
+import formatViews from "./_utils/formatViews";
+
 
 export default function MobileMangaPage() {
     const manga = useAppSelector(state => state.mangaPage.manga)
@@ -23,6 +24,13 @@ export default function MobileMangaPage() {
     const [optionsOpen, setOptionsOpen] = useState(false)
 
     const router = useRouter()
+
+    useEffect(() => {
+        if (!manga) return () => {};
+
+        navigator.sendBeacon(`/api/manga/${manga.slug}/views`)
+
+    }, [manga])
 
     if (!manga)
         return
@@ -140,7 +148,7 @@ export default function MobileMangaPage() {
                                     mr: "3px"
                                 }}
                             /> 
-                            {0} сохранений
+                            {manga.saves} сохранений
                         </Typography>
                         <Typography 
                             variant="caption"
@@ -157,7 +165,7 @@ export default function MobileMangaPage() {
                                     mr: "3px"
                                 }}
                             /> 
-                            {manga.views} просмотров
+                            {formatViews(manga.views)} просмотров
                         </Typography>
                     </Box>
                 </Box>

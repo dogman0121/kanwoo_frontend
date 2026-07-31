@@ -56,7 +56,8 @@ export default function StudioChapterDrawer() {
                                 display: "flex",
                                 flexDirection: "column",
                                 alignItems: "center",
-                                mt: "10px"
+                                mt: "10px",
+                                textAlign: "center"
                             }}
                         >
                             <Typography fontWeight={600}>{chapter?.name}</Typography>

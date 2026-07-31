@@ -31,6 +31,7 @@ function PageBlock({page, sx, ...props}: {page: Page} & BoxProps) {
                     width: "100%",
                     height: "100%"
                 }}
+                alt=""
                 src={page.link}
             />
         </Box>
@@ -41,14 +42,8 @@ function ChapterBlock({chapter, ...props}: BoxProps & {chapter: Chapter}) {
     const dispatch = useAppDispatch()
 
     const pagesRef = useRef<HTMLDivElement[]>(new Array(chapter.pages?.length || 0))
-
     const currentChapter = useAppSelector(state => state.chapterPage.currentChapter)
-
     const currentChapterRef = useRef(currentChapter);
-
-    useEffect(() => {
-        currentChapterRef.current = currentChapter
-    }, [currentChapter])
 
     const handlePage = throttle(() => {
         if (chapter != currentChapterRef.current) return;
@@ -67,9 +62,13 @@ function ChapterBlock({chapter, ...props}: BoxProps & {chapter: Chapter}) {
     }, 20)
 
     useEffect(() => {
+        currentChapterRef.current = currentChapter
+    }, [currentChapter])
+
+    useEffect(() => {
         document.addEventListener("scroll", handlePage)
 
-        return () => {document.removeEventListener("scroll", handlePage)}
+        return () => document.removeEventListener("scroll", handlePage)
     }, [])
 
     return (
@@ -127,6 +126,7 @@ export default function VerticalScreen() {
     const chaptersListRef = useRef(chaptersList)
     const currentChapterRef = useRef(currentChapter);
     const pageNumberRef = useRef(currentChapterPageNumber);
+
 
     useEffect(() => {
         currentChapterRef.current = currentChapter;
@@ -217,7 +217,7 @@ export default function VerticalScreen() {
 
         return () => {
             document.removeEventListener("click", handleOpenHeader)
-            document.removeEventListener("click", handleScrollHeader)
+            document.removeEventListener("scroll", handleScrollHeader)
         }
     }, [])
 

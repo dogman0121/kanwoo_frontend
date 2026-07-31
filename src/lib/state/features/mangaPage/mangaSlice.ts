@@ -1,3 +1,4 @@
+import Chapter from "@/types/chapter/chapter";
 import Manga from "@/types/manga/manga";
 import MangaPermission from "@/types/manga/mangaPermission";
 import ReadingProgress from "@/types/manga/readingProgress";
@@ -9,6 +10,8 @@ export interface MangaPageState {
     mangaPermissions?: MangaPermission,
     readingProgress?: ReadingProgress,
     translations: Translation[],
+    chapters: Record<number, Chapter[]>
+    currentTranslation?: Translation,
     similar: Manga[]
 }
 
@@ -17,7 +20,9 @@ const initialState: MangaPageState = {
     mangaPermissions: undefined,
     readingProgress: undefined,
     translations: [],
-    similar: []
+    currentTranslation: undefined,
+    similar: [],
+    chapters: {}
 }
 
 export const mangaSlice = createSlice({
@@ -38,6 +43,17 @@ export const mangaSlice = createSlice({
         },
         setMangaPageReadingProgress: (state, action) => {
             state.readingProgress = action.payload
+        },
+        setMangaPageCurrentTranslation: (state, action) => {
+            state.currentTranslation = action.payload
+        },
+        setMangaPageTranslationChapters: (state, action) => {
+            const {translation, chapters} = action.payload
+
+            const newChapters = {...state.chapters}
+            newChapters[translation.id] = chapters
+
+            state.chapters = newChapters
         }
     }
 })
@@ -47,7 +63,9 @@ export const {
     setMangaPageSimilar, 
     setMangaPagePermissions,
     setMangaPageTranslations ,
-    setMangaPageReadingProgress
+    setMangaPageReadingProgress,
+    setMangaPageCurrentTranslation,
+    setMangaPageTranslationChapters
 } = mangaSlice.actions
 
 export default mangaSlice.reducer
