@@ -23,11 +23,7 @@ export async function generateMetadata({
     const { mangaSlug } = await params;
 
     const {data: mangaData} = await serverFetch.get<MangaSchema>(`/manga/${mangaSlug}`)
-
-    if (!mangaData.manga){
-        return notFound()
-    }
-
+    
     return {
         title: `Читать ${mangaData.manga.type.name} ${mangaData.manga.name} онлайн | kanwoo`,
         description: mangaData.manga.description,

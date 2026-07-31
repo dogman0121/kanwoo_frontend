@@ -21,7 +21,8 @@ export default function ChaptersSection() {
 
 
     const handleTranslation = (_event: MouseEvent<HTMLElement>, newTranslation: Translation) => {
-        dispatch(setMangaPageCurrentTranslation(newTranslation))
+        if (newTranslation)
+            dispatch(setMangaPageCurrentTranslation(newTranslation))
     }
 
     useEffect(() => {
