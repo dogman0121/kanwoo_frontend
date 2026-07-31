@@ -55,26 +55,22 @@ export default async function Page({
 
     const { viewport } = await searchParams;
 
-    try {
-        const {data: mangaData} = await serverFetch.get<MangaSchema>(`/manga/${mangaSlug}`)
+    const {data: mangaData} = await serverFetch.get<MangaSchema>(`/manga/${mangaSlug}`)
 
-        return ( 
-            <MangaProvider 
-                manga={mangaData.manga}
-                mangaPermission={mangaData.mangaPermissions}
-                readingProgress={mangaData.readingProgress}
-            >
-                {viewport == "mobile" ?
-                    <MobileMangaPage/>
-                    :
-                    <DesktopMangaPage/>
-                }
-            </MangaProvider>
-        )
-    } catch (e) {
-        if (e instanceof ApiError) {
-            if (e.code == "not_found")
-                return notFound();
-        }
-    }
+    if (!mangaData.manga)
+        return notFound()
+
+    return ( 
+        <MangaProvider 
+            manga={mangaData.manga}
+            mangaPermission={mangaData.mangaPermissions}
+            readingProgress={mangaData.readingProgress}
+        >
+            {viewport == "mobile" ?
+                <MobileMangaPage/>
+                :
+                <DesktopMangaPage/>
+            }
+        </MangaProvider>
+    )
 }
