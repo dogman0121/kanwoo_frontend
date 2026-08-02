@@ -164,7 +164,11 @@ export default function ChaptersSection() {
                                                 columnGap: 2
                                             }}
                                         >
-                                            <Typography>
+                                            <Typography
+                                                sx={{
+                                                    whiteSpace: "nowrap"
+                                                }}
+                                            >
                                                 Глава {chapter.chapter}
                                             </Typography>
                                             {chapter.name && (

@@ -42,6 +42,8 @@ export default function MobileLayout({children}: {children: React.ReactNode}) {
                     zIndex: 1000, 
                     px: theme.spacing(2),
 
+                    boxShadow: "0 0 10px rgb(126 115 115 / 20%)",
+
                     ".MuiBottomNavigationAction-root": {
                         px: theme.spacing(2),
                         minWidth: "72px",

@@ -40,7 +40,7 @@ export default function SelectFilter({
     
     return (
         <FormControl fullWidth>
-            <Typography>{label}</Typography>
+            <Typography fontWeight={600}>{label}</Typography>
             <CatalogSelect
                 labelId={`catalog_${name}_input`}
                 name={name}
@@ -48,6 +48,9 @@ export default function SelectFilter({
                 multiple
                 displayEmpty
                 value={value}
+                sx={{
+                    mt: 1
+                }}
                 renderValue={(selected: unknown) => (
                     <>
                         {(selected as string[]).length == 0 ? 

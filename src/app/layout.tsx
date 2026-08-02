@@ -5,13 +5,15 @@ import theme from "@/theme"
 import { CssBaseline, InitColorSchemeScript, ThemeProvider } from "@mui/material"
 import MetaProvider from "./_components/MetaProvider"
 import StoreProvider from "./_components/StoreProvider"
-import { ApiError } from "@/lib/fetch/apiResponse"
 import { serverFetch } from "@/lib/fetch/serverFetch"
 import Meta from "@/types/meta"
 import AuthProfile from "@/types/authProfile"
-import ProfileProvider from "./_components/ProfileProvider"
+import AuthProfileProvider from "./_components/AuthProfileProvider"
 import YandexMetrikaContainer from "@/lib/yandex-metrica/YandexMetricaContainer"
 import Script from "next/script"
+import AppProvider from "./_components/AppProvider"
+import { headers } from "next/headers"
+import Collection from "@/types/collection/collection"
 
 
 const analyticsEnabled = !!(process.env.NODE_ENV === "production");
@@ -28,18 +30,19 @@ export default async function RootLayout({
 }: Readonly<{
     children: React.ReactNode
 }>) {
-    let meta = null
-
+    let meta; try { meta = (await serverFetch.get<Meta>("/meta")).data } catch (_) { meta = null }
+    let currentProfile: AuthProfile | null;
+    let collections: Collection[]; 
     try {
-        meta = (await serverFetch.get<Meta>("/meta")).data
-    } catch (e) {
-    }
+        const response = await serverFetch.get<{profile: AuthProfile, collections: Collection[]}>(`/profiles/current`) 
 
-    let profile =  null
-    try {
-        profile = (await serverFetch.get<AuthProfile>(`/profiles/current`)).data
-    } catch (e) {
-    }
+        currentProfile = response.data.profile
+        collections = response.data.collections
+    } catch (e) { currentProfile = null; collections = []}
+
+    console.log(collections, currentProfile)
+
+    const deviceType = await (await headers()).get("X-Device-Type")
 
     return (
         <html lang="en" className={roboto.variable} suppressHydrationWarning>
@@ -57,11 +60,20 @@ export default async function RootLayout({
                     <ThemeProvider theme={theme}>
                         <CssBaseline />
                         <StoreProvider>
-                            <MetaProvider meta={meta}>
-                                <ProfileProvider profile={profile}>
-                                    {children}
-                                </ProfileProvider>
-                            </MetaProvider>
+                            <AppProvider
+                                value={{
+                                    deviceType: deviceType == "desktop" ? "desktop" : "mobile"
+                                }}
+                            >
+                                <MetaProvider meta={meta}>
+                                    <AuthProfileProvider 
+                                        profile={currentProfile}
+                                        collections={collections}
+                                    >
+                                        {children}
+                                    </AuthProfileProvider>
+                                </MetaProvider>
+                            </AppProvider>
                         </StoreProvider>
                     </ThemeProvider>
                 </AppRouterCacheProvider>

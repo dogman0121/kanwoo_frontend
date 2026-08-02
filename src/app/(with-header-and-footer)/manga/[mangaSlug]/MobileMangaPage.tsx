@@ -5,15 +5,13 @@ import theme from "@/theme";
 import { Box, IconButton, Typography } from "@mui/material";
 import WestRoundedIcon from '@mui/icons-material/WestRounded';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
-import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded';
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import Poster from "@/components/Poster";
 import { useEffect, useState } from "react";
 import MobileOptions from "./_components/mobile/MobileOptions";
 import { useRouter } from "next/navigation";
 import MobileSections from "./_components/mobile/MobileSections";
 import MobileReadingButton from "./_components/mobile/MobileReadingButton";
-import formatViews from "./_utils/formatViews";
+import Stats from "@/features/manga/components/Stats";
 
 
 export default function MobileMangaPage() {
@@ -125,49 +123,7 @@ export default function MobileMangaPage() {
                             {manga?.name}
                         </Typography>
                     </Box>
-                    <Box
-                        sx={{
-                            mt: "5px",
-                            display: "flex",
-                            flexDirection: "row",
-                            columnGap: "15px"
-                        }}
-                    >
-                        <Typography 
-                            variant="caption"
-                            sx={{
-                                display: "flex",
-                                flexDirection: "row",
-                                alignItems: "center"
-                            }}
-                        >
-                            <BookmarkBorderRoundedIcon 
-                                sx={{
-                                    width: "18px",
-                                    height: "18px",
-                                    mr: "3px"
-                                }}
-                            /> 
-                            {manga.saves} сохранений
-                        </Typography>
-                        <Typography 
-                            variant="caption"
-                            sx={{
-                                display: "flex",
-                                flexDirection: "row",
-                                alignItems: "center"
-                            }}
-                        >
-                            <VisibilityOutlinedIcon 
-                                sx={{
-                                    width: "18px",
-                                    height: "18px",
-                                    mr: "3px"
-                                }}
-                            /> 
-                            {formatViews(manga.views)} просмотров
-                        </Typography>
-                    </Box>
+                    <Stats views={manga.views} saves={manga.saves} size="small" sx={{mt: 2}}/>
                 </Box>
                 <Box
                     sx={{

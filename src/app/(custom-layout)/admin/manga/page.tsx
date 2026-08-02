@@ -21,7 +21,7 @@ import ModerationFiltersGroup, { ModerationFilterType } from "../_components/Mod
 import { usePagePagination } from "@/features/pagination/hooks/usePagePagination";
 import SearchInput from "../_components/SearchInput";
 import InfiniteScroll from "react-infinite-scroll-component";
-import CreateMangaDialog, { convertSchemaToFormData } from "@/features/manga/components/CreateMangaDialog";
+import CreateMangaDialog, { convertSchemaToFormData } from "@/features/manga/forms/CreateMangaDialog";
 import { MangaFormSchema } from "./_components/CreateMangaDialog";
 
 const compileColor = (moderation_status: AdminMangaModerationStatus | null) => {

@@ -3,7 +3,7 @@
 import EditPageContainer from "@/features/edit/components/EditPageContainer";
 import EditHeader from "@/features/edit/components/EditHeader";
 import { profileClientApi } from "@/lib/fetch/features/profile/client";
-import { setAuthProfile } from "@/lib/state/features/auth_profile/authProfileSlice";
+import { setAuthProfile } from "@/lib/state/features/authProfile/authProfileSlice";
 import { setStudioPageProfile } from "@/lib/state/features/studioPage/studioPageProfileSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import Profile from "@/types/profile/profile";

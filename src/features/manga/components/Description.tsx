@@ -3,15 +3,11 @@
 import { useState, useRef, useEffect } from "react";
 import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
-import { Box, Button, useTheme } from "@mui/material";
+import { Box, BoxProps, Button, useTheme } from "@mui/material";
 import { useAppSelector } from "@/lib/state/hooks";
 
-export default function Description() {
-    const description = useAppSelector(state => state.mangaPage.manga?.description)
-
+export default function Description({description, ...props}: {description: string} & BoxProps) {
     const [open, setOpen] = useState(false);
-
-    const theme = useTheme();
 
     const textRef = useRef<HTMLDivElement | null>(null);
 
@@ -41,7 +37,9 @@ export default function Description() {
     }
 
     return (
-        <Box>
+        <Box
+            {...props}
+        >
             <Box 
                 sx={{
                     lineHeight: 1.5,

@@ -2,13 +2,13 @@
 
 import SearchInputMobile from "@/features/search/components/SearchInputMobile";
 import { Box, Divider, Drawer, IconButton } from "@mui/material";
-import WestRoundedIcon from "@mui/icons-material/WestRounded"
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded"
-import Filters from "./Filters";
+import Filters from "./_components/Filters";
 import { useState } from "react";
 import SearchList from "@/features/search/components/SearchList";
-import MangaResults from "./MangaResults";
+import MangaResults from "./_components/MangaResults";
 import SearchProvider from "@/features/search/components/SearchProvider";
+import SearchSectionSelector from "@/features/search/components/SearchSectionSelector";
 
 export default function MobileCatalogPage() {
     const [filtersOpened, setFiltersOpened] = useState(false)
@@ -19,31 +19,37 @@ export default function MobileCatalogPage() {
                 sx={{
                     p: "10px",
                     display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: "2px"
+                    flexDirection: "column",
+                    rowGap: 1
                 }}
             >
-                <SearchInputMobile/>
-                <IconButton 
-                    color="inherit"
-                    onClick={() => setFiltersOpened(true)}
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: "2px"
+                    }}
                 >
-                    <MoreVertRoundedIcon />
-                </IconButton>
+                    <SearchInputMobile/>
+                    <IconButton 
+                        color="inherit"
+                        onClick={() => setFiltersOpened(true)}
+                    >
+                        <MoreVertRoundedIcon />
+                    </IconButton>
+                </Box>
+                <SearchSectionSelector />
             </Box>
             <Divider />
-            <SearchList>
-                <Box
+            <SearchList>                
+                <MangaResults 
                     sx={{
                         p: "15px 10px"
                     }}
-                >
-                    <MangaResults />
-                </Box>
+                />
             </SearchList>
             <Drawer
-                elevation={0}
                 sx={{
                     ".MuiPaper-root": {
                         p: "20px 15px",

@@ -3,19 +3,22 @@
 import { useAppSelector } from "@/lib/state/hooks";
 import theme from "@/theme";
 import Language from "@/types/language";
-import { Box, Breadcrumbs, Typography } from "@mui/material";
+import NameTranslation from "@/types/manga/nameTranslation";
+import { Box, BoxProps, Breadcrumbs, Typography } from "@mui/material";
 
-export default function NameTranslations() {
-    const nameTranlations = useAppSelector(state => state.mangaPage.manga?.name_translations);
+export default function NameTranslations({
+    nameTranslations, 
+    ...props
+}: {
+    nameTranslations: NameTranslation[],
+} & BoxProps) {
 
-    if (!nameTranlations?.length)
+    if (!nameTranslations?.length)
         return null;
 
     return (
         <Box
-            sx={{
-
-            }}
+            {...props}
         >
             <Typography
                 sx={{
@@ -24,7 +27,7 @@ export default function NameTranslations() {
                 }}
             >Другие названия</Typography>
             <Breadcrumbs sx={{mt: theme.spacing(1)}}>
-                {nameTranlations?.map((name: {lang: Language, name: string}) => (
+                {nameTranslations?.map((name: {lang: Language, name: string}) => (
                     <Typography 
                         lineHeight={"16px"} 
                         variant="caption" 

@@ -1,7 +1,7 @@
 "use client"
 
 import { clientFetch } from "@/lib/fetch/clientFetch";
-import { setAuthProfile } from "@/lib/state/features/auth_profile/authProfileSlice";
+import { setAuthProfile } from "@/lib/state/features/authProfile/authProfileSlice";
 import { useAppDispatch } from "@/lib/state/hooks";
 import { ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem } from "@mui/material"
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';

@@ -1,8 +1,8 @@
 import { AppTab, AppTabContext, AppTabList, AppTabPanel } from "@/components/AppTabs";
 import { Box } from "@mui/material";
-import Description from "../Description";
-import Genres from "../Genres";
-import NameTranslations from "../NameTranslations";
+import Description from "../../../../../../features/manga/components/Description";
+import Genres from "../../../../../../features/manga/components/Genres";
+import NameTranslations from "../../../../../../features/manga/components/NameTranslations";
 import Similar from "../Similar";
 import { useEffect, useState } from "react";
 import Chapters from "../ChapterSection";
@@ -32,6 +32,8 @@ export default function MobileSections() {
         setSection(newValue);
     };
 
+    if (!manga) return;
+
     return (
         <AppTabContext
             value={section}
@@ -49,9 +51,9 @@ export default function MobileSections() {
                         rowGap: "25px"
                     }}
                 >
-                    <Description />
-                    <Genres />
-                    <NameTranslations />
+                    <Description description={manga.description} />
+                    <Genres genres={manga.genres}/>
+                    <NameTranslations nameTranslations={manga.name_translations} />
                     <Similar />
                 </Box>
             </AppTabPanel>

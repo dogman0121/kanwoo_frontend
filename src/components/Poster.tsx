@@ -1,5 +1,5 @@
-import { Box } from "@mui/material"
-import Image from "next/image"
+import { Box, Paper } from "@mui/material"
+import NoPhotographyRoundedIcon from "@mui/icons-material/NoPhotographyRounded"
 
 export default function Poster({
     src, 
@@ -10,6 +10,9 @@ export default function Poster({
     width?: string
     style?: React.CSSProperties
 }){
+
+    const computedWidth = width || "100%"
+
     return (
         <>
             {src ?
@@ -20,20 +23,34 @@ export default function Poster({
                     style={{
                         aspectRatio: "2/3",
                         borderRadius: "6% / 4%",
-                        width: width || "100%",
+                        width: computedWidth,
                         ...style
                     }} 
                 /> 
                 :
-                <Box
+                <Paper
                     sx={{
-                        bgcolor: "background.paper",
                         aspectRatio: "2/3",
+                        position: "relative",
                         borderRadius: "6% / 4%",
+                        border: "1px solid",
+                        //borderStyle: "dashed",
+                        borderColor: "divider",
+
                         minWidth: width || "100%",
                         ...style
                     }}
-                />
+                >
+                    <NoPhotographyRoundedIcon 
+                        sx={{
+                            fontSize: `100%`,
+                            position: "absolute",
+                            left: "50%",
+                            top: "50%",
+                            transform: "translate(-50%, -50%)"
+                        }}
+                    />
+                </Paper>
             }
         </>
     )

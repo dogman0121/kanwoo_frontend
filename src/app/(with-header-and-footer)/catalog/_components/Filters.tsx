@@ -19,10 +19,18 @@ export default function Filters() {
                     alignItems: "center"
                 }}
             >
-                <Typography>Фильтры</Typography>
+                <Typography
+                    sx={{
+                        fontSize: "16px",
+                        fontWeight: 600
+                    }}
+                >
+                    Фильтры
+                </Typography>
                 <Button
                     variant="text"
-                    color="secondary"
+                    color="inherit"
+                    size="small"
                     sx={{
                         display: "flex",
                         alignItems: "center",
@@ -30,14 +38,9 @@ export default function Filters() {
                     onClick={() => {
                         setFilters(new Map())
                     }}
+                    endIcon={<DeleteRoundedIcon />}
                 >
                     <Typography>очистить</Typography>
-                    <DeleteRoundedIcon 
-                        sx={(theme) => ({
-                            ml: "5px",
-                            color: theme.typography.body1.color
-                        })}
-                    />
                 </Button>
             </Box>
             <Box
@@ -69,7 +72,13 @@ export default function Filters() {
                     options={meta?.manga.adults || []}
                 />
                 <Box>
-                    <Typography>Дата выпуска</Typography>
+                    <Typography
+                        sx={{
+                            fontWeight: 600
+                        }}
+                    >
+                        Дата выпуска
+                    </Typography>
                     <Box
                         sx={{
                             display: "flex",

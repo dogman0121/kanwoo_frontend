@@ -2,6 +2,7 @@
 
 import AppSnackbar from "@/components/AppSnackbar"
 import { clientFetch } from "@/lib/fetch/clientFetch"
+import { useAppSelector } from "@/lib/state/hooks"
 import { Box, Button, Container, Dialog, DialogActions, DialogContent, DialogProps, DialogTitle, Grid, Link, styled, SvgIcon, TextField, Typography, useTheme } from "@mui/material"
 import { useState } from "react"
 
@@ -92,6 +93,8 @@ const FooterText = styled(Typography)({
 export default function Footer() {
     const theme = useTheme()
 
+    const deviceType = useAppSelector(state => state.app.deviceType)
+
     const [feedbackDialogOpen, setFeedbackDialogOpen] = useState(false)
 
     return (
@@ -100,7 +103,7 @@ export default function Footer() {
                 component={"footer"}
                 sx={[
                     {
-                        mt: "40px",
+                        mt: deviceType == "desktop" ? 8 : 0
                     },
                     theme.applyStyles("light", {
                         backgroundColor: "#E8E8E8"

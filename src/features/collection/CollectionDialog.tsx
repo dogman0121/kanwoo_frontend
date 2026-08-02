@@ -1,37 +1,48 @@
 "use client"
 
 import { clientFetch } from "@/lib/fetch/clientFetch";
-import { useAppSelector } from "@/lib/state/hooks";
-import ProfileCollection from "@/types/profile/profileCollection";
-import { Box, Button, Checkbox, CircularProgress, Dialog, DialogContent, DialogProps, DialogTitle, List, ListItemButton, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
+import { Box, Button, Checkbox, Dialog, DialogContent, DialogProps, DialogTitle, List, ListItemButton, Typography } from "@mui/material";
+import { useState } from "react";
 import AddRoundedIcon from "@mui/icons-material/AddRounded"
 import CreateCollectionDialog from "@/components/CreateCollectionDialog";
+import Manga from "@/types/manga/manga";
+import Collection from "@/types/collection/collection";
+import { addAuthProfileCollection, addMangaIntoAuthProfileCollection, removeMangaFromAuthProfileCollection, setAuthProfileCollections } from "@/lib/state/features/authProfile/authProfileSlice";
+import PostersStack from "@/components/PostersStack";
 
-export default function CollectionDialog({open, onClose, ...props}: DialogProps){
-    const [collections, setCollections] = useState<ProfileCollection[]>([])
+export default function CollectionDialog({open, onClose, manga, ...props}: {manga: Manga} & DialogProps){
+    const dispatch = useAppDispatch()
+
+    const collections = useAppSelector(state => state.authProfile.collections)
+
     const [createCollectionDialogOpen, setCreateCollectonDialogOpen] = useState<boolean>(false)
-    const [isFetching, setIsFetching] = useState(true)
 
-    const authProfile = useAppSelector(state => state.authProfile.profile)
-    const manga = useAppSelector(state => state.mangaPage.manga)
+    const removeManga = async (collection: Collection) => {
+        await clientFetch.post(`/collections/${collection.id}/remove-manga`, {
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                manga: manga?.slug
+            })
+        })
 
-    useEffect(() => {
-        if (!authProfile || !manga) return;
+        dispatch(removeMangaFromAuthProfileCollection({id: collection.id, manga: manga}))
+    }
 
-        setIsFetching(true)
+    const addManga = async (collection: Collection) => {
+        await clientFetch.post(`/collections/${collection.id}/add-manga`, {
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                manga: manga?.slug
+            })
+        })
 
-        if (open)
-            clientFetch.get<ProfileCollection[]>(`/profiles/${authProfile.slug}/collections?scope=creator&from_manga=${manga.slug}`)
-                .then(resp => {
-                    setCollections(resp.data)
-                })
-                .finally(() => {
-                    setIsFetching(false)
-                })
-    }, [open, authProfile, manga])
-
-    if (isFetching) return;
+        dispatch(addMangaIntoAuthProfileCollection({id: collection.id, manga: manga}))
+    }
     
     return (
         <>
@@ -43,51 +54,33 @@ export default function CollectionDialog({open, onClose, ...props}: DialogProps)
                 <DialogTitle>Выберите коллекцию</DialogTitle>
                 <DialogContent>
                     <List>
-                        {collections.map(c => (
+                        {collections?.map(collection => (
                             <ListItemButton
-                                key={`manga_page_collection_${c.id}`}
+                                key={`manga_page_collection_${collection.id}`}
+                                sx={{
+                                    borderRadius: 1
+                                }}
                                 onClick={async () => {
                                     try {
-                                        if (c.contain_manga){
-                                            clientFetch.post(`/collections/${c.id}/remove-manga`, {
-                                                headers: {
-                                                    "Content-Type": "application/json"
-                                                },
-                                                body: JSON.stringify({
-                                                    manga: manga?.slug
-                                                })
-                                            })
-                                        }
-
+                                        if (collection.manga.find(val => val.id == manga.id))
+                                            removeManga(collection)
                                         else {
-                                            clientFetch.post(`/collections/${c.id}/add-manga`, {
-                                                headers: {
-                                                    "Content-Type": "application/json"
-                                                },
-                                                body: JSON.stringify({
-                                                    manga: manga?.slug
-                                                })
-                                            })
+                                            addManga(collection)
                                         }   
                                     } finally {
                                         onClose?.({}, "escapeKeyDown")
                                     }
                                 }}
                             >
-                                <Box
-                                    sx={{
-                                        aspectRatio: "3/4",
-                                        width: "40px",
-                                        bgcolor: "secondary.main",
-                                        borderRadius: "6px"
-                                    }}
+                                <PostersStack 
+                                    width="32px"
                                 />
                                 <Box
                                     sx={{
                                         width: "100%",
                                         display: "flex",
                                         justifyContent: "space-between",
-                                        ml: 3
+                                        ml: 4
                                     }}
                                 >
                                     <Box
@@ -102,20 +95,20 @@ export default function CollectionDialog({open, onClose, ...props}: DialogProps)
                                                 flexDirection: "row"
                                             }}
                                         >
-                                            <Typography>{c.name}</Typography>
+                                            <Typography>{collection.name}</Typography>
                                             <Typography 
                                                 sx={{
                                                     ml: 2
                                                 }}
                                                 variant="caption"
                                             >
-                                                {c.manga_count} тайтлов
+                                                {collection.manga.length} тайтлов
                                             </Typography>
                                         </Box>
-                                        <Typography variant="caption">{c.privacy.name}</Typography>
+                                        <Typography variant="caption">{collection.privacy.name}</Typography>
                                     </Box>
                                     <Checkbox 
-                                        checked={c.contain_manga}
+                                        checked={collection.manga.findIndex(val => val.id == manga.id) != -1}
                                     />
                                 </Box>
                             </ListItemButton>
@@ -139,7 +132,9 @@ export default function CollectionDialog({open, onClose, ...props}: DialogProps)
             <CreateCollectionDialog 
                 open={createCollectionDialogOpen}
                 onClose={() => setCreateCollectonDialogOpen(false)}
-                onCreate={(collection) => {}}
+                onCreate={(collection) => {
+                    dispatch(addAuthProfileCollection(collection))
+                }}
             />
         </>
     )

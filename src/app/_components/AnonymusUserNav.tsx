@@ -2,7 +2,7 @@
 
 import AuthModal from "@/features/auth/components/AuthModal";
 import { AuthSection } from "@/features/auth/types/AuthPanel";
-import { setAuthProfile } from "@/lib/state/features/auth_profile/authProfileSlice";
+import { setAuthProfile } from "@/lib/state/features/authProfile/authProfileSlice";
 import { useAppDispatch } from "@/lib/state/hooks";
 import AuthProfile from "@/types/authProfile";
 import Profile from "@/types/profile/profile";

@@ -1,26 +1,25 @@
-import { Box, styled, SxProps, Typography, useTheme } from "@mui/material";
+import { Box, BoxProps, styled, SxProps, Typography, useTheme } from "@mui/material";
 import Link from "next/link";
 import Poster from "./Poster";
 import Manga from "@/types/manga/manga";
-
-const TitleItemSquareText = styled(Typography)(() => ({
-    lineHeight: "1.3",
-    fontSize: "14px"
-})) 
+import WrappedText from "./WrapperTypography";
 
 export interface MangaItemProps {
     manga: Manga,
-    sx?: SxProps,
     rightTopAdornment?: React.ReactElement
 }
 
-export function MangaItemSquare({manga, sx, rightTopAdornment}: MangaItemProps) {
+export function MangaItemSquare({manga, sx, rightTopAdornment, ...props}: MangaItemProps & BoxProps) {
     const theme = useTheme();
 
     return (
         <Box 
             className="TitleItem"
-            sx={{position: "relative", ...sx}}
+            sx={{
+                position: "relative", 
+                ...sx
+            }}
+            {...props}
         >
             <Link 
                 draggable={false}
@@ -44,22 +43,18 @@ export function MangaItemSquare({manga, sx, rightTopAdornment}: MangaItemProps) 
                             flexDirection: "row",
                         }}
                     >
-                        <TitleItemSquareText>{manga.type?.name}</TitleItemSquareText>
-                        <TitleItemSquareText ml={theme.spacing(1)}>{manga.year}</TitleItemSquareText>
+                        <Typography variant="caption">{manga.type?.name}</Typography>
+                        <Typography variant="caption" ml={theme.spacing(1)}>{manga.year}</Typography>
                     </Box>
-                    <TitleItemSquareText
+                    <WrappedText
+                        lines={2}
                         sx={{
-                            mt: theme.spacing(1),
-                            fontSize:"14px",
-                            display: "-webkit-box",
-                            WebkitLineClamp: "2",
-                            WebkitBoxOrient: "vertical",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis"
+                            lineHeight: "1.3",
+                            fontSize: "14px"
                         }}
                     >
                         {manga.name}
-                    </TitleItemSquareText>
+                    </WrappedText>
                 </Box>
                 {rightTopAdornment && (
                     <Box
@@ -77,24 +72,23 @@ export function MangaItemSquare({manga, sx, rightTopAdornment}: MangaItemProps) 
     )
 }
 
-function MangaItemRect({manga}: MangaItemProps) {
+function MangaItemRect({manga}: MangaItemProps & BoxProps) {
     return (
         <>{manga.name}</>
     )
 }
 
 export default function MangaItem({
-    manga,
-    sx,
-    rightTopAdornment, 
-    form
-}: {form: "square" | "rectangle"} & MangaItemProps) {
+    manga, 
+    form,
+    ...props
+}: {form: "square" | "rectangle"} & MangaItemProps & BoxProps) {
     return (
         <>
             {form == "square" ?
-                <MangaItemSquare manga={manga} sx={sx} rightTopAdornment={rightTopAdornment}/>
+                <MangaItemSquare manga={manga} {...props}/>
                 :
-                <MangaItemRect manga={manga} rightTopAdornment={rightTopAdornment}/>
+                <MangaItemRect manga={manga} {...props}/>
             }
         </>
     )

@@ -5,9 +5,11 @@ import Manga from "@/types/manga/manga";
 
 
 class SearchService {    
-    async search(query: string, section: string, filters?: Map<string, string[]>) {
+    async search(query: string, section: string, filters: Map<string, string[]>, page: number, perPage: number) {
         const params = this.compileParams(query, section, filters);
-        
+        params.set("page", page.toString())
+        params.set("per_page", perPage.toString())
+
         return await clientFetch.get<Manga[]>("/search?" + new URLSearchParams(params).toString())
     }
 
