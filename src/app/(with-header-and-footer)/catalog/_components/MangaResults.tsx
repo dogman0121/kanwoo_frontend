@@ -1,22 +1,348 @@
-import { MangaItemSquare } from "@/components/MangaItem";
+import MangaItem, { MangaItemSquare } from "@/components/MangaItem";
 import useSearch from "@/features/search/hooks/useSearch";
+import { useAppSelector } from "@/lib/state/hooks";
 import Manga from "@/types/manga/manga";
-import { Box } from "@mui/material";
+import { Box, BoxProps, Breadcrumbs, Button, CircularProgress, Drawer, IconButton, Menu, Paper, Popover, Typography } from "@mui/material";
+import Grid, { GridProps } from "@mui/material/Grid"
+import { useRef, useState } from "react";
+import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded';
+import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded"
+import Description from "@/features/manga/components/Description";
+import Genres from "@/features/manga/components/Genres";
+import NameTranslations from "@/features/manga/components/NameTranslations";
+import theme from "@/theme";
+import Poster from "@/components/Poster";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded"
+import Stats from "@/features/manga/components/Stats";
+import { ROUTES } from "@/routes";
+import { useRouter } from "next/navigation";
+import CollectionDialog from "@/features/collection/CollectionDialog";
 
-export default function MangaResults() {
+
+
+function MangaResult({
+    manga,
+    ...props
+}: {manga: Manga} & BoxProps) {
+    const deviceType = useAppSelector(state => state.app.deviceType)
+
+    const router = useRouter()
+
+    const openTimoutRef = useRef<NodeJS.Timeout | null>(null);
+    const mangaItemRef = useRef<HTMLDivElement | null>(null);
+    const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+    const [mangaMenuOpen, setMangaMenuOpen] = useState(false);
+    const [collectionDialogOpen, setCollectionDialogOpen] = useState(false)
+
+    const setShowDetailsTimeout = () => {
+        if (closeTimeoutRef.current)
+            clearTimeout(closeTimeoutRef.current)
+
+        openTimoutRef.current = setTimeout(() => {
+            setMangaMenuOpen(true)
+        }, 500)
+    }
+
+    const cleanShowDetailsTimeout = () => {
+        closeTimeoutRef.current = setTimeout(() => {
+            if (openTimoutRef.current)
+                clearTimeout(openTimoutRef.current)
+
+            setMangaMenuOpen(false)
+        }, 100)
+    }
+
+    return (
+        <>
+            <MangaItem
+                aria-owns={mangaMenuOpen ? "mouse-over-popover" : undefined}
+                aria-haspopup="true"
+                form={"square"} 
+                manga={manga as Manga}
+                ref={mangaItemRef}
+                onContextMenu={(event) => {
+                    if (deviceType != "desktop")
+                        event.preventDefault()
+                }}
+                onMouseEnter={() => {
+                    setShowDetailsTimeout()
+                }}
+                onMouseLeave={() => {
+                    cleanShowDetailsTimeout()
+                }}
+                onPointerUp={() => {
+                    if (!mangaMenuOpen)
+                        cleanShowDetailsTimeout()
+                }}
+                onPointerDown={() => {
+                    setShowDetailsTimeout()
+                }}
+            />
+            { deviceType == "desktop" ?
+                <Popover
+                    onPointerOver={(event) => event.stopPropagation()}
+                    onPointerEnter={(event) => event.stopPropagation()}
+                    open={mangaMenuOpen}
+                    onClose={() => {
+                        setMangaMenuOpen(false)
+                    }}
+                    anchorEl={mangaItemRef.current}
+                    sx={{
+                        pointerEvents: "none",
+                        ml: 2,
+                        
+                        "& .MuiPaper-root": {
+                            pointerEvents: "auto",
+                            width: "350px",
+
+                            borderRadius: 2,
+
+                            p: 2
+                        }
+                    }}
+                    anchorOrigin={{
+                        vertical: "top",
+                        horizontal: "right"
+                    }} 
+                    transformOrigin={{
+                        vertical: "top",
+                        horizontal: "left"
+                    }}
+                    disableRestoreFocus
+                    disableAutoFocus
+                >
+                    <Box
+                        onMouseEnter={() => {
+                            if (closeTimeoutRef.current) {
+                                clearTimeout(closeTimeoutRef.current)
+                            }
+                        }}
+                        onMouseLeave={() => {
+                            cleanShowDetailsTimeout()
+                        }}
+
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            rowGap: 2
+                        }}
+                    >   
+                        <Box>
+                            <Breadcrumbs>
+                                <Typography>
+                                    {manga.type.name}
+                                </Typography>
+                                <Typography>
+                                    {manga.year}
+                                </Typography>
+                                <Typography>
+                                    {manga.status.name}
+                                </Typography>
+                            </Breadcrumbs>
+                            <Typography 
+                                variant="h2"
+                            >
+                                {manga.name}
+                            </Typography>
+                            <Stats views={manga.views} saves={manga.saves} size="small"/>
+                        </Box>
+                        <Description 
+                            description={manga.description}
+                        />
+                        <Genres 
+                            genres={manga.genres}
+                        />
+                        <NameTranslations 
+                            nameTranslations={manga.name_translations}
+                        />
+                        <Button 
+                            size="small" 
+                            variant="contained"
+                            startIcon={<BookmarkBorderRoundedIcon />}  
+                            onClick={() => setCollectionDialogOpen(true)}  
+                            sx={{
+                                width: "200px"
+                            }}
+                        >
+                                Сохранить
+                        </Button>
+                    </Box>
+                </Popover>
+                :
+                <Drawer
+                    open={mangaMenuOpen}
+                    onClose={() => setMangaMenuOpen(false)}
+                    anchor="bottom"
+                    sx={{
+                        "&.MuiPaper-root": {
+                            background: "none",
+                            backgroundColor: "none",
+                            backgroundImage: "none"
+                        }
+                    }}
+                >
+                    <Box
+                        sx={{
+                            position: "relative",
+
+                            height: "100%"
+                        }}
+                    >
+                        <Paper
+                            sx={{
+                                height: "100%",
+                                width: "100%",
+                                position: "absolute",
+                                opacity: 0.95,
+
+                                zIndex: -1,
+                                borderRadius: "15px 15px 0 0"
+                            }}
+                        />
+                        <Box
+                            sx={{
+                                position: "absolute",
+                                left: 0,
+                                top: 0,
+                                width: "100%",
+                                height: "100%",
+                                zIndex: -2,
+
+                                background: `url('${manga.background ? manga.background : manga.poster.medium}')`,
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                                backgroundRepeat: "no-repeat",
+                                backgroundPositionY: "0",
+                                borderRadius: "15px 15px 0 0"
+                            }}
+                        >
+                        </Box>
+                        <Box>
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    justifyContent: "end"
+                                }}
+                            >
+                                <IconButton onClick={() => setMangaMenuOpen(false)}>
+                                    <CloseRoundedIcon />
+                                </IconButton>
+                            </Box>
+                            <Box
+                                sx={{
+                                    px: 2,
+                                    pt: 1,
+                                    pb: 3
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        justifyContent: "center"
+                                    }}
+                                >
+                                    <Poster 
+                                        src={manga.poster.small}
+                                        width="80px"
+                                    />
+                                </Box>
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        flexDirection: "column"
+                                    }}
+                                >
+                                    <Typography 
+                                        variant="h2" 
+                                        textAlign="center"
+                                        mt={2}
+                                    >
+                                        {manga.name}
+                                    </Typography>
+                                    <Stats views={manga.views} saves={manga.saves} size="small"/>
+                                </Box>
+                                <Box
+                                    sx={{
+                                        mt: 2,
+                                        display: "flex",
+                                        flexDirection: "column",  
+                                        rowGap: 2
+                                    }}
+                                >
+                                    <Description description={manga.description}/>
+                                    <Genres genres={manga.genres}/>
+                                    <NameTranslations nameTranslations={manga.name_translations}/>
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            columnGap: 1
+                                        }}
+                                    >
+                                        <Button
+                                            startIcon={<BookmarkBorderRoundedIcon />}
+                                            variant="contained"
+                                            fullWidth
+                                            onClick={() => setCollectionDialogOpen(true)}
+                                        >
+                                            Сохранить
+                                        </Button>
+                                        <Button
+                                            startIcon={<OpenInNewRoundedIcon />}
+                                            variant="contained"
+                                            fullWidth
+                                            onClick={() => router.push(ROUTES.MANGA.MAIN(manga.slug))}
+                                        >
+                                            Перейти
+                                        </Button>
+                                    </Box>
+                                </Box>
+                            </Box>
+                        </Box>
+                    </Box>
+                </Drawer>
+            }
+            <CollectionDialog 
+                open={collectionDialogOpen}
+                onClose={() => setCollectionDialogOpen(false)}
+                manga={manga}
+            />
+        </>
+    )
+}
+
+export default function MangaResults({
+    ...props
+}: GridProps) {
     const { results } = useSearch();
 
     return (
-        <Box
-            sx={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
-                gap: "15px"
+        <Grid
+            container
+            columns={{
+                xs: 3,
+                sm: 4,
+                md: 5,
             }}
+            spacing={{
+                xs: 1.2,
+                sm: 2,
+                md: 3
+            }}
+            {...props}
         >
-            {results.map(m => (
-                <MangaItemSquare manga={m as Manga} key={`catalog_manga_${m.slug}`}/>
+            {results.map(manga => (
+                <Grid 
+                    size={1}
+                    key={`catalog_manga_${manga.slug}`}
+                >
+                    <MangaResult 
+                        manga={manga as Manga}
+                    />
+                </Grid>
             ))}
-        </Box>
+        </Grid>
     )
 }

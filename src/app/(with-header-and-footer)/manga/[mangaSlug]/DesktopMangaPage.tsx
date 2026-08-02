@@ -3,11 +3,9 @@
 import Poster from "@/components/Poster";
 import { useAppSelector } from "@/lib/state/hooks";
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
-import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded';
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import Description from "./_components/Description";
-import Genres from "./_components/Genres";
-import NameTranslations from "./_components/NameTranslations";
+import Description from "../../../../features/manga/components/Description";
+import Genres from "../../../../features/manga/components/Genres";
+import NameTranslations from "../../../../features/manga/components/NameTranslations";
 import Similar from "./_components/Similar";
 import theme from "@/theme";
 import { useEffect, useState } from "react";
@@ -16,9 +14,9 @@ import DesktopReadingButton from "./_components/desktop/DesktopReadingButton";
 import ReportDialog from "@/components/ReportDialog";
 import { mangaService } from "./_services/mangaService";
 import dynamic from "next/dynamic";
-import formatViews from "./_utils/formatViews"
+import Stats from "@/features/manga/components/Stats";
 
-const CollectionDialog = dynamic(() => import("./_components/CollectionDialog"))
+const CollectionDialog = dynamic(() => import("../../../../features/collection/CollectionDialog"))
 
 export default function DesktopMangaPage() {
     const manga = useAppSelector(state => state.mangaPage.manga)
@@ -57,7 +55,12 @@ export default function DesktopMangaPage() {
                         <Grid 
                             size={{lg: 3, md: 3, sm: 2}}
                         >
-                            <Box>
+                            <Box
+                                sx={{
+                                    position: "sticky",
+                                    top: "94px"
+                                }}
+                            >
                                 <Poster 
                                     src={manga.poster?.medium || ""}   
                                 />
@@ -130,51 +133,7 @@ export default function DesktopMangaPage() {
                                 columns={{lg: 12, md: 8}}
                             >
                                 <Grid size={similar.length == 0 ? 12 : 8}>
-                                    <Box
-                                        sx={{
-                                            mt: "5px",
-                                            display: "flex",
-                                            flexDirection: "row",
-                                            columnGap: "15px"
-                                        }}
-                                    >
-                                        <Typography 
-                                            variant="caption"
-                                            sx={{
-                                                fontSize: "14px",
-                                                display: "flex",
-                                                flexDirection: "row",
-                                                alignItems: "center"
-                                            }}
-                                        >
-                                            <BookmarkBorderRoundedIcon 
-                                                sx={{
-                                                    width: "22px",
-                                                    height: "22px",
-                                                    mr: "3px"
-                                                }}
-                                            /> 
-                                            {manga.saves} сохранений
-                                        </Typography>
-                                        <Typography 
-                                            variant="caption"
-                                            sx={{
-                                                fontSize: "14px",
-                                                display: "flex",
-                                                flexDirection: "row",
-                                                alignItems: "center"
-                                            }}
-                                        >
-                                            <VisibilityOutlinedIcon 
-                                                sx={{
-                                                    width: "22px",
-                                                    height: "22px",
-                                                    mr: "3px"
-                                                }}
-                                            /> 
-                                            {formatViews(manga.views)} просмотров
-                                        </Typography>
-                                    </Box>
+                                    <Stats size="medium" views={manga.views} saves={manga.saves} sx={{mt: 1}}/>
                                     <Box
                                         sx={{
                                             mt: "15px",
@@ -183,9 +142,9 @@ export default function DesktopMangaPage() {
                                             rowGap: "20px"
                                         }}
                                     >
-                                        <Description />
-                                        <Genres />
-                                        <NameTranslations />
+                                        <Description description={manga.description}/>
+                                        <Genres genres={manga.genres} />
+                                        <NameTranslations nameTranslations={manga.name_translations}/>
                                         <DesktopSections />
                                     </Box>
                                 </Grid>
@@ -249,6 +208,7 @@ export default function DesktopMangaPage() {
                 }}
             />
             <CollectionDialog
+                manga={manga}
                 open={collectionsDialogOpen}
                 onClose={() => setCollectionsDialogOpen(false)}
             />

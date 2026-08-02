@@ -6,7 +6,7 @@ import Profile from "@/types/profile/profile";
 import Auth from "./Auth";
 import { useAppDispatch } from "@/lib/state/hooks";
 import AuthProfile from "@/types/authProfile";
-import { setAuthProfile } from "@/lib/state/features/auth_profile/authProfileSlice";
+import { setAuthProfile } from "@/lib/state/features/authProfile/authProfileSlice";
 
 export default function AuthModal({onClose, ...props}: DialogProps) {
     const dispatch = useAppDispatch()

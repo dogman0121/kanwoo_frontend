@@ -190,7 +190,7 @@ const theme = createTheme({
     },
     MuiDrawer: {
       defaultProps: {
-        elevation: 0
+        elevation: 1
       }
     },
     MuiPaper: {

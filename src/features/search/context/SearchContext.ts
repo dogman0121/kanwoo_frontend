@@ -5,17 +5,22 @@ import Sections from "../types/searchSection";
 import Team from "@/types/profile/profile";
 import SearchSection from "../types/searchSection";
 import Manga from "@/types/manga/manga";
+import Profile from "@/types/profile/profile";
 
 interface SearchContextProps {
     query: string,
     setQuery: (query: string) => void,
-    results: Manga[] | Team[],
-    setResults: (results: Manga[] | Team[]) => void,
+    results: (Manga | Profile)[],
+    setResults: (results: (Manga | Profile)[]) => void,
     section: SearchSection,
     setSection: (section: SearchSection) => void,
     filters: Map<string, string[]>,
     setFilters: (filters: Map<string, string[]>) => void,
-    isLoading: boolean
+    isLoading: boolean,
+    hasMore: boolean,
+    totalCount: number | null,
+    onNext: (query: string, section: string, filters: Map<string, string[]>) => void,
+    emptyQuery: boolean
 }
 
 const SearchContext = createContext<SearchContextProps>({
@@ -27,7 +32,11 @@ const SearchContext = createContext<SearchContextProps>({
     setSection: () => {},
     filters: new Map<string, string[]>(),
     setFilters: () => {},
-    isLoading: false
+    isLoading: false,
+    hasMore: true,
+    totalCount: null,
+    onNext: (query, section, filters) => {},
+    emptyQuery: false
 });
 
 export default SearchContext;

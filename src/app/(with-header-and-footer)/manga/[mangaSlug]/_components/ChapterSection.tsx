@@ -21,7 +21,8 @@ export default function ChaptersSection() {
 
 
     const handleTranslation = (_event: MouseEvent<HTMLElement>, newTranslation: Translation) => {
-        dispatch(setMangaPageCurrentTranslation(newTranslation))
+        if (newTranslation)
+            dispatch(setMangaPageCurrentTranslation(newTranslation))
     }
 
     useEffect(() => {
@@ -163,7 +164,11 @@ export default function ChaptersSection() {
                                                 columnGap: 2
                                             }}
                                         >
-                                            <Typography>
+                                            <Typography
+                                                sx={{
+                                                    whiteSpace: "nowrap"
+                                                }}
+                                            >
                                                 Глава {chapter.chapter}
                                             </Typography>
                                             {chapter.name && (

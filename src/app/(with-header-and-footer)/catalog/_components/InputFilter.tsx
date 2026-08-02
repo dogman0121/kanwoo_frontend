@@ -17,10 +17,10 @@ export default function InputFilter({label, name, sx, ...props}: TextFieldProps)
 
     return (
         <Box>
-            <Typography>{label}</Typography>
+            <Typography variant="caption">{label}</Typography>
             <TextField
                 sx={{
-                    
+                    mt: 1,
                     "& input": {
                         padding: "10px 14px"
                     },

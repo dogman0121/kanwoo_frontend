@@ -1,7 +1,8 @@
 "use client"
 
 import { useAppSelector } from "@/lib/state/hooks"
-import { Box, Chip } from "@mui/material";
+import Genre from "@/types/manga/genre";
+import { Box, BoxProps, Chip } from "@mui/material";
 import Link from "next/link";
 
 function GenreItem({genre}: {genre: {id: number, name: string}}) {
@@ -13,9 +14,13 @@ function GenreItem({genre}: {genre: {id: number, name: string}}) {
     )
 }
 
-export default function Genres() {
-    const genres = useAppSelector(state => state.mangaPage.manga?.genres);
-
+export default function Genres({
+    genres,
+    sx,
+    ...props
+}: {
+    genres: Genre[]
+} & BoxProps) {
     if (!genres?.length)
         return null;
 
@@ -25,8 +30,10 @@ export default function Genres() {
                 display: "flex",
                 
                 columnGap: "5px",
-                rowGap: "5px"
+                rowGap: "5px",
+                ...sx
             }}
+            {...props}
         >
             {genres?.map((genre) => <GenreItem key={genre.id} genre={genre} />)}
         </Box>

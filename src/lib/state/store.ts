@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import authProfileReducer from './features/auth_profile/authProfileSlice'
+import appReducer from "./features/app/appSlice"
+import authProfileReducer from './features/authProfile/authProfileSlice'
 import mangaPageReducer from './features/mangaPage/mangaSlice'
-import listReducer from './features/list/listSlice'
 import profileReducer from './features/profile/profileSlice'
 import homePageReducer from './features/homePage/homeSlice'
 import metaReducer from './features/meta/metaSlice'
@@ -17,10 +17,10 @@ import settingsPageReducer from './features/settingsPage/settingsPageSlice'
 
 
 const rootReducers = combineReducers({
+  app: appReducer,
   authProfile: authProfileReducer,
   meta: metaReducer,
   readingSettings: readingSettingsReducer,
-  list: listReducer,
   profile: profileReducer,
   homePage: homePageReducer,
   mangaPage: mangaPageReducer,

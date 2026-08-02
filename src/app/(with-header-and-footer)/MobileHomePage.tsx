@@ -5,9 +5,6 @@ import { Suspense, useState } from "react";
 import MobileHeroSlider from "./_components/MobileHeroSlider";
 import MobileHeroSliderSkeleton from "./_components/skeleton/MobileHeroSliderSkeleton";
 import MangaCarouselSkeleton from "./_components/skeleton/MangaCarouselSkeleton";
-import MangaCarousel from "./_features/MangaCarousel/MangaCarousel";
-import MangaCarouselTitle from "./_features/MangaCarousel/MangaCarouselTitle";
-import MangaCarouselList from "./_features/MangaCarousel/MangaCarouselLIst";
 import { useAppSelector } from "@/lib/state/hooks";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded"
 import MobileSearchModal from "@/features/search/components/MobileSearchModal";
@@ -18,8 +15,6 @@ import ReadingProgresss from "./_components/sliders/ReadingProgress";
 
 export default function MobileHomePage() {
     const theme = useTheme()
-
-    const home = useAppSelector(state => state.homePage.home)
 
     const [searchOpen, setSearchOpen] = useState(false)
 
@@ -75,7 +70,8 @@ export default function MobileHomePage() {
                     mt: theme.spacing(3),
                     display :"flex",
                     flexDirection: "column",
-                    gap: "20px"
+                    gap: "20px",
+                    pb: 3
                 }}
             >
                 <ReadingProgresss />

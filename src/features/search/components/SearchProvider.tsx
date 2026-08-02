@@ -6,40 +6,56 @@ import { searchService } from "../services/api/searchService";
 import Team from "@/types/profile/profile";
 import SearchSection from "../types/searchSection";
 import Manga from "@/types/manga/manga";
+import { usePagePagination } from "@/features/pagination/hooks/usePagePagination";
+import Profile from "@/types/profile/profile";
+import { debounce } from "lodash";
 
 
 function SearchProvider({ children, emptyQuery}: { children: React.ReactNode, emptyQuery: boolean }) {
+
+    const {
+        page,
+        setPage,
+        results,
+        perPage,
+        setResults,
+        totalCount,
+        hasMore,
+        setTotalCount,
+        reset
+    } = usePagePagination<Manga | Profile>({initialPage: 1, perPage: 20})
+
     const [query, setQuery] = useState<string>("");
-
     const [section, setSection] = useState<SearchSection>(SearchSection.MANGA);
-
-    const [results, setResults] = useState<Manga[] | Team[]>([]);
-
     const [filters, setFilters] = useState<Map<string, string[]>>(new Map<string, string[]>());
-
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const timerId = useRef<undefined | ReturnType<typeof setTimeout>>(undefined);
+
+    const loadResults = async (query: string, section: string, filters: Map<string, string[]>) => {
+        setIsLoading(true)
+
+        try {
+            const response = await searchService.search(query, section, filters, page, perPage)
+
+            setResults(prev => [...prev, ...response.data])
+            setPage(prev => prev+1)
+            if (response.pagination)
+                setTotalCount(response.pagination.total_count)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    const debouncedLoadResultsRef = useRef(debounce(async (query, section, filters) => {
+        await loadResults(query, section, filters)
+    }, 500))
 
     useEffect(() => {
-        if (!emptyQuery && query === ""){
-            setIsLoading(false);
-            setResults([]);
-            return () => {}
-        }
-
-        setIsLoading(true);
         
-        timerId.current = setTimeout(async () => {
-            const {data} = await searchService.search(query, section, filters);
-
-            setResults(data);
-
-            setIsLoading(false);
-        }, 500);
-
         return () => {
-            clearTimeout(timerId.current);
+            debouncedLoadResultsRef.current.cancel()
+            setResults([])
+            reset()
         }
     }, [emptyQuery, query, section, filters])
 
@@ -54,7 +70,11 @@ function SearchProvider({ children, emptyQuery}: { children: React.ReactNode, em
                 setResults: setResults,
                 filters: filters,
                 setFilters: setFilters,
-                isLoading: isLoading
+                isLoading: isLoading,
+                hasMore: hasMore,
+                totalCount: totalCount,
+                onNext: loadResults,
+                emptyQuery: emptyQuery
             }}
         >
             { children }

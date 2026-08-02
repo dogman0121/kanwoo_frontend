@@ -4,12 +4,21 @@ import { Children, useContext } from "react";
 import SearchContext from "../context/SearchContext";
 import { Box, BoxProps, CircularProgress} from "@mui/material";
 import ScrollableBox from "@/components/ScrollableBox";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 
 function SearchList({ sx, children, ...props }: BoxProps) {
-    const {query, isLoading, results} = useContext(SearchContext);
+    const {
+        query, 
+        results, 
+        onNext, 
+        section, 
+        filters, 
+        hasMore,
+        emptyQuery
+    } = useContext(SearchContext);
 
-    if (isLoading)
+    if (!emptyQuery && query.length == 0) {
         return (
             <Box
                 sx={{
@@ -20,11 +29,12 @@ function SearchList({ sx, children, ...props }: BoxProps) {
                     p: "50px 0"
                 }}
             >
-                <CircularProgress />
+               Введите запрос для начала поиска.
             </Box>
         )
+    }
 
-    if (results.length === 0)
+    if (!hasMore && results.length == 0) 
         return (
             <Box
                 sx={{
@@ -39,16 +49,35 @@ function SearchList({ sx, children, ...props }: BoxProps) {
             </Box>
         )
 
+
     return (
-        <ScrollableBox
-            sx={{
-                overflowY: "auto",
-                ...sx
-            }}
-            {...props}
+        <InfiniteScroll
+            dataLength={results.length}
+            hasMore={hasMore}
+            next={() => onNext(query, section, filters)}
+            loader={
+                <Box
+                    sx={{
+                        py: 10,
+                        display: 'flex',
+                        justifyContent: "center"
+                    }}
+                >
+                    <CircularProgress />
+                </Box>
+            }
+            
         >
-            {Children.map(children, (child) => child)}
-        </ScrollableBox>
+            <ScrollableBox
+                sx={{
+                    overflowY: "auto",
+                    ...sx
+                }}
+                {...props}
+            >
+                {Children.map(children, (child) => child)}
+            </ScrollableBox>
+        </InfiniteScroll>
     )
 }
 

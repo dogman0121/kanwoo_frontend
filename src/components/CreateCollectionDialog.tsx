@@ -8,16 +8,13 @@ import {
     DialogContent, 
     DialogProps, 
     DialogTitle,
-    Select,  
-    styled, 
     TextField
 } from "@mui/material";
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import AppSnackbar from "./AppSnackbar";
 import PrivacySelect from "./PrivacySelect";
 import { Controller, useForm } from "react-hook-form";
 import { clientFetch } from "@/lib/fetch/clientFetch";
-import ProfileCollection from "@/types/profile/profileCollection";
 import Collection from "@/types/collection/collection";
 
 interface CreateCollectionFormSchema {
@@ -41,7 +38,7 @@ export default function CreateCollectionDialog({
 
     const onSubmit = async (data: CreateCollectionFormSchema) => {
         try {
-            const response = await clientFetch.post<ProfileCollection>("/collections", {
+            const response = await clientFetch.post<Collection>("/collections", {
                 headers: {
                     "Content-Type": "application/json"
                 },
