@@ -4,7 +4,7 @@ import { useAppSelector } from "@/lib/state/hooks";
 import Manga from "@/types/manga/manga";
 import { Box, BoxProps, Breadcrumbs, Button, CircularProgress, Drawer, IconButton, Menu, Paper, Popover, Typography } from "@mui/material";
 import Grid, { GridProps } from "@mui/material/Grid"
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded';
 import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded"
 import Description from "@/features/manga/components/Description";
@@ -17,6 +17,7 @@ import Stats from "@/features/manga/components/Stats";
 import { ROUTES } from "@/routes";
 import { useRouter } from "next/navigation";
 import CollectionDialog from "@/features/collection/CollectionDialog";
+import { throttle } from "lodash";
 
 
 
@@ -41,6 +42,7 @@ function MangaResult({
 
         openTimoutRef.current = setTimeout(() => {
             setMangaMenuOpen(true)
+            openTimoutRef.current = null
         }, 500)
     }
 
@@ -52,6 +54,14 @@ function MangaResult({
             setMangaMenuOpen(false)
         }, 100)
     }
+
+    const throttledCleanShowDetails = throttle(() => {
+        cleanShowDetailsTimeout()
+    }, 50)
+
+    useEffect(() => {
+        window.addEventListener("scroll", throttledCleanShowDetails)
+    }, [])
 
     return (
         <>
@@ -74,9 +84,6 @@ function MangaResult({
                 onPointerUp={() => {
                     if (!mangaMenuOpen)
                         cleanShowDetailsTimeout()
-                }}
-                onScroll={() => {
-                    cleanShowDetailsTimeout()
                 }}
                 onPointerDown={() => {
                     setShowDetailsTimeout()
