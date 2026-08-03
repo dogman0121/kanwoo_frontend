@@ -75,6 +75,9 @@ function MangaResult({
                     if (!mangaMenuOpen)
                         cleanShowDetailsTimeout()
                 }}
+                onScroll={() => {
+                    cleanShowDetailsTimeout()
+                }}
                 onPointerDown={() => {
                     setShowDetailsTimeout()
                 }}
@@ -175,7 +178,7 @@ function MangaResult({
                     onClose={() => setMangaMenuOpen(false)}
                     anchor="bottom"
                     sx={{
-                        "&.MuiPaper-root": {
+                        "&>.MuiPaper-root": {
                             background: "none",
                             backgroundColor: "none",
                             backgroundImage: "none"
