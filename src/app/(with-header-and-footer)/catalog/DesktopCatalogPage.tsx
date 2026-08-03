@@ -7,6 +7,7 @@ import Filters from "./_components/Filters"
 import SearchList from "@/features/search/components/SearchList"
 import MangaResults from "./_components/MangaResults"
 import SearchSectionSelector from "@/features/search/components/SearchSectionSelector"
+import theme from "@/theme"
 
 export default function DesktopCatalogPage() {
     return (
@@ -55,6 +56,8 @@ export default function DesktopCatalogPage() {
                             variant="outlined"
                             sx={{
                                 borderRadius: "12px",
+                                position: "sticky",
+                                top: `calc(54px + ${theme.spacing(4)})`,
                                 px: 4,
                                 pt: 3,
                                 pb: 4,

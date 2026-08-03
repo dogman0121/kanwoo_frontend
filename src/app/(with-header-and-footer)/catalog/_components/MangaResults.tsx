@@ -197,7 +197,7 @@ function MangaResult({
                                 height: "100%",
                                 width: "100%",
                                 position: "absolute",
-                                opacity: 0.95,
+                                opacity: 0.97,
 
                                 zIndex: -1,
                                 borderRadius: "15px 15px 0 0"
