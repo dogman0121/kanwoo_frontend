@@ -40,8 +40,6 @@ export default async function RootLayout({
         collections = response.data.collections
     } catch (e) { currentProfile = null; collections = []}
 
-    console.log(collections, currentProfile)
-
     const deviceType = await (await headers()).get("X-Device-Type")
 
     return (
