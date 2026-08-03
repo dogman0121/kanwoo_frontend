@@ -61,6 +61,8 @@ function MangaResult({
 
     useEffect(() => {
         window.addEventListener("scroll", throttledCleanShowDetails)
+
+        return () => {window.removeEventListener("scroll", throttledCleanShowDetails)}
     }, [])
 
     return (
