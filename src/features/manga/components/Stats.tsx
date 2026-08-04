@@ -12,7 +12,7 @@ interface StatsProps {
 export default function Stats({size, views, saves, sx, ...props}: StatsProps & BoxProps) {
     return (
         <>
-            {size == "small" ?
+            {size == "medium" ?
                 <Box
                     sx={{
                         display: "flex",
