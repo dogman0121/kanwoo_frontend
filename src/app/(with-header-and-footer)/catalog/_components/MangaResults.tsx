@@ -204,16 +204,17 @@ function MangaResult({
                             borderRadius: `${theme.spacing(3)} ${theme.spacing(3)} 0 0`,
 
                             background: `
-                                linear-gradient(rgba(${theme.vars?.palette.background.defaultChannel} / 0.8), 
-                                rgba(${theme.vars?.palette.background.defaultChannel} / 1)), 
-                                url('${manga.background ? manga.background : manga.poster.medium}')
+                                linear-gradient(
+                                    rgba(${theme.vars?.palette.background.defaultChannel} / 0.8) 0%, 
+                                    rgba(${theme.vars?.palette.background.defaultChannel} / 0.9) 30%,
+                                    rgba(${theme.vars?.palette.background.defaultChannel} / 1)) 100%, 
+                                    url('${manga.background ? manga.background : manga.poster.medium}'
+                                )
                             `,
                             backgroundSize: "cover",
                             backgroundPosition: "center",
                             backgroundRepeat: "no-repeat",
                             backgroundPositionY: "0",
-
-                            zIndex: -1,
                         }
                     }}
                 >
