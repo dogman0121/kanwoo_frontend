@@ -79,10 +79,12 @@ function MangaResult({
                         event.preventDefault()
                 }}
                 onMouseEnter={() => {
-                    setShowDetailsTimeout()
+                    if (deviceType === "desktop")
+                        setShowDetailsTimeout()
                 }}
                 onMouseLeave={() => {
-                    cleanShowDetailsTimeout()
+                    if (deviceType === "desktop")
+                        cleanShowDetailsTimeout()
                 }}
                 onPointerUp={() => {
                     if (!mangaMenuOpen)
