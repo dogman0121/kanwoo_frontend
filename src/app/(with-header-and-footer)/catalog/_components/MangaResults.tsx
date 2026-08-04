@@ -173,7 +173,7 @@ function MangaResult({
                             >
                                 {manga.name}
                             </Typography>
-                            <Stats views={manga.views} saves={manga.saves} size="small"/>
+                            <Stats views={manga.views} saves={manga.saves} size="medium"/>
                         </Box>
                         <Description 
                             description={manga.description}
