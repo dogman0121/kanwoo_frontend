@@ -90,6 +90,19 @@ function MangaResult({
                 onPointerDown={() => {
                     setShowDetailsTimeout()
                 }}
+                sx={{
+                    WebkitUserSelect: "none",
+                    MozUserSelect: "none",    /* Firefox */
+                    MsUserSelect: "none",    /* Internet Explorer / Edge */
+                    userSelect: "none",
+
+                    WebkitTouchCallout: "none", /* Отключает контекстное меню при долгом нажатии в iOS Safari */
+                    WebkitTapHighlightColor: "transparent", /* Убирает синюю подсветку при клике на Android/iOS */
+                    
+                    "&:hover": {
+                        transform: (deviceType != "desktop" ? "scale(1.05)" : undefined)
+                    }
+                }}  
             />
             { deviceType == "desktop" ?
                 <Popover
@@ -188,128 +201,101 @@ function MangaResult({
                     anchor="bottom"
                     sx={{
                         "&>.MuiPaper-root": {
-                            background: "none",
-                            backgroundColor: "none",
-                            backgroundImage: "none"
+                            borderRadius: `${theme.spacing(3)} ${theme.spacing(3)} 0 0`,
+
+                            background: `
+                                linear-gradient(rgba(${theme.vars?.palette.background.defaultChannel} / 0.8), 
+                                rgba(${theme.vars?.palette.background.defaultChannel} / 1)), 
+                                url('${manga.background ? manga.background : manga.poster.medium}')
+                            `,
+                            backgroundSize: "cover",
+                            backgroundPosition: "center",
+                            backgroundRepeat: "no-repeat",
+                            backgroundPositionY: "0",
+
+                            zIndex: -1,
                         }
                     }}
                 >
-                    <Box
-                        sx={{
-                            position: "relative",
-
-                            height: "100%"
-                        }}
-                    >
-                        <Paper
-                            sx={{
-                                height: "100%",
-                                width: "100%",
-                                position: "absolute",
-                                opacity: 0.97,
-
-                                zIndex: -1,
-                                borderRadius: "15px 15px 0 0"
-                            }}
-                        />
+                    <Box>
                         <Box
                             sx={{
-                                position: "absolute",
-                                left: 0,
-                                top: 0,
-                                width: "100%",
-                                height: "100%",
-                                zIndex: -2,
-
-                                background: `url('${manga.background ? manga.background : manga.poster.medium}')`,
-                                backgroundSize: "cover",
-                                backgroundPosition: "center",
-                                backgroundRepeat: "no-repeat",
-                                backgroundPositionY: "0",
-                                borderRadius: "15px 15px 0 0"
+                                display: "flex",
+                                justifyContent: "end"
                             }}
                         >
+                            <IconButton onClick={() => setMangaMenuOpen(false)}>
+                                <CloseRoundedIcon />
+                            </IconButton>
                         </Box>
-                        <Box>
+                        <Box
+                            sx={{
+                                px: 2,
+                                pt: 1,
+                                pb: 3
+                            }}
+                        >
                             <Box
                                 sx={{
                                     display: "flex",
-                                    justifyContent: "end"
+                                    justifyContent: "center"
                                 }}
                             >
-                                <IconButton onClick={() => setMangaMenuOpen(false)}>
-                                    <CloseRoundedIcon />
-                                </IconButton>
+                                <Poster 
+                                    src={manga.poster.small}
+                                    width="80px"
+                                />
                             </Box>
                             <Box
                                 sx={{
-                                    px: 2,
-                                    pt: 1,
-                                    pb: 3
+                                    display: "flex",
+                                    alignItems: "center",
+                                    flexDirection: "column"
                                 }}
                             >
+                                <Typography 
+                                    variant="h2" 
+                                    textAlign="center"
+                                    mt={2}
+                                >
+                                    {manga.name}
+                                </Typography>
+                                <Stats views={manga.views} saves={manga.saves} size="small"/>
+                            </Box>
+                            <Box
+                                sx={{
+                                    mt: 2,
+                                    display: "flex",
+                                    flexDirection: "column",  
+                                    rowGap: 2
+                                }}
+                            >
+                                <Description description={manga.description}/>
+                                <Genres genres={manga.genres}/>
+                                <NameTranslations nameTranslations={manga.name_translations}/>
                                 <Box
                                     sx={{
                                         display: "flex",
-                                        justifyContent: "center"
+                                        flexDirection: "row",
+                                        columnGap: 1
                                     }}
                                 >
-                                    <Poster 
-                                        src={manga.poster.small}
-                                        width="80px"
-                                    />
-                                </Box>
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        flexDirection: "column"
-                                    }}
-                                >
-                                    <Typography 
-                                        variant="h2" 
-                                        textAlign="center"
-                                        mt={2}
+                                    <Button
+                                        startIcon={<BookmarkBorderRoundedIcon />}
+                                        variant="contained"
+                                        fullWidth
+                                        onClick={() => setCollectionDialogOpen(true)}
                                     >
-                                        {manga.name}
-                                    </Typography>
-                                    <Stats views={manga.views} saves={manga.saves} size="small"/>
-                                </Box>
-                                <Box
-                                    sx={{
-                                        mt: 2,
-                                        display: "flex",
-                                        flexDirection: "column",  
-                                        rowGap: 2
-                                    }}
-                                >
-                                    <Description description={manga.description}/>
-                                    <Genres genres={manga.genres}/>
-                                    <NameTranslations nameTranslations={manga.name_translations}/>
-                                    <Box
-                                        sx={{
-                                            display: "flex",
-                                            flexDirection: "row",
-                                            columnGap: 1
-                                        }}
+                                        Сохранить
+                                    </Button>
+                                    <Button
+                                        startIcon={<OpenInNewRoundedIcon />}
+                                        variant="contained"
+                                        fullWidth
+                                        onClick={() => router.push(ROUTES.MANGA.MAIN(manga.slug))}
                                     >
-                                        <Button
-                                            startIcon={<BookmarkBorderRoundedIcon />}
-                                            variant="contained"
-                                            fullWidth
-                                            onClick={() => setCollectionDialogOpen(true)}
-                                        >
-                                            Сохранить
-                                        </Button>
-                                        <Button
-                                            startIcon={<OpenInNewRoundedIcon />}
-                                            variant="contained"
-                                            fullWidth
-                                            onClick={() => router.push(ROUTES.MANGA.MAIN(manga.slug))}
-                                        >
-                                            Перейти
-                                        </Button>
-                                    </Box>
+                                        Перейти
+                                    </Button>
                                 </Box>
                             </Box>
                         </Box>
