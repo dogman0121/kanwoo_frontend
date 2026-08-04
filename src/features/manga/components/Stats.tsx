@@ -60,7 +60,6 @@ export default function Stats({size, views, saves, sx, ...props}: StatsProps & B
                 :
                 <Box
                     sx={{
-                        mt: "5px",
                         display: "flex",
                         flexDirection: "row",
                         columnGap: "15px"

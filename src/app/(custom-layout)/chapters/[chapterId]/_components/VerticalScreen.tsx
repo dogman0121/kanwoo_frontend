@@ -15,6 +15,7 @@ import {
 import ChapterEnd from "./ChapterEnd"
 import { NavigationButtonsShadow } from "./NavigationButtons"
 import NavOpenContext from "../_contexts/navOpenContext"
+import { ROUTES } from "@/routes"
 
 function PageBlock({page, sx, ...props}: {page: Page} & BoxProps) {
     return (
@@ -177,7 +178,7 @@ export default function VerticalScreen() {
                 const chapter = chaptersListRef.current[chaptersRef.current.indexOf(chapterDiv)]
                 
                 if (currentChapterRef.current != chapter) {
-                    window.history.pushState({}, '', `/chapters/${chapter.id}`);
+                    window.history.replaceState({}, '', ROUTES.CHAPTER(chapter.id));
                     dispatch(setChapterPageCurrentChapter(chapter))
                 }
 

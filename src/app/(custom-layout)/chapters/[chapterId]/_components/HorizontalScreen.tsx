@@ -21,6 +21,7 @@ import Image from "next/image";
 import "swiper/css"
 import "swiper/css/navigation"
 import { Swiper as SwiperType } from "swiper/types";
+import { ROUTES } from "@/routes";
 
 function PageBlock({
     page, 
@@ -171,7 +172,7 @@ export default function HorizontalScreen() {
                                     page={page}
                                     onPageActive={() => {
                                         if (currentChapter != chapter) {
-                                            window.history.pushState({}, '', `/chapters/${chapter.id}`);
+                                            window.history.replaceState({}, '', ROUTES.CHAPTER(chapter.id));
 
                                             dispatch(setChapterPageCurrentChapter(chapter)) 
                                         }
