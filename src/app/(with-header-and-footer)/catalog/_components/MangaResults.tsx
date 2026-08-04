@@ -2,7 +2,7 @@ import MangaItem, { MangaItemSquare } from "@/components/MangaItem";
 import useSearch from "@/features/search/hooks/useSearch";
 import { useAppSelector } from "@/lib/state/hooks";
 import Manga from "@/types/manga/manga";
-import { Box, BoxProps, Breadcrumbs, Button, CircularProgress, Drawer, IconButton, Menu, Paper, Popover, Typography } from "@mui/material";
+import { Box, BoxProps, Breadcrumbs, Button, Drawer, IconButton, Popover, Typography } from "@mui/material";
 import Grid, { GridProps } from "@mui/material/Grid"
 import { useEffect, useRef, useState } from "react";
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded';
@@ -56,7 +56,8 @@ function MangaResult({
     }
 
     const throttledCleanShowDetails = throttle(() => {
-        cleanShowDetailsTimeout()
+        if (!mangaMenuOpen)
+            cleanShowDetailsTimeout()
     }, 50)
 
     useEffect(() => {
