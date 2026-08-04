@@ -50,6 +50,7 @@ export default function MobileCatalogPage() {
                 />
             </SearchList>
             <Drawer
+                elevation={0}
                 sx={{
                     ".MuiPaper-root": {
                         p: "20px 15px",
