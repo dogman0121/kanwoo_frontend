@@ -20,7 +20,7 @@ export default function DesktopCatalogPage() {
             >
                 Каталог
             </Typography>
-            <SearchProvider emptyQuery={true}>
+            <SearchProvider fromSearchParams={true} emptyQuery={true}>
                 <Grid
                     container
                     columns={10}

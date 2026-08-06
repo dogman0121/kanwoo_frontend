@@ -3,15 +3,26 @@
 import { useEffect, useState, useRef } from "react";
 import SearchContext from "../context/SearchContext";
 import { searchService } from "../services/api/searchService";
-import Team from "@/types/profile/profile";
 import SearchSection from "../types/searchSection";
 import Manga from "@/types/manga/manga";
 import { usePagePagination } from "@/features/pagination/hooks/usePagePagination";
 import Profile from "@/types/profile/profile";
 import { debounce } from "lodash";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 
-function SearchProvider({ children, emptyQuery}: { children: React.ReactNode, emptyQuery: boolean }) {
+function SearchProvider({ 
+    children, 
+    emptyQuery,
+    fromSearchParams
+}: { 
+    children: React.ReactNode, 
+    emptyQuery?: boolean,
+    fromSearchParams?: boolean 
+}) {
+    const router = useRouter()
+    const pathName = usePathname()
+    const searchParams  = useSearchParams()
 
     const {
         page,
@@ -31,7 +42,7 @@ function SearchProvider({ children, emptyQuery}: { children: React.ReactNode, em
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
 
-    const loadResults = async (query: string, section: string, filters: Map<string, string[]>) => {
+    const loadResults = async (query: string, section: SearchSection, filters: Map<string, string[]>) => {
         setIsLoading(true)
 
         try {
@@ -47,17 +58,39 @@ function SearchProvider({ children, emptyQuery}: { children: React.ReactNode, em
     }
 
     const debouncedLoadResultsRef = useRef(debounce(async (query, section, filters) => {
-        await loadResults(query, section, filters)
+        if (fromSearchParams) {
+            const currentParams = new URLSearchParams(searchParams.toString())
+
+            const compiledParams = searchService.compileParams(query, section, filters)
+
+            for(const key in compiledParams.keys){
+                currentParams.delete(key)
+            }
+
+            compiledParams.forEach((val, key) => {
+                currentParams.append(key, val)
+            })
+
+            router.replace(pathName + "?" + compiledParams.toString())
+        }
+
+        setResults([])
+        reset()
     }, 500))
 
     useEffect(() => {
-        
-        return () => {
-            debouncedLoadResultsRef.current.cancel()
-            setResults([])
-            reset()
+        if (fromSearchParams) {
+            const {query, section, filters} = searchService.parseParams(searchParams)
+            
+            setQuery(query)
+            setSection(section)
+            setFilters(filters)
         }
-    }, [emptyQuery, query, section, filters])
+    }, [])
+
+    useEffect(() => {
+        debouncedLoadResultsRef.current(query, section, filters)
+    }, [query, section, filters])
 
     return (
         <SearchContext.Provider
@@ -74,7 +107,7 @@ function SearchProvider({ children, emptyQuery}: { children: React.ReactNode, em
                 hasMore: hasMore,
                 totalCount: totalCount,
                 onNext: loadResults,
-                emptyQuery: emptyQuery
+                emptyQuery: emptyQuery ? true : false
             }}
         >
             { children }

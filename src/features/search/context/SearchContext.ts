@@ -19,7 +19,7 @@ interface SearchContextProps {
     isLoading: boolean,
     hasMore: boolean,
     totalCount: number | null,
-    onNext: (query: string, section: string, filters: Map<string, string[]>) => void,
+    onNext: (query: string, section: SearchSection, filters: Map<string, string[]>) => void,
     emptyQuery: boolean
 }
 
@@ -35,7 +35,7 @@ const SearchContext = createContext<SearchContextProps>({
     isLoading: false,
     hasMore: true,
     totalCount: null,
-    onNext: (query, section, filters) => {},
+    onNext: () => {},
     emptyQuery: false
 });
 

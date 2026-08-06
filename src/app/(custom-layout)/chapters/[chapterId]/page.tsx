@@ -1,9 +1,9 @@
 import { Metadata } from "next"
-import ChapterProvider from "./_components/ChapterProvider"
 import { serverFetch } from "@/lib/fetch/serverFetch"
 import Chapter from "@/types/chapter/chapter"
 import ReadingProgress from "@/types/manga/readingProgress"
-import ChapterPageDynamic from "./ChapterPageDynamic"
+import ChapterPage from "./ChapterPage"
+import { notFound } from "next/navigation"
 
 export async function generateMetadata({ 
     params 
@@ -12,9 +12,7 @@ export async function generateMetadata({
 }): Promise<Metadata>  {
     const {chapterId} = await params;
 
-    const response = await serverFetch.get<{chapter: Chapter, readingProgress: ReadingProgress}>(`/chapters/${chapterId}`)
-
-    const {chapter} = response.data;
+    const {data: chapter} = await serverFetch.get<Chapter>(`/chapters/${chapterId}`)
 
     return {
         title: chapter.name ? `Глава ${chapter.id} ${chapter.name} ${chapter.manga.name} | kanwoo`  : `Глава ${chapter.id} ${chapter.manga.name} | kanwoo`
@@ -26,18 +24,19 @@ export default async function Page({
 }: {
     params: Promise<{chapterId: string}>
 }) {
-    const {chapterId} = await params;
+    const {
+        chapterId
+    } = await params;
 
-    const response = await serverFetch.get<{chapter: Chapter, readingProgress: ReadingProgress}>(`/chapters/${chapterId}`)
+    try {
+        const {data: chapter} = await serverFetch.get<Chapter>(`/chapters/${chapterId}`)
 
-    const {chapter, readingProgress} = response.data;
-
-    return (
-        <ChapterProvider
-            chapter={chapter}
-            readingProgress={readingProgress}
-        >
-            <ChapterPageDynamic />
-        </ChapterProvider>
-    )
+        return (
+            <ChapterPage 
+                initialChapter={chapter}
+            />
+        )
+    } catch(_) {
+        notFound()
+    }
 }

@@ -51,8 +51,6 @@ export default async function Page({
 
     const { viewport } = await searchParams;
 
-    console.log(viewport)
-
     const {data: mangaData} = await serverFetch.get<MangaSchema>(`/manga/${mangaSlug}`)
 
     if (!mangaData.manga)

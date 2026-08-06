@@ -5,7 +5,7 @@ import Chapter from "@/types/chapter/chapter"
 import Page from "@/types/chapter/page"
 import { Box, BoxProps } from "@mui/material"
 import { throttle } from "lodash"
-import { useContext, useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef } from "react"
 import { chapterService } from "../_services/chapterService"
 import { 
     appendChapterPageChapter, 
@@ -16,6 +16,7 @@ import ChapterEnd from "./ChapterEnd"
 import { NavigationButtonsShadow } from "./NavigationButtons"
 import NavOpenContext from "../_contexts/navOpenContext"
 import { ROUTES } from "@/routes"
+import { useRouter } from "next/navigation"
 
 function PageBlock({page, sx, ...props}: {page: Page} & BoxProps) {
     return (
@@ -110,7 +111,9 @@ function ChapterBlock({chapter, ...props}: BoxProps & {chapter: Chapter}) {
     )
 }
 
-export default function VerticalScreen() {
+export default function VerticalReadingScreen() {
+    const router = useRouter()
+
     const dispatch = useAppDispatch()
 
     const {setOpen} = useContext(NavOpenContext)
@@ -178,7 +181,7 @@ export default function VerticalScreen() {
                 const chapter = chaptersListRef.current[chaptersRef.current.indexOf(chapterDiv)]
                 
                 if (currentChapterRef.current != chapter) {
-                    window.history.replaceState({}, '', ROUTES.CHAPTER(chapter.id));
+                    router.replace(ROUTES.CHAPTER(chapter.id));
                     dispatch(setChapterPageCurrentChapter(chapter))
                 }
 
@@ -202,10 +205,6 @@ export default function VerticalScreen() {
 
     // Navigation components open controller
     useEffect(() => {
-        const handleOpenHeader = () => {
-            setOpen(open => !open)
-        }
-
         const handleScrollHeader = (_event: Event) => {
             if (window.scrollY <= 5 || window.scrollY + window.screen.height >= document.body.scrollHeight)
                 setOpen(true)
@@ -213,17 +212,16 @@ export default function VerticalScreen() {
                 setOpen(false)
         }
 
-        document.addEventListener("click", handleOpenHeader)
         document.addEventListener("scroll", handleScrollHeader)
 
         return () => {
-            document.removeEventListener("click", handleOpenHeader)
             document.removeEventListener("scroll", handleScrollHeader)
         }
     }, [])
 
     return (
         <Box
+            onClick={() => setOpen(prev => !prev)}
             sx={{
                 display: "flex",
                 flexDirection: "column"

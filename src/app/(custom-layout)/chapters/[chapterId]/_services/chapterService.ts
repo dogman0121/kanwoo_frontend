@@ -18,7 +18,8 @@ class ChapterService {
             },
             body: JSON.stringify({
                 page: page
-            })
+            }),
+            keepalive: true
         })
 
         return success
