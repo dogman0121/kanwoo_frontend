@@ -14,7 +14,7 @@ export default function MobileCatalogPage() {
     const [filtersOpened, setFiltersOpened] = useState(false)
 
     return (
-        <SearchProvider emptyQuery={true}>
+        <SearchProvider fromSearchParams={true}>
             <Box
                 sx={{
                     p: "10px",

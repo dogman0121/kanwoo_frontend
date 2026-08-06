@@ -1,13 +1,14 @@
 "use client"
 
-import { useAppSelector } from "@/lib/state/hooks";
-import { Box, Button, IconButton, IconButtonProps, SvgIcon, useTheme } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
+import { Box, IconButton, IconButtonProps, SvgIcon, useTheme } from "@mui/material";
 import ArrowBackIosRounded from "@mui/icons-material/ArrowBackIosRounded"
 import ArrowForwardIosRounded from "@mui/icons-material/ArrowForwardIosRounded"
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import NavOpenContext from "../_contexts/navOpenContext";
-import { useRouter } from "next/navigation";
 import CommentsModal from "./CommentsModal";
+import { useRouter } from "next/navigation";
+import { ROUTES } from "@/routes";
 
 export function NavigationButtonsShadow() {
     return (
@@ -25,7 +26,6 @@ export function NavigationButtonsShadow() {
 }
 
 function NavigationButton({sx, ...props}: IconButtonProps) {
-    const theme = useTheme()
     return (
         <IconButton
             disableRipple
@@ -47,12 +47,21 @@ function NavigationButton({sx, ...props}: IconButtonProps) {
 
 export default function NavigationButtons() {
     const router = useRouter()
-
+    
     const {open} = useContext(NavOpenContext)
-
     const currentChapter = useAppSelector(state => state.chapterPage.currentChapter)
 
     const [modalOpen, setModalOpen] = useState(false)
+
+    // const handleLoadChapter = async (chapterId: number) => {
+    //     const response = await clientFetch.get<{chapter: Chapter}>(`/chapters/${chapterId}`)
+
+    //     dispatch(setReadingProgress(undefined))
+    //     dispatch(initChapterPageChapter(response.data.chapter))
+
+    //     router.replace(ROUTES.CHAPTER(chapterId))
+    // }
+
 
     if (!currentChapter) return
 
@@ -76,9 +85,7 @@ export default function NavigationButtons() {
             >
                 <NavigationButton
                     disabled={!currentChapter.prev_chapter_id}
-                    onClick={() => {
-                        router.push(`/chapters/${currentChapter.prev_chapter_id}`)
-                    }}
+                    onClick={() => router.replace(ROUTES.CHAPTER(currentChapter.prev_chapter_id))}
                 >
                     <ArrowBackIosRounded />
                 </NavigationButton>
@@ -93,9 +100,7 @@ export default function NavigationButtons() {
                 </NavigationButton>
                 <NavigationButton
                     disabled={!currentChapter.next_chapter_id}
-                    onClick={() => {
-                        router.push(`/chapters/${currentChapter.next_chapter_id}`)
-                    }}
+                    onClick={() => router.replace(ROUTES.CHAPTER(currentChapter.next_chapter_id))}
                 >
                     <ArrowForwardIosRounded />
                 </NavigationButton>

@@ -116,7 +116,7 @@ function HorizontalChapterEnd({
 }
 
 
-export default function HorizontalScreen() {
+export default function HorizontalReadingScreen() {
     const nextChapterIsLoading = useRef(false)
 
     const dispatch = useAppDispatch()
@@ -133,20 +133,10 @@ export default function HorizontalScreen() {
         await chapterService.saveProgress(chapter, page)
     }, 4000)
 
-    useEffect(() => {
-        const handleOpenHeader = () => {
-            setOpen((open) => !open)
-        }
-
-        document.addEventListener("click", handleOpenHeader)
-
-        return () => {
-            document.removeEventListener("click", handleOpenHeader)
-        }
-    }, [])
 
     return (
         <Box
+            onClick={() => setOpen(prev => !prev)}
             sx={{
                 display: "flex",
                 flexDirection: "row"

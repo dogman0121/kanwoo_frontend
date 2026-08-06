@@ -1,4 +1,4 @@
-import { fetchManyApi, HTTP_METHODS } from "@/lib/api/fetchApi";
+import { fetchApi, fetchManyApi, HTTP_METHODS } from "@/lib/api/fetchApi";
 import Chapter from "@/types/chapter/chapter";
 import ReadingProgress from "@/types/manga/readingProgress";
 
@@ -12,8 +12,5 @@ export async function GET(request: Request,
 ) {
     const { chapterId } = await params;
 
-    return fetchManyApi(request, [
-        {name: "chapter", url: `/chapters/${chapterId}`, method: HTTP_METHODS.GET},
-        {name: "readingProgress", url: `/chapters/${chapterId}/progress`, method: HTTP_METHODS.GET}
-    ])
+    return fetchApi(request, `/chapters/${chapterId}`, HTTP_METHODS.GET)
 }

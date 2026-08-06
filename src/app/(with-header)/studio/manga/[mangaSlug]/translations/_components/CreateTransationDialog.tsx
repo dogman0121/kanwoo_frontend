@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { ChangeEvent, InputEvent, InputEventHandler, useState } from "react";
 
 
-export default function CreateTranslationDialog({...props}: DialogProps) {
+export default function CreateTranslationDialog({onClose, ...props}: DialogProps) {
     const [translationName, setTranslationName] = useState("")
     const [translationsPrivacy, setTranslationPrivacy] = useState(Privacy.PRIVATE);
 
@@ -35,6 +35,7 @@ export default function CreateTranslationDialog({...props}: DialogProps) {
 
     return (
         <Dialog
+            onClose={onClose}
             {...props}
         >
             <DialogTitle>Создание перевода</DialogTitle>
@@ -57,6 +58,7 @@ export default function CreateTranslationDialog({...props}: DialogProps) {
             <DialogActions>
                 <Button
                     variant="outlined"
+                    onClick={() => onClose?.({}, "backdropClick")}
                 >
                     Отмена
                 </Button>

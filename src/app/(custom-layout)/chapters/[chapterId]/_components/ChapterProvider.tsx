@@ -1,10 +1,10 @@
 "use client"
 
 import { initChapterPageChapter, setReadingProgress } from "@/lib/state/features/chapterPage/chapterPageSlice";
-import { useAppDispatch, useAppStore } from "@/lib/state/hooks";
+import { useAppStore } from "@/lib/state/hooks";
 import Chapter from "@/types/chapter/chapter";
 import ReadingProgress from "@/types/manga/readingProgress";
-import { Children, useEffect, useRef } from "react";
+import { Children, useRef } from "react";
 
 export default function ChapterProvider({
     chapter, 
@@ -19,6 +19,7 @@ export default function ChapterProvider({
     const store = useAppStore()
     const initialized = useRef(false)
     if (!initialized.current) {
+        //console.log(chapter)
         store.dispatch(initChapterPageChapter(chapter))
         store.dispatch(setReadingProgress(readingProgress))
         initialized.current = true

@@ -34,7 +34,6 @@ export default function ChaptersSection() {
 
         clientFetch.get<Chapter[]>(`/translations/${currentTranslation.id}/chapters`)
             .then(response => {
-                console.log(currentTranslation, response.data)
                 dispatch(setMangaPageTranslationChapters({
                     translation: currentTranslation, 
                     chapters: response.data
@@ -42,10 +41,6 @@ export default function ChaptersSection() {
             })
     }, [currentTranslation])
 
-    useEffect(() => {
-        console.log(chapters)
-    }, [chapters])
-    
     return (
         <>
             {currentTranslation ?
