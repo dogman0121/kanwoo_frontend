@@ -1,4 +1,4 @@
-import Profile from "@/types/profile/profile";
+import { Profile } from "@/types/profile";
 
 export default interface AdminFeedback {
     id: number,

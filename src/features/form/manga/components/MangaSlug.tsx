@@ -1,11 +1,11 @@
 "use client"
 
-import EditInput from "@/features/edit/components/EditInput";
+import EditInput from "@/components/edit/EditInput";
 import { CircularProgress, InputAdornment, TextFieldProps } from "@mui/material";
 import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import { studioClientApi } from "@/lib/fetch/features/studio/client";
-import { clientFetch } from "@/lib/fetch/clientFetch";
+import { clientFetch } from "@/lib/fetch/client-fetch.util";
 
 
 export async function validateSlug(slug: string) {
@@ -19,28 +19,29 @@ export default function MangaSlug({value, slugChecking, defaultValue, error, ...
         <EditInput 
             label="Тег манги"
             caption="Уникальная последовательность из цифр и латинских букв. Используется в url. (обязательно)"
-            placeholder="Введите тег"
-            value={value}
-            error={error}
-            {...props}
-            slotProps={{
-                input: {
-                    endAdornment: 
-                        <InputAdornment position="end">
-                            {(slugChecking) && (
-                                <CircularProgress
-                                    size={"20px"}
-                                />
-                            ) }
-                            {(!slugChecking && value != "" && value != defaultValue && !error) && (
-                                <CheckCircleRoundedIcon color="success"/>
-                            )}
-                            {(!slugChecking && value != "" && value != defaultValue && error) && (
-                                <ErrorRoundedIcon color="error"/>
-                            )}
-                        </InputAdornment>
+            inputProps={{
+                value: value,
+                error: error,
+                placeholder: 'Введите тег',
+                slotProps: {
+                    input: {
+                        endAdornment: 
+                            <InputAdornment position="end">
+                                {(slugChecking) && (
+                                    <CircularProgress
+                                        size={"20px"}
+                                    />
+                                ) }
+                                {(!slugChecking && value != "" && value != defaultValue && !error) && (
+                                    <CheckCircleRoundedIcon color="success"/>
+                                )}
+                                {(!slugChecking && value != "" && value != defaultValue && error) && (
+                                    <ErrorRoundedIcon color="error"/>
+                                )}
+                            </InputAdornment>
+                    }
                 }
-            }} 
+            }}
         />
     )
 }

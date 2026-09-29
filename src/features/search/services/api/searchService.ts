@@ -1,8 +1,9 @@
 "use client"
 
-import { clientFetch } from "@/lib/fetch/clientFetch";
-import Manga from "@/types/manga/manga";
+import { clientFetch } from "@/lib/fetch/client-fetch.util";
 import SearchSection from "../../types/searchSection";
+import { Manga } from "@/types/manga";
+import { PagePagination } from "@/lib/fetch/api-response.types";
 
 
 class SearchService {    
@@ -11,7 +12,7 @@ class SearchService {
         params.set("page", page.toString())
         params.set("per_page", perPage.toString())
 
-        return await clientFetch.get<Manga[]>("/search?" + new URLSearchParams(params).toString())
+        return await clientFetch.get<Manga[], null, null, PagePagination>("/search?" + new URLSearchParams(params).toString())
     }
 
     compileParams(query: string, section: SearchSection, filters?: Map<string, string[]>) {

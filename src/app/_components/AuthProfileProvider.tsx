@@ -1,26 +1,22 @@
 "use client"
 
-import { setAuthProfile, setAuthProfileCollections } from "@/lib/state/features/authProfile/authProfileSlice"
-import { setProfile } from "@/lib/state/features/profile/profileSlice"
+import { setAuthProfile } from "@/features/global/states/auth-profile/auth-profile.slice"
 import { useAppStore } from "@/lib/state/hooks"
-import Collection from "@/types/collection/collection"
-import Profile from "@/types/profile/profile"
+import { AuthProfile } from "@/types/profile"
 import React, { useRef } from "react"
 
 export default function AuthProfileProvider({
     children, 
-    profile,
-    collections
+    profile
 }: {
     children: React.ReactNode
-    profile?: Profile | null,
-    collections?: Collection[]
+    profile: AuthProfile | null
 }) {
     const store = useAppStore()
     const initialized = useRef(false)
+    
     if (!initialized.current) {
         store.dispatch(setAuthProfile(profile))
-        store.dispatch(setAuthProfileCollections(collections))
         initialized.current = true
     }
 

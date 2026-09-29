@@ -23,14 +23,15 @@ export default function AppBackdrop({open, onClose, children}: AppBackdropProps)
             <Box
                 sx={{
                     position: "absolute",
-                    bottom: theme.spacing(3),
-                    px: theme.spacing(3),
+                    bottom: theme.spacing(2),
+                    px: theme.spacing(2),
                     width: "100%"
                 }}
             >
                 <Paper
+                    elevation={3}
                     sx={{
-                        borderRadius: "12px",
+                        borderRadius: 2,
                         padding: theme.spacing(3)
                     }}
                 >

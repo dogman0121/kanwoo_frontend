@@ -28,6 +28,7 @@ export default function SearchInputDesktop({sx, ...props}: FormControlProps) {
             <SearchOutlinedInputPC
                 id="search-input"
                 value={query}
+                autoFocus
                 fullWidth
                 onInput={(event: React.FormEvent) => {
                     setQuery((event.target as HTMLInputElement).value)

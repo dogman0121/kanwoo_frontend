@@ -1,17 +1,28 @@
 import Language from "../language"
-import Manga from "../manga/manga"
 import Privacy from "../privacy"
-import Profile from "../profile/profile"
+import { Profile } from "../profile"
 
-export default interface Translation {
-    id: number
-    name: string,
-    manga?: Manga,
+
+export type TranslationShort = {
+    id: number,
+    owner: Profile
+    chapters_count: number,
+    is_official: boolean
+}
+
+export type Translation = TranslationShort & {
+    name: string
     privacy: Privacy,
     lang: Language,
     created_at: string,
     creator: Profile,
-    owner: Profile,
-    chapters_count: number,
-    is_official: boolean,
+    chapters_count: number
 }
+
+export type Context = {
+    viewer: {
+        is_subscribed: boolean
+    }
+}
+
+export type Metadata = null

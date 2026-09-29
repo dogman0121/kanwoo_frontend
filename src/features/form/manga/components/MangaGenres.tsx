@@ -1,12 +1,13 @@
 "use client"
 
-import EditSelect from "@/features/edit/components/EditSelect";
+import EditSelect from "@/components/edit/EditSelect";
 import { useAppSelector } from "@/lib/state/hooks";
 import { Box, Chip, MenuItem, SelectProps, Typography } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel"
+import { selectMeta } from "@/features/global/states/meta/meta.slice";
 
 export default function MangaGenres({onChange, ...props}: SelectProps & {onChange: (value: string[]) => void}) {
-    const meta = useAppSelector(state => state.meta.meta)
+    const meta = useAppSelector(selectMeta)
 
     if (!meta)
         return null;

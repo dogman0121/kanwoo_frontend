@@ -2,10 +2,9 @@
 
 import { createContext } from "react";
 import Sections from "../types/searchSection";
-import Team from "@/types/profile/profile";
 import SearchSection from "../types/searchSection";
-import Manga from "@/types/manga/manga";
-import Profile from "@/types/profile/profile";
+import { Manga } from "@/types/manga";
+import { Profile } from "@/types/profile";
 
 interface SearchContextProps {
     query: string,
@@ -20,7 +19,7 @@ interface SearchContextProps {
     hasMore: boolean,
     totalCount: number | null,
     onNext: (query: string, section: SearchSection, filters: Map<string, string[]>) => void,
-    emptyQuery: boolean
+    processEmptyQuery: boolean
 }
 
 const SearchContext = createContext<SearchContextProps>({
@@ -36,7 +35,7 @@ const SearchContext = createContext<SearchContextProps>({
     hasMore: true,
     totalCount: null,
     onNext: () => {},
-    emptyQuery: false
+    processEmptyQuery: false
 });
 
 export default SearchContext;

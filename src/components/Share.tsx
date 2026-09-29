@@ -3,7 +3,9 @@
 import { Backdrop, Box, Button, Dialog, DialogContent, DialogTitle, Divider, List, ListItemButton, ListItemIcon, ListItemText, Modal, OutlinedInput, Paper, SvgIcon, SxProps, Typography, useTheme } from "@mui/material";
 import { TelegramShareButton } from "react-share";
 import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
-import theme from "@/theme";
+import theme from "@/constants/themes/main.theme";
+import { useAppSelector } from "@/lib/state/hooks";
+import { selectDeviceType } from "@/features/global/states/app/slice";
 
 interface ShareProps {
     open: boolean,
@@ -86,21 +88,25 @@ export function ShareMobile({open, onClose, link}: ShareProps) {
             <Box
                 sx={{
                     position: "absolute",
-                    bottom: theme.spacing(3),
-                    px: theme.spacing(3),
+                    bottom: "10px",
+                    px: 3,
                     width: "100%"
                 }}
             >
                 <Paper
+                    elevation={3}
                     sx={{
-                        borderRadius: "12px",
-                        padding: theme.spacing(3)
+                        borderRadius: 2,
+                        p: 3,
+
+                        maxWidth: "600px",
+                        mx: "auto"
                     }}
                 >
                     <Typography fontSize={"16px"}>Поделиться</Typography>
                     <Box
                         sx={{
-                            mt: theme.spacing(2)
+                            mt: 2
                         }}
                     >
                         <ShareIconsCarousel 
@@ -108,21 +114,21 @@ export function ShareMobile({open, onClose, link}: ShareProps) {
                             sx={{
                                 display: "flex",
                                 flexDirection: "row",
-                                gap: "15px"
+                                gap: 3
                             }}/>
                     </Box>
                     <Divider 
                         sx={{
-                            mt: theme.spacing(3)
+                            mt: 3
                         }}
                     />
                     <List
                         onClick={() => {navigator.clipboard.writeText(process.env.NEXT_PUBLIC_SITE_URL + link); onClose?.()}}
                         sx={{
-                            mt: theme.spacing(2),
+                            mt: 2,
                             display: "flex",
                             flexDirection: "row",
-                            gap: theme.spacing(3),
+                            gap:3,
                             alignItems: "center"
                         }}
                     >
@@ -154,6 +160,20 @@ export function ShareDesktop({open, onClose, link}: ShareProps) {
                 <ShareIconsCarousel sx={{mt: "20px"}} link={process.env.NEXT_PUBLIC_SITE_URL + link}/>
             </DialogContent>
         </Dialog>
+    )
+}
+
+export default function Share({...props}: ShareProps) {
+    const deviceType = useAppSelector(selectDeviceType)
+
+    return (
+        <>
+            {deviceType == "desktop" ?
+                <ShareDesktop {...props}/>
+                :
+                <ShareMobile {...props}/>
+            }
+        </>
     )
 }
 

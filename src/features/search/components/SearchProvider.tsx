@@ -4,20 +4,20 @@ import { useEffect, useState, useRef } from "react";
 import SearchContext from "../context/SearchContext";
 import { searchService } from "../services/api/searchService";
 import SearchSection from "../types/searchSection";
-import Manga from "@/types/manga/manga";
-import { usePagePagination } from "@/features/pagination/hooks/usePagePagination";
-import Profile from "@/types/profile/profile";
+import { usePagePagination } from "@/lib/use-page-pagination";
 import { debounce } from "lodash";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Manga } from "@/types/manga";
+import { Profile } from "@/types/profile";
 
 
 function SearchProvider({ 
     children, 
-    emptyQuery,
+    processEmptyQuery,
     fromSearchParams
 }: { 
     children: React.ReactNode, 
-    emptyQuery?: boolean,
+    processEmptyQuery?: boolean,
     fromSearchParams?: boolean 
 }) {
     const router = useRouter()
@@ -60,10 +60,11 @@ function SearchProvider({
     const debouncedLoadResultsRef = useRef(debounce(async (query, section, filters) => {
         if (fromSearchParams) {
             const currentParams = new URLSearchParams(searchParams.toString())
-
+            
             const compiledParams = searchService.compileParams(query, section, filters)
 
             for(const key in compiledParams.keys){
+                console.log(key)
                 currentParams.delete(key)
             }
 
@@ -107,7 +108,7 @@ function SearchProvider({
                 hasMore: hasMore,
                 totalCount: totalCount,
                 onNext: loadResults,
-                emptyQuery: emptyQuery ? true : false
+                processEmptyQuery: processEmptyQuery ? true : false
             }}
         >
             { children }

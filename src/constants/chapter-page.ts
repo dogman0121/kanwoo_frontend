@@ -1,0 +1,1 @@
+export const COMMENTS_DRAWER_WIDTH = 400;

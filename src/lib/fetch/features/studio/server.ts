@@ -1,8 +1,7 @@
-import Profile from "@/types/profile/profile";
-import { serverFetch } from "../../serverFetch"
+import { Profile } from "@/types/profile";
+import { serverFetch } from "../../server-fetch.util"
 import ProfilePermission from "@/types/profile/profilePermission";
-import MangaPermission from "@/types/manga/mangaPermission";
-import Manga from "@/types/manga/manga";
+import { Manga, MangaPermission } from "@/types/manga";
 
 export interface StudioProfileResponse {
     profile: Profile,

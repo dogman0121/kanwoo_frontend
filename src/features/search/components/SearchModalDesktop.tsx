@@ -6,7 +6,7 @@ import SearchSectionSelector from "./SearchSectionSelector";
 import SearchListModal from "./SearchListModal";
 import ScrollableBox from "@/components/ScrollableBox";
 import SearchInputDesktop from "./SearchInputDesktop";
-import theme from "@/theme";
+import theme from "@/constants/themes/main.theme";
 import { useState } from "react";
 import SuggestMangaDialog from "@/components/SuggestMangaDialog";
 
@@ -20,7 +20,7 @@ export default function SearchModalDesktop({onClose, ...props}: Omit<ModalProps,
                 onClose={onClose}
                 {...props}
             >
-                <SearchProvider emptyQuery={false}>
+                <SearchProvider processEmptyQuery={false}>
                     <Paper
                         sx={{
                             position: "absolute",

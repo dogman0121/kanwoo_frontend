@@ -1,7 +1,7 @@
 "use client"
 
 import { useAppSelector } from "@/lib/state/hooks"
-import Genre from "@/types/manga/genre";
+import { Genre } from "@/types/manga/manga";
 import { Box, BoxProps, Chip } from "@mui/material";
 import Link from "next/link";
 

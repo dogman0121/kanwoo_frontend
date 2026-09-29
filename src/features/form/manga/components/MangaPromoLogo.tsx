@@ -1,7 +1,7 @@
 "use client"
 
-import EditInputCaption from "@/features/edit/components/EditInputCaption";
-import EditInputLabel from "@/features/edit/components/EditInputLabel";
+import EditInputCaption from "@/components/edit/EditInputCaption";
+import EditInputLabel from "@/components/edit/EditInputLabel";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { ChangeEvent, useEffect, useState } from "react";

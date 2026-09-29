@@ -1,4 +1,4 @@
-import { serverFetch } from "../../serverFetch"
+import { serverFetch } from "../../server-fetch.util"
 
 export const homeServerApi = {
     async getHome() {

@@ -1,37 +1,29 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import appReducer from "./features/app/appSlice"
-import authProfileReducer from './features/authProfile/authProfileSlice'
-import mangaPageReducer from './features/mangaPage/mangaSlice'
-import profileReducer from './features/profile/profileSlice'
-import homePageReducer from './features/homePage/homeSlice'
-import metaReducer from './features/meta/metaSlice'
-import chapterPageReducer from './features/chapterPage/chapterPageSlice'
-import studioPageProfileReducer from './features/studioPage/studioPageProfileSlice'
-import studioPageMangaReducer from './features/studioPage/studioPageMangaSlice'
-import studioPageTranslationReducer from './features/studioPage/studioPageTranslationSlice'
-import studioPageChapterReducer from './features/studioPage/studioPageChapterSlice'
-import readingSettingsReducer from './features/readingSettings/readingSettingsSlice'
-import historyPageReducer from './features/historyPage/historyPageSlice'
-import adminPageReducer from './features/adminPage/adminPageSlice'
-import settingsPageReducer from './features/settingsPage/settingsPageSlice'
+import { mangaPageReducer } from './features/manga-page/reducer'
+import { homePageReducer } from '../../features/home/states/home-page/reducer'
+import adminPageReducer from './features/admin-page/adminPageSlice'
+import settingsPageReducer from './features/settings-page/slice'
+import authProfileCollectionsReducer from '../../features/collection/states/auth-profile-collections-page/slice'
+import collectionPageReducer from '../../features/collection/states/collection-page/slice'
+import authProfileHistoryPage from "@/features/progress/states/auth-profile-history-page/slice"
 
+import { studioPageReducer } from './features/studio-page/reducer'
+import { profilePageReducer } from './features/profile-page/reducer'
+import { globalReducer } from '@/features/global/states/reducer'
+import { readerReducer } from '@/features/reader/states/reducer'
 
 const rootReducers = combineReducers({
-  app: appReducer,
-  authProfile: authProfileReducer,
-  meta: metaReducer,
-  readingSettings: readingSettingsReducer,
-  profile: profileReducer,
+  global: globalReducer,
+  reader: readerReducer,
+  studioPage: studioPageReducer,
+  profilePage: profilePageReducer,
   homePage: homePageReducer,
   mangaPage: mangaPageReducer,
-  chapterPage: chapterPageReducer,
-  studioPageProfile: studioPageProfileReducer,
-  studioPageManga: studioPageMangaReducer,
-  studioPageChapter: studioPageChapterReducer,
-  studioPageTranslation: studioPageTranslationReducer,
-  historyPage: historyPageReducer,
   adminPage: adminPageReducer,
-  settingsPage: settingsPageReducer
+  settingsPage: settingsPageReducer,
+  authProfileCollectionsPage: authProfileCollectionsReducer,
+  authProfileHistoryPage: authProfileHistoryPage,
+  collectionPage: collectionPageReducer 
 })
 
 export const makeStore = () => {

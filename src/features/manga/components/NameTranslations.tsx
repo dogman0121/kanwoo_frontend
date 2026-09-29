@@ -1,10 +1,10 @@
 "use client"
 
 import { useAppSelector } from "@/lib/state/hooks";
-import theme from "@/theme";
+import theme from "@/constants/themes/main.theme";
 import Language from "@/types/language";
-import NameTranslation from "@/types/manga/nameTranslation";
 import { Box, BoxProps, Breadcrumbs, Typography } from "@mui/material";
+import { NameTranslation } from "@/types/manga/manga";
 
 export default function NameTranslations({
     nameTranslations, 

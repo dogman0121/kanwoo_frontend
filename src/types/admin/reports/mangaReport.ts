@@ -1,4 +1,4 @@
-import Profile from "@/types/profile/profile";
+import { Profile } from "@/types/profile";
 import AdminManga from "../manga/manga";
 
 export default interface AdminMangaReport {

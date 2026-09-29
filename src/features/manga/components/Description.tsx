@@ -46,7 +46,7 @@ export default function Description({description, ...props}: {description: strin
                     width: "100%",
                     overflowWrap: "break-word",
                     overflowY: "hidden",
-                    fontSize: "16px",
+                    fontSize: "15px",
                     whiteSpace: "pre-wrap"
                 }}
                 ref={textRef}

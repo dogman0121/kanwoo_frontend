@@ -1,7 +1,8 @@
 "use client"
 
 import AppSnackbar from "@/components/AppSnackbar"
-import { clientFetch } from "@/lib/fetch/clientFetch"
+import { clientFetch } from "@/lib/fetch/client-fetch.util"
+import { selectDeviceType } from "@/features/global/states/app/slice"
 import { useAppSelector } from "@/lib/state/hooks"
 import { Box, Button, Container, Dialog, DialogActions, DialogContent, DialogProps, DialogTitle, Grid, Link, styled, SvgIcon, TextField, Typography, useTheme } from "@mui/material"
 import { useState } from "react"
@@ -91,9 +92,7 @@ const FooterText = styled(Typography)({
 }) 
 
 export default function Footer() {
-    const theme = useTheme()
-
-    const deviceType = useAppSelector(state => state.app.deviceType)
+    const deviceType = useAppSelector(selectDeviceType)
 
     const [feedbackDialogOpen, setFeedbackDialogOpen] = useState(false)
 
@@ -103,14 +102,9 @@ export default function Footer() {
                 component={"footer"}
                 sx={[
                     {
-                        mt: deviceType == "desktop" ? 8 : 0
+                        mt: deviceType == "desktop" ? 8 : 0,
+                        bgcolor: "footer.main"
                     },
-                    theme.applyStyles("light", {
-                        backgroundColor: "#E8E8E8"
-                    }),
-                    theme.applyStyles("dark", {
-                        backgroundColor: "#06090E"
-                    })
                 ]}
             >
                 <Container maxWidth="lg"

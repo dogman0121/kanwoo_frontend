@@ -1,0 +1,1 @@
+export const MAX_CHAPTER_WIDTH = 640

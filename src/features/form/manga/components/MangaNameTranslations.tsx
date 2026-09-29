@@ -23,12 +23,13 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useEffect, useRef, useState } from "react";
-import EditInput from "@/features/edit/components/EditInput";
-import EditInputLabel from "@/features/edit/components/EditInputLabel";
-import EditInputCaption from "@/features/edit/components/EditInputCaption";
-import EditSelect from "@/features/edit/components/EditSelect";
+import EditInput from "@/components/edit/EditInput";
+import EditInputLabel from "@/components/edit/EditInputLabel";
+import EditInputCaption from "@/components/edit/EditInputCaption";
+import EditSelect from "@/components/edit/EditSelect";
 import { useAppSelector } from "@/lib/state/hooks";
 import { capitalize } from "lodash";
+import { selectMeta } from "@/features/global/states/meta/meta.slice";
 
 function SortableTranslation({ 
     translation, 
@@ -43,7 +44,7 @@ function SortableTranslation({
     onChangeName: (index: number, value: string) => void;
     onChangeLang: (index: number, value: number) => void;
 }) {
-    const meta = useAppSelector(state => state.meta.meta)
+    const meta = useAppSelector(selectMeta)
 
     const {
         attributes,
@@ -117,15 +118,17 @@ function SortableTranslation({
                 ))}
             </EditSelect>
             <EditInput 
-                placeholder="Название"
-                value={translation.name}
-                onFocus={() => setNameTouched(true)}
-                onChange={(e) => {
-                    onChangeName(index, e.target.value)
+                boxProps={{
+                    sx: {width: "500px"}
                 }}
-                error={nameError && nameTouched}
-                sx={{
-                    width: "500px"
+                inputProps={{
+                    placeholder: "Название",
+                    value: translation.name,
+                    onFocus: () => setNameTouched(true),
+                    onChange: (e) => {
+                        onChangeName(index, e.target.value)
+                    },
+                    error: nameError && nameTouched
                 }}
             />
             <IconButton 

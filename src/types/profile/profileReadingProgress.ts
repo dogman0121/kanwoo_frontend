@@ -1,5 +1,5 @@
-import Chapter from "../chapter/chapter";
-import Manga from "../manga/manga";
+import { Chapter } from "../chapter";
+import { Manga } from "../manga";
 
 export default interface ProfileReadingProgress {
     manga: Manga,

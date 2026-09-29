@@ -29,11 +29,20 @@ export interface ReportForm {
     comment: string
 }
 
+export interface ReportDialogProps {
+    open: boolean,
+    onClose: () => void,
+    context: {
+        type: "profile" | "manga" | "chapter",
+        entityID: number | string
+    }
+}
+
 export default function ReportDialog({
-    onClose, 
-    onSend, 
-    ...props
-}: Omit<DialogProps, "children"> & {onSend: (value: ReportForm) => Promise<unknown>}) {
+    open,
+    onClose,
+    context
+}: ReportDialogProps ) {
 
     const [successSnackbarOpen, setSuccessSnackbarOpen] = useState(false)
 
@@ -45,21 +54,18 @@ export default function ReportDialog({
 
     const handleReport = async (formData: ReportForm) => {
         try {
-            await onSend(formData)
-
-            setSuccessSnackbarOpen(true)
-        
+            
         } catch (_error) {
             setErrorSnackbarOpen(true)
         }
-        onClose?.({}, "escapeKeyDown")
+        onClose()
     }
 
     return (
         <>
             <Dialog 
                 onClose={onClose}
-                {...props}
+                open={open}
             >
                 <DialogTitle>Жалоба</DialogTitle>
                 <DialogContent>
@@ -129,7 +135,7 @@ export default function ReportDialog({
                 <DialogActions>
                     <Button
                         variant="outlined"
-                        onClick={() => onClose?.({}, "escapeKeyDown")}
+                        onClick={() => onClose()}
                     >
                         Отмена
                     </Button>
