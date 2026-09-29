@@ -1,25 +1,48 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { initialState, MangaState } from "./state";
 import { Manga, MangaContext, MangaMetadata } from "@/types/manga";
 import { mangaAdapter } from "./adapters";
 import { addMangaIntoCollection, removeMangaFromCollection } from "@/features/collection/states/lib/thunks";
+import { mangaClientApi } from "@/lib/fetch/features/manga/client.api";
 
+
+export const fetchManga = createAsyncThunk(
+    "global/manga/fetchMangaStatus",
+    async (mangaUUID: string) => {
+        const response = await mangaClientApi.getManga(mangaUUID)
+
+        return {
+            response: response
+        }
+    }
+)
 
 export const mangaSlice = createSlice({
     name: "manga",
     initialState,
     reducers: {
-        addManga: (state: MangaState, action: PayloadAction<{manga: Manga, metadata: MangaMetadata, context: MangaContext}>) => {
-            const { manga, metadata, context } = action.payload
+        addManga: (state: MangaState, action: PayloadAction<{manga: Manga, mangaContext: MangaContext}>) => {
+            const { manga, mangaContext } = action.payload
 
             mangaAdapter.setOne(state, {
                 manga: manga,
-                metadata: metadata,
-                context: context
+                mangaContext: mangaContext
             })
         }
     },
     extraReducers: (builder) => ( builder
+        .addCase(fetchManga.fulfilled, 
+            (state, action) => {
+                const {response} = action.payload
+
+                mangaAdapter.addOne(state,
+                    {
+                        manga: response.data,
+                        mangaContext: response.context
+                    }
+                )
+            }
+        )
         .addCase(addMangaIntoCollection.fulfilled, 
             (state, action) => {
                 const {mangaSlug, collectionId} = action.payload
@@ -27,7 +50,7 @@ export const mangaSlice = createSlice({
                 const manga = state.entities[mangaSlug]
                 if (!manga) return
 
-                manga.context.viewer.collections.push(collectionId)
+                manga.mangaContext.viewer.collections.push(collectionId)
             }
         )
         .addCase(removeMangaFromCollection.fulfilled, 
@@ -37,7 +60,7 @@ export const mangaSlice = createSlice({
                 const manga = state.entities[mangaSlug]
                 if (!manga) return
 
-                manga.context.viewer.collections = manga.context.viewer.collections.filter(cId => cId != collectionId)
+                manga.mangaContext.viewer.collections = manga.mangaContext.viewer.collections.filter(cId => cId != collectionId)
             }
         )
     )

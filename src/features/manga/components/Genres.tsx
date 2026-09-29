@@ -14,18 +14,9 @@ function GenreItem({genre}: {genre: {id: number, name: string}}) {
     )
 }
 
-export default function Genres({
-    genres,
-    sx,
-    ...props
-}: {
-    genres: Genre[]
-} & BoxProps) {
-    if (!genres?.length)
-        return null;
-
+export function GenresContainer({sx, ...props}: BoxProps) {
     return (
-        <Box
+        <Box 
             sx={{
                 display: "flex",
                 
@@ -34,9 +25,26 @@ export default function Genres({
                 ...sx
             }}
             {...props}
+        />
+    )
+}
+
+export default function Genres({
+    genres,
+    boxProps = {}
+}: {
+    genres: Genre[],
+    boxProps?: BoxProps
+}) {
+    if (!genres?.length)
+        return null;
+
+    return (
+        <GenresContainer
+            {...boxProps}
         >
             {genres?.map((genre) => <GenreItem key={genre.id} genre={genre} />)}
-        </Box>
+        </GenresContainer>
     )
 
 }

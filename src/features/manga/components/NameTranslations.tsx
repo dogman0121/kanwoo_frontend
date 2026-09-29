@@ -20,12 +20,7 @@ export default function NameTranslations({
         <Box
             {...props}
         >
-            <Typography
-                sx={{
-                    fontWeight: "600",
-                    fontSize: "16px"
-                }}
-            >Другие названия</Typography>
+            <Typography variant="h3">Другие названия</Typography>
             <Breadcrumbs sx={{mt: theme.spacing(1)}}>
                 {nameTranslations?.map((name: {lang: Language, name: string}) => (
                     <Typography 

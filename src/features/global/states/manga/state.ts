@@ -5,8 +5,7 @@ import { mangaAdapter } from "./adapters"
 
 export interface MangaBlock {
     manga: Manga,
-    metadata: MangaMetadata,
-    context: MangaContext,
+    mangaContext: MangaContext,
 }
 
 export const initialState = mangaAdapter.getInitialState()

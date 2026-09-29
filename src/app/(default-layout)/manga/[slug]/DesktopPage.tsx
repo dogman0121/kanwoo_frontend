@@ -140,7 +140,7 @@ export default function DesktopPage({
                             columns={{lg: 12, md: 8}}
                         >
                             <Grid size={12}>
-                                <Stats size="medium" views={manga.stats.views} saves={manga.stats.saves} sx={{mt: 1}}/>
+                                <Stats size="medium" views={manga.stats.views} saves={manga.stats.saves} boxProps={{sx:{mt: 1}}}/>
                                 <Box
                                     sx={{
                                         mt: 3,

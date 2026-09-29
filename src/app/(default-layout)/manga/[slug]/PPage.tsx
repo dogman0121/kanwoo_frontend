@@ -36,8 +36,7 @@ export default function PPage({
 
         dispatch(addManga({
             manga: manga,
-            metadata: mangaMetadata,
-            context: mangaContext
+            mangaContext: mangaContext
         }))
 
         dispatch(setProgress({

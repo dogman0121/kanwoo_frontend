@@ -1,4 +1,4 @@
-import { Box, BoxProps, Typography } from "@mui/material"
+import { Box, BoxProps, Skeleton, SvgIcon, Typography } from "@mui/material"
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import formatViews from "../utils/formatViews";
@@ -6,101 +6,78 @@ import formatViews from "../utils/formatViews";
 interface StatsProps {
     size: "medium" | "small",
     views: number,
-    saves: number
+    saves: number,
+    boxProps?: BoxProps
 }
 
-export default function Stats({size, views, saves, sx, ...props}: StatsProps & BoxProps) {
+export function StatsOption({
+    icon,
+    label,
+    size = "medium",
+    loading = false
+}: {
+    icon?: React.ReactElement,
+    label?: string,
+    size?: "small" | "medium",
+    loading?: boolean
+}) {
+
+
     return (
-        <>
-            {size == "medium" ?
-                <Box
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center"
+            }}
+        >
+            {icon && (
+                <SvgIcon
                     sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        columnGap: "15px",
-                        ...sx
-                    }}
-                    {...props}
-                >
-                    <Typography 
-                        variant="caption"
-                        sx={{
-                            fontSize: "14px",
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center"
-                        }}
-                    >
-                        <BookmarkBorderRoundedIcon 
-                            sx={{
-                                fontSize: "22px",
-                                mr: "3px"
-                            }}
-                        /> 
-                        {saves} сохранений
-                    </Typography>
-                    <Typography 
-                        variant="caption"
-                        sx={{
-                            fontSize: "14px",
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center"
-                        }}
-                    >
-                        <VisibilityOutlinedIcon 
-                            sx={{
-                                fontSize: "22px",
-                                mr: "3px"
-                            }}
-                        /> 
-                        {formatViews(views)} просмотров
-                    </Typography>
-                </Box>
-                :
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        columnGap: "15px"
+                        fontSize: size == "medium" ? "20px" : "18px",
+                        color: "textSecondary"
                     }}
                 >
-                    <Typography 
-                        variant="caption"
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center"
-                        }}
-                    >
-                        <BookmarkBorderRoundedIcon 
-                            sx={{
-                                width: "18px",
-                                height: "18px",
-                                mr: "3px"
-                            }}
-                        /> 
-                        {saves} сохранений
-                    </Typography>
-                    <Typography 
-                        variant="caption"
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center"
-                        }}
-                    >
-                        <VisibilityOutlinedIcon 
-                            sx={{
-                                width: "18px",
-                                height: "18px",
-                                mr: "3px"
-                            }}
-                        /> 
-                        {formatViews(views)} просмотров
-                    </Typography>
-                </Box>
-            }
-        </>
+                    {icon}
+                </SvgIcon>
+            )}
+            <Typography
+                color="textSecondary"
+                variant={size == "medium" ? "body1" : "caption"}
+                ml={0.6}
+            >
+                {loading ? <Skeleton width={"60px"} /> : label}
+            </Typography>
+        </Box>
+    )
+}
+
+export default function Stats({
+    size, 
+    views, 
+    saves, 
+    boxProps = {}
+}: StatsProps) {
+    return (
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: "row",
+                columnGap: "15px",
+                ...boxProps.sx
+            }}
+            {...boxProps}
+        >
+            <StatsOption 
+                size={size}
+                icon={<BookmarkBorderRoundedIcon />}
+                label={`${saves} сохранений`}
+            />
+            <StatsOption 
+                size={size}
+                icon={<VisibilityOutlinedIcon />}
+                label={`${formatViews(views)} просмотров`}
+            />
+        </Box>
     )
 }

@@ -9,9 +9,12 @@ export const {
 
 
 export const selectMangaBySlug = (state: RootState, slug: string) => {
-    const manga = selectMangaBlockBySlug(state, slug).manga
+    const mangaBlock = selectMangaBlockBySlug(state, slug)
 
-    return manga
+    if (mangaBlock)
+        return mangaBlock.manga
+
+    return null
 }
 
 export const selectMangaInCollection = createSelector(
@@ -26,6 +29,6 @@ export const selectMangaInCollection = createSelector(
     (data: {manga: MangaBlock, collectionId: number}) => {
         const {manga, collectionId} = data
 
-        return manga.context.viewer.collections.findIndex(cId => cId == collectionId) != -1
+        return manga.mangaContext.viewer.collections.findIndex(cId => cId == collectionId) != -1
     }
 )
