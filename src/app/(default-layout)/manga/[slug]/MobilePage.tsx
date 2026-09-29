@@ -141,7 +141,7 @@ export default function MobilePage({
                         views={manga.stats.views} 
                         saves={manga.stats.saves} 
                         size="small" 
-                        sx={{mt: 2}}
+                        boxProps={{sx:{mt: 2}}}
                     />
                 </Box>
                 <Box

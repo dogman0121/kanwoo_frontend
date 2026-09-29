@@ -4,9 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import { Box, BoxProps, Button, useTheme } from "@mui/material";
-import { useAppSelector } from "@/lib/state/hooks";
 
-export default function Description({description, ...props}: {description: string} & BoxProps) {
+export default function Description({description, boxProps}: {description: string, boxProps?: BoxProps}) {
     const [open, setOpen] = useState(false);
 
     const textRef = useRef<HTMLDivElement | null>(null);
@@ -38,7 +37,7 @@ export default function Description({description, ...props}: {description: strin
 
     return (
         <Box
-            {...props}
+            {...boxProps}
         >
             <Box 
                 sx={{

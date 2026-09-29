@@ -31,7 +31,7 @@ export default function MangaAddRemoveDialog({
     const collections = useAppSelector(selectAuthProfileCollections)
 
     const isMangaInCollection = (mangaBlock: MangaBlock, collectionId: number) => {
-        return mangaBlock.context.viewer.collections.findIndex(cId => cId == collectionId) != -1
+        return mangaBlock.mangaContext.viewer.collections.findIndex(cId => cId == collectionId) != -1
     }
 
     const removeManga = async (collection: Collection) => {
