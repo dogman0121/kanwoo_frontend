@@ -1,38 +1,67 @@
+import Language from "../language"
 import Privacy from "../privacy"
-import Profile from "../profile/profile"
-import Adult from "./adult"
-import Genre from "./genre"
-import NameTranslation from "./nameTranslation"
-import Status from "./status"
-import Type from "./type"
+import { Profile } from "../profile"
 
+export type Adult = {
+    id: number,
+    name: string
+}
 
-export default interface Manga {
+export type Genre = {
+    id: number,
+    name: string
+}
+
+export type NameTranslation = {
+    lang: Language,
+    name: string
+}
+
+export type Status = {
+    id: number,
+    name: string
+}
+
+export type Type = {
+    id: number,
+    name: string
+}
+
+export type Poster = {
+    orig: string,
+    large: string,
+    medium: string,
+    small: string,
+    thumbnail: string,
+}
+
+export type Stats = {
+    views: number,
+    saves: number,
+}
+
+export type MangaShort = {
     id: number,
     slug: string,
     name: string,
-    name_translations: NameTranslation[],
-    description: string,
-    poster: {
-        orig: string,
-        large: string,
-        medium: string,
-        small: string,
-        thumbnail: string,
-    },
-    background: string,
+    poster: Poster,
     type: Type,
     year: number,
     status: Status,
-    adult: Adult,
+    adult: Adult
+}
+
+export type Manga = MangaShort & {
+    name_translations: NameTranslation[],
+    description: string,
+    background: string,
     genres: Genre[]
-    views: number,
-    saves: number,
     promo_name: string,
     promo_logo: string,
     promo_background: string,
+    privacy: Privacy,
+    stats: Stats
     creator: Profile,
     created_at: string,
     updated_ad: string,
-    privacy: Privacy
 }

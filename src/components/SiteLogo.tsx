@@ -1,4 +1,4 @@
-import theme from "@/theme";
+import theme from "@/constants/themes/main.theme";
 import { SvgIcon, SvgIconProps } from "@mui/material";
 
 export default function SiteLogo({sx, ...props}: SvgIconProps) {

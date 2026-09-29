@@ -1,8 +1,5 @@
 import Language from "./language";
-import Adult from "./manga/adult";
-import Genre from "./manga/genre";
-import Status from "./manga/status";
-import Type from "./manga/type";
+import { Adult, Genre, Status, Type } from "./manga/manga";
 import Privacy from "./privacy";
 
 export default interface Meta {

@@ -1,10 +1,15 @@
-import Manga from "../manga/manga"
+import { MangaPoster } from "@/types/manga"
 import Privacy from "../privacy"
+import { Profile } from "../profile"
 
-export default interface Collection {
-    id: number
-    name: string
-    description: string,
+export type CollectionPreview = MangaPoster[]
+
+
+export type Collection = {
+    id: number,
+    name: string,
     privacy: Privacy,
-    manga: Manga[]
+    preview: CollectionPreview,
+    manga_count: number,
+    creator: Profile
 }

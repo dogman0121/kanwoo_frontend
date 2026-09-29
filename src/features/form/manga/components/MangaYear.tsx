@@ -1,14 +1,15 @@
 "use client"
 
-import EditInput from "@/features/edit/components/EditInput";
-import { TextFieldProps } from "@mui/material";
+import EditInput from "@/components/edit/EditInput";
 
-export default function MangaYear({...props}: TextFieldProps) {
+export default function MangaYear({value}: {value: number}) {
     return (
-        <EditInput 
-            label="Год выпуска"
-            type="number"
-            {...props}
+        <EditInput
+            label={"Год выпуска"}
+            inputProps={{
+                type: "number",
+                value: value
+            }}
         />
     )
 }

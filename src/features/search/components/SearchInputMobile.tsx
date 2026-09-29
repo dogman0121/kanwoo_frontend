@@ -1,6 +1,6 @@
 "use client"
 
-import { Box, FormControl, FormControlProps, InputAdornment, OutlinedInput, styled } from "@mui/material";
+import { Box, BoxProps, FormControl, FormControlProps, InputAdornment, OutlinedInput, OutlinedInputProps, styled } from "@mui/material";
 import { useContext } from "react";
 import SearchContext from "../context/SearchContext";
 import CloseIcon from '@mui/icons-material/Close';
@@ -15,23 +15,29 @@ const SearchOutlinedInputMobile = styled(OutlinedInput)(({theme}) => ({
     }
 }));
 
+export interface SearchInputMobileProps {
+    slotProps?: {
+        formControl?: FormControlProps,
+        box?: BoxProps,
+        input?: OutlinedInputProps
+    }
+}
 
-export default function SearchInputMobile({sx, ...props}: FormControlProps) {
+
+export default function SearchInputMobile({slotProps: {formControl, box, input} = {}}: SearchInputMobileProps) {
     const { query, setQuery } = useContext(SearchContext);
 
     return (
         <FormControl
             variant="outlined"
-            sx={{
-                width: "100%",
-            }}
+            fullWidth
+            {...formControl}
         >
             <Box 
                 sx={{
                     width: "100%",
-                    ...sx
                 }}
-                {...props}
+                {...box}
             >
                 <SearchOutlinedInputMobile
                     id="search-input"
@@ -45,7 +51,6 @@ export default function SearchInputMobile({sx, ...props}: FormControlProps) {
                         }
                     }}
                     value={query}
-                    autoFocus
                     onInput={(event: React.FormEvent) => {
                         setQuery((event.target as HTMLInputElement).value)
                     }}
@@ -61,10 +66,8 @@ export default function SearchInputMobile({sx, ...props}: FormControlProps) {
                             />
                         </InputAdornment>
                     }
-                    sx={{
-                        
-                    }}
                     placeholder="Поиск"
+                    {...input}
                 />
             </Box>
         </FormControl>

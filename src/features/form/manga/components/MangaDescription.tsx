@@ -1,6 +1,6 @@
 "use client"
 
-import EditInput from "@/features/edit/components/EditInput";
+import EditInput from "@/components/edit/EditInput";
 import { InputAdornment, TextFieldProps, Typography } from "@mui/material";
 
 export default function MangaDescription({value, ...props}: TextFieldProps) {
@@ -8,26 +8,28 @@ export default function MangaDescription({value, ...props}: TextFieldProps) {
         <EditInput 
             label="Описание"
             caption="Помогает читать о тайтле пользователям. Участвует при поиске информации"
-            placeholder="Введите описание"
-            minRows={5}
-            multiline
-            value={value}
-            {...props}
-            slotProps={{
-                input: {
-                    endAdornment: 
-                        <InputAdornment position="end"
-                            sx={{
-                                alignSelf: "end"
-                            }}
-                        >
-                            <Typography
-                                variant="caption"
+            inputProps={{
+                placeholder: "Введите описание",
+                minRows: 5,
+                multiline: true,
+                value: value,
+                slotProps: {
+                    input: {
+                        endAdornment: 
+                            <InputAdornment position="end"
+                                sx={{
+                                    alignSelf: "end"
+                                }}
                             >
-                                {(value as string | undefined)?.length}/1000
-                            </Typography>
-                        </InputAdornment>
-                }
+                                <Typography
+                                    variant="caption"
+                                >
+                                    {(value as string | undefined)?.length}/1000
+                                </Typography>
+                            </InputAdornment>
+                    }
+                },
+                ...props
             }}
         />
     )

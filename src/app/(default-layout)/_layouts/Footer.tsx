@@ -1,0 +1,223 @@
+"use client"
+
+import AppSnackbar from "@/components/AppSnackbar"
+import { clientFetch } from "@/lib/fetch/client-fetch.util"
+import { selectDeviceType } from "@/features/global/states/app/slice"
+import { useAppSelector } from "@/lib/state/hooks"
+import { 
+    Box, 
+    Button, 
+    Container, 
+    Dialog, 
+    DialogActions, 
+    DialogContent, 
+    DialogProps, 
+    DialogTitle, 
+    Grid, 
+    Link, 
+    styled, 
+    SvgIcon, 
+    TextField, 
+    Typography
+} from "@mui/material"
+import { useState } from "react"
+
+function FeedbackDialog({onClose, ...props}: DialogProps) {
+    const [message, setMessage] = useState("")
+
+    const [successSnackbarOpen, setSuccessSnackbarOpen] = useState<boolean>(false)
+
+    const handleSendFeedback = () => {
+        clientFetch.post("/sendFeedback", {
+            body: JSON.stringify({
+                message: message
+            })
+        })
+
+        onClose?.({}, "backdropClick")
+        setSuccessSnackbarOpen(true)
+    }
+
+    return (
+        <>
+            <Dialog
+                onClose={onClose}
+                {...props}
+            >
+                <DialogTitle>
+                    Обратная связь
+                </DialogTitle>
+                <DialogContent>
+                    <TextField
+                        id="feedback-input"
+                        fullWidth
+                        multiline
+                        minRows={3}
+                        placeholder="Введите сообщение"
+                        onChange={(event) => setMessage(event.target.value)}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        variant="outlined"
+                        onClick={() => onClose?.({}, "escapeKeyDown")}
+                    >
+                        Отмена
+                    </Button>
+                    <Button
+                        variant="contained"
+                        onClick={handleSendFeedback}
+                    >
+                        Отправить
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <AppSnackbar 
+                open={successSnackbarOpen}
+                variant="success" 
+                message="Обратная связь отправлена успешна"
+                onClose={() => setSuccessSnackbarOpen(false)}
+            />
+        </>
+    )
+}
+
+const FooterSection = styled(Box)({
+    display: "flex",
+    flexDirection: "column",
+    rowGap: "20px"    
+})
+
+const FooterList = styled(Box)({
+    display: "flex",
+    flexDirection: "column",
+    rowGap: "10px"    
+})
+
+const FooterHeader = styled(Typography)({
+    fontSize: "24px"
+})
+
+const FooterText = styled(Typography)({
+    fontSize: "16px",
+
+    "&:hover": {
+        textDecoration: "underline"
+    }
+}) 
+
+export default function Footer() {
+    const deviceType = useAppSelector(selectDeviceType)
+
+    const [feedbackDialogOpen, setFeedbackDialogOpen] = useState(false)
+
+    return (
+        <>
+            <Box
+                component={"footer"}
+                sx={[
+                    {
+                        mt: deviceType == "desktop" ? 8 : 0,
+                        bgcolor: "footer.main"
+                    },
+                ]}
+            >
+                <Container maxWidth="lg"
+                    sx={{
+                        py: "50px",
+                    }}
+                >
+                    <Grid
+                        container
+                        columns={{md: 3, sm: 1}}
+                        spacing={5}
+                    >
+                        <Grid
+                            size={1}
+                        >
+                            <Box>
+                                <Typography fontSize={"36px"}>KANWOO</Typography>
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        columnGap: 1
+                                    }}
+                                >
+                                    <Link href="https://t.me/kanwoo_manga" target="_blank">
+                                    {/* Telegram Icon */}
+                                        <SvgIcon sx={{fontSize: "32px"}}>
+                                            <svg width="1000" height="1000" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <g clipPath="url(#clip0_9_71)">
+                                            <path d="M500 1000C776.142 1000 1000 776.142 1000 500C1000 223.858 776.142 0 500 0C223.858 0 0 223.858 0 500C0 776.142 223.858 1000 500 1000Z" fill="url(#paint0_linear_9_71)"/>
+                                            <path fillRule="evenodd" clipRule="evenodd" d="M226.328 494.722C372.089 431.217 469.285 389.35 517.917 369.122C656.773 311.367 685.625 301.335 704.431 301.004C708.568 300.931 717.816 301.956 723.806 306.817C728.865 310.921 730.257 316.466 730.923 320.357C731.589 324.249 732.418 333.114 731.759 340.041C724.234 419.102 691.675 610.965 675.111 699.515C668.102 736.984 654.301 749.548 640.941 750.777C611.905 753.449 589.856 731.588 561.733 713.153C517.727 684.306 492.866 666.349 450.15 638.2C400.784 605.669 432.786 587.789 460.919 558.569C468.282 550.921 596.215 434.556 598.691 424C599.001 422.68 599.288 417.759 596.365 415.16C593.441 412.562 589.126 413.45 586.012 414.157C581.599 415.159 511.298 461.625 375.11 553.556C355.155 567.259 337.081 573.935 320.887 573.585C303.034 573.199 268.693 563.491 243.164 555.192C211.851 545.014 186.964 539.632 189.132 522.346C190.26 513.343 202.659 504.135 226.328 494.722Z" fill="white"/>
+                                            </g>
+                                            <defs>
+                                            <linearGradient id="paint0_linear_9_71" x1="500" y1="0" x2="500" y2="992.583" gradientUnits="userSpaceOnUse">
+                                            <stop stopColor="#2AABEE"/>
+                                            <stop offset="1" stopColor="#229ED9"/>
+                                            </linearGradient>
+                                            <clipPath id="clip0_9_71">
+                                            <rect width="1000" height="1000" fill="white"/>
+                                            </clipPath>
+                                            </defs>
+                                            </svg>
+                                        </SvgIcon>
+                                    </Link>
+                                </Box>
+                                <FooterText
+                                    sx={{
+                                        mt: 2,
+                                        ":hover": {
+                                            cursor: "pointer"
+                                        }
+                                    }}
+                                    onClick={() => setFeedbackDialogOpen(true)}
+                                >
+                                    Обратная связь
+                                </FooterText>
+                            </Box>
+                            <Box
+                                sx={{
+                                    mt: "20px"
+                                }}
+                            >
+                                <FooterHeader> Почта для связи</FooterHeader>
+                                <FooterText>
+                                    contact@kanwoo.ru
+                                </FooterText>
+                            </Box>
+                        </Grid>
+                        <Grid
+                            size={1}
+                        >
+                            <FooterSection>
+                                <FooterHeader>Полезные статьи</FooterHeader>
+                                <FooterList>
+                                    <FooterText>Как добавить мангу</FooterText>
+                                    <FooterText>Как добавить перевод</FooterText>
+                                    <FooterText>Как добавить главу</FooterText>
+                                </FooterList>
+                            </FooterSection>
+                        </Grid>
+                        <Grid
+                            size={1}
+                        >
+                            <FooterSection>
+                                <FooterHeader>Инфо</FooterHeader>
+                                <FooterList>
+                                    <FooterText>Пользовательское соглашение</FooterText>
+                                    <FooterText>Для правообладателей</FooterText>
+                                </FooterList>
+                            </FooterSection>
+                        </Grid>
+                    </Grid>
+                </Container>
+            </Box>
+            <FeedbackDialog 
+                open={feedbackDialogOpen}
+                onClose={() => setFeedbackDialogOpen(false)}
+            />
+        </>
+    )
+}

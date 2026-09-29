@@ -1,7 +1,7 @@
-import Manga from "@/types/manga/manga";
-import ModerationStatus from "@/types/manga/moderationStatus";
+import { Manga } from "@/types/manga";
+import { ModerationStatus } from "@/types/manga/moderationStatus";
 import Privacy from "@/types/privacy";
-import Profile from "@/types/profile/profile";
+import { Profile } from "@/types/profile";
 
 export interface AdminChapterPage {
     uuid: string,

@@ -1,5 +1,5 @@
-import Chapter from "@/types/chapter/chapter";
-import Profile from "@/types/profile/profile";
+import { Chapter } from "@/types/chapter";
+import { Profile } from "@/types/profile";
 
 export default interface AdminChapterReport {
     id: number,

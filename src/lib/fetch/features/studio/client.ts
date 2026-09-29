@@ -1,7 +1,7 @@
-import Manga from "@/types/manga/manga";
-import { clientFetch } from "../../clientFetch"
-import Profile from "@/types/profile/profile";
-import Translation from "@/types/translation/translation";
+import { Manga } from "@/types/manga";
+import { clientFetch } from "../../client-fetch.util"
+import { Profile } from "@/types/profile";
+import { Translation } from "@/types/translation";
 
 export const studioClientApi = {
     async getProfileManga(profileSlug: string) {

@@ -1,34 +1,26 @@
 "use client"
 
-import { Dialog, DialogProps, ModalProps } from "@mui/material";
-import { AuthSection } from "../types/AuthPanel";
-import Profile from "@/types/profile/profile";
+import { Modal, ModalProps } from "@mui/material";
 import Auth from "./Auth";
 import { useAppDispatch } from "@/lib/state/hooks";
-import AuthProfile from "@/types/authProfile";
-import { setAuthProfile } from "@/lib/state/features/authProfile/authProfileSlice";
+import Wrapper from "./Wrapper";
 
-export default function AuthModal({onClose, ...props}: DialogProps) {
+export interface AuthModalProps {
+    open: boolean,
+    onClose: () => void
+}
+
+export default function AuthModal({open, onClose}: AuthModalProps) {
     const dispatch = useAppDispatch()
 
     return (
-        <Dialog
+        <Modal
+            open={open}
             onClose={onClose}
-            {...props}
         >
-            <Auth 
-                defaultSection={AuthSection.LOGIN}
-                onRegister={(profile: AuthProfile) => {
-                    dispatch(setAuthProfile(profile))
-
-                    onClose?.({}, "escapeKeyDown")
-                }}
-                onLogin={(profile: Profile) => {
-                    dispatch(setAuthProfile(profile))
-
-                    onClose?.({}, "escapeKeyDown")
-                }}
-            />
-        </Dialog>
+            <Wrapper>
+                <Auth/>
+            </Wrapper>
+        </Modal>
     )
 }

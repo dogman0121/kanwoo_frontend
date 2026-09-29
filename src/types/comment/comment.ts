@@ -1,6 +1,6 @@
-import Profile from "../profile/profile";
+import { Profile } from "../profile"
 
-export default interface Comment {
+export type Comment = {
     id: number,
     text: string,
     creator: Profile,

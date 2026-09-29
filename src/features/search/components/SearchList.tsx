@@ -15,10 +15,10 @@ function SearchList({ sx, children, ...props }: BoxProps) {
         section, 
         filters, 
         hasMore,
-        emptyQuery
+        processEmptyQuery
     } = useContext(SearchContext);
 
-    if (!emptyQuery && query.length == 0) {
+    if (!processEmptyQuery && query.length == 0) {
         return (
             <Box
                 sx={{

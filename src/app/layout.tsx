@@ -1,19 +1,19 @@
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter"
 import { Roboto } from "next/font/google"
 import "./global.css"
-import theme from "@/theme"
+import theme from "@/constants/themes/main.theme"
 import { CssBaseline, InitColorSchemeScript, ThemeProvider } from "@mui/material"
 import MetaProvider from "./_components/MetaProvider"
 import StoreProvider from "./_components/StoreProvider"
-import { serverFetch } from "@/lib/fetch/serverFetch"
-import Meta from "@/types/meta"
-import AuthProfile from "@/types/authProfile"
 import AuthProfileProvider from "./_components/AuthProfileProvider"
 import YandexMetrikaContainer from "@/lib/yandex-metrica/YandexMetricaContainer"
 import Script from "next/script"
 import AppProvider from "./_components/AppProvider"
 import { headers } from "next/headers"
-import Collection from "@/types/collection/collection"
+import UI from "./_components/UI"
+import { AuthProfile } from "@/types/profile"
+import { profileServerApi } from "@/lib/fetch/features/profile/server.api"
+import { metaServerApi } from "@/lib/fetch/features/meta/server.api"
 
 
 const analyticsEnabled = !!(process.env.NODE_ENV === "production");
@@ -30,17 +30,15 @@ export default async function RootLayout({
 }: Readonly<{
     children: React.ReactNode
 }>) {
-    let meta; try { meta = (await serverFetch.get<Meta>("/meta")).data } catch (_) { meta = null }
-    let currentProfile: AuthProfile | null;
-    let collections: Collection[]; 
+    let authProfile: AuthProfile | null;
+    let meta; try { meta = (await metaServerApi.getMeta()).data } catch (_) { meta = null }
     try {
-        const response = await serverFetch.get<{profile: AuthProfile, collections: Collection[]}>(`/profiles/current`) 
-
-        currentProfile = response.data.profile
-        collections = response.data.collections
-    } catch (e) { currentProfile = null; collections = []}
-
-    const deviceType = await (await headers()).get("X-Device-Type")
+        authProfile = (await profileServerApi.getAuthProfile()).data 
+    } catch (e) {
+        authProfile = null
+    }
+    
+    const deviceType = (await headers()).get("X-Device-Type")
 
     return (
         <html lang="en" className={roboto.variable} suppressHydrationWarning>
@@ -58,20 +56,19 @@ export default async function RootLayout({
                     <ThemeProvider theme={theme}>
                         <CssBaseline />
                         <StoreProvider>
-                            <AppProvider
-                                value={{
-                                    deviceType: deviceType == "desktop" ? "desktop" : "mobile"
-                                }}
-                            >
-                                <MetaProvider meta={meta}>
-                                    <AuthProfileProvider 
-                                        profile={currentProfile}
-                                        collections={collections}
+                            <MetaProvider meta={meta}>
+                                <AuthProfileProvider 
+                                    profile={authProfile}
+                                >
+                                    <AppProvider
+                                        deviceType={deviceType == "desktop" ? "desktop" : "mobile"}
                                     >
+                                
                                         {children}
-                                    </AuthProfileProvider>
-                                </MetaProvider>
-                            </AppProvider>
+                                        <UI />
+                                    </AppProvider>
+                                </AuthProfileProvider>
+                            </MetaProvider>
                         </StoreProvider>
                     </ThemeProvider>
                 </AppRouterCacheProvider>

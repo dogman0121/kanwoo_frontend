@@ -1,6 +1,6 @@
 "use client"
 
-import { clientFetch } from "@/lib/fetch/clientFetch";
+import { clientFetch } from "@/lib/fetch/client-fetch.util";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogProps, DialogTitle, TextField } from "@mui/material";
 import { ChangeEvent, useState } from "react";
 import AppSnackbar from "./AppSnackbar";

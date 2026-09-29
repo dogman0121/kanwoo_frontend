@@ -1,4 +1,4 @@
-import { clientFetch } from "@/lib/fetch/clientFetch";
+import { clientFetch } from "@/lib/fetch/client-fetch.util";
 import AdminManga from "@/types/admin/manga/manga";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogProps, DialogTitle, Grid, useTheme } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
@@ -8,9 +8,8 @@ import MangaPoster from "@/features/form/manga/components/MangaPoster";
 import MangaName from "@/features/form/manga/components/MangaName";
 import PrivacySelect, { Privacy } from "@/components/PrivacySelect";
 import MangaNameTranslations from "@/features/form/manga/components/MangaNameTranslations";
-import promiseDebounce from "@/lib/promiseDebounce";
-import { validateSlug } from "@/features/profile/ui/SlugInput";
-import MangaSlug from "@/features/form/manga/components/MangaSlug";
+import promiseDebounce from "@/lib/promise-debounce.util";
+import MangaSlug, { validateSlug } from "@/features/form/manga/components/MangaSlug";
 import MangaDescription from "@/features/form/manga/components/MangaDescription";
 import MangaType from "@/features/form/manga/components/MangaType";
 import MangaStatus from "@/features/form/manga/components/MangaStatus";

@@ -1,5 +1,5 @@
-import Manga from "../manga/manga"
-import Profile from "../profile/profile"
+import { Manga } from "../manga";
+import { Profile } from "../profile";
 
 export default interface Notification {
     id: number,

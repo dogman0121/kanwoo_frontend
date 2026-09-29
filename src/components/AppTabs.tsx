@@ -1,4 +1,6 @@
-import Tab from '@mui/material/Tab';
+"use client"
+
+import Tab, { TabProps } from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
@@ -6,14 +8,19 @@ import { styled } from '@mui/material';
 
 export const AppTabContext = TabContext;
 
-export const AppTab = styled(Tab)(({theme}) => ({
-    textTransform: "capitalize",
-    color: theme.typography.body1.color,
-    padding: "10px 30px",
-    "&.Mui-selected": {
-        color: theme.typography.body1.color
-    }
-}))
+export const AppTab = ({...props}: TabProps) => {
+    return <Tab 
+        {...props}
+        sx={{
+            textTransform: "capitalize",
+            color: "text.primary",
+            padding: "10px 30px",
+            "&.Mui-selected": {
+                color: "text.primary"
+            }
+        }}
+    />
+}
 
 export const AppTabList = TabList
 

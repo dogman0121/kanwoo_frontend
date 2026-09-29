@@ -15,5 +15,5 @@ jobs:
           - name: Install modules
             run: npm install
 
-          - name: Test python
+          - name: Test
             run: npm test

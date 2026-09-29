@@ -1,6 +1,6 @@
 "use client"
 
-import AuthProfile from "@/types/authProfile";
+import { AuthProfile } from "@/types/profile";
 import { Avatar, Box, ListItem, MenuItem, Typography, useTheme } from "@mui/material";
 
 export default function Profile({profile}: {profile: AuthProfile}) {

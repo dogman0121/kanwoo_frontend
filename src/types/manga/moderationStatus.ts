@@ -1,4 +1,4 @@
-export default interface ModerationStatus {
+export type ModerationStatus = {
     id: number,
     message: string,
     status_type: {id: number, name: string}

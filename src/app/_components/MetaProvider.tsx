@@ -1,6 +1,6 @@
 "use client"
 
-import { setMeta } from "@/lib/state/features/meta/metaSlice"
+import { setMeta } from "@/features/global/states/meta/meta.slice"
 import { useAppStore } from "@/lib/state/hooks"
 import Meta from "@/types/meta"
 import React, { useRef } from "react"

@@ -1,11 +1,7 @@
-import Adult from "@/types/manga/adult"
-import Genre from "@/types/manga/genre"
-import NameTranslation from "@/types/manga/nameTranslation"
-import Status from "@/types/manga/status"
-import Type from "@/types/manga/type"
-import Profile from "@/types/profile/profile"
+import { Adult, Genre, NameTranslation, Status, Type } from "@/types/manga/manga"
 import AdminMangaModerationStatus from "./moderationStatus"
 import Privacy from "@/types/privacy"
+import { Profile } from "@/types/profile"
 
 export default interface AdminManga {
     id: number,

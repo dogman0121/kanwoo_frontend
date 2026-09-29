@@ -3,7 +3,7 @@
 import SearchModalDesktop from "@/features/search/components/SearchModalDesktop"
 import { AppBar, Avatar, Box, SvgIcon, Toolbar, Typography, useTheme } from "@mui/material"
 import Link from "next/link"
-import { Suspense, useState } from "react"
+import { useState } from "react"
 import UserNav from "../_components/UserNav"
 import Footer from "./Footer"
 
@@ -16,17 +16,11 @@ function Header() {
         <>
             <AppBar
                 component="nav"
-                sx={[
-                    {
-                        zIndex: theme.zIndex.drawer + 1
-                    },
-                    theme.applyStyles("dark", {
-                        backgroundColor: "#06090E"
-                    }),
-                    theme.applyStyles("light", {
-                        backgroundColor: "#FFF1AA"
-                    })
-                ]}
+                color="header"
+                enableColorOnDark
+                sx={{
+                    zIndex: theme.zIndex.drawer + 1
+                }}
             >
                 <Toolbar
                     sx={{

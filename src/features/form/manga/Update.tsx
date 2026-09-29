@@ -1,4 +1,4 @@
-import EditPageContainer from "@/features/edit/components/EditPageContainer";
+import EditPageContainer from "@/components/edit/EditPageContainer";
 import { Controller, UseFormReturn } from "react-hook-form";
 import MangaPoster from "./components/MangaPoster";
 import MangaBackground from "./components/MangaBackground";
@@ -16,8 +16,8 @@ import MangaGenres from "./components/MangaGenres";
 import MangaPromoName from "./components/MangaPromoName";
 import MangaPromoBackground from "./components/MangaPromoBackground";
 import MangaPromoLogo from "./components/MangaPromoLogo";
-import Manga from "@/types/manga/manga";
 import { useState } from "react";
+import { Manga } from "@/types/manga";
 
 export function convertToForm(manga: Manga) {
     return {

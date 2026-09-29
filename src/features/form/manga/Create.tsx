@@ -1,4 +1,4 @@
-import EditPageContainer from "@/features/edit/components/EditPageContainer"
+import EditPageContainer from "@/components/edit/EditPageContainer"
 import { Controller, UseFormReturn } from "react-hook-form"
 import MangaPoster from "./components/MangaPoster"
 import MangaName from "./components/MangaName"
