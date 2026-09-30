@@ -1,6 +1,6 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { v4 } from "uuid";
-import { MangaItemSquare } from "@/components/manga/MangaItem";
+import { MangaItemSquare } from "@/features/manga/components/MangaItem";
 import { FreeMode, Navigation } from "swiper/modules";
 import "swiper/css"
 import "swiper/css/free-mode"

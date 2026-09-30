@@ -17,10 +17,15 @@ export default function MobilePage() {
         <SearchProvider fromSearchParams={true} processEmptyQuery={true}>
             <Box
                 sx={{
+                    position: "sticky",
+                    bgcolor: "background.default",
+                    top: 0,
+
                     p: "10px",
                     display: "flex",
                     flexDirection: "column",
-                    rowGap: 1
+                    rowGap: 1,
+                    zIndex: 1001
                 }}
             >
                 <Box
@@ -41,11 +46,11 @@ export default function MobilePage() {
                 </Box>
                 <SearchSectionSelector />
             </Box>
-            <Divider />
             <SearchList>                
                 <MangaResults 
                     sx={{
-                        p: "15px 10px"
+                        px: 2,
+                        pb: 3
                     }}
                 />
             </SearchList>

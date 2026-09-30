@@ -20,10 +20,7 @@ export default function Filters() {
                 }}
             >
                 <Typography
-                    sx={{
-                        fontSize: "16px",
-                        fontWeight: 600
-                    }}
+                    variant="h3"
                 >
                     Фильтры
                 </Typography>
@@ -45,7 +42,7 @@ export default function Filters() {
             </Box>
             <Box
                 sx={{
-                    mt: "20px",
+                    mt: 2,
                     display: "flex",
                     flexDirection: "column",
                     rowGap: "15px"

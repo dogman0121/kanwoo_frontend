@@ -1,7 +1,7 @@
-import MangaItem, { MangaItemSquare } from "@/components/manga/MangaItem";
+import MangaItem, { MangaItemSquare } from "@/features/manga/components/MangaItem";
 import useSearch from "@/features/search/hooks/useSearch";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
-import { Box, BoxProps, Breadcrumbs, Button, Drawer, IconButton, Popover, Typography } from "@mui/material";
+import { Box, BoxProps, Breadcrumbs, Button, Drawer, IconButton, Popover, SxProps, Typography } from "@mui/material";
 import Grid, { GridProps } from "@mui/material/Grid"
 import { RefObject, useEffect, useRef, useState } from "react";
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded';
@@ -25,6 +25,7 @@ import StatsSkeleton from "@/features/manga/components/skeleton/StatsSkeleton";
 import DescriptionSkeleton from "@/features/manga/components/skeleton/DescriptionSkeleton";
 import GenresSkeleton from "@/features/manga/components/skeleton/GenresSkeleton";
 import NameTranslationsSkeleton from "@/features/manga/components/skeleton/NameTranslationsSkeleton";
+import MangaGrid from "@/features/manga/components/MangaGrid";
 
 
 interface MangaDetailsProps {
@@ -49,7 +50,7 @@ function MangaDetailsMobile({
     useEffect(() => {
         if (!open || manga) return
 
-        dispatch(fetchManga(shortData.slug))
+        //dispatch(fetchManga(shortData.slug))
     }, [open, manga])
 
     return (
@@ -60,37 +61,21 @@ function MangaDetailsMobile({
             sx={{
                 "&>.MuiPaper-root": {
                     borderRadius: `${theme.spacing(3)} ${theme.spacing(3)} 0 0`,
-
-                    background: `
-                        linear-gradient(
-                            rgba(${theme.vars?.palette.background.defaultChannel} / 0.8) 0%, 
-                            rgba(${theme.vars?.palette.background.defaultChannel} / 0.9) 30%,
-                            rgba(${theme.vars?.palette.background.defaultChannel} / 1)) 100%, 
-                            url('${manga?.background ?? manga?.poster.medium}'
-                        )
-                    `,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat",
-                    backgroundPositionY: "0",
                 }
             }}
         >
             <Box
                 sx={{
-                    px: 2,
-                    pt: 4,
-                    pb: 3,
-
-                    position: "relative"
+                    py: 3,
+                    px: 5,
                 }}
             >
                 <Box
                     sx={{
                         display: "flex",
                         flexDirection: "row",
+                        alignItems: "center",
                         gap: 3,
-                        ml: 3
                     }}
                 >
                     <Poster 
@@ -124,9 +109,18 @@ function MangaDetailsMobile({
                         }
                     </Box>
                 </Box>
+            </Box>
+            <Box
+                sx={{
+                    px: 2,
+                    pb: 3,
+
+                    position: "relative"
+                }}
+            >
+               
                 <Box
                     sx={{
-                        mt: 2,
                         display: "flex",
                         flexDirection: "column",  
                         rowGap: 2
@@ -157,39 +151,37 @@ function MangaDetailsMobile({
                         sx={{
                             display: "flex",
                             flexDirection: "row",
-                            columnGap: 1
+
                         }}
                     >
                         <Button
                             startIcon={<BookmarkBorderRoundedIcon />}
                             variant="contained"
                             fullWidth
-                            onClick={() => dispatch(openCollectionDialog({slug: shortData.slug}))}
+                            onClick={() => {
+                                dispatch(openCollectionDialog({mangaUUID: shortData.slug}))
+                            }}
                         >
                             Сохранить
                         </Button>
-                        <Button
-                            startIcon={<OpenInNewRoundedIcon />}
-                            variant="contained"
-                            fullWidth
-                            onClick={() => router.push(toHref(routes.manga.item, {slug: shortData.slug}))}
-                        >
-                            Перейти
-                        </Button>
+                        <IconButton onClick={() => router.push(toHref(routes.manga.item, {slug: shortData.slug}))}>
+                            <OpenInNewRoundedIcon />
+                        </IconButton>
                     </Box>
                 </Box>
 
-                <IconButton 
-                    sx={{
-                        position: "absolute",
-                        right: "0",
-                        top: "0"
-                    }}
-                    onClick={() => onClose?.()}
-                >
-                    <CloseRoundedIcon />
-                </IconButton>
+                
             </Box>
+            <IconButton 
+                sx={{
+                    position: "absolute",
+                    right: "0",
+                    top: "0"
+                }}
+                onClick={() => onClose?.()}
+            >
+                <CloseRoundedIcon />
+            </IconButton>
         </Drawer>
     )
 }
@@ -309,7 +301,7 @@ function MangaDetailsDesktop({
                     fullWidth
                     startIcon={<BookmarkBorderRoundedIcon />}  
                     onClick={() => {
-                        dispatch(openCollectionDialog({slug: shortData.slug}))
+                        dispatch(openCollectionDialog({mangaUUID: shortData.slug}))
                     }}  
                 >
                         Сохранить
@@ -322,8 +314,8 @@ function MangaDetailsDesktop({
 
 function MangaResult({
     manga,
-    ...props
-}: {manga: Manga} & BoxProps) {
+    sx
+}: {manga: MangaShort, sx?: SxProps}) {
     const deviceType = useAppSelector(selectDeviceType)
 
     const openTimoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -364,10 +356,9 @@ function MangaResult({
 
     return (
         <>
-            <MangaItem
+            <MangaItemSquare
                 aria-owns={mangaMenuOpen ? "mouse-over-popover" : undefined}
                 aria-haspopup="true"
-                form={"square"} 
                 manga={manga as Manga}
                 ref={mangaItemRef}
                 onContextMenu={(event) => {
@@ -400,7 +391,8 @@ function MangaResult({
                     
                     "&:hover": {
                         transform: (deviceType != "desktop" ? "scale(1.05)" : undefined)
-                    }
+                    },
+                    ...sx
                 }}  
             />
             { deviceType == "desktop" ?
@@ -430,32 +422,31 @@ function MangaResult({
 }
 
 export default function MangaResults({
-    ...props
-}: GridProps) {
+    sx
+}: {sx?: SxProps}) {
     const { results } = useSearch();
 
     return (
         <Grid
             container
             columns={{
-                xs: 3,
-                sm: 4,
+                lg: 6,
                 md: 5,
+                sm: 4,
+                xs: 3
             }}
             spacing={{
-                xs: 1.2,
-                sm: 2,
-                md: 3
+                md: 3,
+                xs: 2
             }}
-            {...props}
+            sx={{
+                ...sx
+            }}
         >
             {results.map(manga => (
-                <Grid 
-                    size={1}
-                    key={`catalog_manga_${manga.slug}`}
-                >
+                <Grid key={`catalog_manga_${manga.slug}`} size={1}>
                     <MangaResult 
-                        manga={manga as Manga}
+                        manga={manga as MangaShort}
                     />
                 </Grid>
             ))}

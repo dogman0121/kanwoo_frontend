@@ -14,10 +14,10 @@ import { MangaBlock } from "@/features/global/states/manga/state";
 
 interface CollectionDialogProps {
     open: boolean,
-    onClose?: () => void,
     context: {
-        mangaSlug: string
-    }
+        mangaUUID: string
+    },
+    onClose?: () => void,
 }
 
 export default function MangaAddRemoveDialog({
@@ -27,7 +27,7 @@ export default function MangaAddRemoveDialog({
 }: CollectionDialogProps){
     const dispatch = useAppDispatch()
 
-    const manga = useAppSelector(state => selectMangaBlockBySlug(state, context.mangaSlug))
+    const manga = useAppSelector(state => selectMangaBlockBySlug(state, context.mangaUUID))
     const collections = useAppSelector(selectAuthProfileCollections)
 
     const isMangaInCollection = (mangaBlock: MangaBlock, collectionId: number) => {
@@ -45,7 +45,9 @@ export default function MangaAddRemoveDialog({
         <>
             <Dialog
                 open={open}
-                onClose={onClose}
+                onClose={() => {
+                    onClose?.()
+                }}
             >
                 <DialogTitle>Выберите коллекцию</DialogTitle>
                 <DialogContent>
