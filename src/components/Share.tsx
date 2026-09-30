@@ -6,6 +6,7 @@ import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
 import theme from "@/constants/themes/main.theme";
 import { useAppSelector } from "@/lib/state/hooks";
 import { selectDeviceType } from "@/features/global/states/app/slice";
+import AppBackdrop, { AppBackdropContent } from "./AppBackdrop";
 
 interface ShareProps {
     open: boolean,
@@ -78,72 +79,49 @@ function ShareIconsCarousel({sx, link}: {sx?: SxProps, link: string}) {
 
 export function ShareMobile({open, onClose, link}: ShareProps) {
     return (
-        <Backdrop
+        <AppBackdrop
             open={open}
-            onClick={onClose}
-            sx={{
-                zIndex: theme.zIndex.drawer + 1,
-            }}
+            onClose={onClose}
         >
-            <Box
-                sx={{
-                    position: "absolute",
-                    bottom: "10px",
-                    px: 3,
-                    width: "100%"
-                }}
-            >
-                <Paper
-                    elevation={3}
+            <AppBackdropContent>
+                <Typography fontSize={"16px"}>Поделиться</Typography>
+                <Box
                     sx={{
-                        borderRadius: 2,
-                        p: 3,
-
-                        maxWidth: "600px",
-                        mx: "auto"
+                        mt: 2
                     }}
                 >
-                    <Typography fontSize={"16px"}>Поделиться</Typography>
-                    <Box
+                    <ShareIconsCarousel 
+                        link={process.env.NEXT_PUBLIC_SITE_URL + link} 
                         sx={{
-                            mt: 2
-                        }}
-                    >
-                        <ShareIconsCarousel 
-                            link={process.env.NEXT_PUBLIC_SITE_URL + link} 
-                            sx={{
-                                display: "flex",
-                                flexDirection: "row",
-                                gap: 3
-                            }}/>
-                    </Box>
-                    <Divider 
-                        sx={{
-                            mt: 3
-                        }}
-                    />
-                    <List
-                        onClick={() => {navigator.clipboard.writeText(process.env.NEXT_PUBLIC_SITE_URL + link); onClose?.()}}
-                        sx={{
-                            mt: 2,
                             display: "flex",
                             flexDirection: "row",
-                            gap:3,
-                            alignItems: "center"
-                        }}
-                    >
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <ContentCopyRoundedIcon />
-                            </ListItemIcon>
-                            <ListItemText>
-                                Скопировать ссылку
-                            </ListItemText>
-                        </ListItemButton>
-                    </List>
-                </Paper>
-            </Box>
-        </Backdrop>
+                            gap: 3
+                        }}/>
+                </Box>
+            </AppBackdropContent>
+            <Divider 
+                sx={{mx: 3}}
+            />
+            <List
+                onClick={() => {navigator.clipboard.writeText(process.env.NEXT_PUBLIC_SITE_URL + link); onClose?.()}}
+                sx={{
+                    mt: 2,
+                    display: "flex",
+                    flexDirection: "row",
+                    gap:3,
+                    alignItems: "center"
+                }}
+            >
+                <ListItemButton>
+                    <ListItemIcon>
+                        <ContentCopyRoundedIcon />
+                    </ListItemIcon>
+                    <ListItemText>
+                        Скопировать ссылку
+                    </ListItemText>
+                </ListItemButton>
+            </List>
+        </AppBackdrop>
     )
 }
 

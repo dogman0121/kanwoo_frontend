@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  // reactStrictMode: false,
+  reactStrictMode: false,
   allowedDevOrigins: ['192.168.1.103'],
   experimental: {
     middlewareClientMaxBodySize: "100mb",

@@ -6,7 +6,7 @@ import { Box, Button, Container, Grid, Typography, useTheme } from "@mui/materia
 import Similar from "./_components/Similar";
 import { useEffect } from "react";
 import Stats from "@/features/manga/components/Stats";
-import { selectSection, setSection } from "@/lib/state/features/manga-page/page/slice";
+import { selectSection, setSection } from "@/features/manga/states/manga-page/page/slice";
 import { AppTab, AppTabContext, AppTabList, AppTabPanel } from "@/components/AppTabs";
 import ReadingButton from "./_components/ReadingButton";
 import ChaptersSection from "./_components/ChapterSection";

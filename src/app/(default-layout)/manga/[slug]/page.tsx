@@ -2,6 +2,9 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { mangaServerApi } from "@/lib/fetch/features/manga/server.api";
 import PPage from "./PPage";
+import { Suspense } from "react";
+import DesktopPage from "./DesktopPage";
+import MobilePage from "./MobilePage";
 
 
 export async function generateMetadata({
@@ -53,7 +56,16 @@ export default async function Page({
             readingProgress={response.data.progress}
             readingProgressMetadata={response.metadata.progress}
             readingProgressContext={response.context.progress}
-            deviceType={viewport}
-        />
+        >
+            {viewport == "desktop" ?
+                <Suspense>
+                    <DesktopPage manga={response.data.manga} />
+                </Suspense>
+                :
+                <Suspense>
+                    <MobilePage manga={response.data.manga}/>
+                </Suspense>
+            }
+        </PPage>
     )
 }

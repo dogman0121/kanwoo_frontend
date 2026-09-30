@@ -1,26 +1,15 @@
 "use client"
 
-import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import theme from "@/constants/themes/main.theme";
 import { Box, IconButton, Typography } from "@mui/material";
-import WestRoundedIcon from '@mui/icons-material/WestRounded';
-import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import Poster from "@/components/poster/Poster";
-import { useEffect, useState } from "react";
-import MobileOptions from "./_components/mobile/MobileOptions";
 import { useRouter } from "next/navigation";
 import Stats from "@/features/manga/components/Stats";
-import { selectManga, selectSection, setSection } from "@/lib/state/features/manga-page/page/slice";
 import Metadata from "@/features/manga/components/Metadata";
 import ReadingButton from "./_components/ReadingButton";
-import { AppTab, AppTabContext, AppTabList, AppTabPanel } from "@/components/AppTabs";
-import Description from "@/features/manga/components/Description";
-import Genres from "@/features/manga/components/Genres";
-import NameTranslations from "@/features/manga/components/NameTranslations";
-import Similar from "./_components/Similar";
-import ChaptersSection from "./_components/ChapterSection";
-import CommentsPreview from "./_components/mobile/CommentsPreview";
 import { Manga } from "@/types/manga";
+import MobileSections from "./_components/mobile/MobileSections";
+import Header from "./_components/mobile/Header";
 
 
 export default function MobilePage({
@@ -28,27 +17,6 @@ export default function MobilePage({
 }: {
     manga: Manga
 }) {
-    const dispatch = useAppDispatch()
-    
-    const section = useAppSelector(selectSection)
-    const [optionsOpen, setOptionsOpen] = useState(false)
-    const router = useRouter()
-
-    const handleChangeSection = (_event: React.SyntheticEvent, newValue: string) => {
-        dispatch(setSection(newValue));
-    };
-
-    useEffect(() => {
-        if (!manga) 
-            return () => {};
-
-        navigator.sendBeacon(`/api/manga/${manga.slug}/views`)
-
-    }, [manga])
-
-    if (!manga)
-        return
-
     const backgroundURL = manga.background ?? manga.poster.medium 
     const backgroundColor = theme.vars?.palette.background.defaultChannel
 
@@ -81,28 +49,7 @@ export default function MobilePage({
                         backgroundPositionY: "0"
                     }}
                 >
-                    <Box
-                        sx={{
-                            height: "34px",
-                            width: "100%",
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-between"
-                        }}
-                    >
-                        <IconButton
-                            color="inherit"
-                            onClick={() => router.back()}
-                        >
-                            <WestRoundedIcon />
-                        </IconButton>
-                        <IconButton
-                            color="inherit"
-                            onClick={() => setOptionsOpen(true)}
-                        >
-                            <MoreVertRoundedIcon />
-                        </IconButton>
-                    </Box>
+                    <Header />
                     <Box
                         sx={{
                             mt: 2,
@@ -141,7 +88,9 @@ export default function MobilePage({
                         views={manga.stats.views} 
                         saves={manga.stats.saves} 
                         size="small" 
-                        boxProps={{sx:{mt: 2}}}
+                        sx={{
+                            mt: 2
+                        }}
                     />
                 </Box>
                 <Box
@@ -160,37 +109,9 @@ export default function MobilePage({
                         mt: 4
                     }}
                 >
-                    <AppTabContext value={section}>
-                        <AppTabList onChange={handleChangeSection}>
-                            <AppTab label="Информация" value={"info"}/>
-                            <AppTab label="Главы" value={"chapters"} />
-                        </AppTabList>
-                        <AppTabPanel value={"info"}>
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    rowGap: 3
-                                }}
-                            >
-                                <CommentsPreview />
-                                <Description description={manga.description} />
-                                <Genres genres={manga.genres}/>
-                                <NameTranslations nameTranslations={manga.name_translations} />
-                                <Similar />
-                            </Box>
-                        </AppTabPanel>
-                        <AppTabPanel value={"chapters"}>
-                            <ChaptersSection />
-                        </AppTabPanel>
-                    </AppTabContext>
+                    <MobileSections />
                 </Box>
-                
             </Box>
-            <MobileOptions 
-                open={optionsOpen}
-                onClose={() => setOptionsOpen(false)}
-            />
         </>
     )
 }

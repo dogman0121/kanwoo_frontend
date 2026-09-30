@@ -12,9 +12,8 @@ function SearchList({ sx, children, ...props }: BoxProps) {
         query, 
         results, 
         onNext, 
-        section, 
-        filters, 
         hasMore,
+        isLoading,
         processEmptyQuery
     } = useContext(SearchContext);
 
@@ -48,13 +47,12 @@ function SearchList({ sx, children, ...props }: BoxProps) {
                 По запросу {query} ничего не найдено.
             </Box>
         )
-
-
+    
     return (
         <InfiniteScroll
             dataLength={results.length}
-            hasMore={hasMore}
-            next={() => onNext(query, section, filters)}
+            hasMore={!isLoading && hasMore}
+            next={onNext}
             loader={
                 <Box
                     sx={{

@@ -10,7 +10,7 @@ import MangaResults from "./_components/MangaResults";
 import SearchProvider from "@/features/search/components/SearchProvider";
 import SearchSectionSelector from "@/features/search/components/SearchSectionSelector";
 
-export default function MobileCatalogPage() {
+export default function MobilePage() {
     const [filtersOpened, setFiltersOpened] = useState(false)
 
     return (

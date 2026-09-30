@@ -63,6 +63,7 @@ export const {
 
 export const selectManga = (state: AppState) => {
     const mangaSlug = state.mangaPage.page.mangaSlug
+    
     if (!mangaSlug) return null
 
     return selectMangaBySlug(state, mangaSlug)

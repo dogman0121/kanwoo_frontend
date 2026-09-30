@@ -1,8 +1,8 @@
 import CommentsPanel from "@/features/comment/components/CommentsPanel";
 import PreviewComment from "@/features/comment/components/PreviewComment";
 import { addReply } from "@/features/global/states/comments/slice";
-import { fetchComments, fetchCommentsPreview, addBlock, selectCommentsBlockById, sendComment } from "@/lib/state/features/manga-page/comments/slice";
-import { selectManga } from "@/lib/state/features/manga-page/page/slice";
+import { fetchComments, fetchCommentsPreview, addBlock, selectCommentsBlockById, sendComment } from "@/features/manga/states/manga-page/comments/slice";
+import { selectManga } from "@/features/manga/states/manga-page/page/slice";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import { Box, Paper, Typography } from "@mui/material";
 import { useEffect, useState } from "react";

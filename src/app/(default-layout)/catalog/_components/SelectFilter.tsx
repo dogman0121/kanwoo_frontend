@@ -65,7 +65,8 @@ export default function SelectFilter({
                             <Box
                                 sx={{
                                     display: "flex",
-                                    gap: "5px"
+                                    gap: "5px",
+                                    flexWrap: "wrap"
                                 }}
                             >
                                 {(selected as string[]).map((value: string) => (

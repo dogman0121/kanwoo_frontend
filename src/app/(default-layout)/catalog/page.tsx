@@ -1,5 +1,5 @@
-import MobileCatalogPage from "./MobileCatalogPage"
-import DesktopCatalogPage from "./DesktopCatalogPage"
+import MobilePage from "./MobilePage"
+import DesktopPage from "./DesktopPage"
 
 export default async function Page({
     searchParams
@@ -11,9 +11,9 @@ export default async function Page({
     return (
         <>
             {viewport == "mobile" ?
-                <MobileCatalogPage />
+                <MobilePage />
                 :
-                <DesktopCatalogPage />
+                <DesktopPage />
             }
         </>
     )
