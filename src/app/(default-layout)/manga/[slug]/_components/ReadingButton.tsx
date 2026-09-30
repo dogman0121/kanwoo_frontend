@@ -1,5 +1,5 @@
 import { routes, toHref } from "@/constants/routes/main.routes";
-import { selectReadingProgress, selectReadingProgressContext } from "@/lib/state/features/manga-page/progress/slice";
+import { selectReadingProgress, selectReadingProgressContext } from "@/features/manga/states/manga-page/progress/slice";
 import { useAppSelector } from "@/lib/state/hooks";
 import { Button, ButtonProps, styled } from "@mui/material";
 import { useRouter } from "next/navigation";

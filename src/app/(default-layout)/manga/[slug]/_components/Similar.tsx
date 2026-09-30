@@ -1,7 +1,7 @@
 "use client"
 
 import Poster from "@/components/poster/Poster";
-import { fetchSimilar, selectManga, selectSimilar } from "@/lib/state/features/manga-page/page/slice";
+import { fetchSimilar, selectManga, selectSimilar } from "@/features/manga/states/manga-page/page/slice";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import { MangaShort } from "@/types/manga";
 import { Box, Typography } from "@mui/material";

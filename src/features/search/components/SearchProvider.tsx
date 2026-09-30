@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import SearchContext from "../context/SearchContext";
 import { searchService } from "../services/api/searchService";
 import SearchSection from "../types/searchSection";
@@ -9,6 +9,7 @@ import { debounce } from "lodash";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Manga } from "@/types/manga";
 import { Profile } from "@/types/profile";
+import { router } from "@/lib/api/api-config.type";
 
 
 function SearchProvider({ 
@@ -18,9 +19,8 @@ function SearchProvider({
 }: { 
     children: React.ReactNode, 
     processEmptyQuery?: boolean,
-    fromSearchParams?: boolean 
+    fromSearchParams?: boolean
 }) {
-    const router = useRouter()
     const pathName = usePathname()
     const searchParams  = useSearchParams()
 
@@ -39,32 +39,38 @@ function SearchProvider({
     const [query, setQuery] = useState<string>("");
     const [section, setSection] = useState<SearchSection>(SearchSection.MANGA);
     const [filters, setFilters] = useState<Map<string, string[]>>(new Map<string, string[]>());
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [loading, setIsLoading] = useState(false)
+    const initializedRef = useRef(false);
+    const firstFetchProtectRef = useRef(false)
+    const loadingRef = useRef(false)
 
 
-    const loadResults = async (query: string, section: SearchSection, filters: Map<string, string[]>) => {
+    const loadResults = useCallback(async () => {
+        if (loadingRef.current) return
+        if (!hasMore) return;
+
         setIsLoading(true)
+        loadingRef.current = true;
 
         try {
-            const response = await searchService.search(query, section, filters, page, perPage)
+            const response = await searchService.search(query, section, filters, page, perPage);
 
-            setResults(prev => [...prev, ...response.data])
-            setPage(prev => prev+1)
-            if (response.pagination)
-                setTotalCount(response.pagination.total_count)
+            setResults(prev => [...prev, ...response.data]);
+            setPage(prev => prev + 1);
+            if (response.pagination) setTotalCount(response.pagination.total_count);
         } finally {
+            loadingRef.current = false
             setIsLoading(false)
         }
-    }
+    }, [query, section, filters, page, perPage, hasMore, setResults, setPage, setTotalCount]);
 
-    const debouncedLoadResultsRef = useRef(debounce(async (query, section, filters) => {
+    const debouncedLoadResults = useCallback(debounce(async (query, section, filters) => {
         if (fromSearchParams) {
             const currentParams = new URLSearchParams(searchParams.toString())
             
             const compiledParams = searchService.compileParams(query, section, filters)
 
             for(const key in compiledParams.keys){
-                console.log(key)
                 currentParams.delete(key)
             }
 
@@ -72,26 +78,35 @@ function SearchProvider({
                 currentParams.append(key, val)
             })
 
-            router.replace(pathName + "?" + compiledParams.toString())
+            window.history.replaceState({}, "", pathName + "?" + compiledParams.toString())
         }
 
-        setResults([])
         reset()
-    }, 500))
+    }, 500), [])
+
 
     useEffect(() => {
-        if (fromSearchParams) {
+        // console.log(debouncedLoadResults, fromSearchParams, query, section, filters, initialized)
+        if (!initializedRef.current && fromSearchParams) {
             const {query, section, filters} = searchService.parseParams(searchParams)
-            
+
             setQuery(query)
             setSection(section)
             setFilters(filters)
-        }
-    }, [])
 
-    useEffect(() => {
-        debouncedLoadResultsRef.current(query, section, filters)
-    }, [query, section, filters])
+            initializedRef.current = true
+            firstFetchProtectRef.current = true
+            return () => {}
+        }
+
+        if (firstFetchProtectRef.current) {
+            firstFetchProtectRef.current = false
+            return
+        }
+
+        debouncedLoadResults(query, section, filters)
+
+    }, [debouncedLoadResults, fromSearchParams, query, section, filters])
 
     return (
         <SearchContext.Provider
@@ -104,7 +119,7 @@ function SearchProvider({
                 setResults: setResults,
                 filters: filters,
                 setFilters: setFilters,
-                isLoading: isLoading,
+                isLoading: loading,
                 hasMore: hasMore,
                 totalCount: totalCount,
                 onNext: loadResults,

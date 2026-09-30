@@ -1,5 +1,5 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import { mangaPageReducer } from './features/manga-page/reducer'
+import { mangaPageReducer } from '../../features/manga/states/manga-page/reducer'
 import { homePageReducer } from '../../features/home/states/home-page/reducer'
 import adminPageReducer from './features/admin-page/adminPageSlice'
 import settingsPageReducer from './features/settings-page/slice'

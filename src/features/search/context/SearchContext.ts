@@ -18,7 +18,7 @@ interface SearchContextProps {
     isLoading: boolean,
     hasMore: boolean,
     totalCount: number | null,
-    onNext: (query: string, section: SearchSection, filters: Map<string, string[]>) => void,
+    onNext: () => void,
     processEmptyQuery: boolean
 }
 

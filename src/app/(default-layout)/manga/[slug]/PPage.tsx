@@ -1,13 +1,11 @@
 "use client"
 
-import { setManga } from "@/lib/state/features/manga-page/page/slice"
-import { setProgress } from "@/lib/state/features/manga-page/progress/slice"
+import { setManga } from "@/features/manga/states/manga-page/page/slice"
+import { setProgress } from "@/features/manga/states/manga-page/progress/slice"
 import { useAppDispatch } from "@/lib/state/hooks"
 import { Manga, MangaContext, MangaMetadata } from "@/types/manga"
 import { ReadingProgress, ReadingProgressContext, ReadingProgressMetadata } from "@/types/reading-progress"
-import { useEffect } from "react"
-import DesktopPage from "./DesktopPage"
-import MobilePage from "./MobilePage"
+import React, { Children, useEffect } from "react"
 import { addManga } from "@/features/global/states/manga/slice"
 
 export interface PPageProps {
@@ -17,7 +15,7 @@ export interface PPageProps {
     readingProgress: ReadingProgress,
     readingProgressMetadata: ReadingProgressMetadata,
     readingProgressContext: ReadingProgressContext
-    deviceType: string
+    children: React.ReactElement
 }
 
 export default function PPage({
@@ -27,12 +25,12 @@ export default function PPage({
     readingProgress,
     readingProgressMetadata,
     readingProgressContext,
-    deviceType   
+    children
 }: PPageProps) {
     const dispatch = useAppDispatch()
     
     useEffect(() => {
-        dispatch(setManga(manga.id))
+        dispatch(setManga(manga.slug))
 
         dispatch(addManga({
             manga: manga,
@@ -53,13 +51,14 @@ export default function PPage({
         readingProgressContext
     ])
     
+    useEffect(() => {
+        navigator.sendBeacon(`/api/manga/${manga.slug}/views`)
+
+    }, [manga])
+
     return (
         <>
-            {deviceType == "desktop" ?
-                <DesktopPage manga={manga}/>
-                :
-                <MobilePage manga={manga}/>
-            }
+            {Children.map(children, c => c)}
         </>
     )
 }

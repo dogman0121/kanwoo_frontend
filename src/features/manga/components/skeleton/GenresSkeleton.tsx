@@ -6,7 +6,7 @@ export default function GenresSkeleton() {
     return (
         <GenresContainer>
             {range(0, 3).map(idx => (
-                <Skeleton variant="rounded" width={54} height={32} sx={{ borderRadius: '16px' }} />
+                <Skeleton variant="rounded" width={54} height={32} sx={{ borderRadius: '16px' }} key={`genres_skeleton_${idx}`}/>
             ))}
         </GenresContainer>
     )

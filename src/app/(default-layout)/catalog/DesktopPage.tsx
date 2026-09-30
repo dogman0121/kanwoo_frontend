@@ -9,7 +9,7 @@ import MangaResults from "./_components/MangaResults"
 import SearchSectionSelector from "@/features/search/components/SearchSectionSelector"
 import theme from "@/constants/themes/main.theme"
 
-export default function DesktopCatalogPage() {
+export default function DesktopPage() {
     return (
         <Container maxWidth="lg">
             <Typography 

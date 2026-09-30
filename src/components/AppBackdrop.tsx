@@ -1,12 +1,27 @@
 "use client"
 
-import { Backdrop, Box, Paper, useTheme } from "@mui/material"
-import { Children } from "react"
+import { Backdrop, Box, BoxProps, Paper, useTheme } from "@mui/material"
+import React, { Children } from "react"
 
 export interface AppBackdropProps {
     open: boolean,
     onClose: () => void,
     children?: React.ReactNode
+}
+
+export function AppBackdropContent({
+    sx, ...props
+}: BoxProps){
+    return (
+        <Box
+            sx={{
+                p: 3,
+
+                ...sx
+            }}
+            {...props}
+        />
+    )
 }
 
 export default function AppBackdrop({open, onClose, children}: AppBackdropProps) {
@@ -32,7 +47,9 @@ export default function AppBackdrop({open, onClose, children}: AppBackdropProps)
                     elevation={3}
                     sx={{
                         borderRadius: 2,
-                        padding: theme.spacing(3)
+
+                        maxWidth: "600px",
+                        mx: "auto"
                     }}
                 >
                     {Children.map(children, c => c)}

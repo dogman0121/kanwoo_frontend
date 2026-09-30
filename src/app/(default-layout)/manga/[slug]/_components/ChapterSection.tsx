@@ -7,9 +7,9 @@ import Link from "next/link"
 import { MouseEvent, useEffect, useState } from "react"
 import SwapVertRoundedIcon from "@mui/icons-material/SwapVertRounded"
 import NotificationRoundedIcon from "@mui/icons-material/NotificationsRounded"
-import { selectManga } from "@/lib/state/features/manga-page/page/slice"
-import { fetchChapters, fetchTranslations, reverseChapters, setCurrTranslation, subscribeTranslation } from "@/lib/state/features/manga-page/translations/slice"
-import { selectCurrentTranslationChaptersIsLoading, selectCurrTranslation, selectCurrTranslationChapters, selectCurrTranslationId, selectCurrTranslationIsSubscribed, selectIsLoaded, selectIsLoading, selectTranslationBlockById, selectTranslationById, selectTranslations } from "@/lib/state/features/manga-page/translations/selectors"
+import { selectManga } from "@/features/manga/states/manga-page/page/slice"
+import { fetchChapters, fetchTranslations, reverseChapters, setCurrTranslation, subscribeTranslation } from "@/features/manga/states/manga-page/translations/slice"
+import { selectCurrentTranslationChaptersIsLoading, selectCurrTranslation, selectCurrTranslationChapters, selectCurrTranslationId, selectCurrTranslationIsSubscribed, selectIsLoaded, selectIsLoading, selectTranslationBlockById, selectTranslationById, selectTranslations } from "@/features/manga/states/manga-page/translations/selectors"
 import { Chapter } from "@/types/chapter"
 
 

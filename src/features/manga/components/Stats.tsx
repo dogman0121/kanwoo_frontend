@@ -1,4 +1,4 @@
-import { Box, BoxProps, Skeleton, SvgIcon, Typography } from "@mui/material"
+import { Box, BoxProps, Skeleton, SvgIcon, SxProps, Typography } from "@mui/material"
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import formatViews from "../utils/formatViews";
@@ -7,6 +7,7 @@ interface StatsProps {
     size: "medium" | "small",
     views: number,
     saves: number,
+    sx?: SxProps,
     boxProps?: BoxProps
 }
 
@@ -56,6 +57,7 @@ export default function Stats({
     size, 
     views, 
     saves, 
+    sx,
     boxProps = {}
 }: StatsProps) {
     return (
@@ -64,7 +66,7 @@ export default function Stats({
                 display: "flex",
                 flexDirection: "row",
                 columnGap: "15px",
-                ...boxProps.sx
+                ...sx
             }}
             {...boxProps}
         >

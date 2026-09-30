@@ -7,7 +7,7 @@ import ReportRoundedIcon from "@mui/icons-material/ReportRounded"
 import { useState } from "react";
 import { ShareMobile } from "@/components/Share";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
-import { selectManga } from "@/lib/state/features/manga-page/page/slice";
+import { selectManga } from "@/features/manga/states/manga-page/page/slice";
 import { openReportDialog } from "@/features/global/states/app/slice";
 
 export default function MobileOptions({open, onClose}: AppBackdropProps) {
