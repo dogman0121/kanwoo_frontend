@@ -50,7 +50,7 @@ function MangaDetailsMobile({
     useEffect(() => {
         if (!open || manga) return
 
-        //dispatch(fetchManga(shortData.slug))
+        dispatch(fetchManga(shortData.slug))
     }, [open, manga])
 
     return (
