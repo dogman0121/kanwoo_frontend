@@ -8,7 +8,7 @@ import MangaCarouselTitle from "../../ui/MangaCarouselTitle"
 import useSwitchButtons from "@/features/home/hooks/use-switch-buttons"
 import MangaCarouselList from "../../ui/MangaCarouselList"
 import { MangaShort } from "@/types/manga"
-import { MangaItemSquare } from "@/components/manga/MangaItem"
+import { MangaItemSquare } from "@/features/manga/components/MangaItem"
 import MangaListSkeleton, { MangaSkeleton } from "./MangaListSkeleton"
 import { range } from "lodash"
 

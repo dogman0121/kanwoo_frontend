@@ -11,16 +11,8 @@ export default function MangaGrid({
     return (
         <Grid
             container
-            columns={{
-                lg: 8,
-                md: 6,
-                sm: 4,
-                xs: 3
-            }}
-            spacing={{
-                md: 3,
-                xs: 2
-            }}
+            columns={{ lg: 8, md: 6, sm: 4, xs: 3 }}
+            spacing={{ md: 3, xs: 2 }}
             sx={{
                 ...sx
             }}

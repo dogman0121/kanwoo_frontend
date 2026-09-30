@@ -13,11 +13,7 @@ export default async function RootLayout({
     const device = (await headers()).get("X-Device-Type")
     
     return (
-        <Box
-            sx={{
-                height: "100vh"
-            }}
-        >
+        <Box>
             { device == "mobile" ? 
                 <MobileLayout>
                     {children}

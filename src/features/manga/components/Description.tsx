@@ -3,7 +3,17 @@
 import { useState, useRef, useEffect } from "react";
 import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
-import { Box, BoxProps, Button, useTheme } from "@mui/material";
+import { Box, BoxProps, Button, styled, Typography, useTheme } from "@mui/material";
+
+export const DescriptionText = styled(Typography)(({theme}) => ({
+    width: "100%",
+    fontSize: "16px",
+    lineHeight: "1.7",
+
+    overflowWrap: "break-word",
+    overflowY: "hidden",
+    whiteSpace: "pre-wrap"
+}))
 
 export default function Description({description, boxProps}: {description: string, boxProps?: BoxProps}) {
     const [open, setOpen] = useState(false);
@@ -39,19 +49,11 @@ export default function Description({description, boxProps}: {description: strin
         <Box
             {...boxProps}
         >
-            <Box 
-                sx={{
-                    lineHeight: 1.5,
-                    width: "100%",
-                    overflowWrap: "break-word",
-                    overflowY: "hidden",
-                    fontSize: "15px",
-                    whiteSpace: "pre-wrap"
-                }}
+            <DescriptionText
                 ref={textRef}
             >
                 {description}
-            </Box>
+            </DescriptionText>
             { isFullText && (
                 <Button
                     variant="contained"

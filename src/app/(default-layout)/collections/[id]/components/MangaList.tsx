@@ -1,7 +1,7 @@
 "use client"
 
-import MangaGrid from "@/components/manga/MangaGrid"
-import { MangaItemSquare } from "@/components/manga/MangaItem"
+import MangaGrid from "@/features/manga/components/MangaGrid"
+import { MangaItemSquare } from "@/features/manga/components/MangaItem"
 import { selectCollection, selectCollectionManga } from "@/features/collection/states/collection-page/slice"
 import { selectAuthProfile } from "@/features/global/states/auth-profile"
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"

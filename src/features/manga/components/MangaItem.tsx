@@ -1,7 +1,7 @@
 import { Box, BoxProps, styled, SxProps, Typography, useTheme } from "@mui/material";
 import Link from "next/link";
-import Poster from "../poster/Poster";
-import WrappedText from "../WrapperTypography";
+import Poster from "../../../components/poster/Poster";
+import WrappedText from "../../../components/WrapperTypography";
 import { MangaShort } from "@/types/manga";
 
 export interface MangaItemProps {
