@@ -19,8 +19,8 @@ export type ReaderEventPayloads = {
     [ReaderEventsType.INITIALIZED]: {
         chapter: Chapter
         chapterContext: ChapterContext
-        readingProgress: ReadingProgress
-        readingProgressContext: ReadingProgressContext
+        // readingProgress: ReadingProgress
+        // readingProgressContext: ReadingProgressContext
     }
     [ReaderEventsType.CHAPTER_LOADED]: {
         chapter: Chapter,
@@ -86,22 +86,18 @@ class Reader {
         ]);
 
         this.currChapterID = chapterID
-        this.currPageNumber = progressResponse.progress.page
+        this.currPageNumber = 0
 
         this.pageLoader?.init(
             chapterResponse.chapter.id,
             chapterResponse.chapter.pages!,
-            progressResponse.progress.page || 0
+            0
         );
-
-        this.progressSaver?.startSession(this.currChapterID, this.currPageNumber)
 
         // TS проверит, что value соответствует ReaderEventsType.INITIALIZED
         this.dispatchEvent(ReaderEventsType.INITIALIZED, {
             chapter: chapterResponse.chapter,
             chapterContext: chapterResponse.chapterContext,
-            readingProgress: progressResponse.progress,
-            readingProgressContext: progressResponse.progressContext,
         });
     }
 
@@ -111,7 +107,6 @@ class Reader {
 
     setPageNumber(pageNumber: number) {
         this.pageLoader?.setPageNumber(pageNumber)
-        this.progressSaver?.saveProgress(pageNumber)
     }
 
     async loadChapter(chapterID: number) {

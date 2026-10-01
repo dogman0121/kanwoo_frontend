@@ -49,7 +49,7 @@ export default function KanwooReader({
         dispatch(initReader({
             chapter: value.chapter,
             chapterContext: value.chapterContext,
-            pageNumber: value.readingProgress.page
+            pageNumber: 0
         }))
     }
 
