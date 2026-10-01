@@ -30,7 +30,6 @@ export default function CommentsPreview({
     const commentsBlock = useAppSelector(state => selectCommentsBlockById(state, chapter.id))
 
     const handleShowComments = () => {    
-        console.log(123)    
         dispatch(setCommentsPanelOpen(true))
     }
 

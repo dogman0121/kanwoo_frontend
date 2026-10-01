@@ -14,10 +14,12 @@ export default function ChapterFooterInner({
             sx={{
                 display: 'flex',
                 flexDirection: "column",
+                gap: 4,
+
                 maxWidth: MAX_CHAPTER_WIDTH,
                 width: "100%",
+
                 mx: "auto",
-                gap: 4
             }}
         >
             <AddSkeleton />

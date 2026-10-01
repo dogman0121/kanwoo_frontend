@@ -39,7 +39,7 @@ function NavigationButton({sx, ...props}: IconButtonProps) {
                 "&.Mui-disabled": {
                     bgcolor: "#000000"
                 },
-                boxShadow: "0 0 3px rgba(255, 255, 255, 0.2)",
+                boxShadow: "0 0 1px rgba(255, 255, 255, 0.2)",
                 ...sx
             }}
             {...props}

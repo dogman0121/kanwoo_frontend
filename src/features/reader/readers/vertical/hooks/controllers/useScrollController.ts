@@ -6,7 +6,7 @@ import Page from "@/types/chapter/page"
 import { throttle } from "lodash"
 import { useCallback, useEffect, useRef } from "react"
 import useNavOpen from "../../../../hooks/controllers/useNavOpen"
-import { NextChapterEvent, PageChangeEvent, ReadingEventType } from "../../../../interfaces/reader"
+import { NextChapterEvent, PageChangedEvent, ReadingEventType } from "../../../../interfaces/reader"
 import { selectChapters, selectCurrentPageNumber } from "../../../../states/reader/selectors"
 import { setCurrentChapterIndex, setCurrentPageNumber } from "../../../../states/reader/slice"
 import { setEndOfChapterReached } from "../../../../states/reader.slice"
@@ -66,7 +66,7 @@ export default function useScrollController({
     onLoadNextChapter
 }: {
     onLoadNextChapter?: (event: NextChapterEvent) => void,
-    onPageChange?: (event: PageChangeEvent) => void
+    onPageChange?: (event: PageChangedEvent) => void
 }) {
     const dispatch = useAppDispatch()
 
@@ -82,7 +82,6 @@ export default function useScrollController({
     const chaptersOffsetsRef = useRef<number[]>([])
     const pagesOffsetsRef = useRef(new Map<number, number[]>());
     const progressInitialized = useRef(false)
-    const offsetsReady = useRef(false);
     const { width } = useWindowWidth()
 
     const handleChapter = useCallback((chapters: Chapter[], chaptersOffsets: number[], pagesOffsets: Map<number, number[]>, scrollY: number) => {
@@ -97,16 +96,17 @@ export default function useScrollController({
             throw new Error("Can't get chapter pages")
 
         const {  
+            page,
             idx: pageIdx 
         } = calculatePage(pagesOffsets.get(chapter.id) || [], chapter.pages, scrollY - chapterOffset)
-
-        dispatch(setCurrentChapterIndex(chapterIdx))
-        dispatch(setCurrentPageNumber(pageIdx))
 
         onPageChange?.({
             type: ReadingEventType.PAGE_CHANGED,
             value: {
+                chapter: chapter,
                 chapterId: chapter.id,
+                chapterIdx: chapterIdx,
+                page: page,
                 pageNumber: pageIdx
             }
         })
@@ -118,16 +118,11 @@ export default function useScrollController({
         const topReached = scrollY <= 0
         const endReached = scrollY + windowHeight >= document.documentElement.scrollHeight
 
-        if (topReached){
+        if (topReached || endReached){
             openNav()
-        } 
-        else if (endReached) {
-            openNav()
-            dispatch(setEndOfChapterReached(true))
         }
         else {
             closeNav()
-            dispatch(setEndOfChapterReached(false))
         }
     }
 
@@ -141,12 +136,11 @@ export default function useScrollController({
             const lastChapterInd = chapters.length - 1;
 
             const lastChapter = chapters[lastChapterInd]
-            if (lastChapter.next_chapter_id) {
+            if (infinityChapter && lastChapter.next_chapter_id) {
                 onLoadNextChapter?.({
                     type: ReadingEventType.LOAD_NEXT_CHAPTER,
                     value: {
-                        chapterId: lastChapter.id,
-                        nextChapterId: lastChapter.next_chapter_id
+                        chapter: lastChapter
                     }
                 })
             }

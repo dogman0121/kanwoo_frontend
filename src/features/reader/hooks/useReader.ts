@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react"
 import Reader from "../lib/reader"
 import PageLoader, { PageLoaderProps } from "../lib/pageLoader"
 import ProgressSaver, { ProgressSaverProps } from "../lib/progressSaver"
-import { NextChapterEvent, PageChangeEvent, ReadingEvent, ReadingEventType } from "../interfaces/reader"
 
 
 export default function useReader({
@@ -16,19 +15,6 @@ export default function useReader({
 }) {
 
     const [reader, setReader] = useState<Reader | null>(null)
-
-    const handlePageChange = (event: PageChangeEvent) => {
-        const {value: {chapterId, pageNumber}} = event;
-
-        reader?.setChapter(chapterId)
-        reader?.setPageNumber(pageNumber)
-    }
-
-    const handleLoadChapter = (event: NextChapterEvent) => {
-        const {value: {nextChapterId}} = event
-
-        reader?.loadChapter(nextChapterId)
-    }
 
     useEffect(() => {
         if (!reader) {
@@ -50,7 +36,5 @@ export default function useReader({
 
     return {
         reader: reader,
-        onPageChanged: handlePageChange,
-        onLoadChapter: handleLoadChapter
     }
 }

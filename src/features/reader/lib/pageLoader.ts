@@ -269,9 +269,9 @@ class PageLoader {
         // this._cancelTasks()
 
         const rangeStart = Math.max(0, pageNumber - this.preloadBeforeSize)
-        const rangeEnd = Math.min(this._getChapterPagesById(this.currentChapterId).length, pageNumber + this.preloadAfterSize)
+        const rangeEnd = Math.min(this._getChapterPagesById(this.currentChapterId).length-1, pageNumber + this.preloadAfterSize)
 
-        for(let pageInd = rangeStart; pageInd < rangeEnd; pageInd++) {
+        for(let pageInd = rangeStart; pageInd <= rangeEnd; pageInd++) {
             const page = this._getPageByNumber(pageInd)
 
             if (this._getPageLoadingStatus(page.uuid).status != "loading"){
