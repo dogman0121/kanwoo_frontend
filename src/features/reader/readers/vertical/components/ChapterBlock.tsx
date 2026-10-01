@@ -9,6 +9,7 @@ import useWindowWidth from "@/features/reader/hooks/useWindowWidth";
 import ReaderPage from "@/features/reader/components/ReaderPage";
 import ChapterFooterInner from "@/features/reader/components/ChapterFooterInner";
 import { NavigationButtonsShadow } from "@/features/reader/components/NavigationButtons";
+import { MAX_CHAPTER_WIDTH } from "@/constants/reader";
 
 function ChapterFooter({
     chapter
@@ -71,7 +72,8 @@ export default function ChapterBlock({
         >
             <Box
                 sx={{
-                    width: width + "px",
+                    maxWidth: MAX_CHAPTER_WIDTH,
+                    width: "100%",
                     mx: "auto",
 
                     display: "flex",
