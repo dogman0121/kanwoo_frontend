@@ -80,9 +80,9 @@ class Reader {
 
     async initialize(chapterID: number) {
         console.log("initialize")
-        const [chapterResponse, progressResponse] = await Promise.all([
+        const [chapterResponse] = await Promise.all([
             this._fetchChapter(chapterID),
-            this._fetchChapterProgress(chapterID),
+            // this._fetchChapterProgress(chapterID),
         ]);
 
         this.currChapterID = chapterID
