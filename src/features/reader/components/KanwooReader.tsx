@@ -43,7 +43,7 @@ export default function KanwooReader({
         }
     })
 
-        const onInitialized = (event: InitilizedEvent) => {
+    const onInitialized = (event: InitilizedEvent) => {
         const {value} = event
 
         dispatch(initReader({
