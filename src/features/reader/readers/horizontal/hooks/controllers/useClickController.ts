@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef } from "react"
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
-import { NextChapterEvent, PageChangeEvent, ReadingEventType } from "@/features/reader/interfaces/reader"
+import { NextChapterEvent, PageChangedEvent, ReadingEventType } from "@/features/reader/interfaces/reader"
 import useNavOpen from "@/features/reader/hooks/controllers/useNavOpen"
 import useSwitchPage from "./useSwitchPage"
 import { setCurrentChapterIndex, setCurrentPageNumber } from "@/features/reader/states/reader/slice"
@@ -13,7 +13,7 @@ export default function useClickController({
     onPageChange,
     onLoadNextChapter
 }: {
-    onPageChange?: (event: PageChangeEvent) => void,
+    onPageChange?: (event: PageChangedEvent) => void,
     onLoadNextChapter?: (event: NextChapterEvent) => void
 }) {
     const dispatch = useAppDispatch()
@@ -45,16 +45,13 @@ export default function useClickController({
         }
 
         if (result) {
-            dispatch(setCurrentChapterIndex(result.chapterIdx))
-            dispatch(setCurrentPageNumber(result.pageIdx))
-            dispatch(setEndOfChapterReached(result.endReached))
+            const {chapter, chapterIdx, page, pageIdx, endReached} = result
 
             if (infinityChapter && result.endReached && result.chapter.next_chapter_id) {
                 onLoadNextChapter?.({
                     type: ReadingEventType.LOAD_NEXT_CHAPTER,
                     value: {
-                        chapterId: result.chapter.id,
-                        nextChapterId: result.chapter.next_chapter_id
+                        chapter: chapter
                     }
                 })
             }
@@ -62,10 +59,15 @@ export default function useClickController({
             onPageChange?.({
                 type: ReadingEventType.PAGE_CHANGED,
                 value: {
-                    chapterId: result.chapter.id,
-                    pageNumber: result.pageIdx      
+                    chapter: chapter,
+                    chapterId: chapter.id,
+                    chapterIdx: chapterIdx,
+                    page: page,
+                    pageNumber: pageIdx      
                 }
             })
+
+            dispatch(setEndOfChapterReached(endReached))
         }
 
     }, [getNextPage, getPrevPage])

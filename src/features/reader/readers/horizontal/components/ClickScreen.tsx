@@ -12,6 +12,7 @@ import OffsetContainer from "@/features/reader/components/ui/OffsetContainer";
 import ChapterFooterInner from "@/features/reader/components/ChapterFooterInner";
 import { Chapter } from "@/types/chapter";
 import { NavigationButtonsShadow } from "@/features/reader/components/NavigationButtons";
+import ChapterFooter from "./ChapterFooter";
 
 export interface ClickScreenProps extends ReaderVariant {
 
@@ -45,40 +46,7 @@ export default function ClickScreen({
             {currChapter && currentPage && (
                 <>
                     {endReached && (
-                        <Box
-                            sx={{
-                                bgcolor: "header.main",
-
-                                width: "100%",
-                                display: "flex"
-                            }}
-                        >
-                            <OffsetContainer
-                                ref={playgroundRef}
-
-                                sx={{
-                                    display: "flex",
-                                    flexDirection: "column"
-                                }}
-                            >
-                                <Box
-                                    sx={{
-                                        pt: "59px",
-                                        px: 2,
-                                        pb: "150px",
-
-                                        height: "100%",
-                                        width: "100%",
-                                        overflowY: "auto",
-
-                                        display: "flex",
-                                    }}
-                                >
-                                    <ChapterFooterInner chapter={currChapter} />
-                                </Box>
-                                <NavigationButtonsShadow />
-                            </OffsetContainer>
-                        </Box>
+                        <ChapterFooter chapter={currChapter} ref={playgroundRef}/>
                     )}
                     {!endReached && (
                         <OffsetContainer 

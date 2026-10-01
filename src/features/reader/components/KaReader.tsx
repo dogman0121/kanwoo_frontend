@@ -1,10 +1,10 @@
 "use client"
 
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
-import { useEffect } from "react"
+import { useCallback, useEffect } from "react"
 import useReader from "../hooks/useReader"
 import pageLoaderContext from "../contexts/pageLoaderContext"
-import { selectCommentsPanelOpen, setCommentsPanelOpen } from "../states/reader.slice"
+import { selectCommentsPanelOpen, setCommentsPanelOpen, setEndOfChapterReached } from "../states/reader.slice"
 import ReaderContainer from "./ui/ReaderContainer"
 import { ReaderHeader } from "./ReaderHeader"
 import PageNumberChip from "./PageNumberChip"
@@ -13,14 +13,15 @@ import { selectDeviceType } from "@/features/global/states/app/slice"
 import { selectAligment, selectIsHydrated } from "../states/reading-settings/selectors"
 import { loadSettings } from "../states/reading-settings/slice"
 import ReaderCommentsPanel from "./comments/ReaderCommentsPanel"
-import { addChapter, initReader } from "../states/reader/slice"
-import Reader, { ReaderEventsType, InitilizedEvent, ChapterLoadedEvent } from "../lib/reader"
+import { addChapter, initReader, setCurrentChapterIndex, setCurrentPageNumber } from "../states/reader/slice"
+import Reader, { ReaderEventsType, InitilizedEvent, ChapterLoadedEvent, ReaderEvent } from "../lib/reader"
 import HorizontalReader from "../readers/horizontal/components/HorizontalReader"
 import VerticalReader from "../readers/vertical/components/VerticalReader"
 import NavigationButtons from "./NavigationButtons"
 import { Box } from "@mui/material"
+import { NextChapterEvent, PageChangedEvent } from "../interfaces/reader"
 
-export default function KanwooReader({
+export default function KaReader({
     initChapterID
 }: {
     initChapterID: number
@@ -32,7 +33,7 @@ export default function KanwooReader({
     const commentsPanelOpen = useAppSelector(selectCommentsPanelOpen)
     const deviceType = useAppSelector(selectDeviceType)
 
-    const {reader, onPageChanged, onLoadChapter} = useReader({
+    const { reader } = useReader({
         pageLoaderProps: {
             preloadBeforeSize: 1,
             preloadAfterSize: 2,
@@ -62,12 +63,32 @@ export default function KanwooReader({
         }))
     }
 
+    const handlePageChanged = useCallback((event: PageChangedEvent) => {
+        const {value: {chapterIdx, pageNumber, chapter}} = event
+
+        dispatch(setCurrentChapterIndex(chapterIdx))
+        dispatch(setCurrentPageNumber(pageNumber))
+
+        if (reader) {
+            reader.setChapter(chapter.id)
+            reader.setPageNumber(pageNumber)
+        }
+    }, [dispatch, reader])
+
+    const handleLoadNextChapter = (event: NextChapterEvent) => {
+        const {value: {chapter}} = event
+
+        if (reader) {
+            if (chapter.next_chapter_id)
+                reader.loadChapter(chapter.next_chapter_id)
+        }
+    }
+
     useEffect(() => {
         dispatch(loadSettings())
     }, [])
 
     useEffect(() => {
-        console.log(reader)
         if (reader) {
             reader.addEventListener(ReaderEventsType.INITIALIZED, onInitialized)
             reader.addEventListener(ReaderEventsType.CHAPTER_LOADED, onChapterLoaded)
@@ -94,13 +115,13 @@ export default function KanwooReader({
             <PageNumberChip drawerOpen={offsetEnabled}/>
             {aligment === "horizontal" ?
                 <HorizontalReader 
-                    onPageChange={onPageChanged}
-                    onLoadNextChapter={onLoadChapter}
+                    onPageChange={handlePageChanged}
+                    onLoadNextChapter={handleLoadNextChapter}
                 />
                 :
                 <VerticalReader
-                    onPageChange={onPageChanged}
-                    onLoadNextChapter={onLoadChapter}
+                    onPageChange={handlePageChanged}
+                    onLoadNextChapter={handleLoadNextChapter}
                 />
             }
             <NavigationButtons />

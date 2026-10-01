@@ -7,7 +7,7 @@ export default function AddSkeleton() {
         <Paper 
             elevation={1}
             sx={{
-                height: "120px",
+                height: "100px",
                 width: "100%",
                 mx: "auto"
             }}

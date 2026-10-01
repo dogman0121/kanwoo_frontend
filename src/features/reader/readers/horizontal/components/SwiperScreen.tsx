@@ -12,6 +12,7 @@ import ChapterFooter from "./ChapterFooter"
 import OffsetContainer from "@/features/reader/components/ui/OffsetContainer"
 import { selectOffsetEnabled } from "@/features/reader/states/reader.slice"
 import { transitionProperty } from "@dnd-kit/sortable/dist/hooks/defaults"
+import { useEffect, useRef } from "react"
 
 function PageContainer({sx, ...props}: BoxProps){
     return (
@@ -72,6 +73,7 @@ export default function SwiperScreen({
         onLoadNextChapter: onLoadNextChapter
     })
 
+
     const offsetEnabled = useAppSelector(selectOffsetEnabled)
 
     return (
@@ -79,15 +81,13 @@ export default function SwiperScreen({
             sx={{
                 display: "flex"
             }}
+            onPointerCancel = {(e) => {
+                console.log(e)
+            }}
         >
             <OffsetContainer
                 ref={playgroundRef}
-                onDragStart={(event) => {
-                    event.preventDefault()
-                }}
-                onPointerCancel={(event) => {
-                    console.log(event.target)
-                }}
+                id="offset-container"
                 sx={{
                     overflowX: "hidden",
                     position: "relative",
@@ -100,6 +100,11 @@ export default function SwiperScreen({
                     willChange: "transform", 
 
                     touchAction: "none",
+                    userSelect: "none",
+                    WebkitUserSelect: "none",
+                    WebkitTouchCallout: "none",
+                    WebkitUserDrag: "none",
+                    overscrollBehavior: "contain",
 
                     "@property --page-width": {
                         syntax: '"<length>"',
@@ -142,8 +147,7 @@ export default function SwiperScreen({
                                     <StyledReaderPage page={page} />
                                 </PageContainer>
                             ))}
-                            <PageContainer
-                            >
+                            <PageContainer>
                                 <ChapterFooter chapter={chapter}/>
                             </PageContainer>
                         </Box>

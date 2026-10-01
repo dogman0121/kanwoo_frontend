@@ -1,4 +1,5 @@
 import { Chapter } from "@/types/chapter"
+import Page from "@/types/chapter/page"
 
 export enum ReadingEventType {
     PAGE_CHANGED = "page_changed",
@@ -11,17 +12,19 @@ export type ReadingEvent<T> = {
     value: T
 }
 
-export type PageChangeEvent = ReadingEvent<{
+export type PageChangedEvent = ReadingEvent<{
+    chapter: Chapter,
     chapterId: number,
+    chapterIdx: number,
+    page: Page,
     pageNumber: number
 }>
 
 export type NextChapterEvent = ReadingEvent<{
-    chapterId: number,
-    nextChapterId: number
+    chapter: Chapter
 }>
 
 export default interface ReaderVariant {
-    onPageChange?: (event: PageChangeEvent) => void
+    onPageChange?: (event: PageChangedEvent) => void
     onLoadNextChapter?: (event: NextChapterEvent) => void
 }

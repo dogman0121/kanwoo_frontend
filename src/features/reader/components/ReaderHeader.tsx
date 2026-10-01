@@ -69,8 +69,6 @@ export function ReaderHeader({
                 sx={{
                     opacity: open ? 1 : 0,
                     visibility: open ? "visible" : "hidden",
-
-                    transition: ".3s"
                 }}
             >
                 <Box
@@ -99,7 +97,8 @@ export function ReaderHeader({
                         variant="h1"
                         lines={1}
                         sx={{
-                            textTransform: "uppercase"
+                            textTransform: "uppercase",
+                            lineHeight: "1.5"
                         }}
                     >
                         Глава {currentChapter.chapter}. {currentChapter.name}

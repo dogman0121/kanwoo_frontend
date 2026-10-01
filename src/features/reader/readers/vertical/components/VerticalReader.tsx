@@ -29,6 +29,9 @@ export default function VerticalReader({
 
     return (
         <Box
+            sx={{
+                display: "flex"
+            }}
             ref={playgroundRef}
         >
             <OffsetContainer>

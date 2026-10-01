@@ -1,14 +1,13 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useCallback, useEffect, useRef } from "react"
 import useSwitchPage, { GetPageResult } from "./useSwitchPage"
 import useNavOpen from "../../../../hooks/controllers/useNavOpen"
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import { SwipeAnimation } from "../../../../animations/swipeAnimation"
 import useScreenWidth from "../../../../hooks/useScreenWidth"
-import { setCurrentChapterIndex, setCurrentPageNumber } from "../../../../states/reader/slice"
 import { setEndOfChapterReached } from "../../../../states/reader.slice"
-import { PageChangeEvent, ReadingEventType, NextChapterEvent } from "../../../../interfaces/reader"
+import { PageChangedEvent, ReadingEventType, NextChapterEvent } from "../../../../interfaces/reader"
 import { selectChapters, selectCurrentChapterIndex, selectCurrentPageNumber, selectInitialized } from "../../../../states/reader/selectors"
 import { selectInfinityChapter } from "@/features/reader/states/reading-settings/selectors"
 
@@ -16,7 +15,7 @@ export default function useSwipeController({
     onPageChange,
     onLoadNextChapter
 }: {
-    onPageChange?: (event: PageChangeEvent) => void,
+    onPageChange?: (event: PageChangedEvent) => void,
     onLoadNextChapter?: (event: NextChapterEvent) => void
 }) {
     const dispatch = useAppDispatch()
@@ -63,7 +62,23 @@ export default function useSwipeController({
         }
     })
 
-    const handlePointerDown = (event: PointerEvent) => {
+    const finishTranslation = useCallback((translate: number) => {
+        if (!swipeableRef.current) return
+
+        swipeableRef.current.style.transitionDuration = "0.2s"
+
+        const pages = translate / 100
+        swipeableRef.current.style.transform = `translate3d(calc(${pages} * var(--page-width)), 0, 0)`
+
+        setTimeout(() => {
+            if (swipeableRef.current)
+                swipeableRef.current.style.transitionDuration = "0ms"
+
+            animationMutexRef.current = false
+        }, 300)
+    }, [swipeableRef.current])
+
+    const handlePointerDown = useCallback((event: PointerEvent) => {
         if (animationMutexRef.current) return
         //console.log("pointer down")
         animationMutexRef.current = true
@@ -73,25 +88,9 @@ export default function useSwipeController({
 
         playgroundRef.current?.setPointerCapture(event.pointerId)
         playgroundRef.current?.addEventListener("pointermove", handlePointerMoveRef.current)
-    }
+    }, [])
 
-    const finishTranslation = (translate: number) => {
-        if (!swipeableRef.current) return
-
-        const pages = translate / 100
-        swipeableRef.current.style.transitionDuration = "0.2s"
-
-        swipeableRef.current.style.transform =
-        `translate3d(calc(${pages} * var(--page-width)), 0, 0)`
-
-        setTimeout(() => {
-            if (swipeableRef.current)
-                swipeableRef.current.style.transitionDuration = "0ms"
-            animationMutexRef.current = false
-        }, 300)
-    }
-
-    const handlePointerUp = (event: PointerEvent) => {
+    const handlePointerUp = useCallback((event: PointerEvent) => {
         moveLockRef.current = true
         if (!swipeableRef.current) return
         if (clickLockRef.current) {
@@ -115,16 +114,13 @@ export default function useSwipeController({
             }
 
             if (result) {
-                dispatch(setCurrentChapterIndex(result.chapterIdx))
-                dispatch(setCurrentPageNumber(result.pageIdx))
-                dispatch(setEndOfChapterReached(result.endReached))
+                const {chapter, chapterIdx, page, pageIdx, endReached} = result
 
-                if (infinityChapter && result.endReached && result.chapter.next_chapter_id) {
+                if (infinityChapter && endReached && result.chapter.next_chapter_id) {
                     onLoadNextChapter?.({
                         type: ReadingEventType.LOAD_NEXT_CHAPTER,
                         value: {
-                            chapterId: result.chapter.id,
-                            nextChapterId: result.chapter.next_chapter_id
+                            chapter: chapter
                         }
                     })
                 }
@@ -132,25 +128,32 @@ export default function useSwipeController({
                 onPageChange?.({
                     type: ReadingEventType.PAGE_CHANGED,
                     value: {
-                        chapterId: result.chapter.id,
-                        pageNumber: result.pageIdx      
+                        chapter: chapter,
+                        chapterId: chapter.id,
+                        chapterIdx: chapterIdx,
+                        page: page,
+                        pageNumber: pageIdx,   
                     }
                 })
+
+                dispatch(setEndOfChapterReached(endReached))
             }
         }
 
         playgroundRef.current?.releasePointerCapture(event.pointerId)
         playgroundRef.current?.removeEventListener("pointermove", handlePointerMoveRef.current)
 
-    }
+    }, [onPageChange, getPrevPage, getNextPage, playgroundRef.current, finishTranslation])
 
-    const handlePointerCancel = (event: PointerEvent) => {
-        //console.log("pointer cancel")
+    const handlePointerCancel = useCallback((event: PointerEvent) => {
+        console.log("pointer cancel")
         finishTranslation(animationRef.current.translation)
         animationMutexRef.current = false
+        moveLockRef.current = true
+        clickLockRef.current = true
         playgroundRef.current?.releasePointerCapture(event.pointerId)
         playgroundRef.current?.removeEventListener("pointermove", handlePointerMoveRef.current)
-    }
+    }, [])
 
     useEffect(() => {
         if (readerInitialized && !progressInitialized.current) {
