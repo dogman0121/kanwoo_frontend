@@ -14,7 +14,7 @@ export default function ChapterFooterInner({
             sx={{
                 display: 'flex',
                 flexDirection: "column",
-                width: MAX_CHAPTER_WIDTH,
+                maxWidth: MAX_CHAPTER_WIDTH,
                 mx: "auto",
                 gap: 4
             }}
