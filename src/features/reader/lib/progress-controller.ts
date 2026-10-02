@@ -32,17 +32,21 @@ class ProgressController {
 
     async _fetchProgress(chapterID: number) {
         if (this.mode == ReaderMode.AUTHORIZED) {
-            const response = await readerClientAPI.getChapterProgress(chapterID);
+            try {
+                const response = await readerClientAPI.getChapterProgress(chapterID);
 
-            return {
-                progress: response.data,
-                progressContext: response.context,
-            };
-        } else {
-            return {
-                progress: null,
-                progressContext: null
+                return {
+                    progress: response.data,
+                    progressContext: response.context,
+                };
+            }  catch (e) {
+                console.log(e)
             }
+        }
+
+        return {
+            progress: null,
+            progressContext: null
         }
     }
 
