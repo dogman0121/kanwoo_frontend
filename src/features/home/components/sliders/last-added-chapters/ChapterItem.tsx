@@ -21,7 +21,7 @@ export default function ChapterItem({
                 }}
             >
                 <Poster 
-                    width="64px"
+                    width="56px"
                     src={chapterContext.manga.poster.small}
                 />
                 <Box

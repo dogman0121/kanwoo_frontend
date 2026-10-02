@@ -55,6 +55,8 @@ export default function ReadingProgresss({
 
             setProgresses(response.data)
             setProgressesContexts(response.context)
+        } catch (e) {
+            setProgresses([])
         } finally {
             loadingRef.current = false
             loadedRef.current = true

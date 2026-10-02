@@ -69,6 +69,9 @@ export function ReaderHeader({
                 sx={{
                     opacity: open ? 1 : 0,
                     visibility: open ? "visible" : "hidden",
+
+                    transitionProperty: "opacity, visibility",
+                    transition: ".3s"
                 }}
             >
                 <Box

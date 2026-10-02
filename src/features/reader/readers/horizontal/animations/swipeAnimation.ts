@@ -28,7 +28,7 @@ interface SwipeAnimationInterface {
 
 export class SwipeAnimation implements SwipeAnimationInterface {
     SWITCH_BY_BOOST_THRESHOLD = 3
-    SWITCH_BY_BOOST_SHIFT = 50
+    SWITCH_BY_BOOST_SHIFT = 20
     SWITCH_BY_MOVE_THRESHOLD = 40
 
     startCords: SwipePointerCords | null

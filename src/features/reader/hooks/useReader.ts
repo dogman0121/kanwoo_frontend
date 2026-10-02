@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from "react"
 import Reader from "../lib/reader"
-import PageLoader, { PageLoaderProps } from "../lib/pageLoader"
-import ProgressSaver, { ProgressSaverProps } from "../lib/progressSaver"
+import PageLoader, { PageLoaderProps } from "../lib/page-loader"
+import { ProgressSaverProps } from "../lib/progress-controller"
+import ProgressController from "../lib/progress-controller"
 
 
 export default function useReader({
@@ -19,12 +20,12 @@ export default function useReader({
     useEffect(() => {
         if (!reader) {
             const pageLoader = new PageLoader(pageLoaderProps)
-            const progressSaver = new ProgressSaver(progressSaverProps)
+            const progressSaver = new ProgressController(progressSaverProps)
 
             setReader( 
                 new Reader({
                     pageLoader: pageLoader,
-                    progressSaver: progressSaver
+                    progressController: progressSaver
                 })
             )
         }
