@@ -1,12 +1,14 @@
 import { Chapter, ChapterContext } from "@/types/chapter";
-import { ReadingProgress, ReadingProgressContext } from "@/types/reading-progress";
-import PageLoader from "./pageLoader";
-import ProgressSaver from "./progressSaver";
+import PageLoader from "./page-loader";
 import { readerClientAPI } from "../api/client.api";
+import ProgressController from "./progress-controller";
+import { ReaderMode } from "@/features/types/reader-mode";
+import { ApiError } from "@/lib/fetch/api-response.types";
+import { ReadingProgress, ReadingProgressContext } from "@/types/reading-progress";
 
 export interface ReaderProps {
   pageLoader: PageLoader;
-  progressSaver: ProgressSaver;
+  progressController: ProgressController;
 }
 
 export enum ReaderEventsType {
@@ -19,8 +21,8 @@ export type ReaderEventPayloads = {
     [ReaderEventsType.INITIALIZED]: {
         chapter: Chapter
         chapterContext: ChapterContext
-        // readingProgress: ReadingProgress
-        // readingProgressContext: ReadingProgressContext
+        readingProgress: ReadingProgress | null
+        readingProgressContext: ReadingProgressContext | null
     }
     [ReaderEventsType.CHAPTER_LOADED]: {
         chapter: Chapter,
@@ -44,8 +46,9 @@ export type InitilizedEvent = ReaderEvent<ReaderEventsType.INITIALIZED>
 export type ChapterLoadedEvent = ReaderEvent<ReaderEventsType.CHAPTER_LOADED>
 
 class Reader {
-    pageLoader?: PageLoader
-    progressSaver?: ProgressSaver
+    pageLoader: PageLoader
+    progressController: ProgressController
+
     currPageNumber?: number
     currChapterID?: number
 
@@ -55,58 +58,62 @@ class Reader {
         Set<(event: any) => void>
     > = new Map();
 
-    constructor({ pageLoader, progressSaver }: ReaderProps) {
+    constructor({ pageLoader, progressController }: ReaderProps) {
         this.pageLoader = pageLoader;
-        this.progressSaver = progressSaver;
+        this.progressController = progressController;
     }
 
     async _fetchChapter(chapterID: number) {
-        const response = await readerClientAPI.getChapter(chapterID);
-        return {
-            chapter: response.data,
-            chapterMetadata: response.metadata,
-            chapterContext: response.context,
-        };
+        try{
+            const response = await readerClientAPI.getChapter(chapterID);
+
+            return {
+                chapter: response.data,
+                chapterMetadata: response.metadata,
+                chapterContext: response.context,
+            };
+        } catch (e) {
+            if (e instanceof ApiError)
+                throw new Error("Failed to fetch chapter")
+
+            throw e
+        }
     }
 
-    async _fetchChapterProgress(chapterID: number) {
-        const response = await readerClientAPI.getChapterProgress(chapterID);
-        return {
-            progress: response.data,
-            progressMetadata: response.metadata,
-            progressContext: response.context,
-        };
-    }
+    async initialize({
+        chapterID,
+        mode
+    }: {
+        chapterID: number,
+        mode: ReaderMode
+    }) {
+        const {chapter, chapterContext} = await this._fetchChapter(chapterID)
 
-    async initialize(chapterID: number) {
-        console.log("initialize")
-        const [chapterResponse] = await Promise.all([
-            this._fetchChapter(chapterID),
-            // this._fetchChapterProgress(chapterID),
-        ]);
+        const {progress, progressContext} = await this.progressController.initialize({
+            mode: mode,
+            chapterID: chapter.id,
+        })
 
-        this.currChapterID = chapterID
-        this.currPageNumber = 0
+        this.pageLoader.initialize({
+            mode: mode,
+            chapterID: chapter.id,
+            pages: chapter.pages!,
+        })
 
-        this.pageLoader?.init(
-            chapterResponse.chapter.id,
-            chapterResponse.chapter.pages!,
-            0
-        );
+        this.pageLoader.setPage(chapter.id, progress?.page || 0)
 
         // TS проверит, что value соответствует ReaderEventsType.INITIALIZED
         this.dispatchEvent(ReaderEventsType.INITIALIZED, {
-            chapter: chapterResponse.chapter,
-            chapterContext: chapterResponse.chapterContext,
+            chapter: chapter,
+            chapterContext: chapterContext,
+            readingProgress: progress,
+            readingProgressContext: progressContext
         });
     }
 
-    setChapter(chapterId: number) {
-        this.pageLoader?.setChapter(chapterId)
-    }
-
-    setPageNumber(pageNumber: number) {
-        this.pageLoader?.setPageNumber(pageNumber)
+    setPage(chapterID: number, pageNumber: number) {
+        this.pageLoader.setPage(chapterID, pageNumber)
+        this.progressController.setPage(chapterID, pageNumber)
     }
 
     async loadChapter(chapterID: number) {
@@ -121,8 +128,8 @@ class Reader {
         return this.pageLoader;
     }
 
-    getProgressSaver() {
-        return this.progressSaver;
+    getProgressController() {
+        return this.progressController;
     }
 
     dispatchEvent<K extends ReaderEventsType>(

@@ -1,5 +1,6 @@
 "use client"
 
+import { ReaderMode } from "@/features/types/reader-mode";
 import Page from "@/types/chapter/page"
 import { PriorityQueue } from "@datastructures-js/priority-queue"
 import { padEnd, range } from "lodash";
@@ -98,8 +99,9 @@ class PageLoader {
     MAX_CONCURRENT_TASKS: number = 2
     LOOP_ITERATION_TIMEOUT: number = 100
 
-    currentChapterId: number = 0
-    pageNumber: number
+    mode: ReaderMode = ReaderMode.ANONYMUS
+    currChapterID: number = 0
+    currPageNumber: number = -1
     chapterPages: Map<number, Page[]>
     loadStatuses: Map<string, PageLoadingStatus>
     
@@ -118,7 +120,7 @@ class PageLoader {
     constructor({preloadAfterSize, preloadBeforeSize, maxRetries}: PageLoaderProps) {
         this.preloadBeforeSize = preloadBeforeSize
         this.preloadAfterSize = preloadAfterSize
-        this.pageNumber = -1
+
         this.chapterPages = new Map()
         this.loadStatuses = new Map() // key: uuid, value: PageStatus
         this.maxRetries = maxRetries
@@ -135,14 +137,41 @@ class PageLoader {
         this._loadingLoop()
     }
 
-    init(initChapterId: number, pages: Page[], pageNumber: number) {
-        this.currentChapterId = initChapterId,
-        this.addChapter(initChapterId, pages)
-        this.setPageNumber(pageNumber)
+    initialize({mode, chapterID, pages}: {
+        mode: ReaderMode,
+        chapterID: number, 
+        pages: Page[], 
+    }) {
+        this.mode = mode
+        this.addChapter(chapterID, pages)
+    }
+
+    setPage(chapterID: number, pageNumber: number) {
+        //if (this.pageNumber ==  pageNumber) return
+        
+        this.currChapterID = chapterID
+        this.currPageNumber = pageNumber
+        // this._cancelTasks()
+
+        const rangeStart = Math.max(0, pageNumber - this.preloadBeforeSize)
+        const rangeEnd = Math.min(this._getChapterPagesById(this.currChapterID).length-1, pageNumber + this.preloadAfterSize)
+
+        for(let pageInd = rangeStart; pageInd <= rangeEnd; pageInd++) {
+            const page = this._getPageByNumber(pageInd)
+
+            if (this._getPageLoadingStatus(page.uuid).status != "loading"){
+                this.loadStatuses.set(page.uuid, {status: "loading"})
+                this.tasks.push({
+                    priority: this._computePageTaskPriority(page),
+                    pageNumber: pageInd,
+                    page: page
+                })
+            }
+        }
     }
 
     _getPageByNumber(pageNumber: number) {
-        const pages = this.chapterPages.get(this.currentChapterId); 
+        const pages = this.chapterPages.get(this.currChapterID); 
         if (!pages || pages.length <= pageNumber)
             throw Error("Failed to get Page object")
 
@@ -161,7 +190,7 @@ class PageLoader {
     }
 
     _isPageNeedsToLoad (pageNumber: number) {
-        return (this.pageNumber - this.preloadBeforeSize) <= pageNumber && pageNumber <= (this.pageNumber + this.preloadAfterSize)
+        return (this.currPageNumber - this.preloadBeforeSize) <= pageNumber && pageNumber <= (this.currPageNumber + this.preloadAfterSize)
     }
 
     _addPageIntoBlobCache(pageUUID: string, blob: Blob) {
@@ -250,41 +279,11 @@ class PageLoader {
         this.chapterPages.set(chapterId, pages)
     }
 
-    setChapter(
-        chapterId: number
-    ) {
-        this.currentChapterId = chapterId
-    }
-
     hasChapter(
         chapterId: number
     ) {
         return this.chapterPages.has(chapterId)
     }
-
-    setPageNumber(pageNumber: number) {
-        //if (this.pageNumber ==  pageNumber) return
-        
-        this.pageNumber = pageNumber
-        // this._cancelTasks()
-
-        const rangeStart = Math.max(0, pageNumber - this.preloadBeforeSize)
-        const rangeEnd = Math.min(this._getChapterPagesById(this.currentChapterId).length-1, pageNumber + this.preloadAfterSize)
-
-        for(let pageInd = rangeStart; pageInd <= rangeEnd; pageInd++) {
-            const page = this._getPageByNumber(pageInd)
-
-            if (this._getPageLoadingStatus(page.uuid).status != "loading"){
-                this.loadStatuses.set(page.uuid, {status: "loading"})
-                this.tasks.push({
-                    priority: this._computePageTaskPriority(page),
-                    pageNumber: pageInd,
-                    page: page
-                })
-            }
-        }
-    }
-
 
     getPageImageUrlByUUID(pageUUID: string) {
         const urlString = this.urlCache.get(pageUUID)

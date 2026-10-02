@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import PageLoader from "../lib/pageLoader";
+import PageLoader from "../lib/page-loader";
 
 export interface PageLoaderContextProps {
     loader?: PageLoader,

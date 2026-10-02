@@ -4,8 +4,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import { useCallback, useEffect } from "react"
 import useReader from "../hooks/useReader"
 import pageLoaderContext from "../contexts/pageLoaderContext"
-import { selectCommentsPanelOpen, setCommentsPanelOpen, setEndOfChapterReached } from "../states/reader.slice"
-import ReaderContainer from "./ui/ReaderContainer"
+import { selectCommentsPanelOpen } from "../states/reader.slice"
 import { ReaderHeader } from "./ReaderHeader"
 import PageNumberChip from "./PageNumberChip"
 
@@ -14,12 +13,13 @@ import { selectAligment, selectIsHydrated } from "../states/reading-settings/sel
 import { loadSettings } from "../states/reading-settings/slice"
 import ReaderCommentsPanel from "./comments/ReaderCommentsPanel"
 import { addChapter, initReader, setCurrentChapterIndex, setCurrentPageNumber } from "../states/reader/slice"
-import Reader, { ReaderEventsType, InitilizedEvent, ChapterLoadedEvent, ReaderEvent } from "../lib/reader"
+import { ReaderEventsType, InitilizedEvent, ChapterLoadedEvent, ReaderEvent } from "../lib/reader"
 import HorizontalReader from "../readers/horizontal/components/HorizontalReader"
 import VerticalReader from "../readers/vertical/components/VerticalReader"
 import NavigationButtons from "./NavigationButtons"
-import { Box } from "@mui/material"
 import { NextChapterEvent, PageChangedEvent } from "../interfaces/reader"
+import { ReaderMode } from "@/features/types/reader-mode"
+import { selectAuthProfile } from "@/features/global/states/auth-profile"
 
 export default function KaReader({
     initChapterID
@@ -33,6 +33,8 @@ export default function KaReader({
     const commentsPanelOpen = useAppSelector(selectCommentsPanelOpen)
     const deviceType = useAppSelector(selectDeviceType)
 
+    const authProfile = useAppSelector(selectAuthProfile)
+
     const { reader } = useReader({
         pageLoaderProps: {
             preloadBeforeSize: 1,
@@ -45,12 +47,12 @@ export default function KaReader({
     })
 
     const onInitialized = (event: InitilizedEvent) => {
-        const {value} = event
+        const {value: {chapter, chapterContext, readingProgress}} = event
 
         dispatch(initReader({
-            chapter: value.chapter,
-            chapterContext: value.chapterContext,
-            pageNumber: 0
+            chapter: chapter,
+            chapterContext: chapterContext,
+            pageNumber: readingProgress?.page || 0
         }))
     }
 
@@ -70,8 +72,7 @@ export default function KaReader({
         dispatch(setCurrentPageNumber(pageNumber))
 
         if (reader) {
-            reader.setChapter(chapter.id)
-            reader.setPageNumber(pageNumber)
+            reader.setPage(chapter.id, pageNumber)
         }
     }, [dispatch, reader])
 
@@ -93,7 +94,10 @@ export default function KaReader({
             reader.addEventListener(ReaderEventsType.INITIALIZED, onInitialized)
             reader.addEventListener(ReaderEventsType.CHAPTER_LOADED, onChapterLoaded)
 
-            reader.initialize(initChapterID)
+            reader.initialize({
+                mode: authProfile ? ReaderMode.AUTHORIZED : ReaderMode.ANONYMUS,
+                chapterID: initChapterID
+            })
         }
 
         return () => {

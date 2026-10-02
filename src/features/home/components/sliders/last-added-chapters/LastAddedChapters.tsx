@@ -71,7 +71,12 @@ export default function LastAddedChapters({
                     {chapters.map((chapter, ind) => (
                         <Box key={`home_page_${item.type}_${chapter.id}`}>
                             {ind != 0 && (
-                                <Divider />
+                                <Divider 
+                                    sx={{
+                                        mt: 2,
+                                        mb: 2
+                                    }}
+                                />
                             )}
                             <ChapterItem 
                                 chapter={chapter}
