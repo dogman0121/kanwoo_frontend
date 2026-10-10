@@ -5,6 +5,7 @@ import { createTheme } from "@mui/material";
 const {palette} = createTheme()
 
 export const chapterPageTheme = createTheme({
+    cssVariables: true,
     typography: {
         fontFamily: 'var(--font-roboto)',
         body1: {

@@ -21,7 +21,7 @@ const CommentRootLine = styled(Box, {
             {
                 props: {depth: 1},
                 style: () => ({
-                    height: "calc(100% - 18px)",
+                    height: "calc(100% - 36px)",
                     width: "36px",
 
                     "&::after": {
