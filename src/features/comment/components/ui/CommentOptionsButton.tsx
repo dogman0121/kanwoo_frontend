@@ -8,6 +8,8 @@ export default function CommentOptionsButton() {
                 size="small"
                 sx={{
                     position: "absolute",
+                    right: 0,
+                    top: 0,
                     p: 0
                 }}
             >
