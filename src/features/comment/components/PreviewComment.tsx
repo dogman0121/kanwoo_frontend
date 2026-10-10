@@ -14,6 +14,7 @@ export default function PreviewComment({
             sx={{
                 display: "flex",
                 flexDirection: "row",
+                alignItems: "center",
 
                 gap: 3
             }}

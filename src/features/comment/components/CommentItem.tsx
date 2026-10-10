@@ -104,7 +104,7 @@ export default function CommentItem({
                 }}
             >
                 <Box>
-                    <CommentAvatar depth={depth} />
+                    <CommentAvatar depth={depth} src={comment.creator.avatar}/>
                     {hasReplies && (
                         <CommentTreeLine depth={depth}/>
                     )}
