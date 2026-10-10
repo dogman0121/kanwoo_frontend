@@ -43,8 +43,8 @@ export const threadsSlice = createSlice({
     name: "threads",
     initialState,
     reducers: {
-        addThread: (state, action: PayloadAction<{comment: Comment, commentContext: CommentContext}>) => {
-            const {comment, commentContext} = action.payload
+        addThread: (state, action: PayloadAction<{comment: Comment}>) => {
+            const {comment} = action.payload
 
             threadAdapter.setOne(
                 state,

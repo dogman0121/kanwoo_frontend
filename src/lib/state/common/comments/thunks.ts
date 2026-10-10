@@ -5,7 +5,7 @@ import { mangaClientApi } from "@/lib/fetch/features/manga/client.api"
 import { CursorPagination, SuccessResponse } from "@/lib/fetch/api-response.types"
 import { addComment, addCommentList } from "@/features/global/states/comments/comments/slice"
 import { Comment, CommentContext } from "@/features/comment/types"
-import { addThreadsList } from "@/features/global/states/comments/threads/slice"
+import { addThread, addThreadsList } from "@/features/global/states/comments/threads/slice"
 
 export function makeThunks(
     sliceName: string, 
@@ -79,7 +79,11 @@ export function makeThunks(
 
             if (!response) throw new Error("Failed to fetch comments")
 
-            thunkAPI.dispatch(addComment({comment: response.data, commentContext: response.context}))
+            const comment = response.data
+            const commentContext = response.context
+
+            thunkAPI.dispatch(addThread({comment: comment}))
+            thunkAPI.dispatch(addComment({comment: comment, commentContext: commentContext}))
 
             return {
                 entityId: data.commentsBlock.entityId,

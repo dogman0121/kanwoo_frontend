@@ -86,7 +86,7 @@ export default function CommentItem({
             comment: comment,
             text: text
         }))
-        commentId
+        dispatch(setReplyInputOpen({commentId: comment.id, open: false}))
     }
 
     return (
