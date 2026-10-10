@@ -46,13 +46,16 @@ export const chapterApiConfig: ApiConfig = {
                 const url = new URL(req.url)
 
                 const searchParams = url.searchParams
-                searchParams.set("target_type", "chapter")
-                searchParams.set("target_id", params.id)
+                searchParams.set("chapter_id", params.id)
+
+                const newHeaders = new Headers(req.headers)
 
                 return new Request(
                     url.origin + "/comments?" + searchParams.toString(),
                     {
-                        ...req
+                        method: "GET",
+                        headers: newHeaders,
+                        credentials: "include"
                     }
                 )
             }
@@ -63,20 +66,27 @@ export const chapterApiConfig: ApiConfig = {
                 const clonedRequest = req.clone()
                 const json = await clonedRequest.json()
 
-                const url = new URL(req.url)
+                const url = new URL(clonedRequest.url)
 
-                return new Request(
+                const newHeaders = new Headers(clonedRequest.headers)
+                newHeaders.delete("content-length")                 
+                newHeaders.set("content-type", "application/json")
+
+                const nReq = new Request(
                     url.origin + "/comments",
                     {
-                        ...req,
+                        method: "POST",
+                        headers: newHeaders,
                         body: JSON.stringify({
-                            type: "chapter",
-                            entity_id: params.id,
+                            chapter_id: params.id,
                             text: json.text
-                        })
+                        }),
+                        credentials: "include"
                     }
                 )
-            },   
+
+                return nReq
+            }
         }
     },
     "/chapters/:id/comments/preview": {
@@ -86,13 +96,16 @@ export const chapterApiConfig: ApiConfig = {
                 const url = new URL(req.url)
 
                 const searchParams = url.searchParams
-                searchParams.set("target_type", "chapter")
-                searchParams.set("target_id", params.id)
+                searchParams.set("chapter_id", params.id.toString())
+
+                const newHeaders = new Headers(req.headers)
 
                 return new Request(
                     url.origin + "/comments/preview?" + searchParams.toString(),
                     {
-                        ...req
+                        method: "GET",
+                        headers: newHeaders,
+                        credentials: "include"
                     }
                 )
             }

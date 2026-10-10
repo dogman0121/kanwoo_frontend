@@ -109,8 +109,7 @@ export const mangaApiConfig: ApiConfig = {
                 const url = new URL(req.url)
 
                 const searchParams = url.searchParams
-                searchParams.set("target_type", "manga")
-                searchParams.set("target_id", params.slug)
+                searchParams.set("manga_id", params.slug)
 
                 const newHeaders = new Headers(req.headers)
 
