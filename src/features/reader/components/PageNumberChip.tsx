@@ -27,6 +27,7 @@ export default function PageNumberChip({
 
     return (
         <Chip
+            size="small"
             sx={{
                 position: "fixed",
                 top: "15%",

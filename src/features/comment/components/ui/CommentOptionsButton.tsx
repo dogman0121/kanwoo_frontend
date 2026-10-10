@@ -8,8 +8,7 @@ export default function CommentOptionsButton() {
                 size="small"
                 sx={{
                     position: "absolute",
-                    right: "-5px",
-                    top: "-5px"
+                    p: 0
                 }}
             >
                 <MoreVertIcon />
