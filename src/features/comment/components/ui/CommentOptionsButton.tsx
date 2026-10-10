@@ -10,7 +10,7 @@ export default function CommentOptionsButton() {
                     position: "absolute",
                     right: 0,
                     top: 0,
-                    p: 0
+                    margin: "-4px"
                 }}
             >
                 <MoreVertIcon />
