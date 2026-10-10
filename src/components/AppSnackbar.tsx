@@ -16,7 +16,12 @@ export default function AppSnackbar({
         variant: "success" | "error"
     }){
     return (
-        <Snackbar open={open} autoHideDuration={6000} onClose={onClose} anchorOrigin={{vertical: "bottom", horizontal: "center"}}>
+        <Snackbar 
+            open={open} 
+            autoHideDuration={3000} 
+            onClose={onClose} 
+            anchorOrigin={{vertical: "bottom", horizontal: "center"}}
+        >
             <Paper
                 sx={{
                     p: "15px",
@@ -26,7 +31,7 @@ export default function AppSnackbar({
 
                     borderRadius: "10px",
 
-                    boxShadow: 2
+                    boxShadow: 1
                 }}
             >
                 {variant === "error" && (

@@ -1,9 +1,11 @@
 "use client"
 
-import { Comment, CommentContext } from "@/types/comment"
 import { clientFetch } from "../../client-fetch.util"
 import { CursorPagination } from "../../api-response.types"
 import encodeCursor from "../../encode-cursor.util"
+import { Comment, CommentContext } from "@/features/comment/types"
+import { DiscussionComment } from "@/features/comment/types/discussion-comment.type"
+import { Subthread, SubthreadContext } from "@/features/comment/types/subthread"
 
 export const commentsClientApi = {
     getPreview: async (type: "manga" | "chapter" | "post", entityId: number | string) => {
@@ -47,14 +49,36 @@ export const commentsClientApi = {
     },
 
     addReply: async (parentId: number, text: string) => {
-        const response = await clientFetch.post<Comment, null, CommentContext>(`/comments`, {
+        const response = await clientFetch.post<Comment, null, CommentContext>(`/comments/${parentId}/replies`, {
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
                 text: text,
-                parent: parentId
             })
         })
         
         return response
-    }
+    },
+
+    getSubthreads: async (commentId: number, cursor?: Record<string, unknown>, limit?: number) => {
+        const queryParams = new URLSearchParams()
+
+        if (cursor)
+            queryParams.set("cursor", encodeCursor(cursor))
+        if (limit)
+            queryParams.set("limit", limit.toString())
+
+        return await clientFetch.get<Subthread[], null, SubthreadContext[], CursorPagination>(`/comments/${commentId}/subthreads?` + queryParams.toString())
+    },
+
+    getDiscussion: async (subthreadId: number, cursor?: Record<string, unknown>, limit?: number) => {
+        const queryParams = new URLSearchParams()
+
+        if (cursor)
+            queryParams.set("cursor", encodeCursor(cursor))
+        if (limit)
+            queryParams.set("limit", limit.toString())
+
+        return await clientFetch.get<DiscussionComment[], null, CommentContext[], CursorPagination>(`/comments/subthreads/${subthreadId}/discussion?` + queryParams.toString())
+    },
+
 }

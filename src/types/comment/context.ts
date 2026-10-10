@@ -1,5 +1,5 @@
 export type Context = {
     viewer: {
-        vote: number
+        vote: number | null
     }
 }

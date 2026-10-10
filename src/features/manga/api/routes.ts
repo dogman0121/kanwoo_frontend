@@ -59,13 +59,16 @@ export const mangaApiConfig: ApiConfig = {
                 const url = new URL(req.url)
 
                 const searchParams = url.searchParams
-                searchParams.set("target_type", "manga")
-                searchParams.set("target_id", params.slug)
+                searchParams.set("manga_id", params.slug)
+
+                const newHeaders = new Headers(req.headers)
 
                 return new Request(
                     url.origin + "/comments?" + searchParams.toString(),
                     {
-                        ...req
+                        method: "GET",
+                        headers: newHeaders,
+                        credentials: "include"
                     }
                 )
             }
@@ -78,17 +81,24 @@ export const mangaApiConfig: ApiConfig = {
 
                 const url = new URL(clonedRequest.url)
 
-                return new Request(
+                const newHeaders = new Headers(clonedRequest.headers)
+                newHeaders.delete("content-length")                 
+                newHeaders.set("content-type", "application/json")
+
+                const nReq = new Request(
                     url.origin + "/comments",
                     {
-                        ...req,
+                        method: "POST",
+                        headers: newHeaders,
                         body: JSON.stringify({
-                            type: "manga",
-                            entity_id: params.slug,
+                            manga_id: params.slug,
                             text: json.text
-                        })
+                        }),
+                        credentials: "include"
                     }
                 )
+
+                return nReq
             }
         }
     },
@@ -102,10 +112,14 @@ export const mangaApiConfig: ApiConfig = {
                 searchParams.set("target_type", "manga")
                 searchParams.set("target_id", params.slug)
 
+                const newHeaders = new Headers(req.headers)
+
                 return new Request(
                     url.origin + "/comments/preview?" + searchParams.toString(),
                     {
-                        ...req
+                        method: "GET",
+                        headers: newHeaders,
+                        credentials: "include"
                     }
                 )
             }

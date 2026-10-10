@@ -1,24 +1,19 @@
 "use client"
 
-import CommentItem from "@/features/comment/components/Comment"
-import CommentInput from "@/features/comment/components/CommentInput"
-import CommentsList from "@/features/comment/components/CommentsList"
-import { addBlock, fetchComments, selectCommentsBlockById } from "@/features/manga/states/manga-page/comments/slice"
+import CommentItem from "@/features/comment/components/CommentItem"
+import CommentInput from "@/features/comment/components/ui/CommentInput"
+import { addBlock, fetchComments, selectCommentsBlockById, sendComment } from "@/features/manga/states/manga-page/comments/slice"
 import { selectManga } from "@/features/manga/states/manga-page/page/slice"
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
-import { Box } from "@mui/material"
+import { Avatar, Box, Button, Icon, IconButton, Tooltip, Typography } from "@mui/material"
 import { useEffect } from "react"
+import CommentsList from "@/features/comment/components/CommentsList"
+import ThreadComment from "@/features/comment/components/ThreadComment"
 
 export default function CommentsSection() {
     const dispatch = useAppDispatch()
 
     const manga = useAppSelector(selectManga)
-
-    useEffect(() => {
-        if (!manga) return
-
-        dispatch(addBlock(manga.slug))
-    }, [])
 
     const commentsBlock = useAppSelector(state => {
         if (!manga) return null
@@ -26,12 +21,25 @@ export default function CommentsSection() {
         return selectCommentsBlockById(state, manga.slug)
     })
 
+    const handleSend = (text: string) => {
+        if (!commentsBlock) 
+            return
+
+        dispatch(sendComment({commentsBlock: commentsBlock, text: text}))
+    }   
+
+    useEffect(() => {
+        if (!manga) return
+
+        dispatch(addBlock(manga.slug))
+    }, [])
+
     if (!commentsBlock)
         return 
 
     return (
         <Box>
-            <CommentInput size="medium"/>
+            <CommentInput size="medium" onSend={handleSend}/>
             <CommentsList
                 commentsLength={commentsBlock.commentsIds.length}
                 hasMore={commentsBlock.hasMore}
@@ -41,9 +49,9 @@ export default function CommentsSection() {
                 }}
             >
                 {commentsBlock.commentsIds.map(cID => (
-                    <CommentItem
+                    <ThreadComment
                         key={`manga_page_comment_${cID}`} 
-                        commentId={cID}
+                        threadId={cID}
                     />
                 ))}
             </CommentsList> 

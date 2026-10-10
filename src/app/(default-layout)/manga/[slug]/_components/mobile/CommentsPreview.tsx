@@ -1,6 +1,6 @@
 import CommentsPanel from "@/features/comment/components/CommentsPanel";
 import PreviewComment from "@/features/comment/components/PreviewComment";
-import { addReply } from "@/features/global/states/comments/slice";
+import { addReply } from "@/features/global/states/comments/comments/slice";
 import { fetchComments, fetchCommentsPreview, addBlock, selectCommentsBlockById, sendComment } from "@/features/manga/states/manga-page/comments/slice";
 import { selectManga } from "@/features/manga/states/manga-page/page/slice";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
@@ -25,13 +25,11 @@ export default function CommentsPreview() {
             dispatch(fetchComments(commentsBlock))
     }
 
-    const handleSendComment = (text: string, parentId?: number) => {
-        if (parentId) {
-            dispatch(addReply({parentId: parentId, text: text}))
-        } else {
-            if (commentsBlock)
-                dispatch(sendComment({commentsBlock: commentsBlock, text: text}))
-        }
+    const handleSendComment = (text: string) => {
+        if (!commentsBlock) 
+            return
+
+        dispatch(sendComment({commentsBlock: commentsBlock, text: text}))
     }
 
     useEffect(() => {
@@ -49,7 +47,7 @@ export default function CommentsPreview() {
                 onClick={() => setCommentsPanelOpen(true)}
                 sx={{
                     px: 2,
-                    pt: 3,
+                    pt: 2,
                     pb: 2,
                     borderRadius: 2
                 }}

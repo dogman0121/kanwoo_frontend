@@ -4,22 +4,22 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogProps, DialogT
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
 import AppSnackbar from "@/components/AppSnackbar";
-import MangaPoster from "@/features/form/manga/components/MangaPoster";
-import MangaName from "@/features/form/manga/components/MangaName";
-import PrivacySelect, { Privacy } from "@/components/PrivacySelect";
-import MangaNameTranslations from "@/features/form/manga/components/MangaNameTranslations";
 import promiseDebounce from "@/lib/promise-debounce.util";
-import MangaSlug, { validateSlug } from "@/features/form/manga/components/MangaSlug";
-import MangaDescription from "@/features/form/manga/components/MangaDescription";
-import MangaType from "@/features/form/manga/components/MangaType";
-import MangaStatus from "@/features/form/manga/components/MangaStatus";
-import MangaAdult from "@/features/form/manga/components/MangaAdult";
-import MangaGenres from "@/features/form/manga/components/MangaGenres";
-import MangaBackground from "@/features/form/manga/components/MangaBackground";
-import MangaPromoName from "@/features/form/manga/components/MangaPromoName";
-import MangaPromoBackground from "@/features/form/manga/components/MangaPromoBackground";
-import MangaPromoLogo from "@/features/form/manga/components/MangaPromoLogo";
-import MangaYear from "@/features/form/manga/components/MangaYear";
+import MangaSlug, { validateSlug } from "./components/MangaSlug";
+import MangaPoster from "./components/MangaPoster";
+import MangaName from "./components/MangaName";
+import PrivacySelect, { Privacy } from "@/components/PrivacySelect";
+import MangaNameTranslations from "./components/MangaNameTranslations";
+import MangaDescription from "./components/MangaDescription";
+import MangaType from "./components/MangaType";
+import MangaStatus from "./components/MangaStatus";
+import MangaYear from "./components/MangaYear";
+import MangaAdult from "./components/MangaAdult";
+import MangaGenres from "./components/MangaGenres";
+import MangaBackground from "./components/MangaBackground";
+import MangaPromoName from "./components/MangaPromoName";
+import MangaPromoBackground from "./components/MangaPromoBackground";
+import MangaPromoLogo from "./components/MangaPromoLogo";
 
 export interface MangaFormSchema {
     slug: string,

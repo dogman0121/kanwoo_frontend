@@ -9,6 +9,7 @@ function GenreItem({genre}: {genre: {id: number, name: string}}) {
     return (
         <Link href={`/catalog?genre=${genre.id}`}>
             <Chip label={genre.name}
+                clickable
             />
         </Link>
     )

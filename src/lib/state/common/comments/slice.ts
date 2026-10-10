@@ -63,6 +63,10 @@ export function makeSlice(
 
                 state.entities[blockId].commentsIds.unshift(response.data.id)
             })
+
+            .addCase(fetchCommentsPreview.rejected, (state, action) => {
+                console.error(action.error.message)
+            })
     }
 )
     return {

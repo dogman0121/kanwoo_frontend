@@ -4,7 +4,7 @@ import { clientFetch } from "../../client-fetch.util"
 import { Translation, TranslationContext } from "@/types/translation"
 import encodeCursor from "../../encode-cursor.util"
 import { CursorPagination } from "../../api-response.types"
-import { Comment, CommentContext } from "@/types/comment"
+import { Comment, CommentContext } from "@/features/comment/types"
 
 export const mangaClientApi = {
 

@@ -1,4 +1,4 @@
-import { Comment } from "@/types/comment"
+import { Comment } from "@/features/comment/types"
 import { CommentsState } from "./state"
 
 export function findIndex(id: number | string, ids: (number | string)[]) {
@@ -14,7 +14,7 @@ export function findIndexOrError(id: number | string, ids: (number | string)[]) 
     return idx
 }
 
-export function updatePagination(state: CommentsState, entityId: number | string, has_more: boolean, limit: number, cursor?: Record<string, unknown>) {
+export function updatePagination(state: CommentsState, entityId: number | string, has_more: boolean, limit: number, cursor?: Record<string, unknown>) {    
     const blockIdx = findIndexOrError(entityId, state.ids)
     const blockId = state.ids[blockIdx]
 
