@@ -10,7 +10,7 @@ import Genres from "@/features/manga/components/Genres";
 import NameTranslations from "@/features/manga/components/NameTranslations";
 import Similar from "../Similar";
 import ChaptersSection from "../ChapterSection";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function MobileSections() {
     const store = useAppStore()

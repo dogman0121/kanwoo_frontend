@@ -4,18 +4,14 @@ import AppBackdrop, { AppBackdropProps } from "@/components/AppBackdrop";
 import { List, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import ShareRoundedIcon from "@mui/icons-material/ShareRounded"
 import ReportRoundedIcon from "@mui/icons-material/ReportRounded"
-import { useState } from "react";
-import { ShareMobile } from "@/components/Share";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import { selectManga } from "@/features/manga/states/manga-page/page/slice";
-import { openReportDialog } from "@/features/global/states/app/slice";
+import { openReportDialog, openShareBackdrop } from "@/features/global/states/app/slice";
 
 export default function MobileOptions({open, onClose}: AppBackdropProps) {
     const dispatch = useAppDispatch()
 
     const manga = useAppSelector(selectManga)
-
-    const [shareOpen, setShareOpen] = useState(false);
 
     const handleReport = () => {
         if (!manga) return
@@ -23,7 +19,7 @@ export default function MobileOptions({open, onClose}: AppBackdropProps) {
         dispatch(openReportDialog({type: "manga", entityID: manga.slug}))
     }
 
-    if (!manga) return;
+    if (!manga) return
 
     return (
         <>
@@ -33,7 +29,7 @@ export default function MobileOptions({open, onClose}: AppBackdropProps) {
             >
                 <List>
                     <ListItemButton
-                        onClick={() => setShareOpen(true)}
+                        onClick={() => dispatch(openShareBackdrop(`/manga/${manga.slug}`))}
                     >
                         <ListItemIcon>
                             <ShareRoundedIcon color="action" />
@@ -54,11 +50,6 @@ export default function MobileOptions({open, onClose}: AppBackdropProps) {
                     </ListItemButton>
                 </List>
             </AppBackdrop>
-            <ShareMobile 
-                open={shareOpen}
-                onClose={() => setShareOpen(false)}
-                link={`/manga/${manga.slug}`}
-            />
         </>
     )
 }

@@ -2,7 +2,7 @@
 
 import { Avatar, Box, Button, Paper, Skeleton, SxProps, Typography } from "@mui/material";
 import EastRoundedIcon from '@mui/icons-material/EastRounded';
-import CommentInput from "@/features/comment/components/CommentInput";
+import CommentInput from "@/features/comment/components/ui/CommentInput";
 import CommentSkeletonList from "./skeleton/CommentSkeletonList";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import CommentsList from "./CommentsList";

@@ -5,8 +5,8 @@ import encodeCursor from "../../../lib/fetch/encode-cursor.util"
 import { CursorPagination } from "../../../lib/fetch/api-response.types"
 import { Chapter, ChapterContext, ChapterMetadata } from "@/types/chapter"
 import { ReadingProgress } from "@/types/reading-progress"
-import { Comment, CommentContext } from "@/types/comment"
 import { GetChapterPageResponseData, GetChapterPageResponseMetadata } from "./types"
+import { Comment, CommentContext } from "@/features/comment/types"
 
 
 export const chapterClientApi = {

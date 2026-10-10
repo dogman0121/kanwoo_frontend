@@ -3,8 +3,9 @@ import { CommentsBlock } from "./state"
 import { chapterClientApi } from "@/features/chapter/api/client.api"
 import { mangaClientApi } from "@/lib/fetch/features/manga/client.api"
 import { CursorPagination, SuccessResponse } from "@/lib/fetch/api-response.types"
-import { Comment, CommentContext } from "@/types/comment"
-import { addComment, addCommentList } from "@/features/global/states/comments/slice"
+import { addComment, addCommentList } from "@/features/global/states/comments/comments/slice"
+import { Comment, CommentContext } from "@/features/comment/types"
+import { addThreadsList } from "@/features/global/states/comments/threads/slice"
 
 export function makeThunks(
     sliceName: string, 
@@ -23,11 +24,11 @@ export function makeThunks(
                 case "manga":
                     response = await mangaClientApi.getCommentsPreview(entityId as string)
                     break
-
             }
 
             if (!response) throw new Error("Failed to fetch preview")
-
+            
+            thunkAPI.dispatch(addThreadsList({comments: response.data}))
             thunkAPI.dispatch(addCommentList({comments: response.data, commentsContexts: response.context}))
 
             return {
@@ -53,6 +54,7 @@ export function makeThunks(
 
             if (!response) throw new Error("Failed to fetch comments")
 
+            thunkAPI.dispatch(addThreadsList({comments: response.data}))
             thunkAPI.dispatch(addCommentList({comments: response.data, commentsContexts: response.context}))
 
             return {

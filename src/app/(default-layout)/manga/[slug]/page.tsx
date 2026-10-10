@@ -13,7 +13,7 @@ export async function generateMetadata({
     params: Promise<{slug: string}>
 }): Promise<Metadata> {
     const { slug } = await params;
-    
+
     const {data: manga} = await mangaServerApi.getManga(slug)
 
     return {
@@ -24,7 +24,7 @@ export async function generateMetadata({
             url: `https://kanwoo.ru/manga/${manga.slug}`,
             title: `Читать ${manga.name} онлайн | kanwoo`,
             description: manga.description,
-            images: [{url: manga.poster.medium || "https://cdn.kanwoo.ru/manga/default"}],
+            images: [{url: manga.poster?.medium || "https://cdn.kanwoo.ru/manga/default"}],
             siteName: "Kanwoo"
         },
     }

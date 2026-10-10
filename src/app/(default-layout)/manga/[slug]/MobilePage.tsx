@@ -3,7 +3,6 @@
 import theme from "@/constants/themes/main.theme";
 import { Box, IconButton, Typography } from "@mui/material";
 import Poster from "@/components/poster/Poster";
-import { useRouter } from "next/navigation";
 import Stats from "@/features/manga/components/Stats";
 import Metadata from "@/features/manga/components/Metadata";
 import ReadingButton from "./_components/ReadingButton";
@@ -17,7 +16,7 @@ export default function MobilePage({
 }: {
     manga: Manga
 }) {
-    const backgroundURL = manga.background ?? manga.poster.medium 
+    const backgroundURL = manga?.background ?? manga.poster?.medium 
     const backgroundColor = theme.vars?.palette.background.defaultChannel
 
     return (
@@ -38,11 +37,11 @@ export default function MobilePage({
 
                         width: "100%",
                         zIndex: "-1",
-                        background: `
+                        background: backgroundURL && (`
                             linear-gradient(rgba(${backgroundColor} / 0.6), 
                             rgba(${backgroundColor} / 1)), 
                             url('${backgroundURL}')
-                        `,
+                        `),
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                         backgroundRepeat: "no-repeat",
@@ -61,7 +60,7 @@ export default function MobilePage({
                         }}
                     >
                         <Poster 
-                            src={manga.poster.medium}
+                            src={manga.poster?.medium}
                         />
                     </Box>
                     <Box
@@ -81,7 +80,7 @@ export default function MobilePage({
                             variant="h1"
                             textAlign={"center"}
                         >
-                            {manga?.name}
+                            {manga.name}
                         </Typography>
                     </Box>
                     <Stats 

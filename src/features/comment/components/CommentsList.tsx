@@ -25,6 +25,7 @@ export default function CommentsList({
             next={onNext ?? (() => {})}
             style={{
                 overflowY: "hidden",
+                overflowX: "hidden"
             }}
             loader={
                 <Box

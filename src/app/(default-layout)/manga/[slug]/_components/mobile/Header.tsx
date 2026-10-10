@@ -4,7 +4,7 @@ import { Box, IconButton } from "@mui/material"
 import MobileOptions from "./MobileOptions"
 import WestRoundedIcon from '@mui/icons-material/WestRounded';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Header() {
@@ -36,7 +36,7 @@ export default function Header() {
                     <MoreVertRoundedIcon />
                 </IconButton>
             </Box>
-            <MobileOptions 
+            <MobileOptions
                 open={optionsOpen}
                 onClose={() => setOptionsOpen(false)}
             />

@@ -5,6 +5,10 @@ export const commentApiConfig: ApiConfig = {
         GET: {
             mode: "proxy",
             url: "/comments"
+        },
+        POST: {
+            mode: "proxy",
+            url: "/comments"
         }
     },
     "/comments/:id/replies": {
@@ -15,6 +19,24 @@ export const commentApiConfig: ApiConfig = {
         POST: {
             mode: "proxy",
             url: "/comments/:id/replies"
+        }
+    },
+    "/comments/:id/votes": {
+        PATCH: {
+            mode: "proxy",
+            url: "/comments/:id/votes"
+        }
+    },
+    "/comments/:id/subthreads": {
+        GET: {
+            mode: "proxy",
+            url: "/comments/:id/subthreads"
+        }
+    },
+    "/comments/subthreads/:id/discussion": {
+        GET: {
+            mode: "proxy",
+            url: "/comments/subthreads/:id/discussion"
         }
     }
 }

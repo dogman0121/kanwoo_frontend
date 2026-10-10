@@ -1,6 +1,6 @@
 import WrappedText from "@/components/WrapperTypography";
 import getPassedDateString from "@/features/comment/lib/getPassedDateString";
-import { selectById } from "@/features/global/states/comments/selectors";
+import { selectById } from "@/features/global/states/comments/comments/selectors";
 import { useAppSelector } from "@/lib/state/hooks";
 import { Avatar, Box, Typography } from "@mui/material";
 
@@ -20,25 +20,12 @@ export default function PreviewComment({
         >
             <Avatar src={comment.creator.avatar}/>
             <Box>
-                <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-
-                        gap: 2
-                    }}
+                <Typography
+                    variant="caption"
+                    color="textSecondary"
                 >
-                    <Typography
-                        variant="caption"
-                        color="textSecondary"
-                    >
-                        {comment.creator.name}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                        {getPassedDateString(comment.created_at)}
-                    </Typography>
-                </Box>
+                    {comment.creator.name}
+                </Typography>
                 <WrappedText
                     lines={3}
                 >

@@ -1,16 +1,15 @@
 import BottomPanel, { BottomPanelBody, BottomPanelHeader } from "@/components/BottomPanel"
 import { COMMENTS_DRAWER_WIDTH } from "@/constants/chapter-page"
-import CommentItem from "@/features/comment/components/Comment"
-import CommentInput from "@/features/comment/components/CommentInput"
+import CommentInput from "@/features/comment/components/ui/CommentInput"
 import CommentsList from "@/features/comment/components/CommentsList"
 import NoComments from "@/features/comment/components/NoComments"
 import { selectDeviceType } from "@/features/global/states/app/slice"
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
-import { Chapter } from "@/types/chapter"
-import { Comment } from "@/types/comment"
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded"
 import { Box, Divider, Drawer, IconButton, Paper, Typography } from "@mui/material"
-import { useEffect, useState } from "react"
+import { selectReplyContext } from "@/features/global/states/comments/comments/selectors"
+import { addReply, setInputContext } from "@/features/global/states/comments/comments/slice"
+import ThreadComment from "./ThreadComment"
 
 export interface CommentsPanelProps {
     commentsIds: number[],
@@ -30,14 +29,19 @@ export default function CommentsPanel({
     onSendComment,
     onClose
 }: CommentsPanelProps) {
-    const deviceType = useAppSelector(selectDeviceType)
+    const dispatch = useAppDispatch()
 
-    const [replyComment, setReplyComment] = useState<Comment | null>(null)
+    const deviceType = useAppSelector(selectDeviceType)
+    const replyContext = useAppSelector(selectReplyContext)
 
     const handleAddComment = (text: string) => {
-        onSendComment?.(text, replyComment?.id)
-
-        setReplyComment(null)
+        const { parentCommentId, comment} = replyContext
+        if (comment) {
+            dispatch(addReply({parentCommentId: parentCommentId, comment: comment, text: text}))
+        } else {
+            onSendComment?.(text)
+        }
+        dispatch(setInputContext({parentCommentId: null, comment: null}))
     }
 
     const inner = (
@@ -74,17 +78,17 @@ export default function CommentsPanel({
                         onNext={onLoad}
                     >
                         {commentsIds.map(commentId => (
-                            <CommentItem 
-                                commentId={commentId}
+                            <ThreadComment 
+                                threadId={commentId}
                                 key={`comment_list_${commentId}`}
-                                onReply={(comment: Comment) => {setReplyComment(comment)}}
                             />
                         ))}
                     </CommentsList>
                 }
             </BottomPanelBody>
-            {replyComment && (
+            {replyContext.comment && (
                 <Paper
+                    elevation={0}
                     sx={{
                         borderRadius: "0",
                         borderTopLeftRadius: "6px",
@@ -93,6 +97,7 @@ export default function CommentsPanel({
                 >
                     <BottomPanelBody
                         sx={{
+                            py: 1,
                             display: "flex",
                             flexDirection: "row",
                             justifyContent: "space-between",
@@ -100,11 +105,11 @@ export default function CommentsPanel({
                         }}
                     >
                         <Box>
-                            Ответ для {replyComment.creator.name}
+                            Ответ для {replyContext.comment.creator.name}
                         </Box>
                         <IconButton 
                             size="small" 
-                            onClick={() => setReplyComment(null)}
+                            onClick={() => dispatch(setInputContext({parentCommentId: null, comment: null}))}
                         >
                             <CloseRoundedIcon 
                                 sx={{
@@ -116,14 +121,15 @@ export default function CommentsPanel({
                     </BottomPanelBody>
                 </Paper>
             )}
-            <Divider />
             <BottomPanelBody
                 sx={{
+                    borderTop: "1px solid",
+                    borderColor: "divider",
                     position: "sticky",
                     bottom: 0
                 }}
             >
-                <CommentInput size="small" onSend={handleAddComment}/>
+                <CommentInput size={deviceType == "mobile" ? "small" : "medium"} onSend={handleAddComment}/>
             </BottomPanelBody>
         </>
     )

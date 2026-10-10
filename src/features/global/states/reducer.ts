@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 
 import appReducer from './app/slice'
-import commentsReducer from './comments/slice'
+import { commentsReducer } from './comments/reducer'
 import metaReducer from './meta/meta.slice'
 import { authProfileReducer } from './auth-profile/reducer'
 import mangaReducer from './manga/slice'

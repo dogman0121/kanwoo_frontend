@@ -34,17 +34,10 @@ export default function DesktopPage({
         dispatch(setSection(newValue));
     };
 
-    useEffect(() => {
-        if (!manga) return () => {};
-
-        navigator.sendBeacon(`/api/manga/${manga.slug}/views`)
-
-    }, [manga])
-
     if (!manga) 
         return null;
 
-    const backgroundURL = manga.background ?? manga.poster.medium 
+    const backgroundURL = manga?.background ?? manga.poster?.medium 
     const backgroundColor = theme.vars?.palette.background.defaultChannel
 
     return (
@@ -71,7 +64,7 @@ export default function DesktopPage({
                             }}
                         >
                             <Poster 
-                                src={manga.poster.medium || ""}   
+                                src={manga.poster?.medium || ""}   
                             />
                             <Box
                                 sx={{

@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import { Box, BoxProps, Button, ButtonProps, FormControl, FormControlProps, IconButton, IconButtonProps, InputBase, Paper, SxProps, Typography, useTheme } from "@mui/material"
 import { ChangeEvent, Children, MouseEvent, useState, useTransition } from "react"
 import SendRoundedIcon from "@mui/icons-material/SendRounded"
-import AuthModal from "@/features/auth/components/AuthModal"
 import { MAX_COMMENT_LENGTH } from "@/constants/comments"
 import { selectAuthProfile } from "@/features/global/states/auth-profile/auth-profile.slice"
 import { setAuthSnackbarOpen } from "@/features/global/states/app/slice"
@@ -14,7 +13,10 @@ type CommentAuthorizedWithoutSizeProps = {
     onSend?: () => void
     value: string,
     disabled: boolean,
+    defaultOpen?: boolean,
     sx?: SxProps,
+    onOpen?: () => void,
+    onClose?: () => void,
     slotProps?: {
         sendButton?: IconButtonProps
     }
@@ -24,6 +26,9 @@ type CommentAuthorizedWithSizeProps = {
     size: "small" | "medium",
     onSend?: (text: string) => void,
     sx?: SxProps,
+    onOpen?: () => void,
+    onClose?: () => void,
+    defaultOpen?: boolean,
     slotProps?: {
         sendButton?: IconButtonProps
     }
@@ -57,14 +62,51 @@ function MediumInputInner({
     onChange,
     value,
     disabled,
+    defaultOpen = false,
+    onClose,
+    onOpen,
     onSend,
     sx
 }: CommentAuthorizedWithoutSizeProps) {
+
+    const [opened, setOpened] = useState(defaultOpen)
 
     const handleSend = (event: MouseEvent) => {
         event.stopPropagation()
 
         onSend?.()
+    }
+
+    const handleClose = () => {
+        setOpened(false)
+        onClose?.()
+    }
+
+    const handleOpen = () => {
+        setOpened(true)
+        onOpen?.()
+    }
+
+    if (!opened) {
+        return (
+            <InputContainer
+                onClick={handleOpen}
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    py: 2,
+                    ...sx
+                }}
+            >
+                <InputBase 
+                    fullWidth
+                    multiline
+                    value={value}
+                    onChange={onChange}
+                    placeholder="Введите текст комментария"
+                />
+            </InputContainer>
+        )
     }
     
     return (
@@ -92,15 +134,30 @@ function MediumInputInner({
                 }}
             >
                 <Typography> {value.length} / {MAX_COMMENT_LENGTH} </Typography>
-                <Button
-                    variant="contained"
-                    endIcon={<SendRoundedIcon />}
-                    size="small"
-                    disabled={disabled}
-                    onClick={handleSend}
+                <Box
+                    sx={{
+                        display: "flex",
+                        gap: 1
+                    }}
                 >
-                    Отправить
-                </Button>
+                    <Button
+                        variant="text"
+                        size="small"
+                        color = "inherit"
+                        onClick={handleClose}
+                    >
+                        Отмена
+                    </Button>
+                    <Button
+                        variant="contained"
+                        size="small"
+                        endIcon={<SendRoundedIcon />}
+                        disabled={disabled}
+                        onClick={handleSend}
+                    >
+                        Отправить
+                    </Button>
+                </Box>
             </Box>
         </InputContainer>
     )
@@ -110,6 +167,7 @@ function SmallInputInner({
     value,
     onChange,
     disabled,
+    defaultOpen = false,
     onSend,
     sx,
     slotProps = {},
@@ -117,31 +175,66 @@ function SmallInputInner({
 }: CommentAuthorizedWithoutSizeProps) {
     const theme = useTheme()
 
+    const [opened, setOpened] = useState(defaultOpen)
+
     const handleSend = (event: MouseEvent) => {
         event.stopPropagation()
         
         onSend?.()
     }
 
+    const handleOpen = () => {}
+
+
+    // if (!opened) {
+    //     return (
+    //         <InputContainer
+    //             onClick={() => setOpened(true)}
+    //             sx={{
+    //                 display: 'flex',
+    //                 borderRadius: 3,
+    //                 height: "34px",
+    //                 ...sx
+    //             }}
+    //         >
+    //             <Typography 
+    //                 color="textSecondary" 
+    //                 my={"auto"}
+    //             >
+    //                 Введите комментарий
+    //             </Typography>
+    //         </InputContainer>
+    //     )
+    // }
+
     return (
-        <InputContainer
+        <Box
             sx={{
                 display: "flex",
-                flexDirection: "row",
                 alignItems: "end",
-                gap: 1,
-                ...sx
+                gap: 2,
             }}
         >
-            <InputBase 
-                fullWidth
-                multiline
-                size="small"
-                maxRows={4}
-                value={value}
-                onChange={onChange}
-                placeholder="Введите текст комментария"
-            />
+            <InputContainer
+                sx={{
+                    borderRadius: 3,
+                    ...sx
+                }}
+            >
+                <InputBase 
+                    fullWidth
+                    multiline
+                    size="small"
+                    maxRows={4}
+                    value={value}
+                    onChange={onChange}
+                    placeholder="Введите текст комментария"
+                    sx={{
+                        py: 0.2
+                    }}
+                />
+                
+            </InputContainer>
             <IconButton 
                 size="small" 
                 disabled={disabled}
@@ -161,17 +254,15 @@ function SmallInputInner({
             >
                 <SendRoundedIcon fontSize="small" />
             </IconButton>
-        </InputContainer>
+        </Box>
     )
 }
 
 export default function CommentInput({
     size,
     onSend,
-    sx,
-    slotProps = {},
     ...props
-}: CommentAuthorizedWithSizeProps & FormControlProps  ) {
+}: CommentAuthorizedWithSizeProps  ) {
     const dispatch = useAppDispatch()
 
     const authProfile = useAppSelector(selectAuthProfile)
@@ -203,7 +294,6 @@ export default function CommentInput({
     return (
         <FormControl
             fullWidth
-            {...props}
         >
             { size=="small" ?
                 <SmallInputInner 
@@ -211,8 +301,7 @@ export default function CommentInput({
                     disabled={isPending || error}
                     value={commentText}
                     onChange={handleChange}
-                    sx={sx}
-                    slotProps={slotProps}
+                    {...props}
                 />
                 :
                 <MediumInputInner 
@@ -220,7 +309,7 @@ export default function CommentInput({
                     disabled={isPending || error}
                     value={commentText}
                     onChange={handleChange}
-                    sx={sx}
+                    {...props}
                 />
             }
         </FormControl>

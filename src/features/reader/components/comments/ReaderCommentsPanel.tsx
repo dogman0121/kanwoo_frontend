@@ -5,7 +5,6 @@ import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import { fetchComments, selectCommentsBlockById, sendComment } from "../../states/comments/slice";
 import { selectCommentsPanelOpen, setCommentsPanelOpen } from "../../states/reader.slice";
 import { selectCurrentChapter } from "../../states/reader/selectors";
-import { addReply } from "@/features/global/states/comments/slice";
 
 export default function ReaderCommentsPanel() {
     const dispatch = useAppDispatch()
@@ -28,13 +27,9 @@ export default function ReaderCommentsPanel() {
             dispatch(fetchComments(commentsBlock))
     }
 
-    const handleSendComment = (text: string, parentID?: number) => {
-        if (parentID) {
-            dispatch(addReply({parentId: parentID, text}))
-        } else {
-            if (commentsBlock) {
-                dispatch(sendComment({commentsBlock: commentsBlock, text: text}))
-            }
+    const handleSendComment = (text: string) => {
+        if (commentsBlock) {
+            dispatch(sendComment({commentsBlock: commentsBlock, text: text}))
         }
     }
 
