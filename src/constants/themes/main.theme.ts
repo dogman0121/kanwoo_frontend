@@ -217,7 +217,8 @@ const mainTheme = createTheme({
       },
       styleOverrides: {
         root: {
-          boxShadow: "0 1px 2px rgba(0, 0, 0, 0.2)"
+          boxShadow: "none",
+          // boxShadow: "0 1px 2px rgba(0, 0, 0, 0.2)"
         }
       }
     },

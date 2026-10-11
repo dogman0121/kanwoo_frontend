@@ -167,7 +167,6 @@ export default function MobileMenu({...props}: DrawerProps) {
     return (
         <Drawer
             {...props}
-            elevation={0}
             anchor="right"
             sx={{
                 "& > .MuiPaper-root": {
