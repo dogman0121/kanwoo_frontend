@@ -64,7 +64,7 @@ export default function CommentsPreview() {
                 {commentsBlock.commentsIds.length > 0 && (
                     <Box
                         sx={{
-                            mt: 2
+                            mt: 1
                         }}
                     >
                         <PreviewComment 

@@ -7,7 +7,8 @@ export default function MobileContainer({
     return (
         <Box
             sx={{
-                p: 2,
+                px: 2,
+                pb: 2,
                 ...sx,
             }}
             {...props}
