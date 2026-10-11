@@ -17,7 +17,7 @@ export function NavigationButtonsShadow() {
             sx={{
                 minHeight: "50px",
                 boxSizing: "content-box",
-                pt: 4,
+                pt: 2,
                 pb: 5,
             }}
         >

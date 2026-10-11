@@ -24,7 +24,7 @@ function ChapterFooter({
         >
             <Box
                 sx={{
-                    pt: 5,
+                    py: 4,
                     px: 2,
                 }}
             >
