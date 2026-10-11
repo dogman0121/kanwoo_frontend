@@ -71,7 +71,7 @@ export default function ReadingProgressItem({
                         }}
                     >
                         <WrappedText
-                            lines={2}
+                            lines={1}
                         >
                             {progressContext.manga.name}
                         </WrappedText>
