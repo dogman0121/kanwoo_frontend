@@ -46,15 +46,15 @@ export default function CommentsPreview() {
             <Box
                 onClick={() => setCommentsPanelOpen(true)}
                 sx={[
-                    (theme) => ({
-                        bgcolor: theme.palette.grey[300],
+                    {
+                        bgcolor: "#e7e7e7",
 
                         px: 2,
                         py: 2,
                         borderRadius: 2
-                    }),
+                    },
                     (theme) => theme.applyStyles("dark", {
-                        backgroundColor: theme.palette.grey[800]
+                        backgroundColor: "#2d2d2d"
                     })
                 ]}
             >
@@ -64,7 +64,7 @@ export default function CommentsPreview() {
                 {commentsBlock.commentsIds.length > 0 && (
                     <Box
                         sx={{
-                            mt: 3
+                            mt: 1
                         }}
                     >
                         <PreviewComment 

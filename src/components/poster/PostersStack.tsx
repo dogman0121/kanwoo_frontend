@@ -21,6 +21,7 @@ export interface PostersStackProps {
 export default function PostersStack({middleSrc, leftSrc, rightSrc, width} : PostersStackProps) {
     return (
         <Box
+            className="posterStack"
             sx={{
                 position: "relative",
                 display: "flex",

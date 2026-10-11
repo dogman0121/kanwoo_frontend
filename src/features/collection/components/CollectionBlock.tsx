@@ -1,7 +1,7 @@
 import PostersStack from "@/components/poster/PostersStack";
 import WrappedText from "@/components/WrapperTypography";
 import { Collection } from "@/types/collection";
-import { Box, Icon, Paper, SvgIcon, Typography } from "@mui/material";
+import { Box, Icon, Paper, SvgIcon, Typography, useMediaQuery, useTheme } from "@mui/material";
 import React from "react";
 import GridViewRoundedIcon from '@mui/icons-material/GridViewRounded';
 import Link from "next/link";
@@ -48,6 +48,20 @@ function CollectionStat({
 export default function CollectionBlock({
     collection
 }: {collection: Collection}) {
+    const theme = useTheme()
+
+    const isXS = useMediaQuery(theme.breakpoints.up("xs"))
+    const isMD = useMediaQuery(theme.breakpoints.up("md"))
+
+    const getPosterWidth = () => {
+        if (isMD) {
+            return "100px"
+        }
+        if (isXS) {
+            return "80px"
+        }
+    }
+
     return (
         <Link href={toHref(routes.collections.item, {id: collection.id.toString()})}>
             <Paper
@@ -72,10 +86,14 @@ export default function CollectionBlock({
                         px: 3,
                         pt: 4,
                         zIndex: 1,
+                        
+                        [theme.breakpoints.up("md")]: {
+
+                        }
                     }}
                 >
                     <PostersStack 
-                        width={"100px"}
+                        width={getPosterWidth()}
                         middleSrc={collection.preview[0]?.medium}
                         leftSrc={collection.preview[1]?.medium}
                         rightSrc={collection.preview[2]?.medium}

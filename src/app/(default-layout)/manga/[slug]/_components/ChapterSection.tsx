@@ -33,8 +33,8 @@ function ChapterItem({chapter}: {chapter: Chapter}) {
         <Box
             key={`chapter_${chapter.id}`}
             sx={[
-                (theme) => ({
-                    bgcolor: theme.palette.grey[300],
+                {
+                    bgcolor: "#e7e7e7",
                     borderRadius: "12px",
                     boxShadow: "none",
                     p: "10px 25px",
@@ -42,9 +42,9 @@ function ChapterItem({chapter}: {chapter: Chapter}) {
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "space-between"
-                }),
+                },
                 (theme) => theme.applyStyles("dark", {
-                    backgroundColor: theme.palette.grey[800]
+                    backgroundColor: "#2d2d2d"
                 })
             ]}
         >
