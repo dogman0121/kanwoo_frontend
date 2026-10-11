@@ -154,7 +154,7 @@ function UserMenuButton() {
                 }}
                 sx={{
                     "& .MuiPopover-paper": {
-                        minWidth: "250px"
+                        minWidth: "250px",
                     }
                 }}
             >
@@ -191,7 +191,7 @@ function UserMenuButton() {
                 <Link href={toHref(routes.studio.profiles.item, {slug: profile.slug})}>
                     <MenuItem>
                         <ListItemIcon>
-                            <ManageAccountRoundedIcon />
+                    r        <ManageAccountRoundedIcon />
                         </ListItemIcon>
                         <ListItemText>
                             Творческая студия

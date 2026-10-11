@@ -43,14 +43,20 @@ export default function CommentsPreview() {
 
     return (
         <>
-            <Paper
+            <Box
                 onClick={() => setCommentsPanelOpen(true)}
-                sx={{
-                    px: 2,
-                    pt: 2,
-                    pb: 2,
-                    borderRadius: 2
-                }}
+                sx={[
+                    (theme) => ({
+                        bgcolor: theme.palette.grey[300],
+
+                        px: 2,
+                        py: 2,
+                        borderRadius: 2
+                    }),
+                    (theme) => theme.applyStyles("dark", {
+                        backgroundColor: theme.palette.grey[800]
+                    })
+                ]}
             >
                 <Typography variant="h3">
                     {commentsBlock.totalCount} комментариев
@@ -66,7 +72,7 @@ export default function CommentsPreview() {
                         />
                     </Box>
                 )}
-            </Paper>
+            </Box>
             <CommentsPanel
                 open={commentsPanelOpen} 
                 commentsIds={commentsBlock.commentsIds}
