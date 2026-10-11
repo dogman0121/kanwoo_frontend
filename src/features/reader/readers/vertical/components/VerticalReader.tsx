@@ -7,6 +7,7 @@ import useScrollController from "../hooks/controllers/useScrollController"
 import ReaderVariant from "../../../interfaces/reader"
 import { selectChapters } from "@/features/reader/states/reader/selectors"
 import OffsetContainer from "@/features/reader/components/ui/OffsetContainer"
+import { NavigationButtonsShadow } from "@/features/reader/components/NavigationButtons"
 
 export interface VerticalOptions extends ReaderVariant {
 
@@ -48,6 +49,7 @@ export default function VerticalReader({
                         }}
                     />
                 ))}
+                <NavigationButtonsShadow />
             </OffsetContainer>
         </Box>
     )

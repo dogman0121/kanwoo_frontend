@@ -30,7 +30,6 @@ function ChapterFooter({
             >
                 <ChapterFooterInner chapter={chapter}/>
             </Box>
-            <NavigationButtonsShadow />
         </Box>
     )
 }
