@@ -11,6 +11,7 @@ import {
     ListItemText, 
     Menu, 
     MenuItem, 
+    SvgIcon, 
     Typography, 
     useTheme
 } from "@mui/material"
@@ -216,12 +217,9 @@ function UserMenuButton() {
                     <ListItemText>
                         Сменить аккаунт
                     </ListItemText>
-                    <ArrowForwardIosRoundedIcon 
-                        sx={{
-                            width: "20px",
-                            height: "20px"
-                        }}
-                    />
+                    <SvgIcon fontSize="small" color="inherit">
+                        <ArrowForwardIosRoundedIcon />
+                    </SvgIcon>
                 </MenuItem>
                 <Divider sx={{my: 1}}/>
                 <Logout />

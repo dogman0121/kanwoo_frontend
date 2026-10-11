@@ -55,7 +55,7 @@ export default function DesktopPage() {
                         <Paper
                             variant="outlined"
                             sx={{
-                                borderRadius: "12px",
+                                borderRadius: 3,
                                 position: "sticky",
                                 top: `calc(54px + ${theme.spacing(4)})`,
                                 px: 4,

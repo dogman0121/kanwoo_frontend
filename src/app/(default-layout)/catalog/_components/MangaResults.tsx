@@ -79,7 +79,7 @@ function MangaDetailsMobile({
                     }}
                 >
                     <Poster 
-                        src={shortData.poster.small}
+                        src={shortData.poster?.small}
                         width="60px"
                     />
                     <Box
