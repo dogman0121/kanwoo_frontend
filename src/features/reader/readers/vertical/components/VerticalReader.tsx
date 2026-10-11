@@ -49,7 +49,11 @@ export default function VerticalReader({
                         }}
                     />
                 ))}
-                <NavigationButtonsShadow />
+                <Box sx={{
+                    bgcolor: "header.main",
+                }}>
+                    <NavigationButtonsShadow />
+                </Box>
             </OffsetContainer>
         </Box>
     )

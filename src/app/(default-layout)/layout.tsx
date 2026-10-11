@@ -1,5 +1,4 @@
 import { headers } from 'next/headers';
-import Layout from "./_layouts/desktop/Layout"
 import DesktopLayout from './_layouts/desktop/Layout';
 import MobileLayout from './_layouts/mobile/Layout';
 import { Box } from '@mui/material';
