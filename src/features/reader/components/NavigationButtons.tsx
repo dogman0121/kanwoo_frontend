@@ -61,19 +61,19 @@ export default function NavigationButtons({
     const navOpen = useAppSelector(selectNavOpen)
     const endReached = useAppSelector(selectEndOfChapterReached)
     const drawerOpen = useAppSelector(selectCommentsPanelOpen)
-    const currentChapter = useAppSelector(selectCurrentChapter)
+    const currChapter = useAppSelector(selectCurrentChapter)
     const leftStyle = useHorizontalCenter()
 
     const handlePrev = () => {
-        if (!currentChapter?.prev_chapter_id) return 
+        if (!currChapter?.prev_chapter_id) return 
 
-        router.replace(toHref(routes.chapters.item, {id: currentChapter.prev_chapter_id.toString()}))
+        router.replace(toHref(routes.chapters.item, {id: currChapter.prev_chapter_id.toString()}))
     }
 
     const handleNext = () => {
-        if (!currentChapter?.next_chapter_id) return 
+        if (!currChapter?.next_chapter_id) return 
 
-        router.replace(toHref(routes.chapters.item, {id: currentChapter.next_chapter_id.toString()}))
+        router.replace(toHref(routes.chapters.item, {id: currChapter.next_chapter_id.toString()}))
     }
 
     const handleCommentsOpen = () => {
@@ -96,17 +96,17 @@ export default function NavigationButtons({
                     visibility: open ? "visible" : "hidden",
                 
                     flexDirection: "row",
-                    gap: "20px",
-                    transition: theme.transitions.create(["left"], {
-                        easing: theme.transitions.easing.sharp,
-                        duration: theme.transitions.duration.leavingScreen,
+                    gap: 4,
+                    transition: theme.transitions.create('margin', {
+                        easing: theme.transitions.easing.easeOut,
+                        duration: theme.transitions.duration.enteringScreen,
                     }),
 
                     display: "flex",
                 }}
             >
                 <NavigationButton
-                    disabled={currentChapter?.prev_chapter_id == undefined}
+                    disabled={currChapter?.prev_chapter_id == undefined}
                     onClick={handlePrev}
                 >
                     <ArrowBackIosRounded />
@@ -121,7 +121,7 @@ export default function NavigationButtons({
                     </SvgIcon>
                 </NavigationButton>
                 <NavigationButton
-                    disabled={currentChapter?.next_chapter_id == undefined}
+                    disabled={currChapter?.next_chapter_id == undefined}
                     onClick={handleNext}
                 >
                     <ArrowForwardIosRounded />

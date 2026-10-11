@@ -127,7 +127,7 @@ export const mangaApiConfig: ApiConfig = {
     "/manga/:slug/progresses": {
         GET: {
             mode: "proxy",
-            url: "/manga/:slug/progresses"
+            url: "/progresses/manga/:slug"
         },
         DELETE: {
             mode: "proxy",

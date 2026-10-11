@@ -2,7 +2,7 @@
 
 import { AppBackdropProps } from "@/components/AppBackdrop";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
-import { Backdrop, Box, BoxProps, IconButton, ListItemButton, ListItemText, Paper, PaperProps, styled, Switch, ToggleButton, ToggleButtonGroup, ToggleButtonGroupProps, Typography } from "@mui/material";
+import { Backdrop, Box, BoxProps, IconButton, ListItemButton, ListItemText, Modal, Paper, PaperProps, styled, Switch, ToggleButton, ToggleButtonGroup, ToggleButtonGroupProps, Typography } from "@mui/material";
 import { ChangeEvent, Children, MouseEvent, useState } from "react";
 import ReportRoundedIcon from "@mui/icons-material/ReportRounded"
 import ReplyRoundedIcon from "@mui/icons-material/ReplyRounded"
@@ -10,11 +10,12 @@ import CloseRoundedIcon from "@mui/icons-material/CloseRounded"
 import { ShareMobile } from "@/components/Share";
 import SwipePreview from "./SwipePreview";
 import ClickPreview from "./ClickPreview";
-import { openReportDialog } from "@/features/global/states/app/slice";
+import { openReportDialog, openShareBackdrop } from "@/features/global/states/app/slice";
 import { selectReadingSettings } from "../../states/reading-settings/selectors";
 import { selectCurrentChapter } from "../../states/reader/selectors";
 import { setAligment, setAutoSave, setInfinityChapter, setPageNumbers, setVariant } from "../../states/reading-settings/slice";
 import useHorizontalCenter from "../../hooks/useHorizontalCenter";
+import { routes, toHref } from "@/constants/routes/main.routes";
 
 function BackdropBody({sx, ...props}: PaperProps) {
     return (
@@ -62,16 +63,26 @@ export default function ReadingSettings({open, onClose}: AppBackdropProps) {
     const settings = useAppSelector(selectReadingSettings)
     const leftStyles = useHorizontalCenter()
 
-    const [shareOpen, setShareOpen] = useState(false);
-
     const currChapter = useAppSelector(selectCurrentChapter)
+
+    const handleOpenShare = () => {
+        if (!currChapter) return
+
+        dispatch(openShareBackdrop(toHref(routes.chapters.item, {id: currChapter.id.toString()})))
+    }
+
+    const handleOpenReport = () => {
+        if (!currChapter) return
+        
+        dispatch(openReportDialog({"type": "chapter", entityID: currChapter.id}))
+    }
 
     if (!currChapter)
         return
     
     return (
         <>
-            <Backdrop
+            <Modal
                 open={open}
                 onClick={onClose}
                 sx={{
@@ -199,7 +210,7 @@ export default function ReadingSettings({open, onClose}: AppBackdropProps) {
                         }}
                     >
                         <BackdropListButton
-                            onClick={() => setShareOpen(true)}
+                            onClick={handleOpenShare}
                         >
                             <ListItemText>
                                 Поделиться
@@ -213,7 +224,7 @@ export default function ReadingSettings({open, onClose}: AppBackdropProps) {
                         }}
                     >
                         <BackdropListButton
-                            onClick={() => dispatch(openReportDialog({"type": "chapter", entityID: currChapter.id}))}
+                            onClick={handleOpenReport}
                         >
                             <ListItemText>
                                 Пожаловаться
@@ -222,12 +233,7 @@ export default function ReadingSettings({open, onClose}: AppBackdropProps) {
                         </BackdropListButton>
                     </BackdropBody>
                 </Box>
-            </Backdrop>
-            <ShareMobile 
-                link={`/chapters/${currChapter.id}`}
-                open={shareOpen}
-                onClose={() => setShareOpen(false)}
-            />
+            </Modal>
         </>
     )
 }
