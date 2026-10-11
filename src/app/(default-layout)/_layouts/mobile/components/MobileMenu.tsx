@@ -1,7 +1,7 @@
 "use client"
 
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
-import { Avatar, Box, Button, Divider, Drawer, DrawerProps, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, Paper, PaperProps, styled, Typography, useTheme } from "@mui/material";
+import { Avatar, Box, Button, Divider, Drawer, DrawerProps, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, PaperProps, styled, Typography, useTheme } from "@mui/material";
 import SettignsRoundedIcon from "@mui/icons-material/SettingsRounded"
 import Logout from "./Logout";
 import ThemeSwitch from "../../../../_components/userMenu/ThemeSwitch";
@@ -19,7 +19,6 @@ const MobileMenuNav = styled(Box)(({theme}) => ({
     display: "flex",
     justifyContent: "end",
     paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2)
 }))
@@ -34,24 +33,28 @@ const ProfileWidget = () => {
 
     return (
         <Link href={toHref(routes.profiles.item, {slug: authProfile.slug})}>
-            <ListItemButton>
-                <Box
-                    sx={{              
-                        py: 1,
-
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 3
-                    }}
-                >
-                    <Avatar src={authProfile.avatar}/>
-                    <Box>
-                        <Typography variant="caption" color="textSecondary">Ваш профиль</Typography>
-                        <Typography variant="h3">{authProfile.name}</Typography>
+            <Box
+                sx={{
+                    pb: 1
+                }}
+            >
+                <MenuItem>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: 3
+                        }}
+                    >
+                        <Avatar src={authProfile.avatar}/>
+                        <Box>
+                            <Typography variant="caption" color="textSecondary">Ваш профиль</Typography>
+                            <Typography variant="h3">{authProfile.name}</Typography>
+                        </Box>
                     </Box>
-                </Box>
-            </ListItemButton>
+                </MenuItem>
+            </Box>
         </Link>
     )
 }
@@ -104,50 +107,50 @@ function AuthorizedMobileMenu() {
                 <ProfileWidget />
                 <MyDivider />
                 <MobileMenuList>
-                    <ListItemButton>
+                    <MenuItem>
                         <ListItemIcon>
                             <NotificationsRoundedIcon />
                         </ListItemIcon>
                         <ListItemText>Уведомления</ListItemText>
-                    </ListItemButton>
-                    <ListItemButton>
+                    </MenuItem>
+                    <MenuItem>
                         <ListItemIcon>
                             <CollectionsBookmarkIcon />
                         </ListItemIcon>
                         <ListItemText>Коллекции</ListItemText>
-                    </ListItemButton>
-                    <ListItemButton>
+                    </MenuItem>
+                    <MenuItem>
                         <ListItemIcon>
                             <HistoryRoundedIcon />
                         </ListItemIcon>
                         <ListItemText>История</ListItemText>
-                    </ListItemButton>
-                    <ListItemButton>
+                    </MenuItem>
+                    <MenuItem>
                         <ListItemIcon>
                             <ManageAccountRoundedIcon />
                         </ListItemIcon>
                         <ListItemText>Творческая студия</ListItemText>
-                    </ListItemButton>
+                    </MenuItem>
                 </MobileMenuList>
                 <MyDivider />
                 <MobileMenuList>
                     <ThemeSwitch />
-                    <ListItemButton>
+                    <MenuItem>
                         <ListItemIcon>
                             <SettignsRoundedIcon />
                         </ListItemIcon>
                         <ListItemText>
                             Настройки
                         </ListItemText>
-                    </ListItemButton>
-                    <ListItemButton>
+                    </MenuItem>
+                    <MenuItem>
                         <ListItemIcon>
                             <SwitchAccountRoundedIcon />
                         </ListItemIcon>
                         <ListItemText>
                             Сменить пользователя
                         </ListItemText>
-                    </ListItemButton>
+                    </MenuItem>
                 </MobileMenuList>
                 <MyDivider />
                 <MobileMenuList>

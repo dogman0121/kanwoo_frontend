@@ -30,18 +30,23 @@ function NoChapters(){
 
 function ChapterItem({chapter}: {chapter: Chapter}) {
     return (
-        <Paper
-            elevation={3}
+        <Box
             key={`chapter_${chapter.id}`}
-            sx={{
-                borderRadius: "12px",
-                boxShadow: "none",
-                p: "10px 25px",
+            sx={[
+                (theme) => ({
+                    bgcolor: theme.palette.grey[300],
+                    borderRadius: "12px",
+                    boxShadow: "none",
+                    p: "10px 25px",
 
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between"
-            }}
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between"
+                }),
+                (theme) => theme.applyStyles("dark", {
+                    backgroundColor: theme.palette.grey[800]
+                })
+            ]}
         >
             <Link href={`/chapters/${chapter.id}`}>
                 <Box
@@ -80,7 +85,7 @@ function ChapterItem({chapter}: {chapter: Chapter}) {
             >
                 {new Date(chapter.created_at).toLocaleDateString()}
             </Typography>
-        </Paper>
+        </Box>
     )
 }
 
