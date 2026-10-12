@@ -89,6 +89,10 @@ export default function HistoryList() {
     const hasMore = useAppSelector(selectHasMore)
     const cursor = useAppSelector(selectCursor)
 
+    const handleNext = () => {
+        dispatch(loadHistory(cursor))
+    }
+
 
     if (dates.length == 0)
         return <Typography color="textSecondary" textAlign={"center"} py={4}>У вас нет истории чтения.</Typography>
@@ -98,7 +102,7 @@ export default function HistoryList() {
         <InfiniteScroll
             dataLength={history.length}
             hasMore={hasMore}
-            next={() => dispatch(loadHistory(cursor))}
+            next={handleNext}
             loader={<CircularProgress />}
             style={{
                 overflow: "hidden"

@@ -16,13 +16,21 @@ export default function InputFilter({label, name, sx, ...props}: TextFieldProps)
     }, [filters])
 
     return (
-        <Box>
-            <Typography variant="caption">{label}</Typography>
+        <Box
+            sx={{
+                width: "100%"
+            }}
+        >
+            {label && (
+                <Typography variant="caption" mb={1}>{label}</Typography>
+            )}
             <TextField
                 sx={{
-                    mt: 1,
                     "& input": {
                         padding: "10px 14px"
+                    },
+                    "& .MuiOutlinedInput-root": {
+                        borderRadius: 3
                     },
                     ...sx
                 }} 
@@ -32,12 +40,11 @@ export default function InputFilter({label, name, sx, ...props}: TextFieldProps)
                     const val = event.target.value;
 
                     const newFilters = filters;
-                    setValue(val)
+
                     if (name)
-                        newFilters.set(name, [val])
-
+                        newFilters.set(name, [ val ])
                     setFilters(newFilters)
-
+                    setValue(val)
                 }}
                 {...props}
             />

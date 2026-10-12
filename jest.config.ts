@@ -1,18 +1,23 @@
-import type { Config } from 'jest'
-import nextJest from 'next/jest.js'
- 
-const createJestConfig = nextJest({
-  // Provide the path to your Next.js app to load next.config.js and .env files in your test environment
-  dir: './',
-})
- 
-// Add any custom config to be passed to Jest
+import type { Config } from 'jest';
+
 const config: Config = {
-  coverageProvider: 'v8',
-  testEnvironment: 'jsdom',
-  // Add more setup options before each test is run
-  // setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
-}
- 
-// createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
-export default createJestConfig(config)
+  preset: 'ts-jest',
+  testEnvironment: 'jest-environment-jsdom', // или 'node', в зависимости от вашего проекта
+  
+  // Если у вас было свойство runner, настроенное массивом, например:
+  // runner: ['some-runner', { options }], 
+  // В новых версиях Jest это недопустимо. Перенесите настройки в соответствующие плагины/трансформеры,
+  // либо оставьте просто строковое имя, если плагин это поддерживает:
+  // runner: 'jest-runner', 
+
+  transform: {
+    '^.+\\.(ts|tsx)$': ['ts-jest', { tsconfig: 'tsconfig.json' }],
+  },
+  
+  // Добавьте остальные ваши личные настройки проекта ниже (массивы сетапов, маппинг путей и т.д.)
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+  },
+};
+
+export default config;

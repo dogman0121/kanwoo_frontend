@@ -60,7 +60,7 @@ export default function DesktopPage() {
                                 top: `calc(54px + ${theme.spacing(4)})`,
                                 px: 4,
                                 pt: 3,
-                                pb: 4,
+                                pb: 6,
                                 boxShadow: "none"
                             }}
                         >

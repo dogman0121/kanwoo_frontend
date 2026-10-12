@@ -48,7 +48,7 @@ export const mangaApiConfig: ApiConfig = {
             mode: "aggregate",
             urls: [
                 {name: "manga", url: "/manga/:slug"},
-                {name: "progress", url: "/manga/:slug/progress"}
+                {name: "progress", url: "/progresses/manga/:slug"}
             ]
         }
     },

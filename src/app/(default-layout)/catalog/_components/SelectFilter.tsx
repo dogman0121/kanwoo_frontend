@@ -11,6 +11,7 @@ export function CatalogSelect({sx, ...props}: SelectProps) {
                 "& .MuiSelect-outlined": {
                     padding: "10px 14px"
                 } ,
+                borderRadius: 3,
                 ...sx
             }}
             {...props}
@@ -40,7 +41,9 @@ export default function SelectFilter({
     
     return (
         <FormControl fullWidth>
-            <Typography fontWeight={600}>{label}</Typography>
+            {label && (
+                <Typography mb={1}>{label}</Typography>
+            )}
             <CatalogSelect
                 labelId={`catalog_${name}_input`}
                 name={name}
@@ -48,15 +51,12 @@ export default function SelectFilter({
                 multiple
                 displayEmpty
                 value={value}
-                sx={{
-                    mt: 1
-                }}
                 renderValue={(selected: unknown) => (
                     <>
                         {(selected as string[]).length == 0 ? 
                             <Typography
                                 sx={{
-                                    color: theme.typography.caption.color
+                                    color: theme.palette.text.secondary,
                                 }}
                             >
                                 Выберите значение

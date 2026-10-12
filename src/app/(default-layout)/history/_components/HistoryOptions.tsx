@@ -9,6 +9,10 @@ export default function HistoryOptions() {
 
     const allSelected = useAppSelector(selectIsAllSelected)
     const deleteDisabled = useAppSelector(selectDeleteDisabled)
+
+    const handleDelete = () => {
+        
+    }
     
     return (
         <Box
@@ -32,6 +36,7 @@ export default function HistoryOptions() {
             <Button
                 variant="contained"
                 disabled={deleteDisabled}
+                onClick = {handleDelete}
             >
                 Удалить
             </Button>

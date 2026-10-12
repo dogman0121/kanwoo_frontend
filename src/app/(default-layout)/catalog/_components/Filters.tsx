@@ -1,9 +1,9 @@
 import { Box, Button, Typography } from "@mui/material";
 import { useAppSelector } from "@/lib/state/hooks";
 import SelectFilter from "./SelectFilter";
-import InputFilter from "./InputFilter";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded"
 import useSearch from "@/features/search/hooks/useSearch";
+import InputFilter from "./InputFilter";
 
 export default function Filters() {
     const meta = useAppSelector(state => state.global.meta.meta)
@@ -71,7 +71,8 @@ export default function Filters() {
                 <Box>
                     <Typography
                         sx={{
-                            fontWeight: 600
+                            fontWeight: 600,
+                            mb: 1
                         }}
                     >
                         Дата выпуска
@@ -81,18 +82,31 @@ export default function Filters() {
                             display: "flex",
                             flexDirection: "row",
                             columnGap: "15px",
-                            mt: "5px"
                         }}
                     >
                         <InputFilter 
-                            label="От"
                             type="number"
+                            placeholder="От"
                             name="year_from"
+                            fullWidth
+                            slotProps={{
+                                htmlInput: {
+                                    min: "1900",
+                                    max: "2099"
+                                }
+                            }}
                         />
                         <InputFilter 
-                            label="До"
                             type="number"
+                            placeholder="До"
                             name="year_to"
+                            fullWidth
+                            slotProps={{
+                                htmlInput: {
+                                    min: "1900",
+                                    max: "2099"
+                                }
+                            }}
                         />
                     </Box>
                 </Box>
