@@ -21,6 +21,10 @@ const initialState: StudioPageProfileState = {
     collections: undefined
 }
 
+type RootState = {
+    studio: {profile: StudioPageProfileState}
+}
+
 export const studioPageProfileSlice = createSlice({
     name: "studio_page_profile",
     initialState,
@@ -46,6 +50,10 @@ export const studioPageProfileSlice = createSlice({
         }
     }
 })
+
+export const selectProfile = (state: RootState) => {
+    return state.studio.profile.profile
+}
 
 export const { 
     setStudioPageProfile, 

@@ -36,7 +36,7 @@ export const clientFetch = {
 
         const apiResponse: ApiResponse<D, M, C, P> = await response.json();
 
-        if ("error" in apiResponse) {
+        if ("error" in apiResponse && Object.keys(apiResponse.error).length > 0) {
             const error = apiResponse.error
 
             throw new ApiError(error.code, error.detail)

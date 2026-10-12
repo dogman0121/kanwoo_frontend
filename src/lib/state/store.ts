@@ -7,15 +7,15 @@ import authProfileCollectionsReducer from '../../features/collection/states/auth
 import collectionPageReducer from '../../features/collection/states/collection-page/slice'
 import authProfileHistoryPage from "@/features/progress/states/auth-profile-history-page/slice"
 
-import { studioPageReducer } from './features/studio-page/reducer'
 import { profilePageReducer } from './features/profile-page/reducer'
 import { globalReducer } from '@/features/global/states/reducer'
 import { readerReducer } from '@/features/reader/states/reducer'
+import { studioPageReducer } from '@/features/studio/states/reducer'
 
 const rootReducers = combineReducers({
   global: globalReducer,
   reader: readerReducer,
-  studioPage: studioPageReducer,
+  studio: studioPageReducer,
   profilePage: profilePageReducer,
   homePage: homePageReducer,
   mangaPage: mangaPageReducer,
