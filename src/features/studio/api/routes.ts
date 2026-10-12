@@ -1,17 +1,21 @@
 import { ApiConfig } from "@/lib/api/api-config.type";
+import { HTTP_METHODS } from "@/lib/api/methods.type";
 
 export const studioApiConfig: ApiConfig = {
-    "/profiles/:slug": {
+    "/studio/profiles/:slug": {
         GET: {
-            mode: "proxy",
-            url: "/profiles/:slug"
+            mode: "aggregate",
+            urls: [
+                {url: "/profiles/:slug", name: "profile", method: HTTP_METHODS.GET},
+                {url: "/profiles/:slug/permissions", name: "profile_permission", method: HTTP_METHODS.GET}
+            ]
         },
         PUT: {
             mode: "proxy",
             url: "/profiles/:slug"
         }
     },
-    "/profiles/:slug/collections": {
+    "/studio/profiles/:slug/collections": {
         GET: {
             mode: "proxy",
             url: "/profiles/:slug/collections"
@@ -21,7 +25,7 @@ export const studioApiConfig: ApiConfig = {
             url: "/profiles/:slug/collections"
         }
     },
-    "/profiles/:slug/manga": {
+    "/studio/profiles/:slug/manga": {
         GET: {
             mode: "proxy",
             url: "/profiles/:slug/manga"
@@ -31,7 +35,7 @@ export const studioApiConfig: ApiConfig = {
             url: "/profiles/:slug/manga"
         }
     },
-    "/profiles/:slug/translations": {
+    "/studio/profiles/:slug/translations": {
         GET: {
             mode: "proxy",
             url: "/profiles/:slug/translations"
@@ -41,7 +45,7 @@ export const studioApiConfig: ApiConfig = {
             url: "/profiles/:slug/translations"
         }
     },
-    "/manga/:slug": {
+    "/studio/manga/:slug": {
         GET: {
             mode: "proxy",
             url: "/manga/:slug"
@@ -51,7 +55,7 @@ export const studioApiConfig: ApiConfig = {
             url: "/manga/:slug"
         }
     },
-    "/manga/:slug/translations": {
+    "/studio/manga/:slug/translations": {
         GET: {
             mode: "proxy",
             url: "/manga/:slug/translations"
@@ -61,13 +65,13 @@ export const studioApiConfig: ApiConfig = {
             url: "/manga/:slug/translations"
         }
     },
-    "/manga/:slug/forms/edit": {
+    "/studio/manga/:slug/forms/edit": {
         GET: {
             mode: "proxy",
             url: "/manga/:slug/forms/edit"
         }
     },
-    "/translations/:id": {
+    "/studio/translations/:id": {
         GET: {
             mode: "proxy",
             url: "/translations/:id"
@@ -77,7 +81,7 @@ export const studioApiConfig: ApiConfig = {
             url: "/translationa/:id"
         }
     },
-    "/translations/:id/chapters": {
+    "/studio/translations/:id/chapters": {
         GET: {
             mode: "proxy",
             url: "/translations/:id/chapters"
@@ -87,7 +91,7 @@ export const studioApiConfig: ApiConfig = {
             url: "/translations/:id/chapters"
         }
     },
-    "/chapters/:id": {
+    "/studio/chapters/:id": {
         GET: {
             mode: "proxy",
             url: "/chapters/:id"

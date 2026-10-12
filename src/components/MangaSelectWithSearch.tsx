@@ -7,7 +7,7 @@ import { debounce } from "lodash";
 import { clientFetch } from "@/lib/fetch/client-fetch.util";
 import theme from "@/constants/themes/main.theme";
 import { Manga, MangaShort } from "@/types/manga";
-import { setDrawerOpen } from "@/lib/state/features/studio-page/studio-page.slice";
+import { setDrawerOpen } from "@/features/studio/states/studio-page.slice";
 
 export default function MangaSelectWithSearch({
     value = null,

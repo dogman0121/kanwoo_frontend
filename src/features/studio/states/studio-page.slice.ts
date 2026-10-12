@@ -23,7 +23,7 @@ export const studioPageSlice = createSlice({
 })
 
 export type RootState = {
-    studioPage: {page: StudioPageState}
+    studio: {page: StudioPageState}
 }
 
 export const { setDrawerOpen } = studioPageSlice.actions
@@ -31,5 +31,5 @@ export const { setDrawerOpen } = studioPageSlice.actions
 export default studioPageSlice.reducer
 
 export const selectDrawerOpen = (state: RootState) => {
-    return state.studioPage.page.ui.drawerOpen
+    return state.studio.page.ui.drawerOpen
 }
