@@ -2,9 +2,8 @@
 
 import { loadHistory, selectCursor, selectHasMore, selectDates, selectDateHistory } from "@/features/progress/states/auth-profile-history-page/slice"
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
-import { Box, CircularProgress, Divider, Typography } from "@mui/material"
+import { Box, CircularProgress, Typography } from "@mui/material"
 import ProgressItem from "./ProgressItem"
-import { ReadingProgress } from "@/types/reading-progress"
 import InfiniteScroll from "react-infinite-scroll-component"
 
 const MONTH_NAMES: Record<number, string> = {
@@ -55,9 +54,10 @@ function HistoryDateList({
     return (
         <Box>
             <Typography
-                variant="h3"
+                fontSize={"16px"}
                 sx={{
-                    my: 4
+                    mt: 4,
+                    mb: 2
                 }}
             >
                 {compileDateIntoString(date)}
@@ -100,7 +100,7 @@ export default function HistoryList() {
 
     return (
         <InfiniteScroll
-            dataLength={history.length}
+            dataLength={dates.length}
             hasMore={hasMore}
             next={handleNext}
             loader={<CircularProgress />}
