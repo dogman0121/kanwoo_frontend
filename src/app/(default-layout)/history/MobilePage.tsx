@@ -3,6 +3,7 @@
 import { AppMobilePageHeader } from "@/components/AppPageHeader"
 import MobileContainer from "@/components/MobileContainer"
 import HistoryOptions from "./_components/HistoryOptions"
+import HistoryList from "./_components/HistoryList"
 
 export default function MobilePage() {
 
@@ -11,6 +12,7 @@ export default function MobilePage() {
             <AppMobilePageHeader label="История"/>
             <MobileContainer>
                 <HistoryOptions />
+                <HistoryList />
             </MobileContainer>
         </>
     )

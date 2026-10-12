@@ -15,7 +15,6 @@ import { AuthProfile } from "@/types/profile"
 import { profileServerApi } from "@/lib/fetch/features/profile/server.api"
 import { metaServerApi } from "@/lib/fetch/features/meta/server.api"
 
-
 const analyticsEnabled = !!(process.env.NODE_ENV === "production");
 
 const roboto = Roboto({
@@ -30,8 +29,8 @@ export default async function RootLayout({
 }: Readonly<{
     children: React.ReactNode
 }>) {
-    let authProfile: AuthProfile | null;
     let meta; try { meta = (await metaServerApi.getMeta()).data } catch (_) { meta = null }
+    let authProfile: AuthProfile | null;
     try {
         authProfile = (await profileServerApi.getAuthProfile()).data 
     } catch (e) {

@@ -32,12 +32,12 @@ const ProfileWidget = () => {
     if (!authProfile) return
 
     return (
-        <Link href={toHref(routes.profiles.item, {slug: authProfile.slug})}>
-            <Box
-                sx={{
-                    pb: 1
-                }}
-            >
+        <Box
+            sx={{
+                pb: 1
+            }}
+        >
+            <Link href={toHref(routes.profiles.item, {slug: authProfile.slug})}>
                 <MenuItem>
                     <Box
                         sx={{
@@ -54,8 +54,8 @@ const ProfileWidget = () => {
                         </Box>
                     </Box>
                 </MenuItem>
-            </Box>
-        </Link>
+            </Link>
+        </Box>
     )
 }
 
