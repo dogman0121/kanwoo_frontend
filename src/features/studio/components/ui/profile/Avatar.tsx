@@ -80,7 +80,7 @@ export default function ProfileAvatar({
                     <Typography
                         variant="caption"
                         sx={{
-                            py: "20px",
+                            py: "10px",
                             maxWidth: "300px"
                         }}
                     >

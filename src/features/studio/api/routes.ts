@@ -4,15 +4,12 @@ import { HTTP_METHODS } from "@/lib/api/methods.type";
 export const studioApiConfig: ApiConfig = {
     "/studio/profiles/:slug": {
         GET: {
-            mode: "aggregate",
-            urls: [
-                {url: "/profiles/:slug", name: "profile", method: HTTP_METHODS.GET},
-                {url: "/profiles/:slug/permissions", name: "profile_permission", method: HTTP_METHODS.GET}
-            ]
+            mode: "proxy",
+            url: "/studio/profiles/:slug"
         },
         PUT: {
             mode: "proxy",
-            url: "/profiles/:slug"
+            url: "/studio/profiles/:slug"
         }
     },
     "/studio/profiles/:slug/collections": {
@@ -27,8 +24,8 @@ export const studioApiConfig: ApiConfig = {
     },
     "/studio/profiles/:slug/manga": {
         GET: {
-            mode: "proxy",
-            url: "/profiles/:slug/manga"
+            mode: "proxy", 
+            url: "/studio/profiles/:slug/manga"
         },
         POST: {
             mode: "proxy",
@@ -38,7 +35,7 @@ export const studioApiConfig: ApiConfig = {
     "/studio/profiles/:slug/translations": {
         GET: {
             mode: "proxy",
-            url: "/profiles/:slug/translations"
+            url: "/studio/profiles/:slug/translations"
         },
         POST: {
             mode: "proxy",

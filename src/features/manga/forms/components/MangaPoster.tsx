@@ -51,13 +51,17 @@ export default function MangaPoster({
                 sx={{
                     mt: "10px",
                     display: "flex",
+                    flexWrap: "wrap",
                     columnGap: "20px"
                 }}
             >
                 {posterUrl == null ?
                     <Paper
                         sx={{
-                            borderRadius: "3% 2%",
+                            borderRadius: 2,
+                            border: "2px dashed",
+                            borderColor: "divider",
+
                             aspectRatio:"2/3",
                             width: "150px",
                             display: "flex",
@@ -109,7 +113,7 @@ export default function MangaPoster({
                         </label>
                         <Button 
                             variant="contained" 
-                            color="secondary" 
+                            color="inherit" 
                             sx={{ml: "5px"}}
                             onClick={() => onChange(null)}
                         >

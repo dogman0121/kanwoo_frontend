@@ -40,7 +40,7 @@ export default function Poster({
                         //borderStyle: "dashed",
                         borderColor: "divider",
 
-                        width: width || "100%",
+                        minWidth: width || "100%",
                         ...style
                     }}
                 >

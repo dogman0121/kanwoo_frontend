@@ -3,7 +3,7 @@
 import EditLayout from "@/components/edit/EditLayout"
 import { notFound, useParams } from "next/navigation";
 import { ApiError } from "@/lib/fetch/api-response.types";
-import { Box, Divider, List, ListItemIcon, ListItemText } from "@mui/material";
+import { Avatar, Box, Divider, List, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import ProfilePermission from "@/types/profile/profilePermission";
 import { clientFetch } from "@/lib/fetch/client-fetch.util";
 import { useEffect, useState } from "react";
@@ -22,8 +22,7 @@ import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import EditSectionsLinkButton from "@/components/edit/EditSectionsLinkButton";
 import EditSectionsButton from "@/components/edit/EditSectionsButton";
 import { studioClientAPI } from "@/features/studio/api/client.api";
-import { error } from "console";
-import { selectProfile, setStudioPageProfile, setStudioPageProfilePermissions } from "@/features/studio/states/profile.slice";
+import { selectProfile, setStudioProfile, setStudioProfilePermissions } from "@/features/studio/states/profile/page.slice";
 
 function StudioDrawer() {
     const dispatch = useAppDispatch()
@@ -41,6 +40,31 @@ function StudioDrawer() {
             onClose={() => dispatch(setDrawerOpen(false))}
         >
             <EditDrawerContainer>
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center"
+                    }}
+                >
+                    <Avatar 
+                        src={profile.avatar}
+                        sx= {{
+                            width: "96px",
+                            height: "96px"
+                        }}
+                    />
+                    <Box
+                        sx={{
+                            mt: 2
+                        }}
+                    >
+                        <Typography>{profile.name}</Typography>
+                        <Typography variant="caption" color="textSecondary">
+                            @{profile.slug}
+                        </Typography>
+                    </Box>
+                </Box>
                 <List>
                     <EditSectionsLinkButton 
                         link={toHref(routes.studio.profiles.item, {slug: profile.slug})}
@@ -75,7 +99,7 @@ function StudioDrawer() {
                             Переводы
                         </ListItemText>
                     </EditSectionsLinkButton>
-                    <EditSectionsLinkButton  
+                    {/* <EditSectionsLinkButton  
                         link={toHref(routes.studio.profiles.collections, {slug: profile.slug})}
                         selected={section == "collections"}
                     >
@@ -85,7 +109,7 @@ function StudioDrawer() {
                         <ListItemText>
                             Списки
                         </ListItemText>
-                    </EditSectionsLinkButton>
+                    </EditSectionsLinkButton> */}
                 </List>
             </EditDrawerContainer>
             <Box
@@ -130,14 +154,15 @@ export default function Layout({
         try {
             const response = await studioClientAPI.getProfile(slug)
 
-            dispatch(setStudioPageProfile(response.data.profile))
-            dispatch(setStudioPageProfilePermissions(response.data.profile_permission))
+            if (!response.data.profile)
+                return setIsNotFound(true)
+
+            dispatch(setStudioProfile(response.data.profile))
+            dispatch(setStudioProfilePermissions(response.data.profile_permission))
             setIsNotFound(false)
         } catch (e) {
             if (e instanceof ApiError) {
-                if (e.code == "not_found")
-                    return setIsNotFound(true)
-                console.error(e)
+                return setIsNotFound(true)
             }
 
             throw e

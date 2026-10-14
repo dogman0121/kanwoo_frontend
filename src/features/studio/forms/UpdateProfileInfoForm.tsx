@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import { useRouter } from "next/navigation";
 import { studioClientAPI } from "../api/client.api";
-import { selectProfile, setStudioPageProfile } from "@/features/studio/states/profile.slice";
+import { selectProfile, setStudioProfile } from "@/features/studio/states/profile/page.slice";
 import { selectAuthProfile } from "@/features/global/states/auth-profile";
 import { setAuthProfile } from "@/features/global/states/auth-profile/auth-profile.slice";
 import { routes, toHref } from "@/constants/routes/main.routes";
@@ -98,7 +98,7 @@ export default function UpdateProfileInfoForm({
         try {
             const {data: updatedProfile} = await studioClientAPI.updateProfileInfo(profile.slug, formData)
 
-            dispatch(setStudioPageProfile(updatedProfile))
+            dispatch(setStudioProfile(updatedProfile))
 
             if (authProfile?.id == profile.id)
                 dispatch(setAuthProfile(updatedProfile))
