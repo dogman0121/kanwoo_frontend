@@ -3,10 +3,11 @@ import { Profile } from "@/features/profile/types/profile.type"
 import { clientFetch } from "@/lib/fetch/client-fetch.util"
 import { StudioManga } from "../types/studio-manga.type"
 import { Translation, TranslationContext } from "@/types/translation"
+import { Entity } from "@/lib/types/Entity.type"
 
 export const studioClientAPI = {
     getProfile: async (slug: string) => {
-        return clientFetch.get<{profile: Profile, profile_permission: ProfilePermission}>(`/studio/profiles/${slug}`)
+        return clientFetch.get<Profile, null, null, null, ProfilePermission>(`/studio/profiles/${slug}`)
     },
 
     updateProfileInfo: async (slug: string, formData: FormData) => {

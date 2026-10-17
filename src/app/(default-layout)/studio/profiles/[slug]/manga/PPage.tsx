@@ -5,6 +5,8 @@ import MobilePage from "./MobilePage"
 import CreateMangaDialog from "@/features/studio/components/CreateMangaDialog"
 import { selectCreateMangaDialogOpen, setCreateMangaDialogOpen } from "@/features/studio/states/profile/page.slice"
 import { Manga } from "@/features/manga/types"
+import { addManga } from "@/features/studio/states/profile/manga.slice"
+import { StudioManga } from "@/features/studio/types/studio-manga.type"
 
 export default function PPage() {
     const dispatch = useAppDispatch()
@@ -13,7 +15,10 @@ export default function PPage() {
 
     const deviceType = useAppSelector(selectDeviceType)
 
-    const handleCreateManga = (manga: Manga) => {
+    const handleCreateManga = (manga: StudioManga) => {
+        dispatch(addManga({
+            data: manga
+        }))
         dispatch(setCreateMangaDialogOpen(false))
     }
 

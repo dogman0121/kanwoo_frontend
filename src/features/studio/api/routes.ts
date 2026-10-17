@@ -29,7 +29,7 @@ export const studioApiConfig: ApiConfig = {
         },
         POST: {
             mode: "proxy",
-            url: "/profiles/:slug/manga"
+            url: "/studio/profiles/:slug/manga"
         }
     },
     "/studio/profiles/:slug/translations": {

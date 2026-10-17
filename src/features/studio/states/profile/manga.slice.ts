@@ -16,13 +16,12 @@ export const profileMangaSlice = createSlice({
     name: "studio_profile_manga",
     initialState,
     reducers: {
-        setMangaList: (state, action: PayloadAction<{manga: StudioManga[], mangaContext?: null}>) => {
-            const {manga} = action.payload
-
-            mangaAdapter.setMany(state, manga.map(m => ({
-                data: m,
-            })))
+        setMangaList: (state, action: PayloadAction<Entity<StudioManga>[]>) => {
+            mangaAdapter.setMany(state, action.payload)
         },
+        addManga: (state, action: PayloadAction<Entity<StudioManga>>) => {
+            mangaAdapter.addOne(state, action.payload)
+        }
     }
 })
 
@@ -31,7 +30,8 @@ export const {
 } = mangaAdapter.getSelectors((state: RootState) => state.studio.profile.manga)
 
 export const { 
-    setMangaList
+    setMangaList,
+    addManga
 } = profileMangaSlice.actions
 
 export default profileMangaSlice.reducer

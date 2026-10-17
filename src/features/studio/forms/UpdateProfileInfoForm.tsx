@@ -72,13 +72,15 @@ export const useUpdateProfileInfoForm = (profile?: Profile | null) => {
 
 export default function UpdateProfileInfoForm({
     control,
+    reset,
     handleSubmit, 
 }: ReturnType<typeof useUpdateProfileInfoForm>) {
     const dispatch = useAppDispatch()
-    const router = useRouter()
 
     const authProfile = useAppSelector(selectAuthProfile)
     const profile = useAppSelector(selectProfile)
+
+    console.log(profile)
 
     const onSubmit = async (data: UpdateProfileInfoFormSchema) => {
         if (!profile)
@@ -98,12 +100,15 @@ export default function UpdateProfileInfoForm({
         try {
             const {data: updatedProfile} = await studioClientAPI.updateProfileInfo(profile.slug, formData)
 
-            dispatch(setStudioProfile(updatedProfile))
+            dispatch(setStudioProfile({
+                data: updatedProfile
+            }))
 
             if (authProfile?.id == profile.id)
                 dispatch(setAuthProfile(updatedProfile))
 
-            router.replace(toHref(routes.studio.profiles.item, {slug: updatedProfile.slug}))
+            reset(convertIntoForm(updatedProfile))
+            window.history.replaceState({}, "", toHref(routes.studio.profiles.item, {slug: updatedProfile.slug}))
 
         } catch (_) {
             throw new Error("Failed to update")
@@ -125,7 +130,7 @@ export default function UpdateProfileInfoForm({
                 <NameInput control={control}/>
                 <SlugInput 
                     control={control} 
-                    defaultSlug={profile.slug}
+                    defaultValue={profile.slug}
                 />
                 <AboutInput control={control}/>
                 <LinksInput control={control}/>

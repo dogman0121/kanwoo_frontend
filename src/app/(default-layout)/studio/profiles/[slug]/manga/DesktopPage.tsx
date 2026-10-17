@@ -8,7 +8,7 @@ import { routes, toHref } from "@/constants/routes/main.routes";
 import CreateMangaDialog from "@/features/studio/components/CreateMangaDialog";
 import { Manga } from "@/features/manga/types";
 import StudioList from "@/features/studio/components/List";
-import StudioPrivacyStatus from "@/features/studio/components/PrivacyStatus";
+import StudioPrivacyStatus from "@/features/studio/components/ui/PrivacyStatus";
 import { selectManga } from "@/features/studio/states/profile/manga.slice";
 import { setCreateMangaDialogOpen } from "@/features/studio/states/profile/page.slice";
 import { StudioManga } from "@/features/studio/types/studio-manga.type";
@@ -147,7 +147,7 @@ export default function DesktopPage() {
                 py={4}
             >
                 {manga?.map((m) => (
-                    <MangaGridRow key={m.manga.slug} manga={m.manga}/>
+                    <MangaGridRow key={m.data.slug} manga={m.data}/>
                 ))}
             </StudioList>
         </>

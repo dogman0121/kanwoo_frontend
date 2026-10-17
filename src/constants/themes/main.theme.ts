@@ -133,7 +133,7 @@ const mainTheme = createTheme({
       defaultProps: {
         slotProps: {
           paper: {
-            elevation: 3,
+            elevation: 2,
           },
         },
       },

@@ -73,18 +73,18 @@ export function useCreateForm() {
     return props
 }
 
-export default function Create({
+export default function CreateMangaForm({
     onCreate,
+    onError,
     control,
     handleSubmit,
     reset
 }: {
-    onCreate?: (manga: StudioManga) => void
+    onCreate?: (manga: StudioManga) => void,
+    onError?: () => void
 } & UseFormReturn<MangaCreateFormSchema>) {
 
     const profile = useAppSelector(selectProfile)
-
-    const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false)
 
     const onSubmit = async (data: MangaCreateFormSchema) => {
         if (!profile) return
@@ -97,7 +97,7 @@ export default function Create({
             onCreate?.(response.data)
             reset()
         } catch (_) {
-            setErrorSnackbarOpen(true)
+            onError?.()
         }
     }
 
@@ -316,12 +316,6 @@ export default function Create({
                     />
                 </Box>
             </form>
-            <AppSnackbar 
-                variant="error"
-                open={errorSnackbarOpen}
-                onClose={() => setErrorSnackbarOpen(false)}
-                message="При добавлении манги произошла ошибка"
-            />
         </>
     )
 }

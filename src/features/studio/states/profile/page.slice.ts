@@ -44,7 +44,7 @@ export const studioProfileSlice = createSlice({
 })
 
 export const selectProfile = (state: RootState) => {
-    return state.studio.profile.page.profile
+    return state.studio.profile.page.profile?.data
 }
 
 export const selectCreateMangaDialogOpen = (state: RootState) => {

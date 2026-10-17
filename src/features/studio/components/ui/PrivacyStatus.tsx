@@ -1,4 +1,4 @@
-import { Box, Toolbar, Tooltip, Typography } from "@mui/material";
+import { Box, SvgIcon, Toolbar, Tooltip, Typography } from "@mui/material";
 import LinkIcon from '@mui/icons-material/Link';
 import PublicIcon from '@mui/icons-material/Public';
 import LockIcon from '@mui/icons-material/Lock';
@@ -26,26 +26,13 @@ function Status({
                     alignItems: "center"
                 }}
             >
-                {icon}
+                <SvgIcon fontSize="small">
+                    {icon}
+                </SvgIcon>
                 <Typography
                     ml={1}
                 >
                     {label}
-                </Typography>
-            </Box>
-        </Tooltip>
-    )
-}
-
-function PublicStatus() {
-    return (
-        <Tooltip
-            title="Данная манга видна только после перехода по прямой ссылке"
-        >
-            <Box>
-                <PublicIcon />
-                <Typography>
-                    публичная
                 </Typography>
             </Box>
         </Tooltip>

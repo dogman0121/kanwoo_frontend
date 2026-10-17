@@ -11,15 +11,21 @@ export default function CreateMangaDialog({
 }: {
     open: boolean,
     onCreate?: (manga: StudioManga) => void,
+    onError?: () => void,
     onClose?: () => void
 }) {
     const [successSnackbarOpen, setSuccessSnackbarOpen] = useState(false)
+    const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false)
 
     const {formState, ...formProps} = useCreateForm()
 
     const handleCreate = (manga: StudioManga) => {
         setSuccessSnackbarOpen(true)
         onCreate?.(manga)
+    }
+
+    const handleError = () => {
+        setErrorSnackbarOpen(true)
     }
 
     return (
@@ -38,6 +44,7 @@ export default function CreateMangaDialog({
                 <DialogContent>
                     <Create 
                         onCreate={handleCreate}
+                        onError={handleError}
                         formState={formState}
                         {...formProps}
                     />
@@ -65,6 +72,12 @@ export default function CreateMangaDialog({
                 open={successSnackbarOpen}
                 onClose={() => setSuccessSnackbarOpen(false)}
                 message="Манга успешно добавлена"
+            />
+            <AppSnackbar 
+                variant="error"
+                open={errorSnackbarOpen}
+                onClose={() => setErrorSnackbarOpen(false)}
+                message="При добавлении манги произошла ошибка"
             />
         </>
     )

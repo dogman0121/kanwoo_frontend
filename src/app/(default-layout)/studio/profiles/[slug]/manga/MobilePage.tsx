@@ -12,7 +12,7 @@ import Poster from "@/components/poster/Poster";
 import Link from "next/link";
 import { routes, toHref } from "@/constants/routes/main.routes";
 import WrappedText from "@/components/WrapperTypography";
-import StudioPrivacyStatus from "@/features/studio/components/PrivacyStatus";
+import StudioPrivacyStatus from "@/features/studio/components/ui/PrivacyStatus";
 import { Privacy } from "@/components/PrivacySelect";
 import StudioList from "@/features/studio/components/List";
 import { selectManga } from "@/features/studio/states/profile/manga.slice";
@@ -162,7 +162,7 @@ export default function MobilePage() {
             <MobileContainer>
                 <StudioList>
                     {manga.map(m => (
-                        <TitleGridRow manga={m.manga} key={m.manga.slug}/>
+                        <TitleGridRow manga={m.data} key={m.data.slug}/>
                     ))}
                 </StudioList>
             </MobileContainer>

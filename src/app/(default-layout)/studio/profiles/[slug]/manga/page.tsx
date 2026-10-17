@@ -15,7 +15,9 @@ export default function Page() {
     const fetchManga = async (slug: string) => {
         const response = await studioClientAPI.getProfileManga(slug)
 
-        dispatch(setMangaList({manga: response.data}))
+        dispatch(setMangaList(response.data.map((m, ind) => ({
+            data: m,
+        }))))
     }   
 
     useEffect(() => {
