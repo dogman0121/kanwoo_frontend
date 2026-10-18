@@ -135,8 +135,7 @@ export default function Layout({
             setIsNotFound(false)
         } catch (e) {
             if (e instanceof ApiError) {
-                if (e.code == "not_found")
-                    return setIsNotFound(true)
+                return setIsNotFound(true)
                 console.error(e)
             }
 
