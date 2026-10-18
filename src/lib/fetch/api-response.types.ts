@@ -12,11 +12,12 @@ export type CursorPagination = {
 
 export type Pagination = CursorPagination | PagePagination
 
-export type SuccessResponse<D, M, C, P> = {
+export type SuccessResponse<D, M, C, PAG, PERM> = {
     data: D,
     metadata: M,
-    pagination: P,
-    context: C
+    pagination: PAG,
+    context: C,
+    permission: PERM
 }
 
 export type ErrorResponse = {
@@ -43,5 +44,6 @@ export type ApiResponse<
     DATA, 
     METADATA=Record<string, unknown>, 
     CONTEXT=Record<string, unknown>,
-    PAGINATION=Pagination
-> = SuccessResponse<DATA, METADATA, CONTEXT, PAGINATION> | ErrorResponse
+    PAGINATION=Pagination,
+    PERMISSION=Record<string, unknown>
+> = SuccessResponse<DATA, METADATA, CONTEXT, PAGINATION, PERMISSION> | ErrorResponse

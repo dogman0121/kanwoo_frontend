@@ -17,7 +17,7 @@ export async function validateSlug(slug: string) {
 }
 
 
-export default function ProfileSlug({value, defaultValue, slugChecking, error, ...props}: TextFieldProps & {slugChecking: boolean}) {
+export default function ProfileSlug({value, defaultValue, slugChecking, error, helperText, ...props}: TextFieldProps & {slugChecking: boolean}) {
     return (
         <EditInput
             label={"Тег профиля"}
@@ -26,7 +26,8 @@ export default function ProfileSlug({value, defaultValue, slugChecking, error, .
                 Является уникальным идентификатором.
             `}
             inputProps={{
-                error: error,
+                error: value != defaultValue && error,
+                helperText: value != defaultValue && helperText,
                 value: value,
                 sx: {
                     mt: "10px"

@@ -2,7 +2,7 @@ import EditHeader from "@/components/edit/EditHeader";
 import EditHeaderNav from "@/components/edit/EditHeaderNav";
 import EditPageContainer from "@/components/edit/EditPageContainer";
 import UpdateProfileInfoForm, { useUpdateProfileInfoForm } from "@/features/studio/forms/UpdateProfileInfoForm";
-import { selectProfile } from "@/features/studio/states/profile.slice";
+import { selectProfile } from "@/features/studio/states/profile/page.slice";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import { Box, Button } from "@mui/material";
 
@@ -40,7 +40,11 @@ export function DesktopPage() {
                     </>
                 }
             />
-            <EditPageContainer>
+            <EditPageContainer
+                sx={{
+                    py: 2
+                }}
+            >
                 <UpdateProfileInfoForm 
                     reset={reset}
                     formState={formState}

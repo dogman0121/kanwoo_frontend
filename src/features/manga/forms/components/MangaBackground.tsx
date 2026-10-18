@@ -55,13 +55,17 @@ export default function MangaBackground({
                 sx={{
                     mt: "10px",
                     display: "flex",
+                    flexWrap: "wrap",
                     columnGap: "20px"
                 }}
             >
                 {backgroundUrl == null ?
                     <Paper
                         sx={{
-                            borderRadius: "12px",
+                            borderRadius: 2,
+                            border: "2px dashed",
+                            borderColor: "divider",
+
                             aspectRatio:"16/9",
                             width: "300px",
                             display: "flex",
@@ -126,7 +130,7 @@ export default function MangaBackground({
                         />
                         <Button 
                             variant="contained" 
-                            color="secondary" 
+                            color="inherit" 
                             sx={{ml: "5px"}}
                             onClick={() => onChange(null)}
                         >

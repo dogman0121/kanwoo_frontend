@@ -5,13 +5,13 @@ import { UpdateProfileInfoFormSchema } from "../../forms/UpdateProfileInfoForm";
 import ProfileSlug from "../ui/profile/ProfileSlug";
 
 export default function SlugInput({
-    defaultSlug,
+    defaultValue,
     control
 }: {
-    defaultSlug?: string,
+    defaultValue?: string,
     control: Control<UpdateProfileInfoFormSchema>
 }) {
-    const {validating, isValid, validate} = useSlugValidator(defaultSlug)
+    const {validating, isValid, validate} = useSlugValidator(defaultValue)
 
     return (
         <Controller
@@ -27,7 +27,7 @@ export default function SlugInput({
             }}
             render={({field: {value, ...props}, fieldState: {error}}) => (
                 <ProfileSlug
-                    defaultValue={defaultSlug}
+                    defaultValue={defaultValue}
                     slugChecking={validating}
                     error={!isValid}
                     helperText={!isValid ? "Данный тег занят" : error?.message}

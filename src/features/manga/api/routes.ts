@@ -5,6 +5,10 @@ export const mangaApiConfig: ApiConfig = {
         GET: {
             mode: "proxy",
             url: "/manga"
+        },
+        POST: {
+            mode: "proxy",
+            url: "/manga"
         }
     },
     "/manga/check-slug": {

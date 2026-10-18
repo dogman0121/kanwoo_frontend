@@ -3,19 +3,19 @@ import { ApiError, SuccessResponse } from './api-response.types';
 
 
 export const serverFetch = {
-    async get<D, M=null, C=null, P=null>(url: string, options?: RequestInit) {
-        return this._sendRequest<D, M, C, P>(url, { ...options, method: 'GET' })
+    async get<D, M=null, C=null, PAG=null, PERM=null>(url: string, options?: RequestInit) {
+        return this._sendRequest<D, M, C, PAG, PERM>(url, { ...options, method: 'GET' })
     },
 
-    async post<D, M=null, C=null>(url: string, payload?: RequestInit) {
-        return this._sendRequest<D, M, C>(url, {
+    async post<D, M=null, C=null, PAG=null, PERM=null>(url: string, payload?: RequestInit) {
+        return this._sendRequest<D, M, C, PAG, PERM>(url, {
             ...payload,
             method: 'POST',
         });
     },
 
-    async put<D, M=null, C=null>(url: string, payload?: RequestInit) {
-        return this._sendRequest<D, M, C>(url, {
+    async put<D, M=null, C=null, PAG=null, PERM=null>(url: string, payload?: RequestInit) {
+        return this._sendRequest<D, M, C, PAG, PERM>(url, {
             ...payload,
             method: 'PUT',
         });
@@ -44,13 +44,13 @@ export const serverFetch = {
         });
     },
 
-    async _sendRequest<D, M=null, C=null, P=null>(url: string, options: RequestInit) {
+    async _sendRequest<D, M=null, C=null, PAG=null, PERM=null>(url: string, options: RequestInit) {
         const response = await this._fetch(url, options)
 
         const apiData = await (response.json())
 
         if (response.ok) {
-            return apiData as SuccessResponse<D, M, C, P>;
+            return apiData as SuccessResponse<D, M, C, PAG, PERM>;
         }
 
         throw new ApiError(apiData.error.code, apiData.error.detail)

@@ -5,7 +5,7 @@ import { Box, Button, IconButton } from "@mui/material";
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import MobileContainer from "@/components/MobileContainer";
 import UpdateProfileInfoForm, { useUpdateProfileInfoForm } from "@/features/studio/forms/UpdateProfileInfoForm";
-import { selectProfile } from "@/features/studio/states/profile.slice";
+import { selectProfile } from "@/features/studio/states/profile/page.slice";
 
 
 export function MobilePage() {

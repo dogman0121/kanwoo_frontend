@@ -1,20 +1,21 @@
 "use client"
 
-import { Autocomplete, Box, CircularProgress, MenuItem, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, CircularProgress, MenuItem, SxProps, TextField, Typography } from "@mui/material";
 import { useCallback, useRef, useState } from "react";
 import Poster from "./poster/Poster";
 import { debounce } from "lodash";
 import { clientFetch } from "@/lib/fetch/client-fetch.util";
 import theme from "@/constants/themes/main.theme";
 import { Manga, MangaShort } from "@/types/manga";
-import { setDrawerOpen } from "@/features/studio/states/studio-page.slice";
 
 export default function MangaSelectWithSearch({
     value = null,
-    onChange
+    onChange,
+    sx
 }: {
     value?: MangaShort | null,
-    onChange?: (value: MangaShort | null) => void
+    onChange?: (value: MangaShort | null) => void,
+    sx?: SxProps
 }) {
     const [innerValue, setInnerValue] = useState<MangaShort | null>(value)
 
@@ -43,6 +44,7 @@ export default function MangaSelectWithSearch({
             value={innerValue}
             inputValue={query}
             loading={isLoading}
+            sx={{...sx}}
             isOptionEqualToValue={(option, value) => option.slug == value.slug}
             onInputChange={(_event, value) => {
                 const query = value;
@@ -73,7 +75,7 @@ export default function MangaSelectWithSearch({
                         >
                             <Poster 
                                 width="32px"
-                                src={value.poster.thumbnail}
+                                src={value.poster?.thumbnail}
                             />
                             <Typography>{value.name}</Typography>
                         </Box>
@@ -99,7 +101,7 @@ export default function MangaSelectWithSearch({
                     >
                         <Poster 
                             width="40px"
-                            src={option.poster.thumbnail}
+                            src={option.poster?.thumbnail}
                         />
                         <Typography>{option.name}</Typography>
                     </Box>

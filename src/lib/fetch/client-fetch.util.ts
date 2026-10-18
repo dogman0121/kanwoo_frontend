@@ -25,7 +25,7 @@ export const clientFetch = {
         return "/api" + url
     },
 
-    async _fetch<D, M, C, P>(url: string, payload?: RequestInit) {
+    async _fetch<D, M, C, PAG, PERM>(url: string, payload?: RequestInit) {
         const response = await fetch(
             this._compileURL(url), 
             {
@@ -34,7 +34,7 @@ export const clientFetch = {
             }
         )
 
-        const apiResponse: ApiResponse<D, M, C, P> = await response.json();
+        const apiResponse: ApiResponse<D, M, C, PAG, PERM> = await response.json();
 
         if ("error" in apiResponse && Object.keys(apiResponse.error).length > 0) {
             const error = apiResponse.error
@@ -42,7 +42,7 @@ export const clientFetch = {
             throw new ApiError(error.code, error.detail)
         }
 
-        return apiResponse as SuccessResponse<D, M, C, P>;
+        return apiResponse as SuccessResponse<D, M, C, PAG, PERM>;
     },
 
     _getRequestOptionsWithCSRF(payload: RequestInit, csrf_token: string) {
@@ -56,14 +56,14 @@ export const clientFetch = {
 
     },
 
-    async _sendCSRFRequest<D, M, C, P>(url: string, payload: RequestInit) {
+    async _sendCSRFRequest<D, M, C, PAG, PERM>(url: string, payload: RequestInit) {
         const csrfAccessToken = this._getCookie(process.env.NEXT_PUBLIC_CSRF_ACCESS_COOKIE_NAME || "");
 
         if (!csrfAccessToken)
             throw Error("Failed to fetch csrf token.")
 
         try {
-            return await this._fetch<D, M, C, P>(url, this._getRequestOptionsWithCSRF(payload, csrfAccessToken))
+            return await this._fetch<D, M, C, PAG, PERM>(url, this._getRequestOptionsWithCSRF(payload, csrfAccessToken))
         } catch (e) {
             if (e instanceof ApiError) {
                 if (e.code == "token_expired") {
@@ -74,7 +74,7 @@ export const clientFetch = {
                     if (!newCsrfToken)
                         throw Error("Failed to get refreshed tokens")
 
-                    return this._fetch<D, M, C, P>(url, this._getRequestOptionsWithCSRF(payload, newCsrfToken))
+                    return this._fetch<D, M, C, PAG, PERM>(url, this._getRequestOptionsWithCSRF(payload, newCsrfToken))
                 }
             }
 
@@ -82,7 +82,7 @@ export const clientFetch = {
         }
     },
 
-    async _sendRequest<D=null, M=null, C=null, P=null>(
+    async _sendRequest<D=null, M=null, C=null, PAG=null, PERM=null>(
         url: string, 
         payload?: RequestInit,
         options?: ClientFetchOptions
@@ -98,10 +98,10 @@ export const clientFetch = {
         }
         
         if (options?.csrf || options?.csrf == undefined){
-            return this._sendCSRFRequest<D, M, C, P>(url, newPayload)
+            return this._sendCSRFRequest<D, M, C, PAG, PERM>(url, newPayload)
         }
 
-        return this._fetch<D, M, C, P>(url, newPayload)
+        return this._fetch<D, M, C, PAG, PERM>(url, newPayload)
     },
 
     async _refreshToken() {
@@ -124,14 +124,14 @@ export const clientFetch = {
         }
     },
 
-    async get<D, M=null, C=null, P=null>(url: string, payload?: RequestInit) {
-        return this._sendRequest<D, M, C, P>(url, {
+    async get<D, M=null, C=null, PAG=null, PERM=null>(url: string, payload?: RequestInit) {
+        return this._sendRequest<D, M, C, PAG, PERM>(url, {
             ...payload,
             method: "GET"
         }, {csrf: false});
     },
 
-    async post<D, M=null, C=null>(url: string, payload?: RequestInit, options?: ClientFetchOptions) {
+    async post<D, M=null, C=null, PAG=null, PERM=null>(url: string, payload?: RequestInit, options?: ClientFetchOptions) {
 
 
         const newPayload = {
@@ -139,25 +139,25 @@ export const clientFetch = {
             method: "POST"
         };
 
-        return this._sendRequest<D, M, C>(url, newPayload, options)
+        return this._sendRequest<D, M, C, PAG, PERM>(url, newPayload, options)
     },
 
-    async put<D, M=null, C=null>(url: string, payload?: RequestInit, options?: ClientFetchOptions) {
+    async put<D, M=null, C=null, PAG=null, PERM=null>(url: string, payload?: RequestInit, options?: ClientFetchOptions) {
         const newPayload = {
             ...payload,
             method: "PUT"
         };
         
-        return this._sendRequest<D, M, C>(url, newPayload, options)
+        return this._sendRequest<D, M, C, PAG, PERM>(url, newPayload, options)
     },
 
-    async patch<D, M=null, C=null, P=null>(url: string, payload?: RequestInit, options?: ClientFetchOptions) {
+    async patch<D, M=null, C=null, PAG=null, PERM=null>(url: string, payload?: RequestInit, options?: ClientFetchOptions) {
         const newPayload = {
             ...payload,
             method: "PATCH"
         };
         
-        return this._sendRequest<D, M, C, P>(url, newPayload, options)
+        return this._sendRequest<D, M, C, PAG, PERM>(url, newPayload, options)
     },
 
     async delete(url: string, payload?: RequestInit, options?: ClientFetchOptions) {

@@ -133,7 +133,7 @@ const mainTheme = createTheme({
       defaultProps: {
         slotProps: {
           paper: {
-            elevation: 3,
+            elevation: 2,
           },
         },
       },
@@ -142,9 +142,10 @@ const mainTheme = createTheme({
           "& .MuiDialog-paper": {
             borderRadius: "20px",
             width: "400px",
-            boxShadow: 24,
-            margin: theme.spacing(4),
-            backgroundColor: "background.paper",
+            marginTop: theme.spacing(4),
+            marginBottom: theme.spacing(4),
+            marginLeft: theme.spacing(2),
+            marginRight: theme.spacing(2),
           },
           "& .MuiDialogTitle-root": {
             padding: "16px 24px 8px",

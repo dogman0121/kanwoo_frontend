@@ -8,6 +8,14 @@ import { Comment, CommentContext } from "@/features/comment/types"
 
 export const mangaClientApi = {
 
+    createManga: async(formData: FormData) => {
+        const response = await clientFetch.post<Manga>('/manga', {
+            body: formData
+        })
+
+        return response
+    },
+
     getManga: async(mangaSlug: string) => {
         const response = await clientFetch.get<Manga, MangaMetadata, MangaContext>(`/manga/${mangaSlug}`)
 
@@ -51,6 +59,12 @@ export const mangaClientApi = {
 
     getCommentsPreview: async(mangaSlug: string) => {
         const response = await clientFetch.get<Comment[], {total_count: number}, CommentContext[], CursorPagination>(`/manga/${mangaSlug}/comments/preview`)
+
+        return response
+    },
+
+    checkMangaSlug: async(slug: string) => {
+        const response = await clientFetch.get<{available: boolean}>(`/manga/check_slug?slug=${slug}`)
 
         return response
     }
