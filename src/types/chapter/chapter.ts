@@ -6,7 +6,8 @@ export type ChapterShort = {
     id: number,
     chapter: number,
     name: string,
-    pages_count: number
+    pages_count: number,
+    extra_number: null | number
 }
 
 export type Chapter = ChapterShort & {

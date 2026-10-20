@@ -1,7 +1,7 @@
 "use client"
 
 import { EditPageHeader, EditPageTitle } from "@/components/edit/EditHeader";
-import EditInput from "@/components/edit/EditInput";
+import EditInput from "@/components/edit/Input";
 import EditPageContainer from "@/components/edit/EditPageContainer";
 import { ApiError } from "@/lib/fetch/api-response.types";
 import { clientFetch } from "@/lib/fetch/client-fetch.util";

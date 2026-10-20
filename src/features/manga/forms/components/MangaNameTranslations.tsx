@@ -23,9 +23,9 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useEffect, useRef, useState } from "react";
-import EditInput from "@/components/edit/EditInput";
-import EditInputLabel from "@/components/edit/EditInputLabel";
-import EditInputCaption from "@/components/edit/EditInputCaption";
+import EditInput from "@/components/edit/Input";
+import EditInputLabel from "@/components/edit/Label";
+import EditInputCaption from "@/components/edit/Caption";
 import EditSelect from "@/components/edit/EditSelect";
 import { useAppSelector } from "@/lib/state/hooks";
 import { capitalize } from "lodash";

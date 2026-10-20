@@ -1,11 +1,6 @@
 import { Box } from "@mui/material";
-import AvatarInput from "../components/profile/AvatarInput";
-import NameInput from "../components/profile/NameInput";
-import SlugInput from "../components/profile/SlugInput";
-import AboutInput from "../components/profile/AboutInput";
-import LinksInput from "../components/profile/LinksInput";
 import { Profile } from "@/features/profile/types/profile.type";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import { useRouter } from "next/navigation";
 import { studioClientAPI } from "../api/client.api";
@@ -14,6 +9,13 @@ import { selectAuthProfile } from "@/features/global/states/auth-profile";
 import { setAuthProfile } from "@/features/global/states/auth-profile/auth-profile.slice";
 import { routes, toHref } from "@/constants/routes/main.routes";
 import { useEffect } from "react";
+import ProfileAvatar from "../components/ui/profile/Avatar";
+import ProfileName from "../components/ui/profile/Name";
+import { throttle } from "lodash";
+import useSlugValidator from "@/features/profile/hooks/use-slug-validator.hook";
+import ProfileSlug from "../components/ui/profile/ProfileSlug";
+import ProfileAbout from "../components/ui/profile/About";
+import ProfileLinks from "../components/ui/profile/Links";
 
 
 const convertIntoForm = (profile: Profile) => {
@@ -27,19 +29,19 @@ const convertIntoForm = (profile: Profile) => {
 }
 
 const prepareAvatar = (avatar: string | File | null) => {
-    let avatarAction: "update" | "keep" | "remove";
+    let avatarAction: "update" | "keep" | "delete";
 
     if (avatar instanceof File)
         avatarAction = "update"
     else if (avatar == null)
-        avatarAction = "remove"
+        avatarAction = "delete"
     else
         avatarAction = "keep"
 
     return avatarAction
 }
 
-export interface UpdateProfileInfoFormSchema {
+export interface ProfileUpdateInfoFormSchema {
     slug: string
     name: string,
     avatar: File | string | null,
@@ -48,7 +50,7 @@ export interface UpdateProfileInfoFormSchema {
 }
 
 export const useUpdateProfileInfoForm = (profile?: Profile | null) => {
-    const {reset, ...props} = useForm<UpdateProfileInfoFormSchema>({
+    const {reset, ...props} = useForm<ProfileUpdateInfoFormSchema>({
         mode: "onChange",
         defaultValues: {
             avatar: null,
@@ -70,55 +72,36 @@ export const useUpdateProfileInfoForm = (profile?: Profile | null) => {
     }
 }
 
+export function convertFormIntoFormData(data: ProfileUpdateInfoFormSchema) {
+    const formData = new FormData()
+
+    formData.set("name", data.name)
+    formData.set("slug", data.slug)
+    formData.set("avatar_action", prepareAvatar(data.avatar))
+    formData.set("about", data.about)
+    formData.set("links", JSON.stringify(data.links))
+    
+    if (data.avatar)
+        formData.set("avatar", data.avatar)
+
+    return formData
+}
+
 export default function UpdateProfileInfoForm({
     control,
-    reset,
-    handleSubmit, 
-}: ReturnType<typeof useUpdateProfileInfoForm>) {
-    const dispatch = useAppDispatch()
+    handleSubmit,
+    onUpdate 
+}: {
+    onUpdate?: (data: ProfileUpdateInfoFormSchema) => void
+} & ReturnType<typeof useUpdateProfileInfoForm>) {
+    const {validating, isValid, validate} = useSlugValidator()
 
-    const authProfile = useAppSelector(selectAuthProfile)
-    const profile = useAppSelector(selectProfile)
-
-    console.log(profile)
-
-    const onSubmit = async (data: UpdateProfileInfoFormSchema) => {
-        if (!profile)
-            return 
-
-        const formData = new FormData()
-
-        formData.set("name", data.name)
-        formData.set("slug", data.slug)
-        formData.set("avatar_action", prepareAvatar(data.avatar))
-        formData.set("about", data.about)
-        formData.set("links", JSON.stringify(data.links))
-        
-        if (data.avatar)
-            formData.set("avatar", data.avatar)
-
-        try {
-            const {data: updatedProfile} = await studioClientAPI.updateProfileInfo(profile.slug, formData)
-
-            dispatch(setStudioProfile({
-                data: updatedProfile
-            }))
-
-            if (authProfile?.id == profile.id)
-                dispatch(setAuthProfile(updatedProfile))
-
-            reset(convertIntoForm(updatedProfile))
-            window.history.replaceState({}, "", toHref(routes.studio.profiles.item, {slug: updatedProfile.slug}))
-
-        } catch (_) {
-            throw new Error("Failed to update")
-        }
+    const handleCreate = (data: ProfileUpdateInfoFormSchema) => {
+        onUpdate?.(data)
     }
 
-    if (!profile) return
-
     return (
-        <form id="profile-info" onSubmit={handleSubmit(onSubmit)}>
+        <form id="profile-info" onSubmit={handleSubmit(handleCreate)}>
             <Box
                 sx={{
                     display: "flex",
@@ -126,14 +109,89 @@ export default function UpdateProfileInfoForm({
                     gap: 4
                 }}
             >
-                <AvatarInput control={control}/>
-                <NameInput control={control}/>
-                <SlugInput 
-                    control={control} 
-                    defaultValue={profile.slug}
+                <Controller
+                    control={control}
+                    name="avatar"
+                    render={({field: {value, onChange}}) => (
+                        <ProfileAvatar
+                            value={value}
+                            onChange={onChange}
+                        />
+                    )}
                 />
-                <AboutInput control={control}/>
-                <LinksInput control={control}/>
+                <Controller
+                    control={control}
+                    name="name"
+                    rules={{
+                        required: "Это поле не должно быть пустым",
+                    }}
+                    render={({field, fieldState: {invalid, error}}) => (
+                        <ProfileName
+                            error={invalid}
+                            helperText={error?.message}
+                            sx={{
+                                mt: "10px"
+                            }}
+                            {...field}
+                        />
+                    )}
+                />
+                <Controller
+                    control={control}
+                    name="slug"
+                    rules={{
+                        required: "Это поле не должно быть пустым",
+                        validate: async (value) => {
+                            validate(value)
+        
+                            return true
+                        }
+                    }}
+                    render={({field: {value, ...props}, fieldState: {error}, formState}) => (
+                        <ProfileSlug
+                            defaultValue={formState.defaultValues?.["slug"]}
+                            slugChecking={validating}
+                            error={formState.defaultValues?.["slug"] != value && !validating && !isValid}
+                            helperText={formState.defaultValues?.["slug"] != value && !validating && !isValid ? "Данный тег занят" : error?.message}
+                            value={value}
+                            {...props}
+                        />
+                    )}
+                />
+                <Controller
+                    control={control}
+                    name="about"
+                    render={({field: {value, ...props}}) => (
+                        <ProfileAbout 
+                            value={value}
+                            {...props}
+                        />
+                    )}
+                />
+                <Controller
+                    control={control}
+                    name="links"
+                    rules={{
+                        validate: (value) => {
+                            for (const v of value) {
+                                if (v.link == "" || v.name == "")
+                                    return false;
+                                
+                                try {
+                                    new URL(v.link);
+                                } catch (e) {
+                                    return false;
+                                }
+                            }
+                        }
+                    }}
+                    render={({field: {value, onChange}}) => (
+                        <ProfileLinks
+                            value={value}
+                            onChange={onChange}
+                        />
+                    )}
+                /> 
             </Box>
         </form>
     )

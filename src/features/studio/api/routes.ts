@@ -39,27 +39,27 @@ export const studioApiConfig: ApiConfig = {
         },
         POST: {
             mode: "proxy",
-            url: "/profiles/:slug/translations"
+            url: "/studio/profiles/:slug/translations"
         }
     },
     "/studio/manga/:slug": {
         GET: {
             mode: "proxy",
-            url: "/manga/:slug"
+            url: "/studio/manga/:slug"
         },
         PUT: {
             mode: "proxy",
-            url: "/manga/:slug"
+            url: "/studio/manga/:slug"
         }
     },
     "/studio/manga/:slug/translations": {
         GET: {
             mode: "proxy",
-            url: "/manga/:slug/translations"
+            url: "/studio/manga/:slug/translations"
         },
         POST: {
             mode: "proxy",
-            url: "/manga/:slug/translations"
+            url: "/studio/manga/:slug/translations"
         }
     },
     "/studio/manga/:slug/forms/edit": {
@@ -71,31 +71,31 @@ export const studioApiConfig: ApiConfig = {
     "/studio/translations/:id": {
         GET: {
             mode: "proxy",
-            url: "/translations/:id"
+            url: "/studio/translations/:id"
         },
         PUT: {
             mode: "proxy",
-            url: "/translationa/:id"
+            url: "/studio/translations/:id"
         }
     },
     "/studio/translations/:id/chapters": {
         GET: {
             mode: "proxy",
-            url: "/translations/:id/chapters"
+            url: "/studio/translations/:id/chapters"
         },
         POST: {
             mode: "proxy",
-            url: "/translations/:id/chapters"
+            url: "/studio/translations/:id/chapters"
         }
     },
     "/studio/chapters/:id": {
         GET: {
             mode: "proxy",
-            url: "/chapters/:id"
+            url: "/studio/chapters/:id"
         },
         PUT: {
             mode: "proxy",
-            url: "/chapters/:id"
+            url: "/studio/chapters/:id"
         }
     }
 }

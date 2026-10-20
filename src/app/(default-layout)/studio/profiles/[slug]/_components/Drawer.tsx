@@ -1,8 +1,7 @@
 "use client"
 
 import { Avatar, Box, Divider, List, ListItemIcon, ListItemText, Typography } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
-import { selectDrawerOpen, setDrawerOpen } from "@/features/studio/states/studio-page.slice";
+import { useAppSelector } from "@/lib/state/hooks";
 import useSection from "@/features/studio/hooks/useSection";
 import EditDrawer from "@/components/edit/EditDrawer";
 import EditDrawerContainer from "@/components/edit/EditDrawerContainer";
@@ -17,20 +16,14 @@ import { selectProfile } from "@/features/studio/states/profile/page.slice";
 
 
 export default function StudioDrawer() {
-    const dispatch = useAppDispatch()
-    
     const profile = useAppSelector(selectProfile)
-    const drawerOpen = useAppSelector(selectDrawerOpen)
 
     const { section } = useSection()
 
     if (!profile) return
 
     return (
-        <EditDrawer
-            open={drawerOpen}
-            onClose={() => dispatch(setDrawerOpen(false))}
-        >
+        <EditDrawer>
             <EditDrawerContainer>
                 <Box
                     sx={{

@@ -23,7 +23,7 @@ import EditSectionsLinkButton from "@/components/edit/EditSectionsLinkButton";
 import EditSectionsButton from "@/components/edit/EditSectionsButton";
 import { studioClientAPI } from "@/features/studio/api/client.api";
 import { selectProfile, setStudioProfile, setStudioProfilePermissions } from "@/features/studio/states/profile/page.slice";
-import { selectManga } from "@/features/studio/states/manga/page.slice";
+import { selectManga, setStudioManga } from "@/features/studio/states/manga/page.slice";
 import Poster from "@/components/poster/Poster";
 
 function StudioDrawer() {
@@ -51,11 +51,12 @@ function StudioDrawer() {
                 >
                     <Poster 
                         src={manga.poster?.medium}
-                        width="80px"
+                        width="96px"
                     />
                     <Box
                         sx={{
-                            mt: 2
+                            mt: 2,
+                            textAlign: "center"
                         }}
                     >
                         <Typography>{manga.name}</Typography>
@@ -78,10 +79,10 @@ function StudioDrawer() {
                     </EditSectionsLinkButton>
                     <EditSectionsLinkButton 
                         link={toHref(routes.studio.manga.translations, {slug: manga.slug})}
-                        selected={section == "manga"}
+                        selected={section == "translations"}
                     >
                         <ListItemIcon>
-                            <LibraryBooksRoundedIcon />
+                            <TranslateRoundedIcon />
                         </ListItemIcon>
                         <ListItemText>
                             Переводы
@@ -129,13 +130,16 @@ export default function Layout({
 
     const fetchProfile = async (slug: string) => {
         try {
-            const response = await studioClientAPI.getProfile(slug)
+            const response = await studioClientAPI.getManga(slug)
 
-            if (!response.data.profile)
+            if (!response.data)
                 return setIsNotFound(true)
 
-            dispatch(setStudioProfile(response.data.profile))
-            dispatch(setStudioProfilePermissions(response.data.profile_permission))
+            dispatch(setStudioManga({
+                data: response.data,
+                context: response.context,
+                permission: response.permission
+            }))
             setIsNotFound(false)
         } catch (e) {
             if (e instanceof ApiError) {

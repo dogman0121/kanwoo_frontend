@@ -1,8 +1,11 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material"
-import Create, { useCreateForm } from "../forms/CreateMangaForm"
+import Create, { MangaCreateFormSchema, useCreateForm } from "../forms/CreateMangaForm"
 import AppSnackbar from "@/components/AppSnackbar"
 import { useState } from "react"
 import { StudioManga } from "../types/studio-manga.type"
+import { useAppDispatch } from "@/lib/state/hooks"
+import { openSnackbar } from "@/features/global/states/app/slice"
+import { setCreateMangaDialogOpen } from "../states/profile/page.slice"
 
 export default function CreateMangaDialog({
     open,
@@ -10,23 +13,12 @@ export default function CreateMangaDialog({
     onClose
 }: {
     open: boolean,
-    onCreate?: (manga: StudioManga) => void,
-    onError?: () => void,
+    onCreate?: (data: MangaCreateFormSchema) => void,
     onClose?: () => void
 }) {
-    const [successSnackbarOpen, setSuccessSnackbarOpen] = useState(false)
-    const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false)
+    const dispatch = useAppDispatch()
 
     const {formState, ...formProps} = useCreateForm()
-
-    const handleCreate = (manga: StudioManga) => {
-        setSuccessSnackbarOpen(true)
-        onCreate?.(manga)
-    }
-
-    const handleError = () => {
-        setErrorSnackbarOpen(true)
-    }
 
     return (
         <>
@@ -43,8 +35,7 @@ export default function CreateMangaDialog({
                 <DialogTitle>Создание тайтла</DialogTitle>
                 <DialogContent>
                     <Create 
-                        onCreate={handleCreate}
-                        onError={handleError}
+                        onCreate={onCreate}
                         formState={formState}
                         {...formProps}
                     />
@@ -67,18 +58,6 @@ export default function CreateMangaDialog({
                     </Button>
                 </DialogActions>
             </Dialog>
-            <AppSnackbar 
-                variant="success"
-                open={successSnackbarOpen}
-                onClose={() => setSuccessSnackbarOpen(false)}
-                message="Манга успешно добавлена"
-            />
-            <AppSnackbar 
-                variant="error"
-                open={errorSnackbarOpen}
-                onClose={() => setErrorSnackbarOpen(false)}
-                message="При добавлении манги произошла ошибка"
-            />
         </>
     )
 }

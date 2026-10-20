@@ -10,6 +10,7 @@ import {
     closeCollectionDialog,
     closeReportDialog, 
     closeShareBackdrop, 
+    closeSnackbar, 
     selectAuthDialogOpen, 
     selectAuthSnackbarOpen, 
     selectCollectionDialogContext, 
@@ -19,6 +20,8 @@ import {
     selectReportDialogOpen, 
     selectShareBackdropOpen, 
     selectShareBackgropLink, 
+    selectSnackbarContext, 
+    selectSnackbarOpen, 
     setAuthModalOpen, 
     setAuthSnackbarOpen, 
     setCreateCollectionDialogOpen
@@ -43,6 +46,9 @@ export default function UI() {
 
     const mangaAddRemoveCollectionDialogOpen = useAppSelector(selectCollectionDialogOpen)
     const mangaAddRemoveCollectionDialogContext = useAppSelector(selectCollectionDialogContext)
+
+    const snackbarOpen = useAppSelector(selectSnackbarOpen)
+    const snackbarContext = useAppSelector(selectSnackbarContext)
 
     return(
         <>
@@ -74,6 +80,12 @@ export default function UI() {
                 open={mangaAddRemoveCollectionDialogOpen}
                 context={mangaAddRemoveCollectionDialogContext}
                 onClose={() => dispatch(closeCollectionDialog())}
+            />
+            <AppSnackbar 
+                variant={snackbarContext.type}
+                message={snackbarContext.message}
+                open={snackbarOpen}
+                onClose={() => dispatch(closeSnackbar())}
             />
         </>
     )

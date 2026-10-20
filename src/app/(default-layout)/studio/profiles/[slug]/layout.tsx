@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import { studioClientAPI } from "@/features/studio/api/client.api";
 import { selectProfile, setStudioProfile, setStudioProfilePermissions } from "@/features/studio/states/profile/page.slice";
 import StudioDrawer from "./_components/Drawer";
+import EditBody from "@/components/edit/EditBody";
 
 
 
@@ -48,7 +49,6 @@ export default function Layout({
     }
 
     useEffect(() => {
-        console.log("dfdf")
         fetchProfile(slug)
     }, [slug])
 
@@ -59,13 +59,9 @@ export default function Layout({
     return (
         <EditLayout>
             <StudioDrawer/>
-            <Box
-                sx={{
-                    width: "100%"
-                }}
-            >
+            <EditBody>
                 {children}
-            </Box>
+            </EditBody>
         </EditLayout>
     )
 }

@@ -1,4 +1,4 @@
-import EditInput from "@/components/edit/EditInput";
+import EditInput from "@/components/edit/Input";
 import { Box, InputAdornment, TextFieldProps, Typography } from "@mui/material";
 
 export default function ProfileAbout({value, ...props}: TextFieldProps) {

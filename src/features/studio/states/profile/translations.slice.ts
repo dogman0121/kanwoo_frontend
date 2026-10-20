@@ -1,14 +1,12 @@
 import { createEntityAdapter, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { StudioManga } from "../../types/studio-manga.type";
-import { Translation, TranslationContext } from "@/types/translation";
+import { StudioTranslation } from "../../types/studio-translation.type";
+import { Entity } from "@/lib/types/Entity.type";
+import { TranslationContext } from "@/types/translation";
 
-interface ProfileTranslationBlock {
-    translation: Translation,
-    translationContext: TranslationContext
-}
+type Translation = Entity<StudioTranslation, TranslationContext>
 
 const translationAdapter = createEntityAdapter({
-    selectId: (translation: ProfileTranslationBlock) => translation.translation.id
+    selectId: (translation: Translation) => translation.data.id
 })
 
 const initialState = translationAdapter.getInitialState()
@@ -21,14 +19,13 @@ export const profileTranslationSlice = createSlice({
     name: "studio_profile_manga",
     initialState,
     reducers: {
-        setTranslationsList: (state, action: PayloadAction<{translations: Translation[], translationsContext: TranslationContext[]}>) => {
-            const {translations, translationsContext} = action.payload
+        setTranslationsList: (state, action: PayloadAction<Translation[]>) => {
 
-            translationAdapter.setMany(state, translations.map((t, idx) => ({
-                translation: translations[idx],
-                translationContext: translationsContext[idx]
-            })))
+            translationAdapter.setMany(state, action.payload)
         },
+        addTranslation: (state, action: PayloadAction<Translation>) => {
+            translationAdapter.addOne(state, action.payload)
+        }
     }
 })
 
@@ -37,7 +34,8 @@ export const {
 } = translationAdapter.getSelectors((state: RootState) => state.studio.profile.translations)
 
 export const { 
-    setTranslationsList
+    setTranslationsList,
+    addTranslation
 } = profileTranslationSlice.actions
 
 export default profileTranslationSlice.reducer

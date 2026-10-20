@@ -1,6 +1,6 @@
 import { Manga, MangaContext, MangaMetadata } from "@/types/manga"
-import { serverFetch } from "../../server-fetch.util"
 import { MangaPageContext, MangaPageData, MangaPageMetadata } from "./types"
+import { serverFetch } from "@/lib/fetch/server-fetch.util"
 
 export const mangaServerApi = {
 

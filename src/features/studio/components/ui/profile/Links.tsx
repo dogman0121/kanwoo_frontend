@@ -24,9 +24,9 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useEffect, useRef, useState } from "react";
-import EditInputLabel from "@/components/edit/EditInputLabel";
-import EditInputCaption from "@/components/edit/EditInputCaption";
-import EditInput from "@/components/edit/EditInput";
+import EditInputLabel from "@/components/edit/Label";
+import EditInputCaption from "@/components/edit/Caption";
+import EditInput from "@/components/edit/Input";
 
 
 function SortableLink({ 

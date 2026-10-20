@@ -2,9 +2,10 @@ import { Profile } from "@/types/profile";
 import ProfilePermission from "@/types/profile/profilePermission";
 import { createSlice } from "@reduxjs/toolkit";
 import { StudioManga } from "../../types/studio-manga.type";
+import { Entity } from "@/lib/types/Entity.type";
 
 export interface StudioMangaState {
-    manga?: StudioManga,
+    manga?: Entity<StudioManga>,
     ui: {
         createTranslationDialogOpen: boolean
     }
@@ -34,7 +35,7 @@ export const studioMangaSlice = createSlice({
 })
 
 export const selectManga = (state: RootState) => {
-    return state.studio.manga.page.manga
+    return state.studio.manga.page.manga?.data
 }
 
 export const selectCreateTranslationDialogOpen = (state: RootState) => {

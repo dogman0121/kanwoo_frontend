@@ -1,5 +1,5 @@
 import { Controller, useForm, UseFormReturn } from "react-hook-form"
-import MangaPoster from "../../manga/forms/components/MangaPoster"
+import MangaPoster from "../components/ui/manga/Poster"
 import MangaName from "../../manga/forms/components/MangaName"
 import MangaDescription from "../../manga/forms/components/MangaDescription"
 import { Box, Grid } from "@mui/material"
@@ -8,15 +8,9 @@ import MangaStatus from "../../manga/forms/components/MangaStatus"
 import MangaYear from "../../manga/forms/components/MangaYear"
 import MangaAdult from "../../manga/forms/components/MangaAdult"
 import MangaGenres from "../../manga/forms/components/MangaGenres"
-import MangaBackground from "../../manga/forms/components/MangaBackground"
-import { Manga } from "../../manga/types"
-import { useState } from "react"
-import AppSnackbar from "@/components/AppSnackbar"
+import MangaBackground from "../components/ui/manga/Background"
 import PrivacySelect, { Privacy } from "@/components/PrivacySelect"
-import { studioClientAPI } from "../api/client.api"
-import { useAppSelector } from "@/lib/state/hooks"
-import { selectProfile } from "../states/profile/page.slice"
-import { StudioManga } from "../types/studio-manga.type"
+
 
 export function getDefaultValues() {
     return {
@@ -75,30 +69,14 @@ export function useCreateForm() {
 
 export default function CreateMangaForm({
     onCreate,
-    onError,
     control,
     handleSubmit,
-    reset
 }: {
-    onCreate?: (manga: StudioManga) => void,
-    onError?: () => void
+    onCreate?: (data: MangaCreateFormSchema) => void
 } & UseFormReturn<MangaCreateFormSchema>) {
 
-    const profile = useAppSelector(selectProfile)
-
     const onSubmit = async (data: MangaCreateFormSchema) => {
-        if (!profile) return
-
-        try {
-            const formData = convertFormToFormData(data)
-
-            const response = await studioClientAPI.createManga(profile.slug, formData)
-
-            onCreate?.(response.data)
-            reset()
-        } catch (_) {
-            onError?.()
-        }
+        onCreate?.(data)
     }
 
     return (
@@ -149,48 +127,6 @@ export default function CreateMangaForm({
                             />
                         )}
                     />
-                    {/* <Controller 
-                        control={control}
-                        name="nameTranslations"
-                        rules={{
-                            maxLength: 1000
-                        }}
-                        render={({field: {value, onChange}}) => (
-                            <MangaNameTranslations
-                                value={value}
-                                onChange={onChange}
-                            />
-                        )}
-                    /> */}
-                    {/* <Controller 
-                        control={control}
-                        name="slug"
-                        rules={{
-                            required: "Это поле не должно быть пустым",
-                            validate: throttle(async (value) => {
-                                setSlugChecking(true)
-                                
-                                const res = await validateSlug(value)
-
-                                setSlugChecking(false)
-
-                                if (res)
-                                    return true
-                                else
-                                    return "Данный тег команды занят"
-                            }, 500)
-                        }}
-                        render={({field: {value, ...props}, fieldState: {invalid, error}}) => (
-                            <MangaSlug 
-                                defaultValue={""}
-                                slugChecking={slugChecking}
-                                value={value}
-                                {...props}
-                                error={invalid}
-                                helperText={error?.message}
-                            />
-                        )}
-                    /> */}
                     <Controller 
                         control={control}
                         name="description"
@@ -274,36 +210,6 @@ export default function CreateMangaForm({
                             />
                         )}
                     />
-                    {/* <Controller 
-                        name="promoName"
-                        control={control}
-                        render={({field: {value, onChange}}) => (
-                            <MangaPromoName 
-                                value={value}
-                                onChange={onChange}
-                            />
-                        )}
-                    />
-                    <Controller 
-                        name="promoBackground"
-                        control={control}
-                        render={({field: {value, onChange}}) => (
-                            <MangaPromoBackground 
-                                value={value}
-                                onChange={onChange}
-                            />
-                        )}
-                    />
-                    <Controller 
-                        name="promoLogo"
-                        control={control}
-                        render={({field: {value, onChange}}) => (
-                            <MangaPromoLogo
-                                value={value}
-                                onChange={onChange}
-                            />
-                        )}
-                    /> */}
                     <Controller 
                         name="background"
                         control={control}
