@@ -4,7 +4,7 @@ import { Box, CircularProgress, InputAdornment, TextFieldProps } from "@mui/mate
 import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import { profileClientApi } from "@/lib/fetch/features/profile/client.api";
-import EditInput from "@/components/edit/EditInput";
+import EditInput from "@/components/edit/Input";
 
 export async function validateSlug(slug: string) {
     try {
@@ -17,7 +17,7 @@ export async function validateSlug(slug: string) {
 }
 
 
-export default function ProfileSlug({value, defaultValue, slugChecking, error, ...props}: TextFieldProps & {slugChecking: boolean}) {
+export default function ProfileSlug({value, defaultValue, slugChecking, error, helperText, ...props}: TextFieldProps & {slugChecking: boolean}) {
     return (
         <EditInput
             label={"Тег профиля"}
@@ -26,7 +26,8 @@ export default function ProfileSlug({value, defaultValue, slugChecking, error, .
                 Является уникальным идентификатором.
             `}
             inputProps={{
-                error: error,
+                error: value != defaultValue && error,
+                helperText: value != defaultValue && helperText,
                 value: value,
                 sx: {
                     mt: "10px"

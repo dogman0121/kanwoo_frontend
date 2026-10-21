@@ -1,7 +1,7 @@
 import EditPageContainer from "@/components/edit/EditPageContainer";
 import { Controller, UseFormReturn } from "react-hook-form";
-import MangaPoster from "./components/MangaPoster";
-import MangaBackground from "./components/MangaBackground";
+import MangaPoster from "../../studio/components/ui/manga/Poster";
+import MangaBackground from "../../studio/components/ui/manga/Background";
 import MangaName from "./components/MangaName";
 import MangaNameTranslations from "./components/MangaNameTranslations";
 import { throttle } from "lodash";
@@ -13,9 +13,9 @@ import MangaStatus from "./components/MangaStatus";
 import MangaYear from "./components/MangaYear";
 import MangaAdult from "./components/MangaAdult";
 import MangaGenres from "./components/MangaGenres";
-import MangaPromoName from "./components/MangaPromoName";
-import MangaPromoBackground from "./components/MangaPromoBackground";
-import MangaPromoLogo from "./components/MangaPromoLogo";
+import MangaPromoName from "../../studio/components/ui/manga/PromoName";
+import MangaPromoBackground from "../../studio/components/ui/manga/PromoBackground";
+import MangaPromoLogo from "../../studio/components/ui/manga/PromoLogo";
 import { useState } from "react";
 import { Manga } from "@/types/manga";
 

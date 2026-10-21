@@ -1,8 +1,8 @@
 "use client"
 
 import AvatarCropper from "@/components/AvatarCropper"
-import EditInputCaption from "@/components/edit/EditInputCaption"
-import EditInputLabel from "@/components/edit/EditInputLabel"
+import EditInputCaption from "@/components/edit/Caption"
+import EditInputLabel from "@/components/edit/Label"
 import { Avatar, Box, Button, Typography } from "@mui/material"
 import { ChangeEvent, useEffect, useState } from "react"
 
@@ -80,7 +80,7 @@ export default function ProfileAvatar({
                     <Typography
                         variant="caption"
                         sx={{
-                            py: "20px",
+                            py: "10px",
                             maxWidth: "300px"
                         }}
                     >

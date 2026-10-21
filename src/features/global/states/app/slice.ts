@@ -20,6 +20,13 @@ export interface AppState {
         shareBackdrop: {
             open: boolean,
             link: string
+        },
+        snackbar: {
+            context: {
+                type: "error" | "success",
+                message: string,
+            }
+            open: boolean
         }
     }
 }
@@ -44,6 +51,13 @@ const initialState: AppState = {
         shareBackdrop: {
             open: false,
             link: ""
+        },
+        snackbar: {
+            context: {
+                message: "нет сообщения",
+                type: "success",
+            },
+            open: false
         }
     }
 }
@@ -87,6 +101,16 @@ export const appSlice = createSlice({
         },
         setCreateCollectionDialogOpen: (state, action) => {
             state.ui.createCollectionDialogOpen = action.payload
+        },
+        openSnackbar: (state, action: PayloadAction<{type: "error" | "success", message: string}>) => {
+            const {type, message} = action.payload
+
+            state.ui.snackbar.context.type = type
+            state.ui.snackbar.context.message = message
+            state.ui.snackbar.open = true
+        },
+        closeSnackbar: (state) => {
+            state.ui.snackbar.open = false
         }
     }
 })
@@ -102,7 +126,9 @@ export const {
     closeReportDialog,
     openShareBackdrop,
     closeShareBackdrop,
-    setCreateCollectionDialogOpen
+    setCreateCollectionDialogOpen,
+    openSnackbar,
+    closeSnackbar
 } = appSlice.actions
 
 export type RootState = {
@@ -119,5 +145,7 @@ export const selectReportDialogContext = (state: RootState) => state.global.app.
 export const selectShareBackdropOpen = (state: RootState) => state.global.app.ui.shareBackdrop.open
 export const selectShareBackgropLink = (state: RootState) => state.global.app.ui.shareBackdrop.link
 export const selectCreateCollectionDialogOpen = (state: RootState) => state.global.app.ui.createCollectionDialogOpen
+export const selectSnackbarOpen = (state: RootState) => state.global.app.ui.snackbar.open
+export const selectSnackbarContext = (state: RootState) => state.global.app.ui.snackbar.context
 
 export default appSlice.reducer

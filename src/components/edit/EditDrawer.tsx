@@ -18,8 +18,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 export default function EditDrawer({children, onClose, open, ...props}: DrawerProps) {
-    const deviceType = useAppSelector(selectDeviceType)
-
     const handleDrawerClose = () => {
         onClose?.({}, "escapeKeyDown")
     }
@@ -29,7 +27,7 @@ export default function EditDrawer({children, onClose, open, ...props}: DrawerPr
             elevation={0}
             open={open}
             onClose={onClose}
-            variant={deviceType == "desktop" ? "permanent" : "temporary"}
+            variant={"permanent"}
             anchor="left"
             sx={{
                 width: drawerWidth,

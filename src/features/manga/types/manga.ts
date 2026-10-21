@@ -38,6 +38,7 @@ export type Poster = {
 export type Stats = {
     views: number,
     saves: number,
+    comments: number
 }
 
 export type MangaShort = {

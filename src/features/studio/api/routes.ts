@@ -4,15 +4,12 @@ import { HTTP_METHODS } from "@/lib/api/methods.type";
 export const studioApiConfig: ApiConfig = {
     "/studio/profiles/:slug": {
         GET: {
-            mode: "aggregate",
-            urls: [
-                {url: "/profiles/:slug", name: "profile", method: HTTP_METHODS.GET},
-                {url: "/profiles/:slug/permissions", name: "profile_permission", method: HTTP_METHODS.GET}
-            ]
+            mode: "proxy",
+            url: "/studio/profiles/:slug"
         },
         PUT: {
             mode: "proxy",
-            url: "/profiles/:slug"
+            url: "/studio/profiles/:slug"
         }
     },
     "/studio/profiles/:slug/collections": {
@@ -27,42 +24,42 @@ export const studioApiConfig: ApiConfig = {
     },
     "/studio/profiles/:slug/manga": {
         GET: {
-            mode: "proxy",
-            url: "/profiles/:slug/manga"
+            mode: "proxy", 
+            url: "/studio/profiles/:slug/manga"
         },
         POST: {
             mode: "proxy",
-            url: "/profiles/:slug/manga"
+            url: "/studio/profiles/:slug/manga"
         }
     },
     "/studio/profiles/:slug/translations": {
         GET: {
             mode: "proxy",
-            url: "/profiles/:slug/translations"
+            url: "/studio/profiles/:slug/translations"
         },
         POST: {
             mode: "proxy",
-            url: "/profiles/:slug/translations"
+            url: "/studio/profiles/:slug/translations"
         }
     },
     "/studio/manga/:slug": {
         GET: {
             mode: "proxy",
-            url: "/manga/:slug"
+            url: "/studio/manga/:slug"
         },
         PUT: {
             mode: "proxy",
-            url: "/manga/:slug"
+            url: "/studio/manga/:slug"
         }
     },
     "/studio/manga/:slug/translations": {
         GET: {
             mode: "proxy",
-            url: "/manga/:slug/translations"
+            url: "/studio/manga/:slug/translations"
         },
         POST: {
             mode: "proxy",
-            url: "/manga/:slug/translations"
+            url: "/studio/manga/:slug/translations"
         }
     },
     "/studio/manga/:slug/forms/edit": {
@@ -74,31 +71,31 @@ export const studioApiConfig: ApiConfig = {
     "/studio/translations/:id": {
         GET: {
             mode: "proxy",
-            url: "/translations/:id"
+            url: "/studio/translations/:id"
         },
         PUT: {
             mode: "proxy",
-            url: "/translationa/:id"
+            url: "/studio/translations/:id"
         }
     },
     "/studio/translations/:id/chapters": {
         GET: {
             mode: "proxy",
-            url: "/translations/:id/chapters"
+            url: "/studio/translations/:id/chapters"
         },
         POST: {
             mode: "proxy",
-            url: "/translations/:id/chapters"
+            url: "/studio/translations/:id/chapters"
         }
     },
     "/studio/chapters/:id": {
         GET: {
             mode: "proxy",
-            url: "/chapters/:id"
+            url: "/studio/chapters/:id"
         },
         PUT: {
             mode: "proxy",
-            url: "/chapters/:id"
+            url: "/studio/chapters/:id"
         }
     }
 }

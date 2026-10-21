@@ -16,7 +16,7 @@ export function makeThunks(
     const fetchCommentsPreview = createAsyncThunk(
         `${sliceName}/fetchPreviewStatus`,
         async (entityId: number | string, thunkAPI) => {
-            let response: SuccessResponse<Comment[], {total_count: number}, CommentContext[], CursorPagination> | null = null;
+            let response: SuccessResponse<Comment[], {total_count: number}, CommentContext[], CursorPagination, null> | null = null;
             switch (options.type) {
                 case "chapter":
                     response = await chapterClientApi.getCommentsPreview(entityId as number)
@@ -41,7 +41,7 @@ export function makeThunks(
     const fetchComments = createAsyncThunk(
         `${sliceName}/fetchCommentsStatus`,
         async (commentsBlock: CommentsBlock, thunkAPI) => {
-            let response: SuccessResponse<Comment[], null, CommentContext[], CursorPagination> | null = null;
+            let response: SuccessResponse<Comment[], null, CommentContext[], CursorPagination, null> | null = null;
             switch (options.type) {
                 case "chapter":
                     response = await chapterClientApi.getComments(commentsBlock.entityId as number, commentsBlock.cursor, commentsBlock.limit)
@@ -67,7 +67,7 @@ export function makeThunks(
     const sendComment = createAsyncThunk(
         `${sliceName}/sendCommentStatus`, 
         async (data: {commentsBlock: CommentsBlock, text: string}, thunkAPI) => {
-            let response: SuccessResponse<Comment, null, CommentContext, null> | null = null;
+            let response: SuccessResponse<Comment, null, CommentContext, null, null> | null = null;
             switch (options.type) {
                 case "chapter":
                     response = await chapterClientApi.addComment(data.commentsBlock.entityId as number, data.text)

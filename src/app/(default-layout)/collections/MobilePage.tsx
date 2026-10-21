@@ -4,7 +4,6 @@ import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import MobileContainer from "@/components/MobileContainer";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
-import { selectCollections } from "@/features/collection/states/auth-profile-collections-page/slice";
 import CollectionsList from "./_components/CollectionsList";
 import { setCreateCollectionDialogOpen } from "@/features/global/states/app/slice";
 
