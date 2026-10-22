@@ -21,6 +21,7 @@ import { MangaContext, MangaPermission } from "../types";
 import { ReadingProgress, ReadingProgressContext } from "@/types/reading-progress";
 import { useEffect } from "react";
 import { addManga } from "../states/manga/slice";
+import { initializeTranslations } from "../states/manga-page/translations/slice";
 
 
 export default function MangaDesktopPage({
@@ -43,6 +44,7 @@ export default function MangaDesktopPage({
     useEffect(() => {
         dispatch(addManga(manga))
 
+        dispatch(initializeTranslations())
         dispatch(initializeMangaPage({
             mangaSlug: manga.data.slug,
             readingProgress: readingProgress
