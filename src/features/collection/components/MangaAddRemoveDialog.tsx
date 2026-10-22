@@ -2,15 +2,13 @@
 
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import { Box, Button, Checkbox, Dialog, DialogContent, DialogTitle, List, ListItemButton, Typography } from "@mui/material";
-import { useState } from "react";
 import AddRoundedIcon from "@mui/icons-material/AddRounded"
-import CreateCollectionDialog from "@/features/collection/components/CreateDialog";
 import PostersStack from "@/components/poster/PostersStack";
 import { selectAuthProfileCollections } from "@/features/global/states/auth-profile";
 import { Collection, CollectionPreview } from "@/types/collection/collection";
 import { setCreateCollectionDialogOpen } from "@/features/global/states/app/slice";
-import { selectMangaBlockBySlug } from "@/features/global/states/manga/selectors";
-import { MangaBlock } from "@/features/global/states/manga/state";
+import { selectMangaBlockBySlug } from "@/features/manga/states/manga/selectors";
+import { MangaBlock } from "@/features/manga/states/manga/state";
 
 interface CollectionDialogProps {
     open: boolean,
@@ -31,7 +29,7 @@ export default function MangaAddRemoveDialog({
     const collections = useAppSelector(selectAuthProfileCollections)
 
     const isMangaInCollection = (mangaBlock: MangaBlock, collectionId: number) => {
-        return mangaBlock.mangaContext.viewer.collections.findIndex(cId => cId == collectionId) != -1
+        return mangaBlock.manga.context!.viewer.collections.findIndex(cId => cId == collectionId) != -1
     }
 
     const removeManga = async (collection: Collection) => {

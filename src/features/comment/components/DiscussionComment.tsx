@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import { Comment } from "../types"
-import { selectCommentBlockById } from "@/features/global/states/comments/comments/selectors"
+import { selectCommentBlockById } from "@/features/comment/states/comments/selectors"
 import { Box } from "@mui/material"
 import CommentLeaveLine from "./ui/CommentLeaveLine"
 import CommentInput from "./ui/CommentInput"

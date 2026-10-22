@@ -31,8 +31,24 @@ export const mangaApiConfig: ApiConfig = {
     },
     "/manga/:slug/translations": {
         GET: {
-            mode: "proxy",
-            url: "/translations?target_type=manga&target_id=:slug"
+            mode: "transform",
+            transformRequest: async (req, params) => {
+                const url = new URL(req.url)
+
+                const searchParams = url.searchParams
+                searchParams.set("manga_id", params.slug)
+
+                const newHeaders = new Headers(req.headers)
+
+                return new Request(
+                    url.origin + "/translations?" + searchParams.toString(),
+                    {
+                        method: "GET",
+                        headers: newHeaders,
+                        credentials: "include"
+                    }
+                )
+            }
         }
     },
     "/manga/:slug/views": {

@@ -3,9 +3,9 @@ import { CommentsBlock } from "./state"
 import { chapterClientApi } from "@/features/chapter/api/client.api"
 import { mangaClientApi } from "@/lib/fetch/features/manga/client.api"
 import { CursorPagination, SuccessResponse } from "@/lib/fetch/api-response.types"
-import { addComment, addCommentList } from "@/features/global/states/comments/comments/slice"
+import { addComment, addCommentList } from "@/features/comment/states/comments/slice"
 import { Comment, CommentContext } from "@/features/comment/types"
-import { addThread, addThreadsList } from "@/features/global/states/comments/threads/slice"
+import { addThread, addThreadsList } from "@/features/comment/states/threads/slice"
 
 export function makeThunks(
     sliceName: string, 
@@ -29,7 +29,12 @@ export function makeThunks(
             if (!response) throw new Error("Failed to fetch preview")
             
             thunkAPI.dispatch(addThreadsList({comments: response.data}))
-            thunkAPI.dispatch(addCommentList({comments: response.data, commentsContexts: response.context}))
+            thunkAPI.dispatch(addCommentList(
+                response.data.map((c, idx) => ({
+                    data: c,
+                    context: response.context[idx]
+                }))
+            ))
 
             return {
                 entityId: entityId,
@@ -55,7 +60,12 @@ export function makeThunks(
             if (!response) throw new Error("Failed to fetch comments")
 
             thunkAPI.dispatch(addThreadsList({comments: response.data}))
-            thunkAPI.dispatch(addCommentList({comments: response.data, commentsContexts: response.context}))
+            thunkAPI.dispatch(addCommentList(
+                response.data.map((c, idx) => ({
+                    data: c,
+                    context: response.context[idx]
+                }))
+            ))
 
             return {
                 entityId: commentsBlock.entityId,
@@ -83,7 +93,7 @@ export function makeThunks(
             const commentContext = response.context
 
             thunkAPI.dispatch(addThread({comment: comment}))
-            thunkAPI.dispatch(addComment({comment: comment, commentContext: commentContext}))
+            thunkAPI.dispatch(addComment({data: comment, context: commentContext}))
 
             return {
                 entityId: data.commentsBlock.entityId,

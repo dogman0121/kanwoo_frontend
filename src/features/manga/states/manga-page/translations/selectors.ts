@@ -9,6 +9,17 @@ export const {
     selectById: selectTranslationBlockById
 } = translationsAdapter.getSelectors((state: RootState) => state.mangaPage.translations)
 
+export const selectTranslationsError = (state: RootState) => {
+    return state.mangaPage.translations.error
+}
+
+export const selectTranslationsLoaded = (state: RootState) => {
+    return state.mangaPage.translations.loaded
+}
+
+export const selectTranslationIsSubscribed = (state: RootState, translationId: number) => {
+    return state.mangaPage.translations.entities[translationId].translation.context?.viewer.is_subscribed
+}
 
 export const selectCurrTranslationId = (state: RootState) => {
     return state.mangaPage.translations.currTranslationId
@@ -50,39 +61,10 @@ export const selectCurrTranslationChapters = createSelector(
     (translationBlock: TranslationBlock | null) => {
         if (!translationBlock || !translationBlock.chapters) return undefined
 
-        return translationBlock.chapters.map(c => c.chapter)
+        return translationBlock.chapters
     }
 )
-
-export const selectTranslationIsSubscribed = (state: RootState, translationId: number) => {
-    const translationBlock = selectTranslationBlockById(state, translationId)
-
-    if (!translationBlock) return false
-
-    return translationBlock.context.viewer.is_subscribed
-}
-
-export const selectCurrTranslationIsSubscribed = createSelector(
-    [selectCurrTranslationBlock],
-    (translationBlock: TranslationBlock | null) => {
-        if (!translationBlock) return false
-
-        return translationBlock.context.viewer.is_subscribed
-    }
-)
-
-export const selectIsLoading = (state: RootState) => {
-    return state.mangaPage.translations.loading
-}
 
 export const selectIsLoaded = (state: RootState) => {
     return state.mangaPage.translations.loaded
-}
-
-export const selectCurrentTranslationChaptersIsLoading = (state: RootState) => {
-    const currentTranslationBlock = selectCurrTranslationBlock(state)
-    if (!currentTranslationBlock) return false
-
-    return currentTranslationBlock.chaptersIsLoading
-
 }
