@@ -16,6 +16,7 @@ import { useAppDispatch } from "@/lib/state/hooks";
 import { useEffect } from "react";
 import { addManga } from "../states/manga/slice";
 import { initializeMangaPage } from "../states/manga-page/page/slice";
+import { setTranslations } from "../states/manga-page/translations/slice";
 
 
 export default function MangaMobilePage({
@@ -31,6 +32,7 @@ export default function MangaMobilePage({
     useEffect(() => {
         dispatch(addManga(manga))
 
+        dispatch(setTranslations([]))
         dispatch(initializeMangaPage({
             mangaSlug: manga.data.slug,
             readingProgress: readingProgress
