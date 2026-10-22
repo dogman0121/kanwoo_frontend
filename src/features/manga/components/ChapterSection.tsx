@@ -219,7 +219,7 @@ function ChaptersList() {
         <LoadingBox loading={isLoading}>
             <Box
                 sx={{
-                    mt: 2,
+                    py: 2,
 
                     display: "flex",
                     flexDirection: "column",
