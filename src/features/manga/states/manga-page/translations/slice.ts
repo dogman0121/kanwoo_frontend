@@ -60,6 +60,12 @@ export const translationSlice = createSlice({
     name: "manga_page_translation",
     initialState,
     reducers: {
+        initializeTranslations: (state) => {
+            state.loaded = false
+            state.error = null
+            state.currTranslationId = undefined
+            translationsAdapter.removeAll(state)
+        },
         setTranslations: translationsAdapter.setAll,
         setCurrTranslation: (state, action: PayloadAction<number>) => {
             state.currTranslationId = action.payload
@@ -128,6 +134,7 @@ export const translationSlice = createSlice({
 })
 
 export const {
+    initializeTranslations,
     setTranslations,
     setCurrTranslation,
     reverseChapters,
