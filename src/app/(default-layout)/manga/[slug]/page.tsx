@@ -1,10 +1,9 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { mangaServerApi } from "@/lib/fetch/features/manga/server.api";
-import PPage from "./PPage";
 import { Suspense } from "react";
-import DesktopPage from "./DesktopPage";
-import MobilePage from "./MobilePage";
+import MangaDesktopPage from "@/features/manga/pages/MangaDesktopPage";
+import MangaMobilePage from "@/features/manga/pages/MangaMobilePage";
 
 
 export async function generateMetadata({
@@ -49,23 +48,34 @@ export default async function Page({
         return notFound()
 
     return ( 
-        <PPage
-            manga={response.data.manga}
-            mangaMetadata={response.metadata.manga}
-            mangaContext={response.context.manga}
-            readingProgress={response.data.progress}
-            readingProgressMetadata={response.metadata.progress}
-            readingProgressContext={response.context.progress}
-        >
+        <>
             {viewport == "desktop" ?
                 <Suspense>
-                    <DesktopPage manga={response.data.manga} />
+                    <MangaDesktopPage 
+                        manga={{
+                            data: response.data.manga,
+                            context: response.context.manga
+                        }}
+                        readingProgress={{
+                            data: response.data.progress,
+                            context: response.context.progress
+                        }}
+                    />
                 </Suspense>
                 :
                 <Suspense>
-                    <MobilePage manga={response.data.manga}/>
+                    <MangaMobilePage
+                        manga={{
+                            data: response.data.manga,
+                            context: response.context.manga
+                        }}
+                        readingProgress={{
+                            data: response.data.progress,
+                            context: response.context.progress
+                        }}
+                    />
                 </Suspense>
             }
-        </PPage>
+        </>
     )
 }

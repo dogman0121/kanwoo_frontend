@@ -6,26 +6,26 @@ import Grid, { GridProps } from "@mui/material/Grid"
 import { RefObject, useEffect, useRef, useState } from "react";
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded';
 import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded"
-import Description from "@/features/manga/components/Description";
-import Genres from "@/features/manga/components/Genres";
-import NameTranslations from "@/features/manga/components/NameTranslations";
+import Description from "@/features/manga/components/ui/Description";
+import Genres from "@/features/manga/components/ui/Genres";
+import NameTranslations from "@/features/manga/components/ui/NameTranslations";
 import theme from "@/constants/themes/main.theme";
 import Poster from "@/components/poster/Poster";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded"
-import Stats from "@/features/manga/components/Stats";
+import Stats from "@/features/manga/components/ui/Stats";
 import { useRouter } from "next/navigation";
 import { throttle } from "lodash";
-import Metadata from "@/features/manga/components/Metadata";
+import Metadata from "@/features/manga/components/ui/Metadata";
 import { openCollectionDialog, selectDeviceType } from "@/features/global/states/app/slice";
 import { Manga, MangaShort } from "@/types/manga";
 import { routes, toHref } from "@/constants/routes/main.routes";
-import { selectMangaBySlug } from "@/features/global/states/manga/selectors";
-import { fetchManga } from "@/features/global/states/manga/slice";
 import StatsSkeleton from "@/features/manga/components/skeleton/StatsSkeleton";
 import DescriptionSkeleton from "@/features/manga/components/skeleton/DescriptionSkeleton";
 import GenresSkeleton from "@/features/manga/components/skeleton/GenresSkeleton";
 import NameTranslationsSkeleton from "@/features/manga/components/skeleton/NameTranslationsSkeleton";
 import MangaGrid from "@/features/manga/components/MangaGrid";
+import { selectMangaBySlug } from "@/features/manga/states/manga/selectors";
+import { fetchManga } from "@/features/manga/states/manga/slice";
 
 
 interface MangaDetailsProps {
@@ -100,8 +100,8 @@ function MangaDetailsMobile({
                         </Typography>
                         {manga ? 
                             <Stats
-                                views={manga.stats.views} 
-                                saves={manga.stats.saves} 
+                                views={manga.data.stats.views} 
+                                saves={manga.data.stats.saves} 
                                 size="small"
                             />
                             :
@@ -128,21 +128,21 @@ function MangaDetailsMobile({
                 >
                     {manga ? 
                         <Description 
-                            description={manga.description}
+                            description={manga.data.description}
                         />
                         :
                         <DescriptionSkeleton />
                     }
                     {manga ? 
                         <Genres 
-                            genres={manga.genres}
+                            genres={manga.data.genres}
                         />
                         :
                         <GenresSkeleton />
                     }
                     {manga ? 
                         <NameTranslations 
-                            nameTranslations={manga.name_translations}
+                            nameTranslations={manga.data.name_translations}
                         />
                         :
                         <NameTranslationsSkeleton />
@@ -265,8 +265,8 @@ function MangaDetailsDesktop({
                     </Typography>
                     {manga ? 
                         <Stats
-                            views={manga.stats.views} 
-                            saves={manga.stats.saves} 
+                            views={manga.data.stats.views} 
+                            saves={manga.data.stats.saves} 
                             size="medium"
                         />
                         :
@@ -275,21 +275,21 @@ function MangaDetailsDesktop({
                 </Box>
                 {manga ? 
                     <Description 
-                        description={manga.description}
+                        description={manga.data.description}
                     />
                     :
                     <DescriptionSkeleton />
                 }
                 {manga ? 
                     <Genres 
-                        genres={manga.genres}
+                        genres={manga.data.genres}
                     />
                     :
                     <GenresSkeleton />
                 }
                 {manga ? 
                     <NameTranslations 
-                        nameTranslations={manga.name_translations}
+                        nameTranslations={manga.data.name_translations}
                     />
                     :
                     <NameTranslationsSkeleton />

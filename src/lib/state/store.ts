@@ -11,6 +11,8 @@ import { profilePageReducer } from './features/profile-page/reducer'
 import { globalReducer } from '@/features/global/states/reducer'
 import { readerReducer } from '@/features/reader/states/reducer'
 import { studioPageReducer } from '@/features/studio/states/reducer'
+import mangaReducer from "@/features/manga/states/manga/slice"
+import { commentsReducer } from "@/features/comment/states/reducer"
 
 const rootReducers = combineReducers({
   global: globalReducer,
@@ -23,7 +25,9 @@ const rootReducers = combineReducers({
   settingsPage: settingsPageReducer,
   authProfileCollectionsPage: authProfileCollectionsReducer,
   authProfileHistoryPage: authProfileHistoryPage,
-  collectionPage: collectionPageReducer 
+  collectionPage: collectionPageReducer,
+  manga: mangaReducer,
+  comments: commentsReducer
 })
 
 export const makeStore = () => {

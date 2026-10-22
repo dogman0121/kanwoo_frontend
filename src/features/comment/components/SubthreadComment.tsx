@@ -1,6 +1,6 @@
-import { selectCommentBlockById } from "@/features/global/states/comments/comments/selectors"
-import { selectSubthreadBlockById } from "@/features/global/states/comments/subthreads/selectors"
-import { fetchDiscussion } from "@/features/global/states/comments/subthreads/slice"
+import { selectCommentBlockById } from "@/features/comment/states/comments/selectors"
+import { selectSubthreadBlockById } from "@/features/comment/states/subthreads/selectors"
+import { fetchDiscussion } from "@/features/comment/states/subthreads/slice"
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import { Box } from "@mui/material"
 import CommentLeaveLine from "./ui/CommentLeaveLine"
@@ -54,7 +54,7 @@ export default function SubthreadComment({
                     depth={2}
                     disableReplyTo
                 />
-                {comment.replies_count > 0 && (
+                {comment.data.replies_count > 0 && (
                     <CommentReplies depth={2}>
                         {discussionIds.map((dID, idx) => (
                             <DiscussionComment 
@@ -71,7 +71,7 @@ export default function SubthreadComment({
                         depth={2} 
                         state={MoreButtonState.OPEN_PARTICULARLY}
                         onMore={handleMore}
-                        repliesCount={comment.replies_count}
+                        repliesCount={comment.data.replies_count}
                     />
                 )}
             </Box>
