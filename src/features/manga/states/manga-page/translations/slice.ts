@@ -5,6 +5,9 @@ import { mangaClientApi } from "@/lib/fetch/features/manga/client.api"
 import { translationClientApi } from "@/lib/fetch/features/translation/client.api"
 import { ApiError } from "@/lib/fetch/api-response.types"
 
+const sleep = (ms: number): Promise<void> => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
 
 export const fetchTranslations = createAsyncThunk(
     "manga_page_translation/fetchTranslationsState",
