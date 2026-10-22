@@ -113,12 +113,12 @@ export const translationSlice = createSlice({
             state.entities[translationId].chapters = chaptersBlocks
         })
         .addCase(fetchChapters.rejected, (state, action) => {
-            state.loaded = true
-            
+            const translationId = action.meta.arg
+
             if (action.meta.rejectedWithValue) {
-                state.error = "api_error"
+                state.entities[translationId].error = "api_error"
             } else {
-                state.error = "no_internet"
+                state.entities[translationId].error = "no_internet"
             }
         })
     )
