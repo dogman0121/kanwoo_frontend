@@ -183,7 +183,9 @@ function ChaptersList() {
     const loadChapters = () => {
         if (!currentTranslation) return
 
-        dispatch(fetchChapters(currentTranslation.data.id))
+        setIsLoading(async() => {
+            await dispatch(fetchChapters(currentTranslation.data.id))
+        })
     }
 
     useEffect(() => {
@@ -351,8 +353,8 @@ export default function ChaptersSection() {
     const loadTranslations = () => {
         if (!manga) return
 
-        setIsLoading(() => {
-            dispatch(fetchTranslations(manga.data.slug))
+        setIsLoading(async () => {
+            await dispatch(fetchTranslations(manga.data.slug))
         })
     }
 
@@ -384,6 +386,8 @@ export default function ChaptersSection() {
 
     if (loaded && !currentTranslation)
         return <NoChapters />
+
+    if (!loaded) return
 
     return (
         <LoadingBox loading={isLoading}>
