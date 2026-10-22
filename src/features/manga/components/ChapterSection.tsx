@@ -9,10 +9,47 @@ import SwapVertRoundedIcon from "@mui/icons-material/SwapVertRounded"
 import NotificationRoundedIcon from "@mui/icons-material/NotificationsRounded"
 import { selectManga } from "@/features/manga/states/manga-page/page/slice"
 import { fetchChapters, fetchTranslations, reverseChapters, setCurrTranslation, subscribeTranslation } from "@/features/manga/states/manga-page/translations/slice"
-import { selectCurrTranslation, selectCurrTranslationChapters, selectCurrTranslationId, selectTranslationById, selectTranslationIsSubscribed, selectTranslations, selectTranslationsError, selectTranslationsLoaded } from "@/features/manga/states/manga-page/translations/selectors"
+import { selectCurrTranslation, selectCurrTranslationChapters, selectCurrTranslationId, selectTranslationById, selectTranslationChaptersError, selectTranslationChaptersLoaded, selectTranslationIsSubscribed, selectTranslations, selectTranslationsError, selectTranslationsLoaded } from "@/features/manga/states/manga-page/translations/selectors"
 import { Chapter } from "@/types/chapter"
 import LoadingBox from "@/components/LoadingBox"
 
+
+function ErrorMessage({
+    message,
+    buttonDisabled = false,
+    loading,
+    onClick
+}: {
+    message: string,
+    buttonDisabled?: boolean,
+    loading?: boolean
+    onClick?: () => void
+}) {
+    return (
+        <Box
+            sx={{
+                mt: 10,
+
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center"
+            }}
+        >
+            <Typography color="textSecondary" >{message}</Typography>
+            <Button 
+                variant="contained"
+                color="primary"
+                onClick={() => onClick?.() }
+                loading={loading}
+                sx={{
+                    mt: 2
+                }}    
+            >
+                Обновить
+            </Button>
+        </Box>
+    )
+}
 
 function NoChapters(){
     return (
@@ -136,33 +173,62 @@ function ChaptersListHeader() {
 function ChaptersList() { 
     const dispatch = useAppDispatch()
 
+    const [isLoading, setIsLoading] = useTransition()
+
     const currentTranslation = useAppSelector(selectCurrTranslation)
+    const error = useAppSelector((state) => selectTranslationChaptersError(state, currentTranslation?.data.id))
+    const loaded = useAppSelector((state) => selectTranslationChaptersLoaded(state, currentTranslation?.data.id))
     const chapters = useAppSelector(selectCurrTranslationChapters)
 
+    const loadChapters = () => {
+        if (!currentTranslation) return
+
+        dispatch(fetchChapters(currentTranslation.data.id))
+    }
+
     useEffect(() => {
-        if (currentTranslation && chapters == undefined){
-            dispatch(fetchChapters(currentTranslation.data.id))
+        if (currentTranslation && !loaded){
+            loadChapters()
         }
 
         return () => {}
-    }, [currentTranslation, chapters])
+    }, [currentTranslation, loaded])
 
-    if (!chapters || !currentTranslation) return
+    if (error === "api_error"){
+        return (
+            <ErrorMessage 
+                message="При отправке запроса произошла ошибка. Попробуйте позже."
+            />
+        )
+    }
+
+    if (error === "no_internet") {
+        return (
+            <ErrorMessage 
+                message='Произошла ошибка. Проверьте соединение с интернетом и нажмите "Обновить"'
+            />
+        )
+    }
+
+    if (loaded && chapters?.length == 0)
+        return <NoChapters />
 
     return (
-        <Box
-            sx={{
-                mt: 2,
+        <LoadingBox loading={isLoading}>
+            <Box
+                sx={{
+                    mt: 2,
 
-                display: "flex",
-                flexDirection: "column",
-                gap: 1
-            }}
-        >
-            { chapters.map(chapter => (
-                <ChapterItem chapter={chapter.data} key={`manga_page_chapter_${chapter.data.id}`}/>
-            ))}
-        </Box>
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 1
+                }}
+            >
+                { chapters?.map(chapter => (
+                    <ChapterItem chapter={chapter.data} key={`manga_page_chapter_${chapter.data.id}`}/>
+                ))}
+            </Box>
+        </LoadingBox>
     )
 }
 
@@ -270,43 +336,6 @@ function SubscribeButton() {
     )
 }
 
-function ErrorMessage({
-    message,
-    buttonDisabled = false,
-    loading,
-    onClick
-}: {
-    message: string,
-    buttonDisabled?: boolean,
-    loading?: boolean
-    onClick?: () => void
-}) {
-    return (
-        <Box
-            sx={{
-                mt: 10,
-
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center"
-            }}
-        >
-            <Typography color="textSecondary" >{message}</Typography>
-            <Button 
-                variant="contained"
-                color="primary"
-                onClick={() => onClick?.() }
-                loading={loading}
-                sx={{
-                    mt: 2
-                }}    
-            >
-                Обновить
-            </Button>
-        </Box>
-    )
-}
-
 export default function ChaptersSection() {
     const dispatch = useAppDispatch()
     
@@ -351,12 +380,12 @@ export default function ChaptersSection() {
         )
     }
 
-    if (!currentTranslation)
+    if (loaded && !currentTranslation)
         return <NoChapters />
 
     return (
         <LoadingBox loading={isLoading}>
-            {!currentTranslation.data.is_official && (
+            {!currentTranslation?.data.is_official && (
                 <TranslationToggleButtonGroup/>  
             )}
             <ChaptersListHeader />
