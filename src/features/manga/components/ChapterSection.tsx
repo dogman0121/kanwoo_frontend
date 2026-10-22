@@ -198,6 +198,7 @@ function ChaptersList() {
         return (
             <ErrorMessage 
                 message="При отправке запроса произошла ошибка. Попробуйте позже."
+                onClick={() => loadChapters()}
             />
         )
     }
@@ -206,6 +207,7 @@ function ChaptersList() {
         return (
             <ErrorMessage 
                 message='Произошла ошибка. Проверьте соединение с интернетом и нажмите "Обновить"'
+                onClick={() => loadChapters()}
             />
         )
     }

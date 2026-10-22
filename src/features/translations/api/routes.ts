@@ -25,8 +25,24 @@ export const translationApiConfig: ApiConfig = {
     },
     "/translations/:id/chapters": {
         GET: {
-            mode: "proxy",
-            url: "/chapters?target_type=translation&target_id=:id"
+            mode: "transform",
+            transformRequest: async (req, params) => {
+                const url = new URL(req.url)
+
+                const searchParams = url.searchParams
+                searchParams.set("translation_id", params.id)
+
+                const newHeaders = new Headers(req.headers)
+
+                return new Request(
+                    url.origin + "/chapters?" + searchParams.toString(),
+                    {
+                        method: "GET",
+                        headers: newHeaders,
+                        credentials: "include"
+                    }
+                )
+            }
         }
     }
 }
