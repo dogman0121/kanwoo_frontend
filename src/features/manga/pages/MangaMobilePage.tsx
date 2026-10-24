@@ -101,7 +101,9 @@ export default function MangaMobilePage({
                         />
                         <Typography
                             variant="h1"
-                            textAlign={"center"}
+                            sx={{
+                                textAlign: "center"
+                            }}
                         >
                             {manga.data.name}
                         </Typography>

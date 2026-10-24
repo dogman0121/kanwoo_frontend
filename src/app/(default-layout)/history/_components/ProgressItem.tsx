@@ -61,7 +61,7 @@ export default function ProgressItem({
                         gap: "10px"
                     }}
                 >
-                    <Typography fontWeight={600}>{progressContext.manga.name}</Typography>
+                    <Typography sx={{fontWeight: 600}}>{progressContext.manga.name}</Typography>
                     <Typography variant="caption">Глава {progressContext.chapter.chapter}</Typography>
                 </Box>
             </Box>

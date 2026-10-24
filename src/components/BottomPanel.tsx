@@ -1,5 +1,5 @@
 import { Box, Drawer, SwipeableDrawer, SxProps, Typography, TypographyProps, useTheme } from "@mui/material";
-import { Children } from "react";
+import { Children, useEffect, useState } from "react";
 
 export function BottomPanelHeader({
     sx,
@@ -15,7 +15,7 @@ export function BottomPanelHeader({
 
                 position: "sticky",
                 top: 0,
-
+                zIndex: 1,
                 ...sx
             }}
             {...props}
@@ -60,7 +60,7 @@ export default function BottomPanel({
     sx
 }: BottomPanelProps) {
 
-    const toggleDrawer = (open: boolean) =>
+    const toggleDrawer = (openState: boolean) =>
         (event: React.KeyboardEvent | React.MouseEvent) => {
             if (
                 event &&
@@ -71,10 +71,10 @@ export default function BottomPanel({
                 return;
             }
 
-            open ? onOpen?.() : onClose?.()
+            openState ? onOpen?.() : onClose?.()                
         };
 
-    const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isIOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
     return (
         <SwipeableDrawer
@@ -83,8 +83,8 @@ export default function BottomPanel({
             onOpen={toggleDrawer(true)}
             onClose={toggleDrawer(false)}
             anchor="bottom"
-            disableBackdropTransition={!iOS} 
-            disableDiscovery={iOS}
+            disableBackdropTransition={!isIOS} 
+            disableDiscovery={isIOS}
             slotProps={{
                 paper: {
                     sx: {
@@ -95,7 +95,7 @@ export default function BottomPanel({
                 }
             }}      
         >
-            {Children.map(children, c => c)}
+            {children}
         </SwipeableDrawer>
     )
 }

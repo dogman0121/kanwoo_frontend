@@ -19,7 +19,7 @@ function SimilarItem({ manga }: {manga: MangaShort}) {
         >
             <Poster width="60px" src={manga.poster?.small || ""}/>
             <Box>
-                <Typography fontSize={"16px"}>{manga.name}</Typography>
+                <Typography sx={{fontSize: "16px"}}>{manga.name}</Typography>
                 <Box
                     sx={{
                         display: "flex",
@@ -53,7 +53,7 @@ export default function SimilarManga() {
 
     return (
         <Box>
-            <Typography fontSize={"22px"} lineHeight={1}>Похожее</Typography>
+            <Typography sx={{fontSize: "22px", lineHeight: 1}}>Похожее</Typography>
             <Box
                 sx={{
                     mt: "5px"

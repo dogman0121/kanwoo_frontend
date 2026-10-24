@@ -33,10 +33,8 @@ export default function CommentsPreview() {
     }
 
     useEffect(() => {
-        if (!commentsBlock && manga)
+        if (!commentsBlock && manga){
             dispatch(addBlock(manga.data.slug))
-
-        if (manga && commentsBlock) {
             dispatch(fetchCommentsPreview(manga.data.slug))
         }
     }, [manga, commentsBlock])

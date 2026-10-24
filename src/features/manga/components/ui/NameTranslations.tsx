@@ -24,9 +24,11 @@ export default function NameTranslations({
             <Breadcrumbs sx={{mt: theme.spacing(1)}}>
                 {nameTranslations?.map((name: {lang: Language, name: string}) => (
                     <Typography 
-                        lineHeight={"16px"} 
+                        sx={{
+                            lineHeight: "16px",
+                            fontSize: "14px"
+                        }}
                         variant="caption" 
-                        fontSize={"14px"} 
                         key={`manga_name_translaton_${name.lang.id}`}
                     >
                         {name.name}

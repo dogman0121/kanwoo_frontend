@@ -96,8 +96,10 @@ export default function CommentsPreview({
                     }}
                 >
                     <Typography 
-                        fontWeight={600} 
-                        fontSize={"18px"}
+                        sx={{
+                            fontWeight: 600,
+                            fontSize: "18px"
+                        }}
                     >
                         {commentsBlock?.totalCount != undefined ? 
                             commentsBlock.totalCount : 

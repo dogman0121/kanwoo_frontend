@@ -45,7 +45,7 @@ export default function MangaSelectWithSearch({
             inputValue={query}
             loading={isLoading}
             sx={{...sx}}
-            isOptionEqualToValue={(option, value) => option.slug == value.slug}
+            isOptionEqualToValue={(option, value) => option.slug == (value as MangaShort).slug}
             onInputChange={(_event, value) => {
                 const query = value;
                 if (query != "") {

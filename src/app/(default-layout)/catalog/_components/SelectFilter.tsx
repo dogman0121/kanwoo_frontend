@@ -42,7 +42,7 @@ export default function SelectFilter({
     return (
         <FormControl fullWidth>
             {label && (
-                <Typography mb={1}>{label}</Typography>
+                <Typography sx={{mb: 1}}>{label}</Typography>
             )}
             <CatalogSelect
                 labelId={`catalog_${name}_input`}

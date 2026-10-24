@@ -11,7 +11,7 @@ export default function NoComments() {
                 alignItems: "center"
             }}
         >
-            <Typography fontSize={"14px"} color="text.secondary">
+            <Typography sx={{fontSize: "14px"}} color="text.secondary">
                 Комментариев нет
             </Typography>
         </Box>

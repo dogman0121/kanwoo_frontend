@@ -45,7 +45,9 @@ export function StatsOption({
             <Typography
                 color="textSecondary"
                 variant={size == "medium" ? "body1" : "caption"}
-                ml={0.6}
+                sx={{
+                    ml: 0.6
+                }}
             >
                 {loading ? <Skeleton width={"60px"} /> : label}
             </Typography>

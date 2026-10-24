@@ -69,7 +69,6 @@ export default function PPage() {
             <TranslationHeader />
             <Divider />
             <StudioList
-                py={4}
             >
                 {translations.map(t => (
                     <TranslationRow key={`studio_translations_${t.data.id}`} translationEntity={t}/>

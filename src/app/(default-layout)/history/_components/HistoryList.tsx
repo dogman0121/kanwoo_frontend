@@ -54,8 +54,8 @@ function HistoryDateList({
     return (
         <Box>
             <Typography
-                fontSize={"16px"}
                 sx={{
+                    fontSize: "16px",
                     mt: 4,
                     mb: 2
                 }}
@@ -95,7 +95,7 @@ export default function HistoryList() {
 
 
     if (dates.length == 0)
-        return <Typography color="textSecondary" textAlign={"center"} py={4}>У вас нет истории чтения.</Typography>
+        return <Typography color="textSecondary" sx={{textAlign: "center", py: 4}}>У вас нет истории чтения.</Typography>
 
 
     return (

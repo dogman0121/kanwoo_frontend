@@ -31,7 +31,7 @@ export default function AppModal({title, onClose, children, ...props}: {title: s
                         alignItems: "center"
                     }}
                 >
-                    <Typography fontSize={"16px"} fontWeight={600}>{title}</Typography>
+                    <Typography sx={{fontSize: "16px", fontWeight: 600}}>{title}</Typography>
                     <IconButton
                         onClick={() => onClose?.({}, "backdropClick")}
                     >
