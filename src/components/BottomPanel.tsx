@@ -1,4 +1,4 @@
-import { Box, Drawer, SxProps, Typography, TypographyProps, useTheme } from "@mui/material";
+import { Box, Drawer, SwipeableDrawer, SxProps, Typography, TypographyProps, useTheme } from "@mui/material";
 import { Children } from "react";
 
 export function BottomPanelHeader({
@@ -47,6 +47,7 @@ export function BottomPanelBody({
 export interface BottomPanelProps {
     open: boolean, 
     onClose?: () => void,
+    onOpen?: () => void,
     sx?: SxProps,
     children?: React.ReactNode
 }
@@ -54,28 +55,47 @@ export interface BottomPanelProps {
 export default function BottomPanel({
     open,
     onClose,
+    onOpen,
     children,
     sx
 }: BottomPanelProps) {
-    const theme = useTheme()
+
+    const toggleDrawer = (open: boolean) =>
+        (event: React.KeyboardEvent | React.MouseEvent) => {
+            if (
+                event &&
+                event.type === 'keydown' &&
+                ((event as React.KeyboardEvent).key === 'Tab' ||
+                (event as React.KeyboardEvent).key === 'Shift')
+            ) {
+                return;
+            }
+
+            open ? onOpen?.() : onClose?.()
+        };
+
+    const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
     return (
-        <Drawer
+        <SwipeableDrawer
             elevation={1}
             open={open}
-            onClose={onClose}
+            onOpen={toggleDrawer(true)}
+            onClose={toggleDrawer(false)}
             anchor="bottom"
+            disableBackdropTransition={!iOS} 
+            disableDiscovery={iOS}
             slotProps={{
                 paper: {
                     sx: {
-                        borderTopLeftRadius: `calc(${theme.shape.borderRadius} * 2)`,
-                        borderTopRightRadius: `calc(${theme.shape.borderRadius} * 2)`,
+                        borderTopLeftRadius: `12px`,
+                        borderTopRightRadius: `12px`,
                         ...sx
                     }
                 }
             }}      
         >
             {Children.map(children, c => c)}
-        </Drawer>
+        </SwipeableDrawer>
     )
 }

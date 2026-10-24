@@ -20,14 +20,6 @@ function ReplyInput({
     onClose?: () => void,
     onReply?: (text: string) => void
 }) {
-    const deviceType = useAppSelector(selectDeviceType)
-    
-    if (deviceType == "mobile") {
-        return (
-            <></>
-        )
-    }
-
     return (
         <CommentInput 
             size="medium"
@@ -45,6 +37,7 @@ export interface CommentItemProps {
     commentId: number,
     depth: number,
     disableReplyTo?: boolean,
+    disableReplyInput?: boolean,
     parentId?: number | null
 }
 
@@ -52,6 +45,7 @@ export default function CommentItem({
     commentId,
     depth,
     disableReplyTo = false,
+    disableReplyInput,
     parentId = null
 }: CommentItemProps) {
     const dispatch = useAppDispatch()
@@ -131,7 +125,7 @@ export default function CommentItem({
                         userVote={comment.context!.viewer.vote}
                         votes={comment.data.up_votes}
                     />
-                    {commentBlock.ui.repliesInputOpen && (
+                    {commentBlock.ui.repliesInputOpen && !disableReplyInput && (
                         <ReplyInput 
                             onClose={() => dispatch(setReplyInputOpen({commentId: commentId, open: false}))}
                             onReply={handleReply}

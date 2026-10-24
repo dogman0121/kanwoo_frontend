@@ -13,9 +13,11 @@ import { v4 } from "uuid"
 export default function SubthreadComment({
     subthreadId,
     threadId,
+    disableReplyInput
 }: {
     subthreadId: number,
     threadId: number,
+    disableReplyInput?: boolean
 }) {
     const dispatch = useAppDispatch()
 
@@ -53,6 +55,7 @@ export default function SubthreadComment({
                     parentId={threadId}
                     depth={2}
                     disableReplyTo
+                    disableReplyInput={disableReplyInput}
                 />
                 {comment.data.replies_count > 0 && (
                     <CommentReplies depth={2}>
@@ -62,6 +65,7 @@ export default function SubthreadComment({
                                 commentId={dID}
                                 subthreadId={subthreadId}
                                 isLast={!subthreadBlock.discussionHasMore && idx == discussionIds.length - 1}
+                                disableReplyInput={disableReplyInput}
                             />
                         ))}
                     </CommentReplies>

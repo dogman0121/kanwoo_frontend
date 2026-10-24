@@ -12,6 +12,11 @@ export const selectById = (state: RootState, id: number) => {
     return comment.comment
 }
 
+export const selectInputOpen = (state: RootState) => {
+    return state.comments.comments.ui.inputOpen
+}
+
+
 export const selectReplyContext = (state: RootState) => {
     return state.comments.comments.ui.replyContext
 }

@@ -24,8 +24,8 @@ export default function CommentsList({
             hasMore={hasMore || false}
             next={onNext ?? (() => {})}
             style={{
-                overflowY: "hidden",
-                overflowX: "hidden"
+                overflowY: "visible",
+                overflowX: "clip"
             }}
             loader={
                 <Box

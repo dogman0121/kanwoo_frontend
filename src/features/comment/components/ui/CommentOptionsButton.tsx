@@ -1,4 +1,4 @@
-import { IconButton } from "@mui/material"
+import { IconButton, SvgIcon } from "@mui/material"
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 export default function CommentOptionsButton() {
@@ -10,10 +10,13 @@ export default function CommentOptionsButton() {
                     position: "absolute",
                     right: 0,
                     top: 0,
-                    margin: "-4px"
+
+                    mt: "-6px"
                 }}
             >
-                <MoreVertIcon />
+                <SvgIcon fontSize="medium">
+                    <MoreVertIcon />
+                </SvgIcon>
             </IconButton>
         </>
     )

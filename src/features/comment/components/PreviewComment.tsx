@@ -21,14 +21,11 @@ export default function PreviewComment({
         >
             <Avatar src={comment.data.creator.avatar}/>
             <Box>
-                <Typography
-                    variant="caption"
-                    color="textSecondary"
-                >
-                    {comment.data.creator.name}
-                </Typography>
                 <WrappedText
                     lines={3}
+                    sx={{
+                        overflowWrap: "anywhere"
+                    }}
                 >
                     {comment.data.text}
                 </WrappedText>

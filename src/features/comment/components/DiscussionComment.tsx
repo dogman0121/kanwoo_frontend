@@ -10,10 +10,12 @@ export default function DiscussionComment({
     commentId,
     subthreadId,
     isLast,
+    disableReplyInput
 }: {
     commentId: number,
     subthreadId: number,
     isLast: boolean,
+    disableReplyInput?: boolean
 }) {
     return (
         <Box
@@ -37,6 +39,7 @@ export default function DiscussionComment({
                     commentId={commentId}
                     parentId={subthreadId}
                     depth={3}
+                    disableReplyInput={disableReplyInput}
                 />
             </Box>
         </Box>
