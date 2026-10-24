@@ -81,7 +81,7 @@ export const commentsSlice = createSlice({
             state.ui.replyContext = action.payload
             state.ui.inputOpen = true
         },
-        closeInput: (state, action) => {
+        closeInput: (state) => {
             state.ui.inputOpen = false
         },
         toggleReplyInputOpen: (state, action: PayloadAction<{commentId: number}>) => {

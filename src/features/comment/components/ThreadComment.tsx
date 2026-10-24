@@ -12,8 +12,10 @@ import { setRepliesState } from "@/features/comment/states/comments/slice"
 
 export default function ThreadComment({
     threadId,
+    disableReplyInput = false
 }: {
     threadId: number,
+    disableReplyInput?: boolean
 }){
     const dispatch = useAppDispatch()
 
@@ -53,6 +55,7 @@ export default function ThreadComment({
                 commentId={threadId}
                 depth={1}
                 disableReplyTo
+                disableReplyInput={disableReplyInput}
             />
             {moreButtonState != MoreButtonState.HIDDEN && (
                 <CommentReplies depth={1}>
@@ -61,6 +64,7 @@ export default function ThreadComment({
                             key={v4()}
                             subthreadId={subthreadID}
                             threadId={threadId}
+                            disableReplyInput={disableReplyInput}
                         />
                     ))}
                     

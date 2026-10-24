@@ -7,8 +7,8 @@ import { selectDeviceType } from "@/features/global/states/app/slice"
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded"
 import { Box, Divider, Drawer, IconButton, Paper, Typography } from "@mui/material"
-import { selectCommentBlockById, selectReplyContext } from "@/features/comment/states/comments/selectors"
-import { addReply, setInputContext } from "@/features/comment/states/comments/slice"
+import { selectCommentBlockById, selectInputOpen, selectReplyContext } from "@/features/comment/states/comments/selectors"
+import { addReply, closeInput, openInput, setInputContext, setReplyInputOpen } from "@/features/comment/states/comments/slice"
 import ThreadComment from "./ThreadComment"
 
 export interface CommentsPanelProps {
@@ -16,6 +16,7 @@ export interface CommentsPanelProps {
     open: boolean,
     hasMore: boolean,
     onClose?: () => void,
+    onOpen?: () => void,
     onLoad?: () => void,
     onSendComment?: (text: string, parentId?: number) => void
     
@@ -27,12 +28,14 @@ export default function CommentsPanel({
     hasMore,
     onLoad,
     onSendComment,
+    onOpen,
     onClose
 }: CommentsPanelProps) {
     const dispatch = useAppDispatch()
 
     const deviceType = useAppSelector(selectDeviceType)
     const replyContext = useAppSelector(selectReplyContext)
+    const inputOpen = useAppSelector(selectInputOpen)
 
     const replyComment = useAppSelector((state) => {
         if (!replyContext.commentId)
@@ -56,6 +59,13 @@ export default function CommentsPanel({
         dispatch(setInputContext({parentCommentId: null, commentId: null}))
     }
 
+    const handleLoad = () => {
+        if (!open)
+            return
+
+        onLoad?.()
+    }
+
     const inner = (
         <>
             <BottomPanelHeader
@@ -75,6 +85,7 @@ export default function CommentsPanel({
                     overflowY: "scroll",
                     scrollbarWidth: "none",
                     height: "100%",
+                    width: "100vw",
 
                     "&::-webkit-scrollbar": {
                         display: "none"
@@ -87,12 +98,13 @@ export default function CommentsPanel({
                     <CommentsList 
                         commentsLength={commentsIds.length}
                         hasMore={hasMore}
-                        onNext={onLoad}
+                        onNext={handleLoad}
                     >
                         {commentsIds.map(commentId => (
                             <ThreadComment 
                                 threadId={commentId}
                                 key={`comment_list_${commentId}`}
+                                disableReplyInput
                             />
                         ))}
                     </CommentsList>
@@ -141,7 +153,16 @@ export default function CommentsPanel({
                     bottom: 0
                 }}
             >
-                <CommentInput size={deviceType == "mobile" ? "small" : "medium"} onSend={handleAddComment}/>
+                <CommentInput 
+                    size="small" 
+                    onSend={handleAddComment}
+                    onOpen={() => dispatch(openInput({
+                        parentCommentId: null, 
+                        commentId: null
+                    }))}
+                    onClose={() => dispatch(closeInput())}
+                    open={inputOpen}
+                />
             </BottomPanelBody>
         </>
     )
@@ -152,9 +173,11 @@ export default function CommentsPanel({
             {deviceType == "mobile" ?
                 <BottomPanel
                     open={open}
+                    onOpen={onOpen}
                     onClose={onClose}
                     sx={{
                         height: "65%",
+                        maxWidth: "100vw",
                         overflow: "hidden"
                     }}
                 >

@@ -33,8 +33,10 @@ export default function CommentsPreview() {
     }
 
     useEffect(() => {
-        if (manga && !commentsBlock) {
+        if (!commentsBlock && manga)
             dispatch(addBlock(manga.data.slug))
+
+        if (manga && commentsBlock) {
             dispatch(fetchCommentsPreview(manga.data.slug))
         }
     }, [manga, commentsBlock])
@@ -47,6 +49,7 @@ export default function CommentsPreview() {
                 onClick={() => setCommentsPanelOpen(true)}
                 sx={[
                     {
+                        overflow: "hidden",
                         bgcolor: "#e7e7e7",
 
                         px: 2,
@@ -77,6 +80,7 @@ export default function CommentsPreview() {
                 open={commentsPanelOpen} 
                 commentsIds={commentsBlock.commentsIds}
                 hasMore={commentsBlock.hasMore}
+                onOpen={() => setCommentsPanelOpen(true)}
                 onClose={() => setCommentsPanelOpen(false)}
                 onLoad={handleLoadComments}
                 onSendComment={handleSendComment}
