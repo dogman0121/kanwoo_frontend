@@ -83,7 +83,7 @@ export default function DesktopPage() {
                             <Typography variant="caption">
                                 @{profile.slug}
                             </Typography>
-                            <Typography variant="h2" lineHeight={1}>
+                            <Typography variant="h2" sx={{lineHeight: 1}}>
                                 {profile.name}
                             </Typography>
                             

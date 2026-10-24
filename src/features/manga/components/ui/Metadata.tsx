@@ -16,9 +16,9 @@ export default function Metadata({
 }) {
     return (
         <Breadcrumbs>
-            <BreadCrumbsText lineHeight={1.2}>{type.name}</BreadCrumbsText>
-            <BreadCrumbsText lineHeight={1.2}>{year}</BreadCrumbsText>
-            <BreadCrumbsText lineHeight={1.2}>{status.name}</BreadCrumbsText>
+            <BreadCrumbsText sx={{lineHeight: "1.2"}}>{type.name}</BreadCrumbsText>
+            <BreadCrumbsText sx={{lineHeight: "1.2"}}>{year}</BreadCrumbsText>
+            <BreadCrumbsText sx={{lineHeight: "1.2"}}>{status.name}</BreadCrumbsText>
         </Breadcrumbs>
     )
 }

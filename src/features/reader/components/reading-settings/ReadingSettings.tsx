@@ -107,7 +107,7 @@ export default function ReadingSettings({open, onClose}: AppBackdropProps) {
                     }}
                 >
                     <BackdropBody>
-                        <Typography fontWeight={600} textAlign={"center"}>Настройки</Typography>
+                        <Typography sx={{fontWeight: 600, textAlign: "center"}}>Настройки</Typography>
                         <Box
                             sx={{
                                 mt: "15px",

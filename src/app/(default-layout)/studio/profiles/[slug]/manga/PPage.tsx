@@ -34,7 +34,9 @@ function MangaGrid({children}: {children: React.ReactNode}) {
                 container
                 columns={14}
                 spacing={3}
-                alignItems={"center"}
+                sx={{
+                    alignItems: "center"
+                }}
             >
                 {Children.map(children, c => c)}
             </Grid>
@@ -176,7 +178,6 @@ export default function PPage() {
             </MangaGrid>
             <Divider />
             <StudioList
-                py={4}
             >
                 {manga?.map((m) => (
                     <MangaGridRow key={m.data.slug} manga={m.data}/>

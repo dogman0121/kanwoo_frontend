@@ -246,7 +246,7 @@ export default function AuthRegister() {
                         mt: "5px"    
                     }}
                 >
-                    <Typography textAlign={"center"}>Уже есть аккаунт?</Typography> 
+                    <Typography sx={{textAlign: "center"}}>Уже есть аккаунт?</Typography> 
                     <TextButton
                         onClick={()=>{
                             dispatch(setSection(AuthSection.LOGIN))

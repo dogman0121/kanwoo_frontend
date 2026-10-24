@@ -290,7 +290,9 @@ function NotificationButton () {
                         Уведомления
                     </Typography>
                     <Typography 
-                        textAlign={"center"}
+                        sx={{
+                            textAlign: "center"
+                        }}
                     >
                         Тут пока ничего нет!
                     </Typography>

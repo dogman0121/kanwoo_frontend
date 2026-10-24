@@ -133,7 +133,7 @@ export default function Login() {
                         mt: 1
                     }}
                 >
-                    <Typography textAlign={"center"}>Нет учетной записи?</Typography> 
+                    <Typography sx={{textAlign: "center"}}>Нет учетной записи?</Typography> 
                     <TextButton
                         onClick={() => dispatch(setSection(AuthSection.REGISTER))}
                     >

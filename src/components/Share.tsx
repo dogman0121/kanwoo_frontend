@@ -35,7 +35,7 @@ function ShareIcon({children, title}: {children: React.ReactElement, title: stri
             >
                 {children}
             </SvgIcon>
-            <Typography fontSize={"12px"}>{title}</Typography>
+            <Typography sx={{fontSize: "12px"}}>{title}</Typography>
         </Box>
         
     )
@@ -84,7 +84,7 @@ export function ShareMobile({open, onClose, link}: ShareProps) {
             onClose={onClose}
         >
             <AppBackdropContent>
-                <Typography fontSize={"16px"}>Поделиться</Typography>
+                <Typography sx={{fontSize: "16px"}}>Поделиться</Typography>
                 <Box
                     sx={{
                         mt: 2

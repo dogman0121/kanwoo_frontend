@@ -203,7 +203,10 @@ function SmallInputInner({
             >
                 <Typography 
                     color="textSecondary" 
-                    my={"auto"}
+                    sx={{
+                        my: "auto",
+                        lineHeight: "1"
+                    }}
                 >
                     Введите комментарий
                 </Typography>

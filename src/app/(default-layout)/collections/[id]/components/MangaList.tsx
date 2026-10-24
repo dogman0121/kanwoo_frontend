@@ -24,8 +24,10 @@ export default function MangaList() {
         return (
             <Typography 
                 color="textSecondary" 
-                textAlign={"center"}
-                py={4}
+                sx={{
+                    textAlign: "center",
+                    py: 4
+                }}
             >
                 Коллекция пуста.
             </Typography>

@@ -108,7 +108,9 @@ export default function EditImageInput({
                     >   
                         <UploadFileIcon/>
                         <Typography
-                            mt={1}
+                            sx={{
+                                mt: 1
+                            }}
                         >
                             Файл не выбран
                         </Typography>

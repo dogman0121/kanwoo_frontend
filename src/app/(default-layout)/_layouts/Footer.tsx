@@ -136,7 +136,7 @@ export default function Footer() {
                             size={1}
                         >
                             <Box>
-                                <Typography fontSize={"36px"}>KANWOO</Typography>
+                                <Typography sx={{fontSize:"36px"}}>KANWOO</Typography>
                                 <Box
                                     sx={{
                                         display: "flex",

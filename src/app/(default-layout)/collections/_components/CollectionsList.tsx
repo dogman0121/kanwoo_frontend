@@ -11,8 +11,10 @@ export default function CollectionsList({...props}: GridProps) {
         return (
             <Typography
                 color="textSecondary"
-                textAlign={"center"}
-                py={4}
+                sx={{
+                    textAlign: "center",
+                    py: 4
+                }}
             >
                 У вас нет коллекций
             </Typography>

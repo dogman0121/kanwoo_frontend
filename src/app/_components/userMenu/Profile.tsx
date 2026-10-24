@@ -23,8 +23,10 @@ export default function Profile({profile}: {profile: AuthProfile}) {
                 <Typography variant="caption">Ваш профиль</Typography>
                 <Box>
                     <Typography 
-                        fontWeight={600} 
-                        fontSize={"16px"}
+                        sx={{
+                            fontWeight: 600,
+                            fontSize: "16px"
+                        }}
                     >
                         {profile.name}
                     </Typography>

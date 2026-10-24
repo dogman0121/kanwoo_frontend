@@ -111,7 +111,9 @@ function ChapterItem({chapter}: {chapter: Chapter}) {
                         lines={1}
                         variant="caption"
                         color="textSecondary"
-                        lineHeight={1}
+                        sx={{
+                            lineHeight: 1
+                        }}
                     >
                         {chapter.name ? chapter.name : "Без названия"}
                     </WrappedText>

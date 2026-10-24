@@ -21,7 +21,9 @@ export function TranslationGrid({children}: {children: React.ReactNode}) {
                 container
                 columns={12}
                 spacing={3}
-                alignItems={"center"}
+                sx={{
+                    alignItems: "center"
+                }}
             >
                 {Children.map(children, c => c)}
             </Grid>

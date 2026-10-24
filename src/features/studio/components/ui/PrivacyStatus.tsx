@@ -30,7 +30,9 @@ function Status({
                     {icon}
                 </SvgIcon>
                 <Typography
-                    ml={1}
+                    sx={{
+                        mt: 1
+                    }}
                 >
                     {label}
                 </Typography>

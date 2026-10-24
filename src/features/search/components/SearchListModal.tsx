@@ -29,7 +29,7 @@ function MangaItem({ item }: { item: Manga }) {
                         alignItems: "center"
                     }}
                 >
-                    <Box fontSize={"15px"}>{item.name}</Box>
+                    <Box sx={{fontSize: "15px"}}>{item.name}</Box>
                 </Box>
             </ListItemButton>
         </a>

@@ -33,7 +33,9 @@ function TranslationGrid({children}: {children: React.ReactNode}) {
                 container
                 columns={12}
                 spacing={3}
-                alignItems={"center"}
+                sx={{
+                    alignItems: "center"
+                }}
             >
                 {Children.map(children, c => c)}
             </Grid>
@@ -156,7 +158,7 @@ export default function PPage() {
                 </Grid>
             </TranslationGrid>
             <Divider />
-            <StudioList py={4}>
+            <StudioList>
                 {translations.map(t => (
                     <TranslationGridRow 
                         key={t.data.id}

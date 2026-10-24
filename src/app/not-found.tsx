@@ -19,15 +19,15 @@ export default function NotFound() {
                 columnGap: "15px"
             }}
         >
-            <Typography variant="h1" fontSize="56px">404</Typography>
+            <Typography sx={{variant:"h1", fontSize:"56px"}}>404</Typography>
             <Box
                 sx={{
                     display: "flex",
                     flexDirection: "column"
                 }}
             >
-                <Typography fontSize={"24px"}>Упс... Что-то не так!</Typography>
-                <Typography fontSize={"20px"}>Страница не найдена</Typography>
+                <Typography sx={{fontSize: "24px"}}>Упс... Что-то не так!</Typography>
+                <Typography sx={{fontSize: "20px"}}>Страница не найдена</Typography>
             </Box>
         </Box>
     )

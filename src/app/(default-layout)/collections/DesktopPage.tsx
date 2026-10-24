@@ -16,7 +16,7 @@ export default function DesktopPage() {
                     label="Мои коллекции"
                     disableMobile
                 />
-                <CollectionsList mt={4}/>
+                <CollectionsList sx={{mt: 4}}/>
             </Container>
 
             <Footer />            

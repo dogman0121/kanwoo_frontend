@@ -42,7 +42,7 @@ export function MangaItemSquare({manga, sx, rightTopAdornment, ...props}: MangaI
                         }}
                     >
                         <Typography variant="caption">{manga.type?.name}</Typography>
-                        <Typography variant="caption" ml={1}>{manga.year}</Typography>
+                        <Typography variant="caption" sx={{ml: 1}}>{manga.year}</Typography>
                     </Box>
                     <WrappedText
                         lines={2}

@@ -22,7 +22,7 @@ export default function InputFilter({label, name, sx, ...props}: TextFieldProps)
             }}
         >
             {label && (
-                <Typography variant="caption" mb={1}>{label}</Typography>
+                <Typography variant="caption" sx={{mb: 1}}>{label}</Typography>
             )}
             <TextField
                 sx={{
