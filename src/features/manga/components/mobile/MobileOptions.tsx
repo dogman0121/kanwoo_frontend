@@ -1,7 +1,8 @@
 "use client"
 
 import AppBackdrop, { AppBackdropProps } from "@/components/AppBackdrop";
-import { List, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
+import { List, ListItem, ListItemButton, ListItemText, Typography } from "@mui/material";
+import ListItemIcon from "@mui/material/ListItemIcon";
 import ShareRoundedIcon from "@mui/icons-material/ShareRounded"
 import ReportRoundedIcon from "@mui/icons-material/ReportRounded"
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
@@ -28,26 +29,26 @@ export default function MobileOptions({open, onClose}: AppBackdropProps) {
                 onClose={onClose}
             >
                 <List>
-                    <ListItemButton
-                        onClick={() => dispatch(openShareBackdrop(`/manga/${manga.data.slug}`))}
-                    >
-                        <ListItemIcon>
-                            <ShareRoundedIcon color="action" />
-                        </ListItemIcon>
-                        <ListItemText>
-                            Поделиться
-                        </ListItemText>
-                    </ListItemButton>
-                    <ListItemButton
-                        onClick={handleReport}
-                    >
-                        <ListItemIcon>
-                            <ReportRoundedIcon color="action"/>
-                        </ListItemIcon>
-                        <ListItemText>
-                            Пожаловаться
-                        </ListItemText>
-                    </ListItemButton>
+                    <ListItem disablePadding>
+                        <ListItemButton
+                            onClick={() => dispatch(openShareBackdrop(`/manga/${manga.data.slug}`))}
+                        >
+                            <ListItemIcon>
+                                <ShareRoundedIcon color="action" />
+                            </ListItemIcon>
+                            <ListItemText primary="Поделиться" />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem disablePadding>
+                        <ListItemButton
+                            onClick={handleReport}
+                        >
+                            <ListItemIcon>
+                                <ReportRoundedIcon color="action"/>
+                            </ListItemIcon>
+                            <ListItemText primary="Пожаловаться" />
+                        </ListItemButton>
+                    </ListItem>
                 </List>
             </AppBackdrop>
         </>
