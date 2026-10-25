@@ -250,6 +250,13 @@ const mainTheme = createTheme({
           fontWeight: 400
         })
       }
+    },
+    MuiListItemIcon: {
+      styleOverrides: {
+        root: ({theme}) => ({
+          minWidth: `calc(8 * ${theme.vars.spacing})`
+        })
+      }
     }
   },
 });
