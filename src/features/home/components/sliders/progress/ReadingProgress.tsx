@@ -18,6 +18,7 @@ import { selectBlockByHash } from "@/features/home/states/home-page/slice";
 import { ProgressSave } from "@/features/home/types/progress";
 import { range } from "lodash";
 import ReadingProgressSkeleton from "./ReadingProgressSkeleton";
+import { HomeProgresses } from "@/features/home/types/hero";
 
 
 export default function ReadingProgresss({
@@ -36,7 +37,7 @@ export default function ReadingProgresss({
 
     }
 
-    if (block?.status == "loaded" && !block.data)
+    if (block?.status == "loaded" && (!block.data || (block.data as HomeProgresses[]).length == 0))
         return null
 
     return (
