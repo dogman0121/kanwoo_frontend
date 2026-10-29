@@ -21,7 +21,9 @@ export default function MobilePage() {
                     bgcolor: "background.default",
                     top: 0,
 
-                    p: "10px",
+                    px: 2,
+                    pt: 2,
+                    pb: 1,
                     display: "flex",
                     flexDirection: "column",
                     rowGap: 1,
