@@ -22,7 +22,14 @@ export type HomeProgresses = {
     manga: MangaShort
 }
 
-export type LastAddedChaptersBlock = {chapters : Chapter[], pagination: CursorPagination}
+export type HomeChapter = Chapter & {
+    manga: MangaShort
+}
+
+export type LastAddedChaptersBlock = {
+    chapters : HomeChapter[], 
+    pagination: CursorPagination
+}
 
 export type HomeBlockData = Hero[] | HomeProgresses[] | MangaShort[] | LastAddedChaptersBlock
 

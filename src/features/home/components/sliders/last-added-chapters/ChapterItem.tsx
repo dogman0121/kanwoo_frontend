@@ -1,5 +1,6 @@
 import Poster from "@/components/poster/Poster";
 import { routes, toHref } from "@/constants/routes/main.routes";
+import { HomeChapter } from "@/features/home/types/hero";
 import { Entity } from "@/lib/types/Entity.type";
 import { Chapter, ChapterContext } from "@/types/chapter";
 import { Box, Typography } from "@mui/material";
@@ -8,10 +9,10 @@ import Link from "next/link";
 export default function ChapterItem({
     chapter,
 }: {
-    chapter: Entity<Chapter, ChapterContext>,
+    chapter: HomeChapter,
 }) {
     return (
-        <Link href={toHref(routes.chapters.item, {id: chapter.data.id.toString()})}>
+        <Link href={toHref(routes.chapters.item, {id: chapter.id.toString()})}>
             <Box
                 sx={{
                     display: "flex",
@@ -21,7 +22,7 @@ export default function ChapterItem({
             >
                 <Poster 
                     width="72px"
-                    src={chapter.context?.manga.poster?.small}
+                    src={chapter.manga.poster?.small}
                 />
                 <Box
                     sx={{
@@ -32,12 +33,12 @@ export default function ChapterItem({
                     }}
                 >
                     <Box>
-                        <Typography>{chapter.context?.manga.name}</Typography>
+                        <Typography>{chapter.manga.name}</Typography>
                         <Typography
                             variant="caption"
                             color="textSecondary"
                         >
-                            Глава {chapter.data.chapter}
+                            Глава {chapter.chapter}
                         </Typography>
                     </Box>
                 </Box>

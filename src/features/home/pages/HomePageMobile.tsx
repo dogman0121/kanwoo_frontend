@@ -17,7 +17,7 @@ function Header() {
     const dispatch = useAppDispatch()
 
     return (
-        <AppBar color="header">
+        <AppBar color="header" position="sticky">
             <Toolbar>
                 <Box
                     sx={{
