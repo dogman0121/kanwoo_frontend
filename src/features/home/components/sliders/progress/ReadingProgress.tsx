@@ -36,9 +36,9 @@ export default function ReadingProgresss({
 
     }
 
-    if (block.status == "loaded" && !block.data)
+    if (block?.status == "loaded" && !block.data)
         return null
-    
+
     return (
         <Container maxWidth="lg">
             <MangaCarousel>
