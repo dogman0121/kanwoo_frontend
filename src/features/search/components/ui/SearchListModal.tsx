@@ -62,6 +62,7 @@ function SearchListModal({ sx, onChoose }: {
                 className="scrollable"
                 sx={{
                     display: "flex",
+                    flexDirection: "column",
                     ...sx
                 }}
             >

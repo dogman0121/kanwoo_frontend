@@ -181,9 +181,7 @@ function MobileModal({
                         </Box>
                     </Box>               
                     <SearchListModal
-                        onChoose={() => {
-                            onClose?.()
-                        }}
+                        onChoose={() => onClose?.()}
                     />
                 </Box>
             </Box>
