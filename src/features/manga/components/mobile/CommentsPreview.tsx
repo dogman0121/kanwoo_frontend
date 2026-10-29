@@ -62,6 +62,9 @@ export default function CommentsPreview() {
                 <Typography variant="h3">
                     {commentsBlock.totalCount} комментариев
                 </Typography>
+                {commentsBlock.commentsIds.length == 0 && (
+                    <Typography variant="caption" color="textSecondary">Напишите комментарий. Будте первым!</Typography>
+                )}
                 {commentsBlock.commentsIds.length > 0 && (
                     <Box
                         sx={{

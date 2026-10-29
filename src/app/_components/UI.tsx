@@ -18,14 +18,17 @@ import {
     selectCreateCollectionDialogOpen, 
     selectReportDialogContext, 
     selectReportDialogOpen, 
+    selectSearchModalOpen, 
     selectShareBackdropOpen, 
     selectShareBackgropLink, 
     selectSnackbarContext, 
     selectSnackbarOpen, 
     setAuthModalOpen, 
     setAuthSnackbarOpen, 
-    setCreateCollectionDialogOpen
+    setCreateCollectionDialogOpen,
+    setSearchModalOpen
 } from "@/features/global/states/app/slice"
+import SearchModal from "@/features/search/components/SearchModal"
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import { useEffect } from "react"
 
@@ -49,6 +52,8 @@ export default function UI() {
 
     const snackbarOpen = useAppSelector(selectSnackbarOpen)
     const snackbarContext = useAppSelector(selectSnackbarContext)
+
+    const searchModalOpen = useAppSelector(selectSearchModalOpen)
 
     return(
         <>
@@ -86,6 +91,10 @@ export default function UI() {
                 message={snackbarContext.message}
                 open={snackbarOpen}
                 onClose={() => dispatch(closeSnackbar())}
+            />
+            <SearchModal 
+                open={searchModalOpen}
+                onClose={() => dispatch(setSearchModalOpen(false))}
             />
         </>
     )

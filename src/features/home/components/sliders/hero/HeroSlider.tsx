@@ -3,31 +3,32 @@
 import DesktopHeroSlider from "@/features/home/components/sliders/hero/DesktopHeroSlider"
 import MobileHeroSlider from "@/features/home/components/sliders/hero/MobileHeroSlider"
 import { selectDeviceType } from "@/features/global/states/app/slice"
-import { useAppSelector } from "@/lib/state/hooks"
-import MobileHeroSliderSkeleton from "./MobileHeroSliderSkeleton"
-import DesktopHeroSliderSkeleton from "./DesktopHeroSliderSkeleton"
-import useBlockLoader from "@/features/home/hooks/use-block-loader"
-import { HomeMapItem } from "@/features/home/types/hero"
+import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import HeroBlock from "@/types/home/heroBlock"
+import { useEffect } from "react"
+import { selectBlockByHash } from "@/features/home/states/home-page/slice"
+import DesktopHeroSliderSkeleton from "./skeleton/HeroSkeletonDesktop"
+import MobileHeroSliderSkeleton from "./skeleton/HeroSkeletonMobile"
 
 
 export default function HeroSlider({
-    item
+    hash
 }: {
-    item: HomeMapItem
+    hash: string
 }) {
     const deviceType = useAppSelector(selectDeviceType)
 
-    const {data, loaded} = useBlockLoader(item)
+    const block = useAppSelector((state) => selectBlockByHash(state, hash))
 
-    if (!loaded) {
+    if (block?.status != "loaded") {
         return (
             <>
-                {deviceType == "desktop" ?
+                {deviceType == "desktop" && (
                     <DesktopHeroSliderSkeleton />
-                    :
+                )}
+                {deviceType != "desktop" && (
                     <MobileHeroSliderSkeleton />
-                }
+                )}
             </>
         )
     }
@@ -35,10 +36,10 @@ export default function HeroSlider({
     return (
         <>
             {deviceType == "desktop" && (
-                <DesktopHeroSlider slides={data as HeroBlock[]}/>
+                <DesktopHeroSlider slides={block.data as HeroBlock[]}/>
             )}
             {deviceType != "desktop" && (
-                <MobileHeroSlider slides={data as HeroBlock[]} />
+                <MobileHeroSlider slides={block.data as HeroBlock[]}/>
             )}
         </>
     )

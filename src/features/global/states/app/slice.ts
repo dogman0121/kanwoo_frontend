@@ -27,7 +27,8 @@ export interface AppState {
                 message: string,
             }
             open: boolean
-        }
+        },
+        searchModalOpen: boolean
     }
 }
 
@@ -58,7 +59,8 @@ const initialState: AppState = {
                 type: "success",
             },
             open: false
-        }
+        },
+        searchModalOpen: false
     }
 }
 
@@ -111,6 +113,9 @@ export const appSlice = createSlice({
         },
         closeSnackbar: (state) => {
             state.ui.snackbar.open = false
+        },
+        setSearchModalOpen: (state, action) => {
+            state.ui.searchModalOpen = action.payload
         }
     }
 })
@@ -128,7 +133,8 @@ export const {
     closeShareBackdrop,
     setCreateCollectionDialogOpen,
     openSnackbar,
-    closeSnackbar
+    closeSnackbar,
+    setSearchModalOpen
 } = appSlice.actions
 
 export type RootState = {
@@ -147,5 +153,6 @@ export const selectShareBackgropLink = (state: RootState) => state.global.app.ui
 export const selectCreateCollectionDialogOpen = (state: RootState) => state.global.app.ui.createCollectionDialogOpen
 export const selectSnackbarOpen = (state: RootState) => state.global.app.ui.snackbar.open
 export const selectSnackbarContext = (state: RootState) => state.global.app.ui.snackbar.context
+export const selectSearchModalOpen = (state: RootState) => state.global.app.ui.searchModalOpen
 
 export default appSlice.reducer

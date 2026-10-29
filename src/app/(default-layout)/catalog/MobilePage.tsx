@@ -5,7 +5,7 @@ import { Box, Divider, Drawer, IconButton } from "@mui/material";
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded"
 import Filters from "./_components/Filters";
 import { useState } from "react";
-import SearchList from "@/features/search/components/SearchList";
+import SearchList from "@/features/search/components/ui/SearchList";
 import MangaResults from "./_components/MangaResults";
 import SearchProvider from "@/features/search/components/SearchProvider";
 import SearchSectionSelector from "@/features/search/components/SearchSectionSelector";

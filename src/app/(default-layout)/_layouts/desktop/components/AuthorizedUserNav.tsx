@@ -191,7 +191,7 @@ function UserMenuButton() {
                 <Link href={toHref(routes.studio.profiles.item, {slug: profile.slug})}>
                     <MenuItem>
                         <ListItemIcon>
-                    r        <ManageAccountRoundedIcon />
+                            <ManageAccountRoundedIcon />
                         </ListItemIcon>
                         <ListItemText>
                             Творческая студия

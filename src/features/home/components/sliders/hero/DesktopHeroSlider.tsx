@@ -121,7 +121,7 @@ export default function DesktopHeroSlider({
                 allowTouchMove={false}
                 autoplay={{ delay: 5000 }}
             >
-                {slides?.slice(0, 5).map((slice) => (
+                {slides.slice(0, 5).map((slice) => (
                     <SwiperSlide key={`hero_${slice.type}_${v4()}`}>
                         <HeroManga manga={slice}/>
                     </SwiperSlide>

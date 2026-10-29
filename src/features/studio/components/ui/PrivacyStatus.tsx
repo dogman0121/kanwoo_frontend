@@ -31,7 +31,7 @@ function Status({
                 </SvgIcon>
                 <Typography
                     sx={{
-                        mt: 1
+                        ml: 1
                     }}
                 >
                     {label}

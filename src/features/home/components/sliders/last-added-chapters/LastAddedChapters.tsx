@@ -1,104 +1,110 @@
 import { homeClientAPI } from "@/features/home/api/client.api";
-import { HomeMapItem } from "@/features/home/types/hero";
-import { CursorPagination } from "@/lib/fetch/api-response.types";
 import { Chapter, ChapterContext } from "@/types/chapter";
-import { Box, Button, Container, Divider, Paper, Typography } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { Box, Button, Container, Divider, Paper, Stack, Typography } from "@mui/material";
+import { useEffect, useRef, useState, useTransition } from "react";
 import ChapterItem from "./ChapterItem";
+import { useAppSelector } from "@/lib/state/hooks";
+import { selectBlockByHash } from "@/features/home/states/home-page/slice";
+import LastAddedChaptersSkeleton from "./LastAddedChaptersSkeleton";
+import { range } from "lodash";
+import { selectDeviceType } from "@/features/global/states/app/slice";
+import { LastAddedChaptersBlock } from "@/features/home/types/hero";
 
 export default function LastAddedChapters({
-    item
+    hash
 }: {
-    item: HomeMapItem
+    hash: string
 }) {
+    const deviceType = useAppSelector(selectDeviceType)
 
-    const [chapters, setChapters] = useState<Chapter[]>([])
-    const [chaptersContexts, setChaptersContexts] = useState<ChapterContext[]>([]) 
-    const loadingRef = useRef(false)
-    const loadedRef = useRef(false)
-    const cursorRef = useRef<Record<string, unknown> | undefined>(undefined)
-    const hasMoreRef = useRef(true)
+    const block = useAppSelector(state => selectBlockByHash(state, hash))
 
-    const fetchChapters = async () => {
-        try {
-            loadingRef.current = true
+    const [isLoading, setIsLoading] = useTransition()
 
-            const response = await homeClientAPI.getLastAddedChapters(cursorRef.current)
+    const [results, setResults] = useState<Chapter[]>([])
+    const [cursor, setCursor] = useState<Record<string, unknown>>({})
+    const [hasMore, setHasMore] = useState(false)
 
-            setChapters(prev => [...prev, ...response.data])
-            setChaptersContexts(prev => [...prev, ...response.context])
-            cursorRef.current = response.pagination.cursor
-            hasMoreRef.current = response.pagination.has_more
-        } finally {
-            loadedRef.current = true
-            loadingRef.current = false
-        }
+    const loadChapters = async () => {
+        setIsLoading(async () => {
+            const response = await homeClientAPI.getLastAddedChapters(cursor)
+
+            setResults(prev => [...prev, ...response.data])
+            setCursor(response.pagination.cursor)
+            setHasMore(response.pagination.has_more)
+        })
     }
 
     useEffect(() => {
-        if (loadedRef.current || loadingRef.current) return
+        if (!block?.data) return
 
-        fetchChapters()
-    }, [])
+        setResults((block.data as LastAddedChaptersBlock).chapters)
+        setCursor((block.data as LastAddedChaptersBlock).pagination.cursor)
+        setHasMore((block.data as LastAddedChaptersBlock).pagination.has_more)
+    }, [block])
 
     return (
-        <Container maxWidth="lg">
-            <Typography
-                variant="h3"
-            >
-                {item.title}
-            </Typography>
-            <Paper
-                elevation={3}
+        <Box>
+            <Container maxWidth="lg">
+                <Typography variant="h3">
+                    Последние обновления
+                </Typography>
+            </Container>
+            <Container 
+                maxWidth="lg"
                 sx={{
-                    mt: 3,
-                    p: 2,
-                    borderRadius: 2,
+                    px: deviceType != "desktop" ? 0 : undefined
                 }}
             >
                 <Paper
                     elevation={1}
                     sx={{
-                        borderRadius: 2,
-                        py: 2,
-                        px: 3,
-
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 2
+                        mt: 3,
+                        pt: 3,
+                        px: 2,
+                        pb: 4,
+                        borderRadius: "0",
+                        borderTopLeftRadius: "18px",
+                        borderTopRightRadius: "18px",
                     }}
                 >
-                    {chapters.map((chapter, ind) => (
-                        <Box key={`home_page_${item.type}_${chapter.id}`}>
-                            {ind != 0 && (
-                                <Divider 
-                                    sx={{
-                                        mt: 2,
-                                        mb: 2
-                                    }}
-                                />
-                            )}
-                            <ChapterItem 
-                                chapter={chapter}
-                                chapterContext={chaptersContexts[ind]}
-                            />
-                        </Box>
-                    ))}
+                    <Stack
+                        direction="column"
+                        spacing={2}
+                        divider={
+                            <Divider />
+                        }
+                    >
+                        {block?.status != "loaded" ?
+                            range(0, 4).map((idx) => (
+                                <LastAddedChaptersSkeleton key={`home_page_last_added_chapters_stub_${idx}`}/>
+                            ))
+                            :
+                            results.map((chapter, ind) => (
+                                <Box key={`home_page_last_added_chapters_${chapter.id}`}>
+                                    
+                                    <ChapterItem 
+                                        chapter={{data: chapter}}
+                                    />
+                                </Box>
+                            ))
+                        }
+                    </Stack>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        disabled={!hasMore}
+                        onClick={loadChapters}
+                        loading={isLoading}
+                        sx={{
+                            mt: 3
+                        }}
+                    >
+                        Показать еще
+                    </Button>
                 </Paper>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    disabled={!hasMoreRef.current}
-                    onClick={fetchChapters}
-                    loading={loadingRef.current}
-                    sx={{
-                        mt: 2
-                    }}
-                >
-                    Показать еще
-                </Button>
-            </Paper>
-        </Container>
+            </Container>
+        </Box>
     )
 }
