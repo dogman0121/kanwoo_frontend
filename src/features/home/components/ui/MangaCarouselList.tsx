@@ -8,6 +8,7 @@ import "swiper/css/mousewheel"
 import "swiper/css/navigation"
 import { Manga, MangaShort } from "@/types/manga";
 import { Children, RefObject } from "react";
+import { Stack } from "@mui/material";
 
 type Props = {
     prevButtonRef: RefObject<HTMLElement | null>,
@@ -41,11 +42,16 @@ export default function MangaCarouselList({
                 width: "100%",
             }}
         >
-            {Children.map(children, c => (
-                <SwiperSlide>
-                    {c}
-                </SwiperSlide>
-            ))}
+            <Stack
+                direction="row"
+                spacing={2}
+            >
+                {Children.map(children, c => (
+                    <SwiperSlide>
+                        {c}
+                    </SwiperSlide>
+                ))}
+            </Stack>
         </Swiper>
     )
 }

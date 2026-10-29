@@ -1,3 +1,5 @@
+import { Chapter } from "@/features/chapter/types/chapter.type"
+import { CursorPagination } from "@/lib/fetch/api-response.types"
 import { ChapterShort } from "@/types/chapter"
 import { MangaShort } from "@/types/manga"
 
@@ -20,12 +22,14 @@ export type HomeProgresses = {
     manga: MangaShort
 }
 
-export type HomeBlockData = Hero[] | HomeProgresses[] | MangaShort[] | ChapterShort[]
+export type LastAddedChaptersBlock = {chapters : Chapter[], pagination: CursorPagination}
 
-export type HomeMapItem = {
+export type HomeBlockData = Hero[] | HomeProgresses[] | MangaShort[] | LastAddedChaptersBlock
+
+export type HomePageItem = {
     type: "manga_list" | "hero" | "reading_progresses" | "last_added_chapters",
-    hash: string | null,
+    hash: string,
     title: string
 }
 
-export type HomeMap = HomeMapItem[]
+export type HomePageMap = HomePageItem[]

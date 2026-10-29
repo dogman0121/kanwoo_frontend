@@ -17,7 +17,7 @@ function HeroManga({manga}: {manga: HeroBlock}) {
     const theme = useTheme()
     
     const router = useRouter();
-//hff
+
     return (
         <Box>
             <Box

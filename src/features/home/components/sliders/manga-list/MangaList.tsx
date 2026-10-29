@@ -1,7 +1,6 @@
 "use client"
 
 import useBlockLoader from "@/features/home/hooks/use-block-loader"
-import { HomeMapItem } from "@/features/home/types/hero"
 import { Container } from "@mui/material"
 import MangaCarousel from "../../ui/MangaCarousel"
 import MangaCarouselTitle from "../../ui/MangaCarouselTitle"
@@ -11,16 +10,20 @@ import { MangaShort } from "@/types/manga"
 import { MangaItemSquare } from "@/features/manga/components/MangaItem"
 import MangaListSkeleton, { MangaSkeleton } from "./MangaListSkeleton"
 import { range } from "lodash"
+import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
+import { useEffect } from "react"
+import { selectBlockByHash } from "@/features/home/states/home-page/slice"
 
 export default function MangaList({
-    item
+    hash,
+    title
 }: {
-    item: HomeMapItem
+    hash: string,
+    title: string
 }) {
-
-    const {data, loading, loaded} = useBlockLoader(item)
-
     const {nextButton, prevButton} = useSwitchButtons()
+
+    const block = useAppSelector(state => selectBlockByHash(state, hash))
 
     return (
         <Container maxWidth="lg">
@@ -29,9 +32,9 @@ export default function MangaList({
                     prevButtonRef={prevButton}
                     nextButtonRef={nextButton}
                 >
-                    {item.title}
+                    {title}
                 </MangaCarouselTitle>
-                {!loaded ? 
+                {block?.status != "loaded" ? 
                     <MangaCarouselList
                         nextButtonRef={nextButton}
                         prevButtonRef={prevButton}
@@ -43,9 +46,9 @@ export default function MangaList({
                         nextButtonRef={nextButton}
                         prevButtonRef={prevButton}
                     >
-                        {(data as MangaShort[]).map(manga => (
+                        {(block.data as MangaShort[]).map(manga => (
                             <MangaItemSquare
-                                key={`home_page_${item.type}_${item.hash}_${manga.id}`}
+                                key={`home_page_${hash}_${manga.id}`}
                                 manga={manga}
                             />
                         ))}

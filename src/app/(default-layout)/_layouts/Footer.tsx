@@ -117,7 +117,6 @@ export default function Footer() {
                 component={"footer"}
                 sx={[
                     {
-                        mt: deviceType == "desktop" ? 8 : 0,
                         bgcolor: "footer.main"
                     },
                 ]}

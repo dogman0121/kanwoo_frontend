@@ -1,6 +1,7 @@
 import { Metadata } from "next";
-import PPage from "./PPage";
 import { homeServerAPI } from "@/features/home/api/server.api";
+import HomePageDesktop from "@/features/home/pages/HomePageDesktop";
+import HomePageMobile from "@/features/home/pages/HomePageMobile";
 
 export async function generateMetadata(): Promise<Metadata> {
     const title = `Kanwoo - лучший сайт по чтению манги`;
@@ -28,9 +29,18 @@ export default async function Page({
     searchParams: Promise<{ viewport: string }>
 }) {
 
+    const {viewport} = await searchParams;
+
     const {data: homeMap} = await homeServerAPI.getHomeMap()
 
     return (
-        <PPage homeMap={homeMap}/>
+        <>
+            {viewport == "desktop" && (
+                <HomePageDesktop map={homeMap}/>
+            )}
+            {viewport != "desktop" && (
+                <HomePageMobile  map={homeMap}/>
+            )}
+        </>
     )
 }

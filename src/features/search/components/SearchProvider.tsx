@@ -14,8 +14,8 @@ import { router } from "@/lib/api/api-config.type";
 
 function SearchProvider({ 
     children, 
-    processEmptyQuery,
-    fromSearchParams
+    processEmptyQuery = false,
+    fromSearchParams = false
 }: { 
     children: React.ReactNode, 
     processEmptyQuery?: boolean,
