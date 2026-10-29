@@ -8,7 +8,7 @@ import { selectBlockByHash } from "@/features/home/states/home-page/slice";
 import LastAddedChaptersSkeleton from "./LastAddedChaptersSkeleton";
 import { range } from "lodash";
 import { selectDeviceType } from "@/features/global/states/app/slice";
-import { LastAddedChaptersBlock } from "@/features/home/types/hero";
+import { HomeChapter, LastAddedChaptersBlock } from "@/features/home/types/hero";
 
 export default function LastAddedChapters({
     hash
@@ -21,7 +21,7 @@ export default function LastAddedChapters({
 
     const [isLoading, setIsLoading] = useTransition()
 
-    const [results, setResults] = useState<Chapter[]>([])
+    const [results, setResults] = useState<HomeChapter[]>([])
     const [cursor, setCursor] = useState<Record<string, unknown>>({})
     const [hasMore, setHasMore] = useState(false)
 
@@ -84,7 +84,7 @@ export default function LastAddedChapters({
                                 <Box key={`home_page_last_added_chapters_${chapter.id}`}>
                                     
                                     <ChapterItem 
-                                        chapter={{data: chapter}}
+                                        chapter={chapter}
                                     />
                                 </Box>
                             ))
