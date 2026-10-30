@@ -14,7 +14,7 @@ export default function HomeBlock({
     onLoad: () => void
 }) {
 
-    const blockRef = useRef<HTMLElement>(null);
+    const blockRef = useRef<HTMLDivElement>(null);
     const intersectionObserverRef = useRef<IntersectionObserver>(null)
     const intersectionLocked = useRef(false)
     
@@ -45,21 +45,19 @@ export default function HomeBlock({
     }, [blockRef.current])
 
     return (
-        <Box
-            ref={blockRef}
-        >
+        <>
             {item.type == "hero" && (
-                <HeroSlider hash={item.hash}/>
+                <HeroSlider hash={item.hash} ref={blockRef}/>
             )}
             {item.type == "reading_progresses" && (
-                <ReadingProgresss hash={item.hash}/>
+                <ReadingProgresss hash={item.hash} ref={blockRef}/>
             )}
             {item.type == "manga_list" && (
-                <MangaList title={item.title} hash={item.hash}/>
+                <MangaList title={item.title} hash={item.hash} ref={blockRef}/>
             )}
             {item.type == "last_added_chapters" && (
-                <LastAddedChapters hash={item.hash}/>
+                <LastAddedChapters hash={item.hash} ref={blockRef}/>
             )}
-        </Box>
+        </>
     )
 }

@@ -11,22 +11,24 @@ import { MangaItemSquare } from "@/features/manga/components/MangaItem"
 import MangaListSkeleton, { MangaSkeleton } from "./MangaListSkeleton"
 import { range } from "lodash"
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
-import { useEffect } from "react"
+import { RefObject, useEffect } from "react"
 import { selectBlockByHash } from "@/features/home/states/home-page/slice"
 
 export default function MangaList({
     hash,
-    title
+    title,
+    ref
 }: {
     hash: string,
-    title: string
+    title: string,
+    ref?: RefObject<HTMLDivElement | null>
 }) {
     const {nextButton, prevButton} = useSwitchButtons()
 
     const block = useAppSelector(state => selectBlockByHash(state, hash))
 
     return (
-        <Container maxWidth="lg">
+        <Container maxWidth="lg" ref={ref}>
             <MangaCarousel>
                 <MangaCarouselTitle
                     prevButtonRef={prevButton}
