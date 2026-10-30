@@ -1,13 +1,21 @@
 "use client"
 
-import { Children, useContext } from "react";
+import React, { Children, useContext, useEffect, useRef } from "react";
 import SearchContext from "../../context/SearchContext";
-import { Box, BoxProps, CircularProgress, List, Typography} from "@mui/material";
-import ScrollableBox from "@/components/ScrollableBox";
+import { Box, BoxProps, CircularProgress, List, SxProps, Typography} from "@mui/material";
 import InfiniteScroll from "react-infinite-scroll-component";
 
+export interface SearchList {
+    sx?: SxProps,
+    infinity?: boolean,
+    children?: React.ReactNode
+}
 
-function SearchList({ sx, children, ...props }: BoxProps) {
+function SearchList({ 
+    sx, 
+    children,
+    infinity = false
+}: SearchList) {
     const {
         query, 
         results, 
@@ -59,7 +67,7 @@ function SearchList({ sx, children, ...props }: BoxProps) {
     return (
         <InfiniteScroll
             dataLength={results.length}
-            hasMore={!isLoading && hasMore}
+            hasMore={infinity && !isLoading && hasMore}
             next={onNext}
             loader={
                 <Box
@@ -74,17 +82,13 @@ function SearchList({ sx, children, ...props }: BoxProps) {
             }
             
         >
-            <List>
-                <ScrollableBox
-                    sx={{
-                        overflowY: "auto",
-                        ...sx
-                    }}
-                    {...props}
-                >
-                    {Children.map(children, (child) => child)}
-                </ScrollableBox>
-            </List>
+            <Box
+                sx={{
+                    ...sx
+                }}
+            >
+                {Children.map(children, (child) => child)}
+            </Box>
         </InfiniteScroll>
     )
 }

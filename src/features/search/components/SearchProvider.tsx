@@ -5,7 +5,7 @@ import SearchContext from "../context/SearchContext";
 import { searchService } from "../services/api/searchService";
 import SearchSection from "../types/searchSection";
 import { usePagePagination } from "@/lib/use-page-pagination";
-import { debounce } from "lodash";
+import { debounce, has } from "lodash";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Manga } from "@/types/manga";
 import { Profile } from "@/types/profile";
@@ -45,7 +45,15 @@ function SearchProvider({
     const loadingRef = useRef(false)
 
 
-    const loadResults = useCallback(async () => {
+    const loadResults = useCallback(async (
+        query: string,
+        filters: Map<string, string[]>,
+        section: SearchSection,
+        page: number, 
+        perPage: number, 
+        results: (Manga | Profile)[],
+        hasMore: boolean
+    ) => {
         if (loadingRef.current) return
         if (!hasMore) return;
 
@@ -55,14 +63,27 @@ function SearchProvider({
         try {
             const response = await searchService.search(query, section, filters, page, perPage);
 
-            setResults(prev => [...prev, ...response.data]);
-            setPage(prev => prev + 1);
+            setResults([...results, ...response.data]);
+            setPage(page + 1);
             if (response.pagination) setTotalCount(response.pagination.total_count);
         } finally {
             loadingRef.current = false
             setIsLoading(false)
         }
-    }, [query, section, filters, page, perPage, hasMore, setResults, setPage, setTotalCount]);
+    }, [setResults, setPage, setTotalCount, setIsLoading]);
+
+
+    const onLoadNextResults = () => {
+        loadResults(
+            query,
+            filters,
+            section,
+            page,
+            perPage,
+            results,
+            hasMore
+        )
+    }
 
     const debouncedLoadResults = useCallback(debounce(async (query, section, filters) => {
         if (fromSearchParams) {
@@ -82,6 +103,17 @@ function SearchProvider({
         }
 
         reset()
+        if (query != "" || processEmptyQuery) {
+            await loadResults(
+                query,
+                filters,
+                section,
+                1,
+                20,
+                [],
+                true
+            )
+        }
     }, 500), [])
 
 
@@ -122,7 +154,7 @@ function SearchProvider({
                 isLoading: loading,
                 hasMore: hasMore,
                 totalCount: totalCount,
-                onNext: loadResults,
+                onNext: onLoadNextResults,
                 processEmptyQuery: processEmptyQuery ? true : false
             }}
         >

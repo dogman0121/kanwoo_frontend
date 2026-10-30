@@ -4,10 +4,10 @@ import SearchInputDesktop from "@/features/search/components/SearchInputDesktop"
 import SearchProvider from "@/features/search/components/SearchProvider"
 import { Box, Container, Grid, Paper, Typography } from "@mui/material"
 import Filters from "./_components/Filters"
-import SearchList from "@/features/search/components/ui/SearchList"
 import MangaResults from "./_components/MangaResults"
 import SearchSectionSelector from "@/features/search/components/SearchSectionSelector"
 import theme from "@/constants/themes/main.theme"
+import SearchList from "@/features/search/components/ui/SearchList"
 
 export default function DesktopPage() {
     return (
@@ -44,8 +44,9 @@ export default function DesktopPage() {
                             />
                         </Box>
                         <SearchList
+                            infinity
                             sx={{
-                                mt: "15px"
+                                mt: 3
                             }}
                         >
                             <MangaResults />

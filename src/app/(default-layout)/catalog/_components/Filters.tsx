@@ -71,7 +71,6 @@ export default function Filters() {
                 <Box>
                     <Typography
                         sx={{
-                            fontWeight: 600,
                             mb: 1
                         }}
                     >
