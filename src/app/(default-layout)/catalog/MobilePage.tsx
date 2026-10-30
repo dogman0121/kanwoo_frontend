@@ -48,19 +48,22 @@ export default function MobilePage() {
                 </Box>
                 <SearchSectionSelector />
             </Box>
-            <SearchList>                
-                <MangaResults 
-                    sx={{
-                        px: 2,
-                        pb: 3
-                    }}
-                />
+            <SearchList
+                infinity
+                sx={{
+                    pt: 1,
+                    px: 2,
+                    pb: 3
+                }}
+            >                
+                <MangaResults />
             </SearchList>
             <Drawer
                 elevation={1}
                 sx={{
                     ".MuiPaper-root": {
-                        p: "20px 15px",
+                        py: 4,
+                        px: 3,
                         width: "75vw"
                     }
                 }}

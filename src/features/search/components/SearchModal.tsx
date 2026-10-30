@@ -5,12 +5,14 @@ import { useAppSelector } from "@/lib/state/hooks"
 import SearchProvider from "./SearchProvider"
 import { Box, Divider, List, Modal, Paper, Typography } from "@mui/material"
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
-import { useRef, useState } from "react"
+import { useContext, useRef, useState } from "react"
 import SearchInputMobile from "./SearchInputMobile"
 import ScrollableBox from "@/components/ScrollableBox"
 import SearchListModal from "./ui/SearchListModal"
 import SearchInputDesktop from "./SearchInputDesktop"
 import SuggestMangaDialog from "@/components/SuggestMangaDialog"
+import SearchContext from "../context/SearchContext"
+import LoadingBox from "@/components/LoadingBox"
 
 export interface SearchModalProps {
     open: boolean,
@@ -20,6 +22,8 @@ export interface SearchModalProps {
 function DesktopModal({
     open, onClose
 }: SearchModalProps) {
+    const { isLoading } = useContext(SearchContext);
+
     const [suggestDialogOpen, setSuggestDialogOpen] = useState(false);
 
     return (
@@ -57,6 +61,7 @@ function DesktopModal({
                             sx={{
                                 px: 2,
                                 pt: 2,
+                                pb: 2
                                 
                             }}
                         >
@@ -69,11 +74,19 @@ function DesktopModal({
                                 }}
                             /> */}
                         </Box>
-                        <SearchListModal
-                            onChoose={() => {
-                                onClose?.()
-                            }}
-                        />
+                        <LoadingBox loading={isLoading}>
+                            <ScrollableBox
+                                sx={{
+                                    pb: 2
+                                }}
+                            >
+                                <SearchListModal
+                                    onChoose={() => {
+                                        onClose?.()
+                                    }}
+                                />
+                            </ScrollableBox>
+                        </LoadingBox>
                         <Divider />
                         <Box
                             sx={{
@@ -109,6 +122,8 @@ function DesktopModal({
 function MobileModal({
     open, onClose
 }: SearchModalProps) {
+    const { isLoading } = useContext(SearchContext);
+
     const inputRef = useRef<HTMLInputElement>(null)
     
     const handleClose = () => {
@@ -180,9 +195,17 @@ function MobileModal({
                             </Box>
                         </Box>
                     </Box>               
-                    <SearchListModal
-                        onChoose={() => onClose?.()}
-                    />
+                    <LoadingBox loading={isLoading}>
+                        <ScrollableBox
+                            sx={{
+                                pb: 2
+                            }}
+                        >
+                            <SearchListModal
+                                onChoose={() => onClose?.()}
+                            />
+                        </ScrollableBox>
+                    </LoadingBox>
                 </Box>
             </Box>
         </Modal>

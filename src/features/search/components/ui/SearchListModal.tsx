@@ -36,10 +36,19 @@ function MangaItem({
                 <Box
                     sx={{
                         display: "flex",
-                        alignItems: "center"
+                        flexDirection: "column",
+                        justifyContent: "center"
                     }}
                 >
-                    <Typography>{item.name}</Typography>
+                    <Typography sx={{fontWeight: 600}}>{item.name}</Typography>
+                    <Box>
+                        <Typography variant="caption" color="textSecondary">
+                            {item.type.name}
+                        </Typography>
+                        <Typography variant="caption" color="textSecondary" sx={{ml: 2}}>
+                            {item.year}
+                        </Typography>
+                    </Box>
                 </Box>
             </ListItemButton>
         </Link>
@@ -59,10 +68,8 @@ function SearchListModal({ sx, onChoose }: {
     return (
         <>
             <SearchList 
-                className="scrollable"
                 sx={{
                     display: "flex",
-                    flexDirection: "column",
                     ...sx
                 }}
             >
