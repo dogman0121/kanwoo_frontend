@@ -195,17 +195,17 @@ function MobileModal({
                             </Box>
                         </Box>
                     </Box>               
-                    <LoadingBox loading={isLoading}>
-                        <ScrollableBox
-                            sx={{
-                                pb: 2
-                            }}
-                        >
+                    <ScrollableBox
+                        sx={{
+                            pb: 2
+                        }}
+                    >
+                        <LoadingBox loading={isLoading}>
                             <SearchListModal
                                 onChoose={() => onClose?.()}
                             />
-                        </ScrollableBox>
-                    </LoadingBox>
+                        </LoadingBox>
+                    </ScrollableBox>
                 </Box>
             </Box>
         </Modal>
