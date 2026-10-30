@@ -1,7 +1,7 @@
 import { homeClientAPI } from "@/features/home/api/client.api";
 import { Chapter, ChapterContext } from "@/types/chapter";
 import { Box, Button, Container, Divider, Paper, Stack, Typography } from "@mui/material";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { RefObject, useEffect, useRef, useState, useTransition } from "react";
 import ChapterItem from "./ChapterItem";
 import { useAppSelector } from "@/lib/state/hooks";
 import { selectBlockByHash } from "@/features/home/states/home-page/slice";
@@ -11,9 +11,11 @@ import { selectDeviceType } from "@/features/global/states/app/slice";
 import { HomeChapter, LastAddedChaptersBlock } from "@/features/home/types/hero";
 
 export default function LastAddedChapters({
-    hash
+    hash,
+    ref
 }: {
-    hash: string
+    hash: string,
+    ref?: RefObject<HTMLDivElement | null>
 }) {
     const deviceType = useAppSelector(selectDeviceType)
 
@@ -44,7 +46,7 @@ export default function LastAddedChapters({
     }, [block])
 
     return (
-        <Box>
+        <Box ref={ref}>
             <Container maxWidth="lg">
                 <Typography variant="h3">
                     Последние обновления

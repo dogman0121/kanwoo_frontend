@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import { iconButtonClasses } from "@mui/material/IconButton"
-import { useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation } from "swiper/modules";
 import "swiper/css"
@@ -22,9 +22,11 @@ import { HomeProgresses } from "@/features/home/types/hero";
 
 
 export default function ReadingProgresss({
-    hash
+    hash,
+    ref
 }: {
-    hash: string
+    hash: string,
+    ref?: RefObject<HTMLDivElement | null>
 }) {
     const {
         nextButton,
@@ -41,7 +43,7 @@ export default function ReadingProgresss({
         return null
 
     return (
-        <Container maxWidth="lg">
+        <Container maxWidth="lg" ref={ref}>
             <MangaCarousel>
                 <MangaCarouselTitle
                     prevButtonRef={prevButton}

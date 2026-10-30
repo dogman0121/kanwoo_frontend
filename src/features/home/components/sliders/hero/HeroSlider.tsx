@@ -5,16 +5,19 @@ import MobileHeroSlider from "@/features/home/components/sliders/hero/MobileHero
 import { selectDeviceType } from "@/features/global/states/app/slice"
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import HeroBlock from "@/types/home/heroBlock"
-import { useEffect } from "react"
+import { RefObject, useEffect } from "react"
 import { selectBlockByHash } from "@/features/home/states/home-page/slice"
 import DesktopHeroSliderSkeleton from "./skeleton/HeroSkeletonDesktop"
 import MobileHeroSliderSkeleton from "./skeleton/HeroSkeletonMobile"
+import { Box } from "@mui/material"
 
 
 export default function HeroSlider({
-    hash
+    hash,
+    ref
 }: {
-    hash: string
+    hash: string,
+    ref?: RefObject<HTMLDivElement | null>
 }) {
     const deviceType = useAppSelector(selectDeviceType)
 
@@ -22,25 +25,25 @@ export default function HeroSlider({
 
     if (block?.status != "loaded") {
         return (
-            <>
+            <Box ref={ref}>
                 {deviceType == "desktop" && (
                     <DesktopHeroSliderSkeleton />
                 )}
                 {deviceType != "desktop" && (
                     <MobileHeroSliderSkeleton />
                 )}
-            </>
+            </Box>
         )
     }
     
     return (
-        <>
+        <Box ref={ref}>
             {deviceType == "desktop" && (
                 <DesktopHeroSlider slides={block.data as HeroBlock[]}/>
             )}
             {deviceType != "desktop" && (
                 <MobileHeroSlider slides={block.data as HeroBlock[]}/>
             )}
-        </>
+        </Box>
     )
 }
