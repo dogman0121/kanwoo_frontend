@@ -70,6 +70,7 @@ function SearchListModal({ sx, onChoose }: {
             <SearchList 
                 sx={{
                     display: "flex",
+                    flexDirection: "column",
                     ...sx
                 }}
             >

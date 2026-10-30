@@ -15,7 +15,9 @@ const ScrollableBox = styled(Box)(({theme}) => ({
         backgroundColor: theme.vars?.palette.secondary.light,
         borderRadius: "8px",
         border: `0px`
-    }
+    },
+
+    overflow: "auto"
 }))
 
 export default ScrollableBox;
