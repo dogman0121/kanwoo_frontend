@@ -5,6 +5,9 @@ import ProgressController from "./progress-controller";
 import { ReaderMode } from "@/features/types/reader-mode";
 import { ApiError } from "@/lib/fetch/api-response.types";
 import { ReadingProgress, ReadingProgressContext } from "@/types/reading-progress";
+import { Alignment } from "../types/alignment.type";
+import { Entity } from "@/lib/types/Entity.type";
+import { ReadingModeEnum } from "@/features/translations/entities/reading-mode.enum";
 
 export interface ReaderProps {
   pageLoader: PageLoader;
@@ -19,15 +22,10 @@ export enum ReaderEventsType {
 // 1. Payload каждой события — без обёртки { type, value }
 export type ReaderEventPayloads = {
     [ReaderEventsType.INITIALIZED]: {
-        chapter: Chapter
-        chapterContext: ChapterContext
-        readingProgress: ReadingProgress | null
-        readingProgressContext: ReadingProgressContext | null
+        chapter: Entity<Chapter, ChapterContext>,
+        progress: Entity<ReadingProgress, ReadingProgressContext> | null
     }
-    [ReaderEventsType.CHAPTER_LOADED]: {
-        chapter: Chapter,
-        chapterContext: ChapterContext,
-    } // пустой объект
+    [ReaderEventsType.CHAPTER_LOADED]: Entity<Chapter, ChapterContext>
 };
 
 // 2. Итоговый event-объект (то, что прилетает в handler)
@@ -49,6 +47,7 @@ class Reader {
     pageLoader: PageLoader
     progressController: ProgressController
 
+    defaultReadingMode?: ReadingModeEnum
     currPageNumber?: number
     currChapterID?: number
 
@@ -68,9 +67,9 @@ class Reader {
             const response = await readerClientAPI.getChapter(chapterID);
 
             return {
-                chapter: response.data,
-                chapterMetadata: response.metadata,
-                chapterContext: response.context,
+                data: response.data,
+                metadata: response.metadata,
+                context: response.context,
             };
         } catch (e) {
             if (e instanceof ApiError)
@@ -87,27 +86,25 @@ class Reader {
         chapterID: number,
         mode: ReaderMode
     }) {
-        const {chapter, chapterContext} = await this._fetchChapter(chapterID)
-
-        const {progress, progressContext} = await this.progressController.initialize({
+        const chapter = await this._fetchChapter(chapterID)
+        const progress = await this.progressController.initialize({
             mode: mode,
-            chapterID: chapter.id,
+            chapterID: chapter.data.id,
         })
 
         this.pageLoader.initialize({
             mode: mode,
-            chapterID: chapter.id,
-            pages: chapter.pages!,
+            chapterID: chapter.data.id,
+            pages: chapter.data.pages!,
         })
 
-        this.pageLoader.setPage(chapter.id, progress?.page || 0)
+        this.pageLoader.setPage(chapter.data.id, progress?.data!.page || 0)
+        this.defaultReadingMode = chapter.context.translation.default_reading_mode.id
 
         // TS проверит, что value соответствует ReaderEventsType.INITIALIZED
         this.dispatchEvent(ReaderEventsType.INITIALIZED, {
             chapter: chapter,
-            chapterContext: chapterContext,
-            readingProgress: progress,
-            readingProgressContext: progressContext
+            progress: progress,
         });
     }
 
@@ -117,11 +114,11 @@ class Reader {
     }
 
     async loadChapter(chapterID: number) {
-        const chapterData = await this._fetchChapter(chapterID)
+        const chapter = await this._fetchChapter(chapterID)
 
-        this.pageLoader?.addChapter(chapterData.chapter.id, chapterData.chapter.pages!)
+        this.pageLoader?.addChapter(chapter.data.id, chapter.data.pages!)
 
-        this.dispatchEvent(ReaderEventsType.CHAPTER_LOADED, chapterData)
+        this.dispatchEvent(ReaderEventsType.CHAPTER_LOADED, chapter)
     }
 
     getPageLoader() {
@@ -165,6 +162,10 @@ class Reader {
     destroy() {
         this.pageLoader?.destroy();
         this.eventsHandlers.clear();
+    }
+
+    getReadingMode() {
+        return this.defaultReadingMode || ReadingModeEnum.VERTICAL
     }
 }
 

@@ -1,7 +1,7 @@
 import { createEntityAdapter, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { StudioTranslation } from "../../types/studio-translation.type";
 import { Entity } from "@/lib/types/Entity.type";
-import { TranslationContext } from "@/types/translation";
+import { TranslationContext } from "@/features/translations/types";
 
 type Translation = Entity<StudioTranslation, TranslationContext>
 

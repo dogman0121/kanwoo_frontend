@@ -36,18 +36,15 @@ class ProgressController {
                 const response = await readerClientAPI.getChapterProgress(chapterID);
 
                 return {
-                    progress: response.data,
-                    progressContext: response.context,
+                    data: response.data,
+                    context: response.context,
                 };
             }  catch (e) {
                 console.log(e)
             }
         }
 
-        return {
-            progress: null,
-            progressContext: null
-        }
+        return null
     }
 
     async _initSession(chapterID: number, pageNumber: number) {
@@ -73,11 +70,11 @@ class ProgressController {
     }) {
         this.mode = mode
 
-        const {progress, progressContext} = await this._fetchProgress(chapterID)
+        const progress = await this._fetchProgress(chapterID)
 
-        this._initSession(chapterID, progress?.page || 0)
+        this._initSession(chapterID, progress?.data!.page || 0)
 
-        return {progress, progressContext}
+        return progress
     }
 
     async setPage(chapterID: number, pageNumber: number) {

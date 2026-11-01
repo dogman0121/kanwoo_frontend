@@ -1,8 +1,8 @@
 "use client"
 
 import { useAppSelector } from "@/lib/state/hooks"
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar"
-import { Box, IconButton, styled } from "@mui/material"
+import MuiToolbar, { ToolbarProps as MuiToolbarProps } from "@mui/material/Toolbar"
+import { AppBar, Box, IconButton, styled } from "@mui/material"
 import WestRoundedIcon from "@mui/icons-material/WestRounded"
 import TuneRoundedIcon from "@mui/icons-material/TuneRounded"
 import { useState } from "react"
@@ -14,25 +14,24 @@ import ReadingSettings from "./reading-settings/ReadingSettings"
 import { selectEndOfChapterReached, selectNavOpen } from "../states/reader.slice"
 import { selectCurrentChapter } from "../states/reader/selectors"
 
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
+interface ToolBarProps extends MuiToolbarProps {
+  offsetEnabled?: boolean;
 }
 
 
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})<AppBarProps>(({ theme }) => ({
+const Toolbar = styled(MuiToolbar, {
+  shouldForwardProp: (prop) => prop !== 'offsetEnabled',
+})<ToolBarProps>(({ theme }) => ({
     elevation: 0,
-    transition: theme.transitions.create(['margin', 'width'], {
+    transition: theme.transitions.create('margin-right', {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
     }),
     variants: [
         {
-            props: ({ open }) => open,
+            props: ({ offsetEnabled }) => offsetEnabled,
             style: {
-                width: `calc(100% - ${COMMENTS_DRAWER_WIDTH}px)`,
-                transition: theme.transitions.create(['margin', 'width'], {
+                transition: theme.transitions.create('margin-right', {
                     easing: theme.transitions.easing.easeOut,
                     duration: theme.transitions.duration.enteringScreen,
                 }),
@@ -63,56 +62,63 @@ export function ReaderHeader({
     return (
         <>
             <AppBar
-                open={drawerOpen}
                 position="fixed"
 
                 sx={{
                     opacity: open ? 1 : 0,
                     visibility: open ? "visible" : "hidden",
 
-                    transitionProperty: "opacity, visibility",
-                    transition: ".3s"
+                    transition: (theme) => theme.transitions.create(['opacity', 'visibility'], {
+                        easing: theme.transitions.easing.sharp,
+                        duration: theme.transitions.duration.short, // или жестко '0.3s'
+                    }),
                 }}
             >
-                <Box
+                <Toolbar
+                    offsetEnabled={drawerOpen}
+                    variant="dense"
                     sx={{
-                        maxWidth: MAX_CHAPTER_WIDTH,
-                        width: "100%",
-
-                        mx: "auto",
-                        px: 2,
-                        py: 1,
-
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        gap: "5px"
+                        height: "50px"
                     }}
                 >
-                    <IconButton
-                        disableRipple
-                        onClick={() => router.back()}
-                    >
-                        <WestRoundedIcon />
-                    </IconButton>
-                    <WrappedText 
-                        variant="h1"
-                        lines={1}
+                    <Box
                         sx={{
-                            textTransform: "uppercase",
-                            lineHeight: "1.5"
+                            maxWidth: MAX_CHAPTER_WIDTH,
+                            width: "100%",
+
+                            mx: "auto",
+
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            gap: "5px"
                         }}
                     >
-                        Глава {currentChapter.chapter}. {currentChapter.name}
-                    </WrappedText>
-                    <IconButton
-                        disableRipple
-                        onClick={() => {setSettingsOpen(true)}}
-                    >
-                        <TuneRoundedIcon />
-                    </IconButton>
-                </Box>
+                        <IconButton
+                            disableRipple
+                            onClick={() => router.back()}
+                        >
+                            <WestRoundedIcon />
+                        </IconButton>
+                        <WrappedText 
+                            variant="h1"
+                            lines={1}
+                            sx={{
+                                textTransform: "uppercase",
+                                lineHeight: "1.5"
+                            }}
+                        >
+                            Глава {currentChapter.chapter}. {currentChapter.name}
+                        </WrappedText>
+                        <IconButton
+                            disableRipple
+                            onClick={() => {setSettingsOpen(true)}}
+                        >
+                            <TuneRoundedIcon />
+                        </IconButton>
+                    </Box>
+                </Toolbar>
             </AppBar>
             <ReadingSettings
                 open={settingsOpen}

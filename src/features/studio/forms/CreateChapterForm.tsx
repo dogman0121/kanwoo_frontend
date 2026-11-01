@@ -1,8 +1,5 @@
 import { Controller, useForm, UseFormReturn } from "react-hook-form"
-import MangaPoster from "../components/ui/manga/Poster"
-import MangaName from "../../manga/forms/components/MangaName"
-import MangaDescription from "../../manga/forms/components/MangaDescription"
-import { Box, Checkbox, Grid } from "@mui/material"
+import { Box, Checkbox, Grid, MenuItem } from "@mui/material"
 import PrivacySelect, { Privacy } from "@/components/PrivacySelect"
 import EditInput from "@/components/edit/Input"
 import EditLabel from "@/components/edit/Label"
@@ -17,6 +14,7 @@ export function getDefaultValues() {
         isExtra: false,
         extraNumber: 1,
         pages: [],
+        privacyId: Privacy.PRIVATE,
     }
 }
 
@@ -26,7 +24,7 @@ export interface ChapterCreateFormSchema {
     isExtra: boolean,
     extraNumber: number,
     pages: EditFile[],
-    privacy: number
+    privacyId: Privacy,
 }
 
 export function useCreateForm() {
@@ -96,8 +94,7 @@ export default function CreateChapterForm({
                     />
                     <Controller 
                         control={control}
-                        name="privacy"
-                        defaultValue={Privacy.PRIVATE}
+                        name="privacyId"
                         render={({field}) => (
                             <PrivacySelect 
                                 sx={{
@@ -107,7 +104,6 @@ export default function CreateChapterForm({
                             />
                         )}
                     />
-
                     <Box>
                         <EditLabel>Дополнительная глава</EditLabel>
                         <EditCaption>

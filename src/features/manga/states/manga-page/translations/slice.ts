@@ -113,7 +113,6 @@ export const translationSlice = createSlice({
 
             const chaptersBlocks: ChapterEntity[] = response.data.map((c, idx) => ({
                 data: c,
-                context: response.context[idx]
             }))
 
             state.entities[translationId].loaded = true

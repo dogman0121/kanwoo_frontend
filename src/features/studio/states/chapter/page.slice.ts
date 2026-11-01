@@ -40,7 +40,7 @@ function prepareFormData(data: ChapterUpdateFormSchema) {
     const formData = new FormData()
 
     formData.set("chapter", data.chapter.toString())
-    formData.set("privacy_id", data.privacy.toString())
+    formData.set("privacy_id", data.privacyId.toString())
     data.name && formData.set("name", data.name)
     data.isExtra && formData.set("extra_number", data.extraNumber.toString())
 

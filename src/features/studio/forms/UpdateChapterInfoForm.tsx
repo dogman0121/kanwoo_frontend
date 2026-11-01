@@ -1,13 +1,13 @@
 import { Controller, useForm, UseFormReturn } from "react-hook-form"
-import { Box, Checkbox, Grid } from "@mui/material"
+import { Box, Checkbox, Grid, MenuItem } from "@mui/material"
 import PrivacySelect, { Privacy } from "@/components/PrivacySelect"
 import EditInput from "@/components/edit/Input"
 import EditLabel from "@/components/edit/Label"
 import EditCaption from "@/components/edit/Caption"
 import EditMultipleFilesInput, { EditFile } from "@/components/edit/MultipleFilesInput"
-import { Chapter } from "@/types/chapter"
 import { useEffect } from "react"
-import { v4 } from "uuid"
+import EditSelect from "@/components/edit/EditSelect"
+import { Chapter } from "@/features/chapter/types/chapter.type"
 
 export function convertDataIntoForm(chapter?: Chapter | null) {
     return {
@@ -15,12 +15,12 @@ export function convertDataIntoForm(chapter?: Chapter | null) {
         chapter: chapter?.chapter || 1,
         isExtra: chapter?.extra_number ? true : false,
         extraNumber: chapter?.extra_number || 1,
-        privacy: chapter?.privacy.id || 1,
+        privacyId: chapter?.privacy.id || Privacy.PRIVATE,
         pages: chapter?.pages?.map(p => ({
             previewLink: p.link, 
             name: p.orig_filename, 
             uuid: p.uuid
-        } as EditFile)) || []
+        } as EditFile)) || [],
     }
 }
 
@@ -30,7 +30,7 @@ export interface ChapterUpdateFormSchema {
     isExtra: boolean,
     extraNumber: number,
     pages: EditFile[],
-    privacy: number
+    privacyId: Privacy,
 }
 
 export function useUpdateChapterInfoForm(chapter?: Chapter | null) {
@@ -108,8 +108,7 @@ export default function UpdateChapterInfoForm({
                     />
                     <Controller 
                         control={control}
-                        name="privacy"
-                        defaultValue={Privacy.PRIVATE}
+                        name="privacyId"
                         render={({field}) => (
                             <PrivacySelect 
                                 sx={{
@@ -119,7 +118,6 @@ export default function UpdateChapterInfoForm({
                             />
                         )}
                     />
-
                     <Box>
                         <EditLabel>Дополнительная глава</EditLabel>
                         <EditCaption>

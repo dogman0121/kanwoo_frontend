@@ -1,5 +1,4 @@
 import { Metadata } from "next"
-import ChapterPage from "./ChapterPage"
 import { notFound } from "next/navigation"
 import { chapterServerApi } from "@/features/chapter/api/server.api"
 import Adapter from "./PPage"

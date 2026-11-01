@@ -2,20 +2,20 @@
 
 import { AppBackdropProps } from "@/components/AppBackdrop";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
-import { Backdrop, Box, BoxProps, IconButton, ListItemButton, ListItemText, Modal, Paper, PaperProps, styled, Switch, ToggleButton, ToggleButtonGroup, ToggleButtonGroupProps, Typography } from "@mui/material";
+import { Backdrop, Box, BoxProps, IconButton, ListItemButton, ListItemText, Modal, Paper, PaperProps, styled, SvgIcon, Switch, ToggleButton, ToggleButtonGroup, ToggleButtonGroupProps, Typography } from "@mui/material";
 import { ChangeEvent, Children, MouseEvent, useState } from "react";
 import ReportRoundedIcon from "@mui/icons-material/ReportRounded"
 import ReplyRoundedIcon from "@mui/icons-material/ReplyRounded"
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded"
-import { ShareMobile } from "@/components/Share";
-import SwipePreview from "./SwipePreview";
-import ClickPreview from "./ClickPreview";
+import CachedRoundedIcon from '@mui/icons-material/CachedRounded';
 import { openReportDialog, openShareBackdrop } from "@/features/global/states/app/slice";
 import { selectReadingSettings } from "../../states/reading-settings/selectors";
 import { selectCurrentChapter } from "../../states/reader/selectors";
-import { setAligment, setAutoSave, setInfinityChapter, setPageNumbers, setVariant } from "../../states/reading-settings/slice";
+import { setAligment, setAutoSave, setInfinityChapter, setPageNumbers } from "../../states/reading-settings/slice";
 import useHorizontalCenter from "../../hooks/useHorizontalCenter";
 import { routes, toHref } from "@/constants/routes/main.routes";
+import HorizontalPreview from "./HorizontalPreview";
+import VerticalPreview from "./VerticalPreview";
 
 function BackdropBody({sx, ...props}: PaperProps) {
     return (
@@ -56,6 +56,21 @@ function SwitchSetting({children}: {children: React.ReactNode}) {
         </Box>
     )
 }
+
+function ToggleSettingLabel({label}: {label:string}) {
+    return (
+        <Typography 
+            variant="caption"
+            color="textSecondary"
+            sx={{
+                textAlign: "center" 
+            }}
+        >
+            {label}
+        </Typography>
+    )
+}
+
 
 export default function ReadingSettings({open, onClose}: AppBackdropProps) {
     const dispatch = useAppDispatch()
@@ -127,36 +142,58 @@ export default function ReadingSettings({open, onClose}: AppBackdropProps) {
                                 <ToggleButtonGroup
                                     value={settings.aligment}
                                     exclusive
-                                    onChange={(_event: MouseEvent<HTMLElement>, newAligment: string) => {
-                                        if (newAligment)
-                                            dispatch(setAligment(newAligment))
-                                    }}
-                                >
-                                    <ToggleButton 
-                                        value={"auto"} key={"auto"}>Авто</ToggleButton>
-                                    <ToggleButton value={"vertical"} key={"vertical"}>Верт.</ToggleButton>
-                                    <ToggleButton value={"horizontal"} key={"horizontal"}>Горизонт.</ToggleButton>
-                                </ToggleButtonGroup>
-                            </Box>
-                             <Box
-                                sx={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    gap: "5px"
-                                }}
-                            >
-                                <Typography>Вариант</Typography>
-                                <ToggleButtonGroup
-                                    value={settings.variant}
-                                    exclusive
                                     onChange={(_event: MouseEvent<HTMLElement>, newVariant: string) => {
                                         if (newVariant)
-                                            dispatch(setVariant(newVariant))
+                                            dispatch(setAligment(newVariant))
                                     }}
                                 >
+                                    <ToggleButton
+                                        value={"auto"}
+                                        sx={{
+                                            flexDirection: "column"
+                                        }}
+                                    >
+                                        <Box
+                                            sx={{
+                                                height: "64px",
+                                                width: "100%",
+
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center"
+                                            }}
+                                        >
+                                            <SvgIcon color="disabled"
+                                                sx={{
+                                                    height: "48px",
+                                                    width: "48px"
+                                                }}
+                                            >
+                                                <CachedRoundedIcon />
+                                            </SvgIcon>
+                                        </Box>
+                                        <ToggleSettingLabel label="Авто" />
+                                    </ToggleButton>
                                     <ToggleButton 
-                                        value={"swipe"} key={"swipe"}><SwipePreview /></ToggleButton>
-                                    <ToggleButton value={"click"} key={"click"}><ClickPreview /></ToggleButton>
+                                        value={"horizontal"} 
+                                        key={"horizontal"}
+                                        sx={{
+                                            flexDirection: "column"
+                                        }}
+                                    >
+                                        <HorizontalPreview />
+                                        <ToggleSettingLabel label="Влево" />
+                                    </ToggleButton>
+                                    <ToggleButton 
+                                        value={"vertical"} 
+                                        key={"vertical"}
+                                        sx={{
+                                            flexDirection: "column"
+                                        }}
+                                    >
+                                        <VerticalPreview />
+                                        <ToggleSettingLabel label="Вниз" />
+                                    </ToggleButton>
                                 </ToggleButtonGroup>
                             </Box>
                             <SwitchSetting>

@@ -2,10 +2,11 @@ import { ProfilePermission } from "@/features/profile/types/profile-permission.t
 import { Profile } from "@/features/profile/types/profile.type"
 import { clientFetch } from "@/lib/fetch/client-fetch.util"
 import { StudioManga } from "../types/studio-manga.type"
-import { Translation, TranslationContext } from "@/types/translation"
 import { StudioTranslation } from "../types/studio-translation.type"
 import { Chapter } from "@/types/chapter"
 import { StudioChapter } from "../types/studio-chapter.type"
+import { Translation } from "@/features/translations/types/translation.type"
+import { TranslationContext } from "@/features/translations/types"
 
 export const studioClientAPI = {
     getProfile: async (slug: string) => {

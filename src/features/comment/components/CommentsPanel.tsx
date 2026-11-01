@@ -85,7 +85,7 @@ export default function CommentsPanel({
                     overflowY: "scroll",
                     scrollbarWidth: "none",
                     height: "100%",
-                    width: "100vw",
+                    width: "100%",
 
                     "&::-webkit-scrollbar": {
                         display: "none"

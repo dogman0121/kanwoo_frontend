@@ -1,5 +1,6 @@
+import { ChapterContext } from "@/features/chapter/types"
+import { Chapter } from "@/features/chapter/types/chapter.type"
 import { clientFetch } from "@/lib/fetch/client-fetch.util"
-import { Chapter, ChapterContext, ChapterMetadata } from "@/types/chapter"
 import { ReadingProgress, ReadingProgressContext } from "@/types/reading-progress"
 
 export const readerClientAPI = {
