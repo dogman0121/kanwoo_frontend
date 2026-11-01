@@ -3,14 +3,12 @@
 import EditHeader from "@/components/edit/EditHeader";
 import EditHeaderNav from "@/components/edit/EditHeaderNav";
 import EditPageContainer from "@/components/edit/EditPageContainer";
-import { studioClientAPI } from "@/features/studio/api/client.api";
-import UpdateProfileInfoForm, { useUpdateProfileInfoForm } from "@/features/studio/forms/UpdateProfileInfoForm";
-import UpdateTranslationInfoForm, { convertFormIntoJSON, TranslationUpdateInfoFormSchema, useUpdateTranslationInfoForm } from "@/features/studio/forms/UpdateTranslationInfoForm";
-import { selectTranslation, setStudioTranslation } from "@/features/studio/states/translation/page.slice";
+import UpdateTranslationInfoForm, { TranslationUpdateInfoFormSchema, useUpdateTranslationInfoForm } from "@/features/studio/forms/UpdateTranslationInfoForm";
+import { selectTranslation, updateTranslation } from "@/features/studio/states/translation/page.slice";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import { Box, Button } from "@mui/material";
 
-export default function PPage() {
+export default function TranslationInfoPage() {
     const dispatch = useAppDispatch()
 
     const translation = useAppSelector(selectTranslation)
@@ -20,13 +18,7 @@ export default function PPage() {
     const handleUpdate = async (data: TranslationUpdateInfoFormSchema) => {
         if (!translation) return
 
-        const jsonData = convertFormIntoJSON(data)
-
-        const response = await studioClientAPI.updateTranslation(translation.id, jsonData)
-
-        dispatch(setStudioTranslation({
-            data: response.data
-        }))
+        dispatch(updateTranslation({translationId: translation.id, form: data}))
     }
 
     return (

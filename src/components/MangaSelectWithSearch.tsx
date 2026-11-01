@@ -57,10 +57,11 @@ export default function MangaSelectWithSearch({
                 setQuery(value)
             }}
             onChange={(_event, value) => {
-                if (value == null){
-                    setInnerValue(value)
-                    onChange?.(value)
-                }
+                if (typeof value == "string")
+                    return
+
+                setInnerValue(value)
+                onChange?.(value)
             }}
             renderValue={(value) => {
                 if (value instanceof Object){
@@ -74,41 +75,52 @@ export default function MangaSelectWithSearch({
                             }}
                         >
                             <Poster 
-                                width="32px"
+                                width="24px"
                                 src={value.poster?.thumbnail}
                             />
                             <Typography>{value.name}</Typography>
                         </Box>
                     )
                 }
+                
             }}
-            renderOption={(_props, option, _state, _ownerState) => (
-                <MenuItem
-                    key={option.slug}
-                    value={option.slug}
-                    onClick={() => {
-                        setInnerValue(option)
-                        onChange?.(option)
-                    }}
-                >
+            renderOption={(props, option) => {
+                // key нужно вынести отдельно, чтобы избежать предупреждения React
+                const { key, ...otherProps } = props;
+
+                return (
                     <Box
+                        component="li"
+                        key={key}
+                        {...otherProps}
                         sx={{
                             display: "flex",
                             flexDirection: "row",
                             columnGap: theme.spacing(2),
-                            alignItems: "center"
+                            alignItems: "center",
                         }}
                     >
-                        <Poster 
+                        <Poster
                             width="40px"
                             src={option.poster?.thumbnail}
                         />
                         <Typography>{option.name}</Typography>
                     </Box>
-
-                </MenuItem>
+                );
+            }}
+            renderInput={(params) => (
+                <TextField
+                    {...params}
+                    label="Тайтл"
+                    slotProps={{
+                        ...params.slotProps,
+                        htmlInput: {
+                        ...params.slotProps.htmlInput,
+                        autoComplete: 'new-password', // disable autocomplete and autofill
+                        },
+                    }}
+                />      
             )}
-            renderInput={(params) => (<TextField {...params} label="Манга"/>)}
             getOptionLabel={(option) => option instanceof Object ? option.name : option}
             noOptionsText={
                 <Typography 

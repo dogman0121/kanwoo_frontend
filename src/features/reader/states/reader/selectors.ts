@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit"
 import { chaptersAdapter } from "./adapters"
-import { ChapterBlock, RootState } from "./state"
+import { ChapterEntity, RootState } from "./state"
 import { getNextPage, getPrevPage } from "./utils"
 import { Chapter } from "@/types/chapter"
 
@@ -13,8 +13,8 @@ export const {
 
 export const selectChapters = createSelector(
     [selectChaptersBlock],
-    (chaptersStates: ChapterBlock[]) => {
-        return chaptersStates.map(c => c.chapter)
+    (chaptersStates: ChapterEntity[]) => {
+        return chaptersStates.map(c => c.data)
     }
 )
 
@@ -25,7 +25,7 @@ export const selectCurrentChapterId = (state: RootState) => {
 export const selectChapterIndex = (state: RootState, chapterId: number) => {
     const chaptersStates = selectChaptersBlock(state)
 
-    const chapterIdx = chaptersStates.findIndex(chapter => chapter.chapter.id == chapterId)
+    const chapterIdx = chaptersStates.findIndex(chapter => chapter.data.id == chapterId)
     if (chapterIdx == -1) 
         throw new Error("Current chapter is not in chapters list")
 
@@ -38,7 +38,7 @@ export const selectCurrentChapterIndex = (state: RootState) => {
 export const selectCurrentChapter = (state: RootState) => {
     const currentChapterId = state.reader.reader.ids[state.reader.reader.currChapterInd]
     if (currentChapterId)
-        return selectChapterBlockById(state, currentChapterId).chapter
+        return selectChapterBlockById(state, currentChapterId).data
 
     return null
 }
@@ -46,7 +46,7 @@ export const selectCurrentChapter = (state: RootState) => {
 export const selectCurrentChapterBlock = (state: RootState) => {
     const currentChapterId = state.reader.reader.ids[state.reader.reader.currChapterInd]
     if (currentChapterId)
-        return selectChapterBlockById(state, currentChapterId).chapter
+        return selectChapterBlockById(state, currentChapterId)
 
     return null
 }

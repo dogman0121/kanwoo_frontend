@@ -5,6 +5,8 @@ import { Chapter } from "@/types/chapter"
 import { NavigationButtonsShadow } from "../../../components/NavigationButtons"
 import ChapterFooterInner from "@/features/reader/components/ChapterFooterInner"
 import OffsetContainer from "@/features/reader/components/ui/OffsetContainer"
+import { useAppSelector } from "@/lib/state/hooks"
+import { selectOffsetEnabled } from "@/features/reader/states/reader.slice"
 
 export interface ChapterFooterProps {
     chapter: Chapter,
@@ -17,6 +19,9 @@ export default function ChapterFooter({
     ref,
     sx
 }: ChapterFooterProps) {
+
+    const offsetEnabled = useAppSelector(selectOffsetEnabled)
+
     return (
         <Box
             sx={{
@@ -28,6 +33,7 @@ export default function ChapterFooter({
             }}
         >
             <OffsetContainer
+                offsetEnabled={offsetEnabled}
                 ref={ref}
 
                 sx={{

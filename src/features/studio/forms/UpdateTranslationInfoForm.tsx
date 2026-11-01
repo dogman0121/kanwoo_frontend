@@ -1,21 +1,25 @@
-import { Box, TextField } from "@mui/material";
+import { Box, MenuItem, TextField } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect } from "react";
 import { StudioTranslation } from "../types/studio-translation.type";
 import PrivacySelect, { Privacy } from "@/components/PrivacySelect";
 import EditInput from "@/components/edit/Input";
+import EditSelect from "@/components/edit/EditSelect";
+import { ReadingModeEnum } from "@/features/translations/entities/reading-mode.enum";
 
 
 const convertDataIntoForm = (translation: StudioTranslation) => {
     return {
         name: translation.name,
-        privacy: translation.privacy.id
+        privacy: translation.privacy.id,
+        defaultReadingModeId: translation.default_reading_mode?.id || ReadingModeEnum.VERTICAL
     }
 }
 
 export interface TranslationUpdateInfoFormSchema {
     name: string,
-    privacy: number,
+    privacyId: Privacy,
+    defaultReadingModeId: number
 }
 
 export const useUpdateTranslationInfoForm = (translation?: StudioTranslation | null) => {
@@ -23,7 +27,8 @@ export const useUpdateTranslationInfoForm = (translation?: StudioTranslation | n
         mode: "onChange",
         defaultValues: {
             name: "",
-            privacy: 1
+            privacyId: Privacy.PRIVATE,
+            defaultReadingModeId: ReadingModeEnum.VERTICAL
         }
     });
 
@@ -35,13 +40,6 @@ export const useUpdateTranslationInfoForm = (translation?: StudioTranslation | n
     return {
         reset,
         ...props
-    }
-}
-
-export function convertFormIntoJSON(data: TranslationUpdateInfoFormSchema) {
-    return {
-        name: data.name,
-        privacy_id: data.privacy
     }
 }
 
@@ -80,8 +78,7 @@ export default function UpdateTranslationInfoForm({
                 />
                 <Controller
                     control={control}
-                    name="privacy"
-                    defaultValue={Privacy.PRIVATE}
+                    name="privacyId"
                     render={({field}) => (
                         <PrivacySelect 
                             sx={{
@@ -89,6 +86,20 @@ export default function UpdateTranslationInfoForm({
                             }}
                             {...field}
                         />
+                    )}
+                />
+                <Controller 
+                    control={control}
+                    name="defaultReadingModeId"
+                    render={({field}) => (
+                        <EditSelect
+                            label="Режим чтения по умолчанию"
+                            caption='В таком режиме будут читать пользователи, у которых установлено "авто"в настройках чтения.'
+                            {...field}
+                        >
+                            <MenuItem value={ReadingModeEnum.VERTICAL}>вертикальный</MenuItem>
+                            <MenuItem value={ReadingModeEnum.HORIZONTAL}>горизонтальный</MenuItem>
+                        </EditSelect>
                     )}
                 />
             </Box>

@@ -1,10 +1,8 @@
+import { Entity } from "@/lib/types/Entity.type";
 import { chaptersAdapter } from "./adapters";
 import { Chapter, ChapterContext, ChapterMetadata } from "@/types/chapter";
 
-export interface ChapterBlock {
-    chapter: Chapter,
-    chapterContext: ChapterContext,
-}
+export type ChapterEntity = Entity<Chapter, ChapterContext>
 
 export interface KanwooReaderStateWithoutAdapter {
     currPageNumber: number,

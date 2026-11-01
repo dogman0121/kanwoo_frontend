@@ -100,6 +100,9 @@ export class SwipeAnimation implements SwipeAnimationInterface {
         this.lastCords = cords
         this.lastCordsTimeMs = timeMs
     }
+    getTranslation() {
+        return this.translation
+    }
     setTranslation(translation: number) {
         this.translation = translation
     }
@@ -141,6 +144,7 @@ export class SwipeAnimation implements SwipeAnimationInterface {
 
         return {translate: this.translation}
     }
+
     destroy() {
 
     }

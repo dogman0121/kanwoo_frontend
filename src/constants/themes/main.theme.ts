@@ -140,6 +140,7 @@ const mainTheme = createTheme({
       styleOverrides: {
         root: ({ theme }) => ({
           "& .MuiDialog-paper": {
+            overflow: "hidden",
             borderRadius: "20px",
             width: "400px",
             marginTop: theme.spacing(4),

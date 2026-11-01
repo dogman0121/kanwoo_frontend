@@ -6,6 +6,7 @@ import { ChapterCreateFormSchema } from "../../forms/CreateChapterForm";
 import { studioClientAPI } from "../../api/client.api";
 import { openSnackbar } from "@/features/global/states/app/slice";
 import { ApiError } from "@/lib/fetch/api-response.types";
+import { TranslationUpdateInfoFormSchema } from "../../forms/UpdateTranslationInfoForm";
 
 export interface StudioTranslationState {
     translation?: Entity<StudioTranslation, TranslationContext>,
@@ -26,11 +27,11 @@ type RootState = {
     studio: {translation: {page: StudioTranslationState}}
 }
 
-function prepareFormData(data: ChapterCreateFormSchema) {
+function prepareCreateChapterFormData(data: ChapterCreateFormSchema) {
     const formData = new FormData()
 
     formData.set("chapter", data.chapter.toString())
-    formData.set("privacy_id", data.privacy.toString())
+    formData.set("privacy_id", data.privacyId.toString())
     data.name && formData.set("name", data.name)
     data.isExtra && formData.set("extra_number", data.extraNumber.toString())
 
@@ -45,11 +46,11 @@ function prepareFormData(data: ChapterCreateFormSchema) {
 }
 
 export const createChapter = createAsyncThunk(
-    "studio_translation/createChapterStatus",
+    "studioTranslation/createChapterStatus",
     async (data: {translationId: number, form: ChapterCreateFormSchema}, thunkAPI) => {
         const {translationId, form} = data
 
-        const formData = prepareFormData(form)
+        const formData = prepareCreateChapterFormData(form)
 
         try {
             const response = await studioClientAPI.createChapter(translationId, formData)
@@ -74,7 +75,7 @@ export const createChapter = createAsyncThunk(
 )
 
 export const fetchTranslation = createAsyncThunk(
-    "studio_translation/fetchTranslationStatus",
+    "studioTranslation/fetchTranslationStatus",
     async (translationId: number, thunkAPI) => {
         const response = await studioClientAPI.getTranslation(translationId)
 
@@ -85,8 +86,45 @@ export const fetchTranslation = createAsyncThunk(
     }
 )
 
+function prepareUpdateTranslationFormData(formData: TranslationUpdateInfoFormSchema) {
+    return {
+        name: formData.name,
+        privacy_id: formData.privacyId,
+        default_reading_mode_id: formData.defaultReadingModeId
+    }
+}
+
+export const updateTranslation = createAsyncThunk(
+    "studioTranslation/updateTranslationStatus",
+    async (data: {translationId: number, form: TranslationUpdateInfoFormSchema}, thunkAPI) => {
+        const {translationId, form} = data
+
+        const formData = prepareUpdateTranslationFormData(form)
+
+        try {
+            const response = await studioClientAPI.updateTranslation(translationId, formData)
+
+            thunkAPI.dispatch(openSnackbar({type: 'success', message: "Перевод успешно обновлен"}))
+
+            return {
+                tranlationId: translationId,
+                form: form,
+                response: response
+            }
+        } catch (e) {
+            let errorMessage = "Неизвестная ошибка"
+            if (e instanceof ApiError) {
+                if (e.code == "already_exists") 
+                    errorMessage = "Перевод уже существует"
+            }
+            thunkAPI.dispatch(openSnackbar({type: "error", message: `Произошла ошибка: ${errorMessage}`}))
+            throw e
+        }
+    }
+)
+
 export const studioProfileSlice = createSlice({
-    name: "studio_translation",
+    name: "studioTranslation",
     initialState,
     reducers: {
         setStudioTranslation: (state, action) => {
@@ -119,6 +157,12 @@ export const studioProfileSlice = createSlice({
         })
         .addCase(createChapter.fulfilled, (state, action) => {
             state.ui.createChapterDialogOpen = false
+        })
+        .addCase(updateTranslation.fulfilled, (state, action) => {
+            const {response} = action.payload
+            state.translation = {
+                data: response.data,
+            }
         })
     )
 })

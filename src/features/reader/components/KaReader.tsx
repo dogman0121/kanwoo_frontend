@@ -1,7 +1,7 @@
 "use client"
 
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
-import { useCallback, useEffect } from "react"
+import { useCallback, useEffect, useState } from "react"
 import useReader from "../hooks/useReader"
 import pageLoaderContext from "../contexts/pageLoaderContext"
 import { selectCommentsPanelOpen } from "../states/reader.slice"
@@ -20,6 +20,7 @@ import NavigationButtons from "./NavigationButtons"
 import { NextChapterEvent, PageChangedEvent } from "../interfaces/reader"
 import { ReaderMode } from "@/features/types/reader-mode"
 import { selectAuthProfile } from "@/features/global/states/auth-profile"
+import { ReadingModeEnum } from "@/features/translations/entities/reading-mode.enum"
 
 export default function KaReader({
     initChapterID
@@ -27,6 +28,8 @@ export default function KaReader({
     initChapterID: number
 }) {
     const dispatch = useAppDispatch()
+
+    const [readingMode, setReadingMode] = useState<ReadingModeEnum | null>(null)
 
     const aligment = useAppSelector(selectAligment)
     const hydrated = useAppSelector(selectIsHydrated)
@@ -46,23 +49,39 @@ export default function KaReader({
         }
     })
 
-    const onInitialized = (event: InitilizedEvent) => {
-        const {value: {chapter, chapterContext, readingProgress}} = event
+    const getReadingMode = (): ReadingModeEnum | null => {
+        console.log(reader?.getReadingMode(), aligment)
+        if (!reader || !aligment) {
+            return null
+        }
 
+        if (aligment == "auto") {
+            return reader.getReadingMode()
+        }
+        else {
+            if (aligment == "horizontal")
+                return ReadingModeEnum.HORIZONTAL
+            if (aligment == "vertical")
+                return ReadingModeEnum.VERTICAL            
+        }
+
+        return null
+    }
+
+    const onInitialized = (event: InitilizedEvent) => {
+        const {value: {chapter, progress}} = event
+
+        setReadingMode(getReadingMode())
         dispatch(initReader({
             chapter: chapter,
-            chapterContext: chapterContext,
-            pageNumber: readingProgress?.page || 0
+            pageNumber: progress?.data.page || 0
         }))
     }
 
     const onChapterLoaded = (event: ChapterLoadedEvent) => {
-        const {chapter, chapterContext} = event.value
+        const {value: chapter} = event
         
-        dispatch(addChapter({
-            chapter: chapter,
-            chapterContext: chapterContext
-        }))
+        dispatch(addChapter(chapter))
     }
 
     const handlePageChanged = useCallback((event: PageChangedEvent) => {
@@ -84,6 +103,10 @@ export default function KaReader({
                 reader.loadChapter(chapter.next_chapter_id)
         }
     }
+
+    useEffect(() => {
+        setReadingMode(getReadingMode())
+    }, [aligment])
 
     useEffect(() => {
         dispatch(loadSettings())
@@ -117,17 +140,21 @@ export default function KaReader({
         >
             <ReaderHeader drawerOpen={offsetEnabled}/>
             <PageNumberChip drawerOpen={offsetEnabled}/>
-            {aligment === "horizontal" ?
-                <HorizontalReader 
-                    onPageChange={handlePageChanged}
-                    onLoadNextChapter={handleLoadNextChapter}
-                />
-                :
-                <VerticalReader
-                    onPageChange={handlePageChanged}
-                    onLoadNextChapter={handleLoadNextChapter}
-                />
-            }
+            { readingMode && (
+                <>
+                    {readingMode == ReadingModeEnum.HORIZONTAL ?
+                        <HorizontalReader 
+                            onPageChange={handlePageChanged}
+                            onLoadNextChapter={handleLoadNextChapter}
+                        />
+                        :
+                        <VerticalReader
+                            onPageChange={handlePageChanged}
+                            onLoadNextChapter={handleLoadNextChapter}
+                        />
+                    }
+                </>
+            )}
             <NavigationButtons />
             <ReaderCommentsPanel />
         </pageLoaderContext.Provider>

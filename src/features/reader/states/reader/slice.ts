@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { initialState, KanwooReaderState } from "./state"
+import { ChapterEntity, initialState, KanwooReaderState } from "./state"
 import { chaptersAdapter } from "./adapters";
 import { findChapterIndexOrError, getNextPage, getPrevPage } from "./utils";
 import { Chapter, ChapterContext, ChapterMetadata } from "@/types/chapter";
+import { Entity } from "@/lib/types/Entity.type";
 
 // export const fetchNextChapter = createAsyncThunk(
 //     "reader/reader/fetchNextChapterByIdStatus",
@@ -33,36 +34,24 @@ export const kanwooReaderSlice = createSlice({
             state: KanwooReaderState, 
             action: PayloadAction<{
                 pageNumber: number,
-                chapter: Chapter,
-                chapterContext: ChapterContext,
+                chapter: Entity<Chapter, ChapterContext>
             }>
         ) => {
-            const {chapter, chapterContext, pageNumber} = action.payload
+            const {chapter, pageNumber} = action.payload
 
             state.currChapterInd = 0
             state.currPageNumber = 0
 
-            chaptersAdapter.setAll(state, [{
-                chapter: chapter,
-                chapterContext: chapterContext,
-            }])
+            chaptersAdapter.setAll(state, [chapter])
 
             state.currPageNumber = pageNumber 
             state.initialized = true
         },
         addChapter: (
             state: KanwooReaderState,
-            action: PayloadAction<{
-                chapter: Chapter, 
-                chapterContext: ChapterContext,
-            }>
+            action: PayloadAction<ChapterEntity>
         ) => {
-            const { chapter, chapterContext } = action.payload
-
-            chaptersAdapter.addOne(state, {
-                chapter: chapter,
-                chapterContext: chapterContext,
-            })            
+            chaptersAdapter.addOne(state, action.payload)            
         },
         setCurrentChapterIndex: (
             state: KanwooReaderState,
@@ -87,7 +76,7 @@ export const kanwooReaderSlice = createSlice({
         switchNextPage: (
             state: KanwooReaderState,
         ) => {
-            const chapters = state.ids.map(id => state.entities[id].chapter)
+            const chapters = state.ids.map(id => state.entities[id].data)
 
             const {idx, page, isChapterChanged} = getNextPage(chapters, state.currChapterInd, state.currPageNumber)
             if (idx == null || page == null) throw new Error("failed to switch page")
@@ -102,7 +91,7 @@ export const kanwooReaderSlice = createSlice({
         switchPrevPage: (
             state: KanwooReaderState
         ) => {
-            const chapters = state.ids.map(id => state.entities[id].chapter)
+            const chapters = state.ids.map(id => state.entities[id].data)
 
             const {idx, page, isChapterChanged} = getPrevPage(chapters, state.currChapterInd, state.currPageNumber)
             if (idx == null || page == null) throw new Error("failed to switch page")

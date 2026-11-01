@@ -8,6 +8,7 @@ import ReaderVariant from "../../../interfaces/reader"
 import { selectChapters } from "@/features/reader/states/reader/selectors"
 import OffsetContainer from "@/features/reader/components/ui/OffsetContainer"
 import { NavigationButtonsShadow } from "@/features/reader/components/NavigationButtons"
+import { selectOffsetEnabled } from "@/features/reader/states/reader.slice"
 
 export interface VerticalOptions extends ReaderVariant {
 
@@ -28,14 +29,13 @@ export default function VerticalReader({
         onLoadNextChapter: onLoadNextChapter
     })
 
+    const offsetEnabled = useAppSelector(selectOffsetEnabled)
+
     return (
         <Box
-            sx={{
-                display: "flex"
-            }}
             ref={playgroundRef}
         >
-            <OffsetContainer>
+            <OffsetContainer ref={playgroundRef} offsetEnabled={offsetEnabled}>
                 {chapters.map((chapter) => (
                     <ChapterBlock 
                         key={`chapter_page_chapter_${chapter.id}`}
