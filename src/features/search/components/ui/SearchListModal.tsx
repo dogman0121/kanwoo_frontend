@@ -2,7 +2,7 @@ import { useContext } from "react";
 import SearchContext from "../../context/SearchContext";
 import { Box, ListItemButton, SxProps, Typography } from "@mui/material";
 import SearchList from "./SearchList";
-import Poster from "@/components/poster/Poster";
+import Poster from "@/features/manga/components/ui/Poster";
 import { Manga } from "@/types/manga";
 import Link from "next/link";
 import { routes, toHref } from "@/constants/routes/main.routes";

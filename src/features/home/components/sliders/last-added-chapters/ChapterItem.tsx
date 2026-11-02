@@ -1,4 +1,4 @@
-import Poster from "@/components/poster/Poster";
+import Poster from "@/features/manga/components/ui/Poster";
 import { routes, toHref } from "@/constants/routes/main.routes";
 import { HomeChapter } from "@/features/home/types/hero";
 import { Entity } from "@/lib/types/Entity.type";

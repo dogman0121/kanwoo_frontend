@@ -1,6 +1,6 @@
 "use client"
 
-import Poster from "@/components/poster/Poster";
+import Poster from "@/features/manga/components/ui/Poster";
 import { Box, Checkbox, IconButton, Paper, Typography, useTheme } from "@mui/material";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded"
 import { ReadingProgress, ReadingProgressContext } from "@/types/reading-progress";

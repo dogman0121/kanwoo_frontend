@@ -63,7 +63,7 @@ export default function LastAddedChapters({
                     sx={{
                         mt: 3,
                         pt: 3,
-                        px: 2,
+                        px: 3,
                         pb: 4,
                         borderRadius: "0",
                         borderTopLeftRadius: "18px",

@@ -24,7 +24,7 @@ import EditSectionsButton from "@/components/edit/EditSectionsButton";
 import { studioClientAPI } from "@/features/studio/api/client.api";
 import { selectProfile, setStudioProfile, setStudioProfilePermissions } from "@/features/studio/states/profile/page.slice";
 import { selectManga, setStudioManga } from "@/features/studio/states/manga/page.slice";
-import Poster from "@/components/poster/Poster";
+import Poster from "@/features/manga/components/ui/Poster";
 
 function StudioDrawer() {
     const dispatch = useAppDispatch()

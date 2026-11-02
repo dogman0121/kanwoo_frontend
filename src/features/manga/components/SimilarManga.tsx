@@ -1,6 +1,6 @@
 "use client"
 
-import Poster from "@/components/poster/Poster";
+import Poster from "@/features/manga/components/ui/Poster";
 import { fetchSimilar, selectManga, selectSimilar } from "@/features/manga/states/manga-page/page/slice";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import { MangaShort } from "@/types/manga";

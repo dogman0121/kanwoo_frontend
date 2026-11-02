@@ -9,7 +9,7 @@ import { ReadingProgress, ReadingProgressContext } from "@/types/reading-progres
 import Link from "next/link";
 import { routes, toHref } from "@/constants/routes/main.routes";
 import { Box, IconButton, LinearProgress, Paper, Typography, useTheme } from "@mui/material";
-import Poster from "@/components/poster/Poster";
+import Poster from "@/features/manga/components/ui/Poster";
 import WrappedText from "@/components/WrapperTypography";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded"
 import { selectDeviceType } from "@/features/global/states/app/slice";

@@ -1,6 +1,6 @@
 "use client"
 
-import Poster from "@/components/poster/Poster";
+import Poster from "@/features/manga/components/ui/Poster";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import { Box, Button, Container, Grid, Typography, useTheme } from "@mui/material";
 import Stats from "@/features/manga/components/ui/Stats";
