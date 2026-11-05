@@ -4,7 +4,7 @@ import CreateChapterDialog from "@/features/studio/components/CreateChapterDialo
 import { createChapter, selectCreateChapterDialogOpen, selectTranslation, setCreateChapterDialogOpen } from "@/features/studio/states/translation/page.slice";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import { Box, Button, Divider, Grid, GridProps, Typography } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState, useTransition } from "react";
 import StudioList from "../components/List";
 import StudioListHeaderLabel from "../components/ui/ListHeaderLabel";
 import { sum } from "lodash";
@@ -15,6 +15,7 @@ import { fetchChapters, selectChapters } from "../states/translation/chapters.sl
 import { Entity } from "@/lib/types/Entity.type";
 import { routes, toHref } from "@/constants/routes/main.routes";
 import Link from "next/link";
+import { ChapterCreateFormSchema } from "../forms/CreateChapterForm";
 
 const gridSizes: number[]  = [
     3,
@@ -126,11 +127,20 @@ export default function TranslationChaptersPage() {
     const chapters = useAppSelector(selectChapters)
     const createChapterDialogOpen = useAppSelector(selectCreateChapterDialogOpen)
 
+    const handleCreateChapter = async (data: ChapterCreateFormSchema) => {
+        if (!translation) return
+
+        await dispatch(createChapter({
+            translationId: translation.id, form: data
+        })).unwrap()
+    }
+
     useEffect(() => {
         if (translation) {
             dispatch(fetchChapters(translation.id))
         }
     }, [translation])
+
 
     if (!translation) return
 
@@ -159,9 +169,7 @@ export default function TranslationChaptersPage() {
             <CreateChapterDialog 
                 open={createChapterDialogOpen}
                 onClose={() => dispatch(setCreateChapterDialogOpen(false))}
-                onCreate={(data) => dispatch(createChapter({
-                    translationId: translation.id, form: data
-                }))}
+                onSubmit={handleCreateChapter}
             />
         </>
     )

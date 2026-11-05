@@ -28,14 +28,8 @@ export default function ProgressItem({
     }
 
     return (
-        <Paper
+        <Box
             sx={{
-                pt: 2,
-                pr: 5,
-                pb: 2,
-                pl: 3,
-                borderRadius: 2,
-
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
@@ -51,7 +45,7 @@ export default function ProgressItem({
                 }}
             >
                 <Poster 
-                    src={progressContext.manga.poster.medium}
+                    src={progressContext.manga.poster?.medium}
                     width={"64px"}
                 />
                 <Box
@@ -72,6 +66,6 @@ export default function ProgressItem({
                     dispatch(setProgressSelected({progressID: progress.id, selected: checked}))
                 }}
             />
-        </Paper>
+        </Box>
     )
 }

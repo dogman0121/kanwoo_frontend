@@ -26,6 +26,7 @@ import NameTranslationsSkeleton from "@/features/manga/components/skeleton/NameT
 import MangaGrid from "@/features/manga/components/MangaGrid";
 import { selectMangaBySlug } from "@/features/manga/states/manga/selectors";
 import { fetchManga } from "@/features/manga/states/manga/slice";
+import BottomPanel from "@/components/BottomPanel";
 
 
 interface MangaDetailsProps {
@@ -54,13 +55,17 @@ function MangaDetailsMobile({
     }, [open, manga])
 
     return (
-        <Drawer
+        <BottomPanel
             open={open}
             onClose={onClose}
-            anchor="bottom"
             sx={{
                 "&>.MuiPaper-root": {
                     borderRadius: `${theme.spacing(3)} ${theme.spacing(3)} 0 0`,
+
+                    WebkitUserSelect: "none",
+                    MozUserSelect: "none",
+                    msUserSelect: "none",
+                    userSelect: "none"
                 }
             }}
         >
@@ -182,7 +187,7 @@ function MangaDetailsMobile({
             >
                 <CloseRoundedIcon />
             </IconButton>
-        </Drawer>
+        </BottomPanel>
     )
 }
 

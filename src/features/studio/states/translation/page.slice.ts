@@ -58,8 +58,6 @@ export const createChapter = createAsyncThunk(
             thunkAPI.dispatch(openSnackbar({type: 'success', message: "Глава добавлена успешно"}))
 
             return {
-                tranlationId: translationId,
-                form: form,
                 response: response
             }
         } catch (e) {
