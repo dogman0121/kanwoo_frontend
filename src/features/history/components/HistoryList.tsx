@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import { Box, CircularProgress, Divider, Paper, Stack, Typography } from "@mui/material"
 import ProgressItem from "./ProgressItem"
 import InfiniteScroll from "react-infinite-scroll-component"
+import { useEffect } from "react"
 
 const MONTH_NAMES: Record<number, string> = {
     0: "янв",
@@ -106,6 +107,9 @@ export default function HistoryList() {
         dispatch(loadHistory(cursor))
     }
 
+    useEffect(() => {
+        handleNext()
+    }, [])
 
     if (dates.length == 0)
         return <Typography color="textSecondary" sx={{textAlign: "center", py: 4}}>У вас нет истории чтения.</Typography>
