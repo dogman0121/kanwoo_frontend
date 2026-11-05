@@ -40,5 +40,15 @@ export const collectionApiConfig: ApiConfig = {
             mode: "proxy",
             url: "/collections/:id/manga"
         }
-    }
+    },
+    "/collections/:id/saves": {
+        POST: {
+            mode: "proxy",
+            url: "/collections/:id/saves"
+        },
+        DELETE: {
+            mode: "proxy",
+            url: "/collections/:id/saves"
+        }
+    },
 }

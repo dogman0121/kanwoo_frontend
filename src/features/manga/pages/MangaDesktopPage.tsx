@@ -1,11 +1,11 @@
 "use client"
 
-import Poster from "@/components/poster/Poster";
+import Poster from "@/features/manga/components/ui/Poster";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import { Box, Button, Container, Grid, Typography, useTheme } from "@mui/material";
 import Stats from "@/features/manga/components/ui/Stats";
 import { initializeMangaPage, selectSection, setSection } from "@/features/manga/states/manga-page/page/slice";
-import { AppTab, AppTabContext, AppTabList, AppTabPanel } from "@/components/AppTabs";
+import { AppTab, AppTabContext, AppTabList, AppTabPanel } from "@/components/app/AppTabs";
 import { Manga } from "@/types/manga";
 import { openCollectionDialog, openReportDialog } from "@/features/global/states/app/slice";
 import Metadata from "@/features/manga/components/ui/Metadata";
@@ -97,7 +97,7 @@ export default function MangaDesktopPage({
                                     }}
                                     fullWidth
                                     variant="contained"
-                                    onClick={() => dispatch(openCollectionDialog({mangaUUID: manga.data.slug}))}
+                                    onClick={() => dispatch(openCollectionDialog({mangaId: manga.data.id}))}
                                 >
                                     Сохранить
                                 </Button>

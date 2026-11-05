@@ -14,7 +14,7 @@ import Input from "./ui/Input";
 import Header from "./ui/Header";
 import { AuthSection } from "@/features/auth/types";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
-import { login, loginWithYandex, selectIsLoading, setSection } from "@/features/global/states/auth/slice";
+import { login, loginWithYandex, selectIsLoading, setSection } from "@/features/auth/states/auth/slice";
 
 interface LoginForm {
     email: string,

@@ -9,8 +9,6 @@ import { ReaderHeader } from "./ReaderHeader"
 import PageNumberChip from "./PageNumberChip"
 
 import { selectDeviceType } from "@/features/global/states/app/slice"
-import { selectAligment, selectIsHydrated } from "../states/reading-settings/selectors"
-import { loadSettings } from "../states/reading-settings/slice"
 import ReaderCommentsPanel from "./comments/ReaderCommentsPanel"
 import { addChapter, initReader, setCurrentChapterIndex, setCurrentPageNumber } from "../states/reader/slice"
 import { ReaderEventsType, InitilizedEvent, ChapterLoadedEvent, ReaderEvent } from "../lib/reader"
@@ -19,24 +17,28 @@ import VerticalReader from "../readers/vertical/components/VerticalReader"
 import NavigationButtons from "./NavigationButtons"
 import { NextChapterEvent, PageChangedEvent } from "../interfaces/reader"
 import { ReaderMode } from "@/features/types/reader-mode"
-import { selectAuthProfile } from "@/features/global/states/auth-profile"
+import { selectAuthProfile } from "@/features/auth/states/auth-profile"
 import { ReadingModeEnum } from "@/features/translations/entities/reading-mode.enum"
+import useReadingMode from "../hooks/useReadingMode"
+import useReadingSettings from "../hooks/useReadingSettings"
+import usePageMetadata from "../hooks/usePageMetadata"
 
 export default function KaReader({
-    initChapterID
+    initChapterID,
+    disablePath = false
 }: {
-    initChapterID: number
+    initChapterID: number,
+    disablePath?: boolean
 }) {
     const dispatch = useAppDispatch()
-
-    const [readingMode, setReadingMode] = useState<ReadingModeEnum | null>(null)
-
-    const aligment = useAppSelector(selectAligment)
-    const hydrated = useAppSelector(selectIsHydrated)
+    
     const commentsPanelOpen = useAppSelector(selectCommentsPanelOpen)
     const deviceType = useAppSelector(selectDeviceType)
 
     const authProfile = useAppSelector(selectAuthProfile)
+
+    usePageMetadata({pathDisabled: disablePath, metadataDisabled: disablePath})
+    const { settingsLoaded } = useReadingSettings()
 
     const { reader } = useReader({
         pageLoaderProps: {
@@ -49,29 +51,13 @@ export default function KaReader({
         }
     })
 
-    const getReadingMode = (): ReadingModeEnum | null => {
-        console.log(reader?.getReadingMode(), aligment)
-        if (!reader || !aligment) {
-            return null
-        }
+    const {readingMode, resetReadingMode} = useReadingMode(reader)
 
-        if (aligment == "auto") {
-            return reader.getReadingMode()
-        }
-        else {
-            if (aligment == "horizontal")
-                return ReadingModeEnum.HORIZONTAL
-            if (aligment == "vertical")
-                return ReadingModeEnum.VERTICAL            
-        }
-
-        return null
-    }
 
     const onInitialized = (event: InitilizedEvent) => {
         const {value: {chapter, progress}} = event
 
-        setReadingMode(getReadingMode())
+        resetReadingMode()
         dispatch(initReader({
             chapter: chapter,
             pageNumber: progress?.data.page || 0
@@ -105,14 +91,6 @@ export default function KaReader({
     }
 
     useEffect(() => {
-        setReadingMode(getReadingMode())
-    }, [aligment])
-
-    useEffect(() => {
-        dispatch(loadSettings())
-    }, [])
-
-    useEffect(() => {
         if (reader) {
             reader.addEventListener(ReaderEventsType.INITIALIZED, onInitialized)
             reader.addEventListener(ReaderEventsType.CHAPTER_LOADED, onChapterLoaded)
@@ -130,7 +108,7 @@ export default function KaReader({
 
     const offsetEnabled = commentsPanelOpen && deviceType == "desktop"
 
-    if (!hydrated) return <></>
+    if (!settingsLoaded) return null
 
     return (
         <pageLoaderContext.Provider

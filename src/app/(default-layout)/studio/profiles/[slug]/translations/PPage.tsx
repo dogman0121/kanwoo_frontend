@@ -1,6 +1,6 @@
 import EditHeader from "@/components/edit/EditHeader";
 import EditHeaderNav from "@/components/edit/EditHeaderNav";
-import Poster from "@/components/poster/Poster";
+import Poster from "@/features/manga/components/ui/Poster";
 import { Privacy } from "@/components/PrivacySelect";
 import { routes, toHref } from "@/constants/routes/main.routes";
 import { openSnackbar } from "@/features/global/states/app/slice";

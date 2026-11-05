@@ -1,11 +1,13 @@
 import { Collection, CollectionContext } from "@/types/collection";
 import { MangaShort } from "@/types/manga";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { addMangaIntoCollection, fetchCollectionManga, removeMangaFromCollection, updateCollection } from "../lib/thunks";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { addMangaIntoCollection, fetchCollectionManga, removeMangaFromCollection, saveCollection, unsaveCollection, updateCollection } from "../lib/thunks";
+import { Entity } from "@/lib/types/Entity.type";
+
+export type CollectionEntity = Entity<Collection, CollectionContext>
 
 interface CollectionPageState {
-    collection?: Collection,
-    collectionContext?: CollectionContext
+    collection?: CollectionEntity,
     manga: MangaShort[],
     ui: {
         addMangaDialogOpen: boolean,
@@ -25,13 +27,20 @@ type RootState = {
     collectionPage: CollectionPageState
 }
 
+
+
 const collectionPageSlice = createSlice({
-    name: "collection_page",
+    name: "collectionPage",
     initialState,
     reducers: {
-        setCollection: (state, action: PayloadAction<{collection: Collection, context: CollectionContext}>) => {
-            state.collection = action.payload.collection
-            state.collectionContext = action.payload.context
+        initializeCollectionPage: (state, action: PayloadAction<CollectionEntity>) => {
+            state.collection = action.payload
+            state.manga = []
+            state.ui.addMangaDialogOpen = false
+            state.ui.editDialogOpen = false
+        },
+        setCollection: (state, action: PayloadAction<CollectionEntity>) => {
+            state.collection = action.payload
         },
         setEditDialogOpen: (state, action) => {
             state.ui.editDialogOpen = action.payload
@@ -53,30 +62,36 @@ const collectionPageSlice = createSlice({
             state.manga = response.data
         })
         .addCase(updateCollection.fulfilled, (state, action) => {
-            const {response: {data: collection}} = action.payload
+            const { response } = action.payload
             
-            if (state.collection?.id == collection.id)
-                state.collection = collection
+            if (state.collection?.data.id == response.data.id)
+                state.collection = {
+                    data: response.data,
+                    context: state.collection.context
+                }
         })
-        .addCase(removeMangaFromCollection.fulfilled, (state, action) => {
-            const {mangaSlug, collectionId} = action.payload;
-
-            console.log(123, mangaSlug, collectionId)
-            if (state.collection?.id != collectionId)
+        .addCase(saveCollection.fulfilled, (state, action) => {
+            if (!state.collection || !state.collection.context)
                 return
 
-            state.manga = state.manga.filter(m => m.slug != mangaSlug)
+            state.collection.context.viewer.is_saved = true
+        })
+        .addCase(unsaveCollection.fulfilled, (state, action) => {
+            if (!state.collection || !state.collection.context)
+                return
+
+            state.collection.context.viewer.is_saved = false
         })
     )
 })
 
 export const selectCollection = (state: RootState) => state.collectionPage.collection
-export const selectCollectionContext = (state: RootState) => state.collectionPage.collectionContext;
 export const selectCollectionManga = (state: RootState) => state.collectionPage.manga
 export const selectEditDialogOpen = (state: RootState) => state.collectionPage.ui.editDialogOpen
 export const selectAddMangaDialogOpen = (state: RootState) => state.collectionPage.ui.addMangaDialogOpen
 
 export const {
+    initializeCollectionPage,
     setCollection,
     setAddMangaDialogOpen,
     setEditDialogOpen,

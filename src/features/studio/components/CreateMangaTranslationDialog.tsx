@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material"
-import AppSnackbar from "@/components/AppSnackbar"
+import AppSnackbar from "@/components/app/AppSnackbar"
 import { useState } from "react"
 import CreateTranslationForm, { MangaTranslationCreateFormSchema, useCreateForm } from "../forms/CreateMangaTranslationForm"
 import { StudioTranslation } from "../types/studio-translation.type"

@@ -10,7 +10,7 @@ import Description from "@/features/manga/components/ui/Description";
 import Genres from "@/features/manga/components/ui/Genres";
 import NameTranslations from "@/features/manga/components/ui/NameTranslations";
 import theme from "@/constants/themes/main.theme";
-import Poster from "@/components/poster/Poster";
+import Poster from "@/features/manga/components/ui/Poster";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded"
 import Stats from "@/features/manga/components/ui/Stats";
 import { useRouter } from "next/navigation";
@@ -159,7 +159,7 @@ function MangaDetailsMobile({
                             variant="contained"
                             fullWidth
                             onClick={() => {
-                                dispatch(openCollectionDialog({mangaUUID: shortData.slug}))
+                                dispatch(openCollectionDialog({mangaId: shortData.id}))
                             }}
                         >
                             Сохранить
@@ -301,7 +301,7 @@ function MangaDetailsDesktop({
                     fullWidth
                     startIcon={<BookmarkBorderRoundedIcon />}  
                     onClick={() => {
-                        dispatch(openCollectionDialog({mangaUUID: shortData.slug}))
+                        dispatch(openCollectionDialog({mangaId: shortData.id}))
                     }}  
                 >
                         Сохранить

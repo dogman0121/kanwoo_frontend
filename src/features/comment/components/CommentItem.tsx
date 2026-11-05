@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import CommentInput from "./ui/CommentInput"
 import { addReply as addReply, setInputContext, setReplyInputOpen, toggleReplyInputOpen, voteComment } from "@/features/comment/states/comments/slice"
 import { selectDeviceType, setAuthSnackbarOpen } from "@/features/global/states/app/slice"
-import { selectAuthProfile } from "@/features/global/states/auth-profile"
+import { selectAuthProfile } from "@/features/auth/states/auth-profile"
 import CommentBody from "./ui/CommentBody"
 import CommentOptionsButton from "./ui/CommentOptionsButton"
 
@@ -54,7 +54,6 @@ export default function CommentItem({
 
     const commentBlock = useAppSelector(state => selectCommentBlockById(state, commentId))
     const comment = commentBlock.comment
-    const commentContext = commentBlock.comment.context
 
     const hasReplies = comment.data.replies_count > 0
 

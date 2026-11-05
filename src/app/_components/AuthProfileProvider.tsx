@@ -1,6 +1,6 @@
 "use client"
 
-import { setAuthProfile } from "@/features/global/states/auth-profile/auth-profile.slice"
+import { setAuthProfile } from "@/features/auth/states/auth-profile/auth-profile.slice"
 import { useAppStore } from "@/lib/state/hooks"
 import { AuthProfile } from "@/types/profile"
 import React, { useRef } from "react"

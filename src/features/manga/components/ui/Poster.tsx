@@ -33,6 +33,7 @@ export default function Poster({
                 <Paper
                     elevation={1}
                     sx={{
+                        boxSizing: "border-box",
                         aspectRatio: "2/3",
                         position: "relative",
                         borderRadius: "6% / 4%",

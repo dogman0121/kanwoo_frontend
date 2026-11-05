@@ -13,9 +13,11 @@ import { readerReducer } from '@/features/reader/states/reducer'
 import { studioPageReducer } from '@/features/studio/states/reducer'
 import mangaReducer from "@/features/manga/states/manga/slice"
 import { commentsReducer } from "@/features/comment/states/reducer"
+import { authReducer } from '@/features/auth/states/reducer'
 
 const rootReducers = combineReducers({
   global: globalReducer,
+  auth: authReducer,
   reader: readerReducer,
   studio: studioPageReducer,
   profilePage: profilePageReducer,

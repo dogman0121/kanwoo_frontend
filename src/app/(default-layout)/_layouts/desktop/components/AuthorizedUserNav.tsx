@@ -33,7 +33,7 @@ import Profile from "../../../../_components/userMenu/Profile";
 import Logout from "../../mobile/components/Logout";
 import ThemeSwitch from "../../../../_components/userMenu/ThemeSwitch";
 import Link from "next/link";
-import { selectAuthProfile, selectUnredNotificationsCount } from "@/features/global/states/auth-profile/auth-profile.slice";
+import { selectAuthProfile, selectUnredNotificationsCount } from "@/features/auth/states/auth-profile/auth-profile.slice";
 import { setCreateCollectionDialogOpen } from "@/features/global/states/app/slice";
 
 

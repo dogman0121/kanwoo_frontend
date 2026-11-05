@@ -11,45 +11,7 @@ import { selectManga } from "@/features/manga/states/manga-page/page/slice"
 import { fetchChapters, fetchTranslations, reverseChapters, setCurrTranslation, subscribeTranslation } from "@/features/manga/states/manga-page/translations/slice"
 import { selectCurrTranslation, selectCurrTranslationChapters, selectCurrTranslationId, selectTranslationById, selectTranslationChaptersError, selectTranslationChaptersLoaded, selectTranslationIsSubscribed, selectTranslations, selectTranslationsError, selectTranslationsLoaded } from "@/features/manga/states/manga-page/translations/selectors"
 import { Chapter } from "@/types/chapter"
-import LoadingBox from "@/components/LoadingBox"
-
-
-function ErrorMessage({
-    message,
-    buttonDisabled = false,
-    loading,
-    onClick
-}: {
-    message: string,
-    buttonDisabled?: boolean,
-    loading?: boolean
-    onClick?: () => void
-}) {
-    return (
-        <Box
-            sx={{
-                mt: 10,
-
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center"
-            }}
-        >
-            <Typography color="textSecondary" >{message}</Typography>
-            <Button 
-                variant="contained"
-                color="primary"
-                onClick={() => onClick?.() }
-                loading={loading}
-                sx={{
-                    mt: 2
-                }}    
-            >
-                Обновить
-            </Button>
-        </Box>
-    )
-}
+import LoadingBox from "@/components/loading/LoadingBox"
 
 function NoChapters(){
     return (
@@ -181,6 +143,10 @@ function ChaptersList() {
     const error = useAppSelector((state) => selectTranslationChaptersError(state, currentTranslation?.data.id))
     const loaded = useAppSelector((state) => selectTranslationChaptersLoaded(state, currentTranslation?.data.id))
     const chapters = useAppSelector(selectCurrTranslationChapters)
+    const errorMessages = {
+        "api_error": "При отправке запроса произошла ошибка. Попробуйте позже",
+        "no_internet_error": "Произошла ошибка. Проверьте соединение с интернетом и нажмите 'Обновить'"
+    }
 
     const loadChapters = () => {
         if (!currentTranslation) return
@@ -198,29 +164,16 @@ function ChaptersList() {
         return () => {}
     }, [currentTranslation, loaded])
 
-    if (error === "api_error"){
-        return (
-            <ErrorMessage 
-                message="При отправке запроса произошла ошибка. Попробуйте позже."
-                onClick={() => loadChapters()}
-            />
-        )
-    }
-
-    if (error === "no_internet") {
-        return (
-            <ErrorMessage 
-                message='Произошла ошибка. Проверьте соединение с интернетом и нажмите "Обновить"'
-                onClick={() => loadChapters()}
-            />
-        )
-    }
-
     if (loaded && chapters?.length == 0)
         return <NoChapters />
 
     return (
-        <LoadingBox loading={isLoading}>
+        <LoadingBox 
+            loading={isLoading}
+            error={error != null}
+            errorMessage={(error && errorMessages[error]) || ""}
+            onRetry={loadChapters}
+        >
             <Box
                 sx={{
                     py: 2,
@@ -351,6 +304,10 @@ export default function ChaptersSection() {
     
     const loaded = useAppSelector(selectTranslationsLoaded)
     const error = useAppSelector(selectTranslationsError)
+    const errorMessages = {
+        "api_error": "При получении данных произошла ошибка. Попробуйте позже",
+        "no_internet_error": "Произошла ошибка. Проверьте соединение с интернетом и нажмите 'Обновить'"
+    }
 
     const loadTranslations = () => {
         if (!manga) return
@@ -367,32 +324,18 @@ export default function ChaptersSection() {
 
     const currentTranslation = useAppSelector(selectCurrTranslation)
 
-    if (error === "api_error") {
-        return (
-            <ErrorMessage 
-                loading={isLoading}
-                message="При получении данных произошла ошибка. Попробуйте позже"
-            />
-        )
-    }
-
-    if (error === "no_internet") {
-        return (
-            <ErrorMessage 
-                loading={isLoading}
-                message='Произошла ошибка. Проверьте соединение с интернетом и нажмите "Обновить"'
-                onClick={() => loadTranslations()}
-            />
-        )
-    }
-
     if (loaded && !currentTranslation)
         return <NoChapters />
 
     if (!loaded) return
 
     return (
-        <LoadingBox loading={isLoading}>
+        <LoadingBox 
+            loading={isLoading}
+            error={error != null}
+            errorMessage={(error && errorMessages[error]) || ""}
+            onRetry={loadTranslations}
+        >
             {!currentTranslation?.data.is_official && (
                 <TranslationToggleButtonGroup/>  
             )}

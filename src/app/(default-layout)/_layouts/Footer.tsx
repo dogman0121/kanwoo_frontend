@@ -1,6 +1,6 @@
 "use client"
 
-import AppSnackbar from "@/components/AppSnackbar"
+import AppSnackbar from "@/components/app/AppSnackbar"
 import { clientFetch } from "@/lib/fetch/client-fetch.util"
 import { selectDeviceType } from "@/features/global/states/app/slice"
 import { useAppSelector } from "@/lib/state/hooks"

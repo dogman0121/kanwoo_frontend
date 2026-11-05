@@ -2,7 +2,7 @@
 
 import { Autocomplete, Box, CircularProgress, MenuItem, SxProps, TextField, Typography } from "@mui/material";
 import { useCallback, useRef, useState } from "react";
-import Poster from "./poster/Poster";
+import Poster from "../features/manga/components/ui/Poster";
 import { debounce } from "lodash";
 import { clientFetch } from "@/lib/fetch/client-fetch.util";
 import theme from "@/constants/themes/main.theme";

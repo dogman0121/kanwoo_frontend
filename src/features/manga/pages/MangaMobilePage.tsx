@@ -2,7 +2,7 @@
 
 import theme from "@/constants/themes/main.theme";
 import { Box, IconButton, Typography } from "@mui/material";
-import Poster from "@/components/poster/Poster";
+import Poster from "@/features/manga/components/ui/Poster";
 import Stats from "@/features/manga/components/ui/Stats";
 import Metadata from "@/features/manga/components/ui/Metadata";
 import { Manga } from "@/types/manga";
@@ -112,9 +112,6 @@ export default function MangaMobilePage({
                         views={manga.data.stats.views} 
                         saves={manga.data.stats.saves} 
                         size="small" 
-                        sx={{
-                            mt: 2
-                        }}
                     />
                 </Box>
                 <Box

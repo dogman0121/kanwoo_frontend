@@ -7,7 +7,7 @@ import MangaCarouselTitle from "../../ui/MangaCarouselTitle"
 import useSwitchButtons from "@/features/home/hooks/use-switch-buttons"
 import MangaCarouselList from "../../ui/MangaCarouselList"
 import { MangaShort } from "@/types/manga"
-import { MangaItemSquare } from "@/features/manga/components/MangaItem"
+import { MangaItemSquare, MangaItemSquareSkeleton } from "@/features/manga/components/MangaItem"
 import MangaListSkeleton, { MangaSkeleton } from "./MangaListSkeleton"
 import { range } from "lodash"
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
@@ -41,7 +41,7 @@ export default function MangaList({
                         nextButtonRef={nextButton}
                         prevButtonRef={prevButton}
                     >
-                        {range(0, 7).map((idx) => <MangaSkeleton key={`manga_carousel_item_${idx}_${Math.random()}`}/>)}
+                        {range(0, 7).map((idx) => <MangaItemSquareSkeleton key={`manga_carousel_item_${idx}_${Math.random()}`}/>)}
                     </MangaCarouselList>
                     :
                     <MangaCarouselList 

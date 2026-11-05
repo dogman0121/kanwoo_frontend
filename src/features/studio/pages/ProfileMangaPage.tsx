@@ -1,7 +1,7 @@
 import EditHeader from "@/components/edit/EditHeader";
 import EditHeaderNav from "@/components/edit/EditHeaderNav";
 import EditPageContainer from "@/components/edit/EditPageContainer";
-import Poster from "@/components/poster/Poster";
+import Poster from "@/features/manga/components/ui/Poster";
 import { Privacy } from "@/components/PrivacySelect";
 import WrappedText from "@/components/WrapperTypography";
 import { routes, toHref } from "@/constants/routes/main.routes";
@@ -9,17 +9,18 @@ import CreateMangaDialog from "@/features/studio/components/CreateMangaDialog";
 import { Manga } from "@/features/manga/types";
 import StudioList from "@/features/studio/components/List";
 import StudioPrivacyStatus from "@/features/studio/components/ui/PrivacyStatus";
-import { addManga, selectManga } from "@/features/studio/states/profile/manga.slice";
+import { addManga, createManga, loadManga, selectManga } from "@/features/studio/states/profile/manga.slice";
 import { selectCreateMangaDialogOpen, selectProfile, setCreateMangaDialogOpen } from "@/features/studio/states/profile/page.slice";
 import { StudioManga } from "@/features/studio/types/studio-manga.type";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import { Box, Button, Divider, Grid, Stack, SxProps, Typography } from "@mui/material";
 import Link from "next/link";
-import React, { Children, useState } from "react";
+import React, { Children, useEffect, useState } from "react";
 import { convertFormToFormData, MangaCreateFormSchema } from "@/features/studio/forms/CreateMangaForm";
 import { studioClientAPI } from "@/features/studio/api/client.api";
 import { openSnackbar } from "@/features/global/states/app/slice";
-import { selectTranslations } from "@/features/studio/states/manga/translations.slice";
+import { useSearchParams } from "next/navigation";
+import ProfileSlug from "../components/ui/profile/ProfileSlug";
 
 
 function MangaGrid({children}: {children: React.ReactNode}) {
@@ -111,38 +112,45 @@ function MangaGridRow({manga}: {manga: StudioManga}){
     )
 }
 
-export default function PPage() {
+export default function ProfileMangaPage() {
     const dispatch = useAppDispatch()
 
-    const manga = useAppSelector(selectManga)
-    const profile = useAppSelector(selectProfile)
+    const searchParams = useSearchParams()
 
+    const profile = useAppSelector(selectProfile)
     const createMangaDialogOpen = useAppSelector(selectCreateMangaDialogOpen)
+
+    useEffect(() => {
+        if (!profile)
+            return
+
+        dispatch(loadManga(profile.slug))
+    }, [profile])
+
+    const manga = useAppSelector(selectManga)
 
     const handleCreateManga = async (data: MangaCreateFormSchema) => {
         if (!profile) return
 
-        try {
-            const formData = convertFormToFormData(data)
-
-            const response = await studioClientAPI.createManga(profile.slug, formData)
-
-            dispatch(addManga({
-                data: response.data,
-                context: response.context,
-                permission: response.permission
-            }))
-            dispatch(openSnackbar({type: "success", message: "Манга добавлена успешно"}))
-            dispatch(setCreateMangaDialogOpen(false))
-        } catch (e) {
-            let errorMessage = "неизвестная ошибка"
-
-            dispatch(openSnackbar({
-                type: "error",
-                message: `При добавлении манги произошла ошибка: ${errorMessage}`
-            }))
-        }
+        dispatch(createManga({profileSlug: profile.slug, form: data}))
     }
+
+    useEffect(() => {
+        const url = new URL(window.location.href);
+
+        if (createMangaDialogOpen) {
+            url.searchParams.set("createManga", "true")
+        } else {
+            url.searchParams.delete("createManga")
+        }
+
+        window.history.pushState({}, '', url);
+    }, [createMangaDialogOpen])
+    useEffect(() => {
+        if (searchParams.get("createManga") == "true") {
+            dispatch(setCreateMangaDialogOpen(true))
+        }
+    }, [searchParams])
 
     return (
         <>

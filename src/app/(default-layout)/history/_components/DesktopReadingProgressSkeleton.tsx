@@ -1,6 +1,6 @@
 "use client"
 
-import Poster from "@/components/poster/Poster";
+import Poster from "@/features/manga/components/ui/Poster";
 import ProfileReadingProgress from "@/types/profile/profileReadingProgress";
 import { Box, IconButton, Paper, Skeleton, Typography, useTheme } from "@mui/material";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded"

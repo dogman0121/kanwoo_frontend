@@ -3,17 +3,19 @@
 import MangaGrid from "@/features/manga/components/MangaGrid"
 import { MangaItemSquare } from "@/features/manga/components/MangaItem"
 import { selectCollection, selectCollectionManga } from "@/features/collection/states/collection-page/slice"
-import { selectAuthProfile } from "@/features/global/states/auth-profile"
+import { selectAuthProfile } from "@/features/auth/states/auth-profile"
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import { Box, IconButton, Typography } from "@mui/material"
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded"
 import { removeMangaFromCollection } from "@/features/collection/states/lib/thunks"
+import { MangaShort } from "@/features/manga/types"
 
-export default function MangaList() {
+export default function MangaList({manga}: {
+    manga: MangaShort[]
+}) {
     const dispatch = useAppDispatch()
 
     const collection = useAppSelector(selectCollection)
-    const manga = useAppSelector(selectCollectionManga)
     
     const authProfile = useAppSelector(selectAuthProfile)
 
@@ -41,12 +43,12 @@ export default function MangaList() {
                     manga={m}
                     rightTopAdornment={
                         <>
-                            {authProfile?.id == collection?.creator.id && (
+                            {authProfile?.id == collection?.data.creator.id && (
                                 <Box
                                     onClick={(event) => {
                                         event.preventDefault()
 
-                                        dispatch(removeMangaFromCollection({mangaSlug: m.slug, collectionId: collection.id}))
+                                        dispatch(removeMangaFromCollection({mangaId: m.id, collectionId: collection.data.id}))
                                     }}
                                     sx={{
                                         bgcolor: "background.paper",

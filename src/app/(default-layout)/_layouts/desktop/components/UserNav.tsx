@@ -4,7 +4,7 @@ import { useAppSelector } from "@/lib/state/hooks"
 import AnonymusNav from "./AnonymusUserNav";
 import AuthorizedUserNav from "./AuthorizedUserNav";
 import { Box } from "@mui/material";
-import { selectAuthProfile } from "@/features/global/states/auth-profile";
+import { selectAuthProfile } from "@/features/auth/states/auth-profile";
 
 export default function UserNav() {
     const authProfile = useAppSelector(selectAuthProfile)

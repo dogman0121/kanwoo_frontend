@@ -36,6 +36,6 @@ export default function useReader({
     }, [])
 
     return {
-        reader: reader,
+        reader,
     }
 }

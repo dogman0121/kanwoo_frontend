@@ -25,7 +25,7 @@ type RootState = {
 }
 
 export const fetchChapter = createAsyncThunk(
-    "studio_chapter/fetchChapterStatus",
+    "studioChapter/fetchChapterStatus",
     async (chapterId: number) => {
         const response = await studioClientAPI.getChapter(chapterId)
 
@@ -59,7 +59,7 @@ function prepareFormData(data: ChapterUpdateFormSchema) {
 }
 
 export const updateChapter = createAsyncThunk(
-    "studio_chapter/updateChapterStatus",
+    "studioChapter/updateChapterStatus",
     async (data: {chapterId: number, form: ChapterUpdateFormSchema}, thunkAPI) => {
         const {chapterId, form} = data
 

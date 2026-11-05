@@ -1,6 +1,6 @@
 "use client"
 
-import { AppTab, AppTabContext, AppTabList, AppTabPanel } from "@/components/AppTabs";
+import { AppTab, AppTabContext, AppTabList, AppTabPanel } from "@/components/app/AppTabs";
 import { selectManga, selectSection, setSection } from "@/features/manga/states/manga-page/page/slice";
 import { useAppDispatch, useAppSelector, useAppStore } from "@/lib/state/hooks";
 import { Box } from "@mui/material";

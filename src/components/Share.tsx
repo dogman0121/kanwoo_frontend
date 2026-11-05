@@ -6,7 +6,7 @@ import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
 import theme from "@/constants/themes/main.theme";
 import { useAppSelector } from "@/lib/state/hooks";
 import { selectDeviceType } from "@/features/global/states/app/slice";
-import AppBackdrop, { AppBackdropContent } from "./AppBackdrop";
+import AppBackdrop, { AppBackdropContent } from "./app/AppBackdrop";
 
 interface ShareProps {
     open: boolean,

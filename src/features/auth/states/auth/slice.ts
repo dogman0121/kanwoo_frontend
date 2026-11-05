@@ -105,11 +105,11 @@ export const {
 } = authSlice.actions
 
 export type RootState = {
-    global: {auth: AuthState}
+    auth: {authProcess: AuthState}
 }
 
-export const selectIsLoading = (state: RootState) => state.global.auth.ui.isLoading
-export const selectProfiles = (state: RootState) => state.global.auth.profiles
-export const selectSection = (state: RootState) => state.global.auth.ui.section
+export const selectIsLoading = (state: RootState) => state.auth.authProcess.ui.isLoading
+export const selectProfiles = (state: RootState) => state.auth.authProcess.profiles
+export const selectSection = (state: RootState) => state.auth.authProcess.ui.section
 
 export default authSlice.reducer

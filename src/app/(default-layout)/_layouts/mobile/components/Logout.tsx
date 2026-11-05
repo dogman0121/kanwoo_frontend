@@ -4,7 +4,7 @@ import { clientFetch } from "@/lib/fetch/client-fetch.util";
 import { useAppDispatch } from "@/lib/state/hooks";
 import { ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem } from "@mui/material"
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
-import { setAuthProfile } from "@/features/global/states/auth-profile/auth-profile.slice";
+import { setAuthProfile } from "@/features/auth/states/auth-profile/auth-profile.slice";
 
 export default function Logout() {
     const dispatch = useAppDispatch()

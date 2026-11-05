@@ -2,7 +2,7 @@ import { Entity } from "@/lib/types/Entity.type";
 import { Box, Grid, Typography } from "@mui/material";
 import { Children } from "react";
 import { StudioTranslation } from "../types/studio-translation.type";
-import Poster from "@/components/poster/Poster";
+import Poster from "@/features/manga/components/ui/Poster";
 import Link from "next/link";
 import { routes, toHref } from "@/constants/routes/main.routes";
 import { Privacy } from "@/components/PrivacySelect";

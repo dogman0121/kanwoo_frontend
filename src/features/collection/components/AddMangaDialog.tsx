@@ -4,16 +4,15 @@ import { useAppDispatch } from "@/lib/state/hooks"
 import { Manga, MangaShort } from "@/types/manga"
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material"
 import { useState } from "react"
+import { addManga } from "../states/collection-page/slice"
 
 export default function AddMangaDialog({
     open,
     onClose,
-    onAdd,
     context
 }: {
     open: boolean,
     onClose: () => void,
-    onAdd?: (manga: MangaShort) => void,
     context: {
         collectionID: number
     }
@@ -26,12 +25,14 @@ export default function AddMangaDialog({
         setValue(value)
     }
 
-    const handleAddManga = () => {
+    const handleAddManga = async () => {
         if (!value) return
 
-        dispatch(addMangaIntoCollection({mangaSlug: value.slug, collectionId: context.collectionID})).unwrap()
+        await dispatch(addMangaIntoCollection({mangaId: value.id, collectionId: context.collectionID})).unwrap()
 
-        onAdd?.(value)
+        dispatch(addManga(value))
+        setValue(null)
+
         onClose()
     }
 
@@ -51,6 +52,7 @@ export default function AddMangaDialog({
                 <Button
                     variant="outlined"
                     color="primary"
+                    onClick={onClose}
                 >
                     Отмена
                 </Button>

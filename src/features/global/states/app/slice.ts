@@ -8,7 +8,7 @@ export interface AppState {
         createCollectionDialogOpen: boolean,
         collectionDialog: {
             open: boolean,
-            context: {mangaUUID: string}
+            context: {mangaId: number}
         },
         reportDialog: {
             open: boolean,
@@ -40,7 +40,7 @@ const initialState: AppState = {
         createCollectionDialogOpen: false,
         collectionDialog: {
             open: false,
-            context: {mangaUUID: ""}
+            context: {mangaId: 0}
         },
         reportDialog: {
             open: false,
@@ -80,7 +80,7 @@ export const appSlice = createSlice({
         setAuthModalOpen: (state, action) => {
             state.ui.authModalOpen = action.payload
         },
-        openCollectionDialog: (state, action: PayloadAction<{mangaUUID: string}>) => {
+        openCollectionDialog: (state, action: PayloadAction<{mangaId: number}>) => {
             state.ui.collectionDialog.open = true
             state.ui.collectionDialog.context = action.payload      
         },

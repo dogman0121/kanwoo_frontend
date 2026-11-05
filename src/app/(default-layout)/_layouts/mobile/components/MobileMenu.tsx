@@ -5,7 +5,7 @@ import { Avatar, Box, Button, Divider, Drawer, DrawerProps, IconButton, List, Li
 import SettignsRoundedIcon from "@mui/icons-material/SettingsRounded"
 import Logout from "./Logout";
 import ThemeSwitch from "../../../../_components/userMenu/ThemeSwitch";
-import { selectAuthProfile } from "@/features/global/states/auth-profile";
+import { selectAuthProfile } from "@/features/auth/states/auth-profile";
 import { setAuthModalOpen } from "@/features/global/states/app/slice";
 import Link from "next/link";
 import { routes, toHref } from "@/constants/routes/main.routes";

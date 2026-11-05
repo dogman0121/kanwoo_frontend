@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material"
 import Create, { MangaCreateFormSchema, useCreateForm } from "../forms/CreateMangaForm"
-import AppSnackbar from "@/components/AppSnackbar"
+import AppSnackbar from "@/components/app/AppSnackbar"
 import { useState } from "react"
 import { StudioManga } from "../types/studio-manga.type"
 import { useAppDispatch } from "@/lib/state/hooks"
