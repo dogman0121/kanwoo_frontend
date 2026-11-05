@@ -37,22 +37,20 @@ export function useCreateForm() {
 }
 
 export default function CreateChapterForm({
-    onCreate,
-    control,
-    watch,
-    setValue,
-    handleSubmit,
+    onSubmit,
+    methods
 }: {
-    onCreate?: (data: ChapterCreateFormSchema) => void
-} & UseFormReturn<ChapterCreateFormSchema>) {
+    onSubmit?: (data: ChapterCreateFormSchema) => Promise<void>
+    methods: UseFormReturn<ChapterCreateFormSchema>
+}) {
 
-    const onSubmit = async (data: ChapterCreateFormSchema) => {
-        onCreate?.(data)
+    const onSubmitWrapper = async (data: ChapterCreateFormSchema) => {
+        await onSubmit?.(data)
     }
 
     return (
         <>
-            <form id="chapter-info" onSubmit={handleSubmit(onSubmit)}>
+            <form id="chapter-info" onSubmit={methods.handleSubmit(onSubmitWrapper)}>
                 <Box
                     sx={{
                         display: "flex",
@@ -61,7 +59,7 @@ export default function CreateChapterForm({
                     }}
                 >
                     <Controller 
-                        control={control}
+                        control={methods.control}
                         name="name"
                         render={({field: {value, ...props}, fieldState: {invalid, error}}) => (
                             <EditInput
@@ -78,7 +76,7 @@ export default function CreateChapterForm({
                         )}
                     />
                     <Controller 
-                        control={control}
+                        control={methods.control}
                         name="chapter"
                         render={({field}) => (
                             <EditInput
@@ -93,7 +91,7 @@ export default function CreateChapterForm({
                         )}
                     />
                     <Controller 
-                        control={control}
+                        control={methods.control}
                         name="privacyId"
                         render={({field}) => (
                             <PrivacySelect 
@@ -119,7 +117,7 @@ export default function CreateChapterForm({
                             }}
                         >
                             <Controller 
-                                control={control}
+                                control={methods.control}
                                 name="isExtra"
                                 render={({field}) => (
                                     <Checkbox
@@ -128,13 +126,13 @@ export default function CreateChapterForm({
                                 )}
                             />
                             <Controller 
-                                control={control}
+                                control={methods.control}
                                 name="extraNumber"
                                 render={({field}) => (
                                     <EditInput
                                         inputProps={{
                                             placeholder: "Экстра номер",
-                                            disabled: !watch("isExtra"),
+                                            disabled: !methods.watch("isExtra"),
                                             type: "number",
                                             ...field
                                         }}
@@ -144,7 +142,7 @@ export default function CreateChapterForm({
                         </Box>
                     </Box>
                     <Controller 
-                        control={control}
+                        control={methods.control}
                         name="pages"
                         render={({field: {value}}) => (
                             <Box>
@@ -152,7 +150,7 @@ export default function CreateChapterForm({
                                 <EditCaption>Страницы главы</EditCaption>
                                 <EditMultipleFilesInput 
                                     value={value}
-                                    onChange={(value: EditFile[]) => {setValue("pages", value)}}
+                                    onChange={(value: EditFile[]) => {methods.setValue("pages", value)}}
                                 />
                             </Box>
                         )}

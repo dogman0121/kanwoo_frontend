@@ -20,11 +20,11 @@ import ProfileLinks from "../components/ui/profile/Links";
 
 const convertIntoForm = (profile: Profile) => {
     return {
-        avatar: profile.avatar,
-        slug: profile.slug,
-        name: profile.name,
-        about: profile.about,
-        links: profile.links
+        avatar: profile.avatar || null,
+        slug: profile.slug || "",
+        name: profile.name || "",
+        about: profile.about || "",
+        links: profile.links || []
     }
 }
 

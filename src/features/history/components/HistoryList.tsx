@@ -2,7 +2,7 @@
 
 import { loadHistory, selectCursor, selectHasMore, selectDates, selectDateHistory } from "@/features/progress/states/auth-profile-history-page/slice"
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
-import { Box, CircularProgress, Typography } from "@mui/material"
+import { Box, CircularProgress, Divider, Paper, Stack, Typography } from "@mui/material"
 import ProgressItem from "./ProgressItem"
 import InfiniteScroll from "react-infinite-scroll-component"
 
@@ -62,21 +62,34 @@ function HistoryDateList({
             >
                 {compileDateIntoString(date)}
             </Typography>
-            <Box
+            <Paper
                 sx={{
                     display: "flex",
                     flexDirection: "column",
-                    gap: 2
+                    gap: 2,
+
+                    pt: 2,
+                    pr: 5,
+                    pb: 2,
+                    pl: 3,
+                    borderRadius: 2
                 }}
             >
-                {progresses.map(prog => (
-                    <ProgressItem 
-                        key={`history_page_progress_${prog.progress.id}`}
-                        progress={prog.progress}
-                        progressContext={prog.progressContext}
-                    />
-                ))}
-            </Box>
+                <Stack 
+                    direction="column"
+                    divider={
+                        <Divider sx={{ my:2 }}/>
+                    }
+                >
+                    {progresses.map(prog => (
+                        <ProgressItem 
+                            key={`history_page_progress_${prog.progress.id}`}
+                            progress={prog.progress}
+                            progressContext={prog.progressContext}
+                        />
+                    ))}
+                </Stack>
+            </Paper>
         </Box>
     )
 }

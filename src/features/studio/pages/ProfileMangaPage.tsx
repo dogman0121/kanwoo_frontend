@@ -15,7 +15,7 @@ import { StudioManga } from "@/features/studio/types/studio-manga.type";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import { Box, Button, Divider, Grid, Stack, SxProps, Typography } from "@mui/material";
 import Link from "next/link";
-import React, { Children, useEffect, useState } from "react";
+import React, { Children, useEffect, useState, useTransition } from "react";
 import { convertFormToFormData, MangaCreateFormSchema } from "@/features/studio/forms/CreateMangaForm";
 import { studioClientAPI } from "@/features/studio/api/client.api";
 import { openSnackbar } from "@/features/global/states/app/slice";
@@ -117,6 +117,7 @@ export default function ProfileMangaPage() {
 
     const searchParams = useSearchParams()
 
+    const [isSubmitting, setIsSubmitting] = useTransition()
     const profile = useAppSelector(selectProfile)
     const createMangaDialogOpen = useAppSelector(selectCreateMangaDialogOpen)
 
@@ -132,7 +133,9 @@ export default function ProfileMangaPage() {
     const handleCreateManga = async (data: MangaCreateFormSchema) => {
         if (!profile) return
 
-        dispatch(createManga({profileSlug: profile.slug, form: data}))
+        setIsSubmitting(async () => {
+            await dispatch(createManga({profileSlug: profile.slug, form: data})).unwrap()
+        })
     }
 
     useEffect(() => {

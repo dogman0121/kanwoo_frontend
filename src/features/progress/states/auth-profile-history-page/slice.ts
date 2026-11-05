@@ -1,5 +1,5 @@
 import { ReadingProgress, ReadingProgressContext } from "@/types/reading-progress";
-import { createAsyncThunk, createEntityAdapter, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createEntityAdapter, createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { progressClientAPI } from "../../api/client.api";
 import { stat } from "fs";
 
@@ -58,6 +58,19 @@ const historyPageSlice = createSlice({
     name: "history_page",
     initialState,
     reducers: {
+        initializeHistoryPage: (state) => {
+            progressesAdapter.removeAll(state)
+
+            state.progressDates = []
+            state.selectedProgresses = {}
+            state.progresses = {}
+            state.cursor = {}
+            state.hasMore = true
+            state.ui = {
+                allSelected: false
+            }
+
+        },
         setAllSelected: (state, action) => {
             state.ui.allSelected = action.payload
             if (!action.payload) {
@@ -109,11 +122,19 @@ export const {
 } = progressesAdapter.getSelectors((state: RootState) => state.authProfileHistoryPage)
 
 export const selectDates = (state: RootState) => state.authProfileHistoryPage.progressDates 
-export const selectDateHistory = (state: RootState, date: string) => {
-    const progressesIDs = state.authProfileHistoryPage.progresses[date]
+export const selectDateHistory = createSelector(
+    [
+        (_state: RootState, date: string) => date,
+        (state: RootState) => state.authProfileHistoryPage.progresses, 
+        (state: RootState) => state.authProfileHistoryPage.entities
+    ],
+    (date: string, dateProgresses: Record<string, number[]>, progresses) => {
+        const progressesIDs = dateProgresses[date]
 
-    return progressesIDs.map(progressID => selectProgressByID(state, progressID))
-}
+        return progressesIDs.map(progressID => progresses[progressID])
+    }
+
+)
 export const selectIsAllSelected = (state: RootState) => state.authProfileHistoryPage.ui.allSelected
 export const selectIsProgressSelected = (state: RootState, progressID: number) => (
     state.authProfileHistoryPage.selectedProgresses[progressID] != undefined
@@ -124,7 +145,8 @@ export const selectDeleteDisabled = (state: RootState) => !state.authProfileHist
 
 export const {
     setAllSelected,
-    setProgressSelected
+    setProgressSelected,
+    initializeHistoryPage
 } = historyPageSlice.actions
 
 export default historyPageSlice.reducer;
