@@ -1,7 +1,7 @@
 "use client"
 
 import AppPageHeader from "@/components/app/AppPageHeader"
-import { initializeHistoryPage } from "@/features/progress/states/auth-profile-history-page/slice"
+import { initializeHistoryPage, loadHistory } from "@/features/progress/states/auth-profile-history-page/slice"
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import { Container } from "@mui/system"
 import { useEffect } from "react"
