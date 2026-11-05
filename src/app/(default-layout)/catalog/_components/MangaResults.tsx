@@ -23,7 +23,6 @@ import StatsSkeleton from "@/features/manga/components/skeleton/StatsSkeleton";
 import DescriptionSkeleton from "@/features/manga/components/skeleton/DescriptionSkeleton";
 import GenresSkeleton from "@/features/manga/components/skeleton/GenresSkeleton";
 import NameTranslationsSkeleton from "@/features/manga/components/skeleton/NameTranslationsSkeleton";
-import MangaGrid from "@/features/manga/components/MangaGrid";
 import { selectMangaBySlug } from "@/features/manga/states/manga/selectors";
 import { fetchManga } from "@/features/manga/states/manga/slice";
 import BottomPanel from "@/components/BottomPanel";

@@ -2,7 +2,7 @@
 
 import { AppMobilePageHeader, BackButton } from "@/components/app/AppPageHeader"
 import MobileContainer from "@/components/MobileContainer"
-import { initializeHistoryPage } from "@/features/progress/states/auth-profile-history-page/slice"
+import { initializeHistoryPage, loadHistory } from "@/features/progress/states/auth-profile-history-page/slice"
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import { useEffect } from "react"
 import HistoryOptions from "../components/HistoryOptions"
@@ -19,6 +19,7 @@ export default function HistoryPageMobile() {
         if (!authProfile) return
 
         dispatch(initializeHistoryPage())
+        
     }, [])
 
     if (!authProfile)
