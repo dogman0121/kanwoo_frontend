@@ -5,26 +5,10 @@ import { useAppDispatch } from "@/lib/state/hooks";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { setMangaList } from "@/features/studio/states/profile/manga.slice";
-import PPage from "./PPage";
+import ProfileMangaPage from "@/features/studio/pages/ProfileMangaPage";
 
 export default function Page() {
-    const dispatch = useAppDispatch()
-
-    const { slug } = useParams<{slug: string}>()
-
-    const fetchManga = async (slug: string) => {
-        const response = await studioClientAPI.getProfileManga(slug)
-
-        dispatch(setMangaList(response.data.map((m, ind) => ({
-            data: m,
-        }))))
-    }   
-
-    useEffect(() => {
-        fetchManga(slug)
-    }, [slug])
-
     return (
-        <PPage />
+        <ProfileMangaPage />
     )
 }

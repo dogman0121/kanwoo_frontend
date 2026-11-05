@@ -1,10 +1,10 @@
 "use client"
 
-import { PPage } from "./PPage"
+import ProfileInfoPage from "@/features/studio/pages/ProfileInfoPage"
 
 export default function Page() {
 
     return (
-        <PPage/>
+        <ProfileInfoPage />
     )
 }

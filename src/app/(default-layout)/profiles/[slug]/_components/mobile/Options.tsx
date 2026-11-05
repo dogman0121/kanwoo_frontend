@@ -1,4 +1,4 @@
-import AppBackdrop from "@/components/AppBackdrop";
+import AppBackdrop from "@/components/app/AppBackdrop";
 import { routes, toHref } from "@/constants/routes/main.routes";
 import { openReportDialog, openShareBackdrop } from "@/features/global/states/app/slice";
 import { selectProfile } from "@/lib/state/features/profile-page/page/selectors";

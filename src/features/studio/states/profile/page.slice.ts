@@ -1,7 +1,12 @@
 import { Entity } from "@/lib/types/Entity.type";
 import { Profile } from "@/types/profile";
 import ProfilePermission from "@/types/profile/profilePermission";
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { ProfileUpdateInfoFormSchema } from "../../forms/UpdateProfileInfoForm";
+import { studioClientAPI } from "../../api/client.api";
+import { openSnackbar } from "@/features/global/states/app/slice";
+import { ApiError } from "@/lib/fetch/api-response.types";
+import prepareFileAction from "../../lib/prepare-file-action";
 
 export interface StudioPageProfileState {
     profile?: Entity<Profile, null, ProfilePermission>,
@@ -22,8 +27,47 @@ type RootState = {
     studio: {profile: {page: StudioPageProfileState}}
 }
 
+function prepareUpdateProfileInfoFormData(data: ProfileUpdateInfoFormSchema) {
+    const formData = new FormData()
+
+    formData.set("name", data.name)
+    formData.set("slug", data.slug)
+    formData.set("avatar_action", prepareFileAction(data.avatar))
+    formData.set("about", data.about)
+    formData.set("links", JSON.stringify(data.links))
+    
+    if (data.avatar)
+        formData.set("avatar", data.avatar)
+
+    return formData
+}
+
+export const updateProfileInfo = createAsyncThunk(
+    "studioProfile/updateProfileInfoStatus",
+    async (data: {profileSlug: string, form: ProfileUpdateInfoFormSchema}, thunkAPI) => {
+        const {profileSlug, form} = data
+        
+        const formData = prepareUpdateProfileInfoFormData(form)
+
+        try {
+            const response = await studioClientAPI.updateProfileInfo(profileSlug, formData)
+
+            thunkAPI.dispatch(openSnackbar({type: 'success', message: "Глава добавлена успешно"}))
+
+            return {
+                response: response
+            }
+        } catch (e) {
+            let errorMessage = "Неизвестная ошибка"
+
+            thunkAPI.dispatch(openSnackbar({type: "error", message: `Произошла ошибка: ${errorMessage}`}))
+            throw e
+        }
+    }
+)
+
 export const studioProfileSlice = createSlice({
-    name: "studio_profile",
+    name: "studioProfile",
     initialState,
     reducers: {
         setStudioProfile: (state, action) => {
@@ -40,7 +84,17 @@ export const studioProfileSlice = createSlice({
         setCreateTranslationDialogOpen: (state, action) => {
             state.ui.createTranslationDialogOpen = action.payload
         }
-    }
+    },
+    extraReducers: (builder) => (builder
+        .addCase(updateProfileInfo.fulfilled, (state, action) => {
+            const {response} = action.payload
+
+            state.profile = {
+                data: response.data,
+                context: response.context
+            }
+        })
+    )
 })
 
 export const selectProfile = (state: RootState) => {

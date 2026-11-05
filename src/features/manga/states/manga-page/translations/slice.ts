@@ -75,7 +75,7 @@ export const translationSlice = createSlice({
             if (chapters != undefined)
                 chapters.reverse()
         },
-        setTranslationsLoadingError: (state, action: PayloadAction<"no_internet" | "api_error" | null>) => {
+        setTranslationsLoadingError: (state, action: PayloadAction<"no_internet_error" | "api_error" | null>) => {
             state.error = action.payload
         }
     },
@@ -105,7 +105,7 @@ export const translationSlice = createSlice({
             if (action.meta.rejectedWithValue) {
                 state.error = "api_error"
             } else {
-                state.error = "no_internet"
+                state.error = "no_internet_error"
             }
         })
         .addCase(fetchChapters.fulfilled, (state, action) => {
@@ -126,7 +126,7 @@ export const translationSlice = createSlice({
             if (action.meta.rejectedWithValue) {
                 state.entities[translationId].error = "api_error"
             } else {
-                state.entities[translationId].error = "no_internet"
+                state.entities[translationId].error = "no_internet_error"
             }
         })
     )

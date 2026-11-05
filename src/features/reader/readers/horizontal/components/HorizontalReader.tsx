@@ -14,7 +14,7 @@ function PageContainer({sx, ...props}: BoxProps){
     return (
         <Box
             sx={{
-                minWidth: "var(--page-width)",
+                width: "var(--page-width)",
                 minHeight: "100%",
 
                 position: "relative",

@@ -2,9 +2,9 @@ import { MangaPermission, MangaShort } from "@/types/manga";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {RootState as AppState} from "@/lib/state/store"
 import { CommentsBlock } from "@/lib/state/common/comments/state";
-import { selectMangaBySlug } from "../../manga/selectors";
 import { Entity } from "@/lib/types/Entity.type";
 import { ReadingProgress, ReadingProgressContext } from "@/types/reading-progress";
+import { selectMangaBlockById, selectMangaBySlug } from "../../manga/selectors";
 
 
 export interface MangaPageState {

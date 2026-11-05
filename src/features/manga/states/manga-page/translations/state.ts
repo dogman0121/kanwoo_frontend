@@ -11,13 +11,13 @@ export type TranslationBlock = {
     translation: TranslationEntity,
     chapters?: ChapterEntity[],
     loaded: boolean, // Загружены ли главы
-    error: "no_internet" | "api_error" | null
+    error: "no_internet_error" | "api_error" | null
 }
 
 export type TranslationsStateWithoutAdapter = {
     currTranslationId?: number,
     loaded: boolean // Загружены ли переводы
-    error: "no_internet" | "api_error" | null
+    error: "no_internet_error" | "api_error" | null
 }
 
 export const initialState = translationsAdapter.getInitialState({

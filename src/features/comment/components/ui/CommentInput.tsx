@@ -5,7 +5,7 @@ import { Box, BoxProps, Button, ButtonProps, FormControl, FormControlProps, Icon
 import { ChangeEvent, Children, MouseEvent, useState, useTransition } from "react"
 import SendRoundedIcon from "@mui/icons-material/SendRounded"
 import { MAX_COMMENT_LENGTH } from "@/constants/comments"
-import { selectAuthProfile } from "@/features/global/states/auth-profile/auth-profile.slice"
+import { selectAuthProfile } from "@/features/auth/states/auth-profile/auth-profile.slice"
 import { setAuthSnackbarOpen } from "@/features/global/states/app/slice"
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
@@ -218,14 +218,14 @@ function SmallInputInner({
         <Box
             sx={{
                 display: "flex",
-                alignItems: "center",
+                alignItems: "end",
                 gap: 2,
             }}
         >
             <InputContainer
                 sx={{
                     borderRadius: 4,
-                    height: "42px",
+                    minHeight: "42px",
 
                     display: "flex",
                     flexDirection: "row",
@@ -265,6 +265,7 @@ function SmallInputInner({
                 sx={{
                     bgcolor: theme.palette.primary.main,
                     color: theme.palette.primary.contrastText,
+                    mb: "6px",
 
                     "&:hover": {
                         bgcolor: theme.palette.primary.main

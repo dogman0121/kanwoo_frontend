@@ -112,9 +112,6 @@ export default function MangaMobilePage({
                         views={manga.data.stats.views} 
                         saves={manga.data.stats.saves} 
                         size="small" 
-                        sx={{
-                            mt: 2
-                        }}
                     />
                 </Box>
                 <Box

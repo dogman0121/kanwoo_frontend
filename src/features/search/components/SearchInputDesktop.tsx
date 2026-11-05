@@ -54,6 +54,13 @@ export default function SearchInputDesktop({sx, ...props}: FormControlProps) {
                 sx={{
                     ...sx
                 }}
+                slotProps={{
+                    input: {
+                        autoCapitalize:"off",
+                        autoComplete:"off",
+                        autoCorrect:"off"
+                    }
+                }}
                 placeholder="Введите запрос"
             />
         </FormControl>

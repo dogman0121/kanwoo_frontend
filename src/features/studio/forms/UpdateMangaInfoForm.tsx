@@ -2,7 +2,7 @@ import { Box, Grid } from "@mui/material";
 import { Profile } from "@/features/profile/types/profile.type";
 import { Controller, useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
-import { selectAuthProfile } from "@/features/global/states/auth-profile";
+import { selectAuthProfile } from "@/features/auth/states/auth-profile";
 import { StudioManga } from "../types/studio-manga.type";
 import { selectManga } from "../states/manga/page.slice";
 import MangaName from "@/features/manga/forms/components/MangaName";
@@ -22,6 +22,7 @@ import MangaPromoLogo from "@/features/studio/components/ui/manga/PromoLogo";
 import MangaBackground from "@/features/studio/components/ui/manga/Background";
 import { act, useEffect } from "react";
 import MangaPoster from "../components/ui/manga/Poster";
+import prepareFileAction from "../lib/prepare-file-action";
 
 
 const convertDataIntoForm = (manga?: StudioManga | null) => {
@@ -44,18 +45,7 @@ const convertDataIntoForm = (manga?: StudioManga | null) => {
     }
 }
 
-const prepareFileAction = (file: string | File | null) => {
-    let action: "update" | "keep" | "delete";
 
-    if (file instanceof File)
-        action = "update"
-    else if (file == null)
-        action = "delete"
-    else
-        action = "keep"
-
-    return action
-}
 
 export function convertFormIntoFormData(data: MangaUpdateInfoFormSchema) {
     const formData = new FormData()

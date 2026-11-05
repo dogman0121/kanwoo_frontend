@@ -6,7 +6,7 @@ import MobilePage from "./MobilePage"
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import { loadHistory } from "@/features/progress/states/auth-profile-history-page/slice"
 import { useRouter } from "next/navigation"
-import { selectAuthProfile } from "@/features/global/states/auth-profile"
+import { selectAuthProfile } from "@/features/auth/states/auth-profile"
 
 export default function PPage({
     deviceType

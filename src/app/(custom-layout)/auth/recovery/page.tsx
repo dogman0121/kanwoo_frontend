@@ -2,7 +2,7 @@
 
 import Auth from "@/features/auth/components/Auth";
 import { AuthSection } from "@/features/auth/types";
-import { setSection } from "@/features/global/states/auth/slice";
+import { setSection } from "@/features/auth/states/auth/slice";
 import { useAppStore } from "@/lib/state/hooks";
 import { Suspense, useRef } from "react";
 

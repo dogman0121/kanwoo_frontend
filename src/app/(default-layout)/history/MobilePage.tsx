@@ -1,6 +1,6 @@
 "use client"
 
-import { AppMobilePageHeader, BackButton } from "@/components/AppPageHeader"
+import { AppMobilePageHeader, BackButton } from "@/components/app/AppPageHeader"
 import MobileContainer from "@/components/MobileContainer"
 import HistoryOptions from "./_components/HistoryOptions"
 import HistoryList from "./_components/HistoryList"

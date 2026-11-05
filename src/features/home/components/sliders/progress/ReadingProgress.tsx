@@ -8,7 +8,7 @@ import "swiper/css/free-mode"
 import "swiper/css/mousewheel"
 import "swiper/css/navigation"
 import "swiper/css/free-mode"
-import AppSnackbar from "@/components/AppSnackbar";
+import AppSnackbar from "@/components/app/AppSnackbar";
 import MangaCarousel from "../../ui/MangaCarousel";
 import MangaCarouselTitle from "../../ui/MangaCarouselTitle";
 import useSwitchButtons from "../../../hooks/use-switch-buttons";

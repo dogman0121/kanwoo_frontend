@@ -1,6 +1,6 @@
 "use client"
 
-import AppBackdrop, { AppBackdropProps } from "@/components/AppBackdrop";
+import AppBackdrop, { AppBackdropProps } from "@/components/app/AppBackdrop";
 import { List, ListItem, ListItemButton, ListItemText, Typography } from "@mui/material";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ShareRoundedIcon from "@mui/icons-material/ShareRounded"

@@ -4,12 +4,12 @@ import { MangaBlock, RootState } from "./state";
 import { Manga } from "@/types/manga";
 
 export const {
-    selectById: selectMangaBlockBySlug
+    selectById: selectMangaBlockById
 } = mangaAdapter.getSelectors((state: RootState) => state.manga)
 
 
-export const selectMangaBySlug = (state: RootState, slug: string) => {
-    const mangaBlock = selectMangaBlockBySlug(state, slug)
+export const selectMangaById = (state: RootState, id: number) => {
+    const mangaBlock = selectMangaBlockById(state, id)
 
     if (mangaBlock)
         return mangaBlock.manga
@@ -17,11 +17,20 @@ export const selectMangaBySlug = (state: RootState, slug: string) => {
     return null
 }
 
+export const selectMangaBySlug = (state: RootState, slug: string) => {
+    for (let blockId of state.manga.ids) {
+        if (state.manga.entities[blockId].manga.data.slug == slug)
+            return state.manga.entities[blockId].manga
+    }
+
+    return null
+}
+
 export const selectMangaInCollection = createSelector(
     [
-        (state: RootState, mangaSlug: string, collectionId: number) => {
+        (state: RootState, mangaId: number, collectionId: number) => {
             return {
-                manga: selectMangaBlockBySlug(state, mangaSlug),
+                manga: selectMangaBlockById(state, mangaId),
                 collectionId: collectionId
             }
         },

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import { ApiError } from "@/lib/fetch/api-response.types";
-import AppSnackbar from "@/components/AppSnackbar";
+import AppSnackbar from "@/components/app/AppSnackbar";
 import { Controller, useForm } from "react-hook-form";
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import useTimer from "../hooks/useTimer";
@@ -15,7 +15,7 @@ import PasswordInput from "./ui/PasswordInput";
 import TextButton from "./ui/TextButton";
 import useSlugValidator from "@/features/profile/hooks/use-slug-validator.hook";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
-import { register, selectIsLoading, setIsLoading, setSection } from "@/features/global/states/auth/slice";
+import { register, selectIsLoading, setIsLoading, setSection } from "@/features/auth/states/auth/slice";
 import { AuthSection } from "@/features/auth/types";
 import SlugInput from "@/features/profile/components/SlugInput";
 

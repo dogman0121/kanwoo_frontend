@@ -1,6 +1,6 @@
 "use client"
 
-import AppPageHeader from "@/components/AppPageHeader"
+import AppPageHeader from "@/components/app/AppPageHeader"
 import { Container } from "@mui/material"
 import HistoryOptions from "./_components/HistoryOptions"
 import HistoryList from "./_components/HistoryList"

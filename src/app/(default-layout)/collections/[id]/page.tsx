@@ -1,5 +1,7 @@
 import { collectionServerAPI } from "@/features/collection/api/server.api";
-import PPage from "./PPage";
+import CollectionPageDesktop from "@/features/collection/pages/CollectionPageDesktop";
+import CollectionPageMobile from "@/features/collection/pages/CollectionPageMobile";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({
     params
@@ -8,10 +10,13 @@ export async function generateMetadata({
 }) {
     const {id} = await params;
 
-    const response = await collectionServerAPI.getCollection(parseInt(id))
-
-    return {
+    try {
+        const response = await collectionServerAPI.getCollection(parseInt(id))
+        return {
         
+        }
+    } catch (e) {
+        return notFound()
     }
 }
 
@@ -25,13 +30,32 @@ export default async function Page({
     const {id} = await params
     const {viewport} = await searchParams
 
-    const response = await collectionServerAPI.getCollection(parseInt(id))
+    try {
+        const response = await collectionServerAPI.getCollection(parseInt(id))
+
+        return (
+            <>
+                {viewport == "desktop" && (
+                    <CollectionPageDesktop 
+                        collection={{
+                            data: response.data,
+                            context: response.context
+                        }}
+                    />
+                )}
+                {viewport != "desktop" && (
+                    <CollectionPageMobile 
+                        collection={{
+                            data: response.data,
+                            context: response.context
+                        }}
+                    />
+                )}
+            </>
+        )
+    } catch (e) {
+        return notFound()
+    }
+
     
-    return (
-        <PPage 
-            deviceType={viewport} 
-            collection={response.data}
-            collectionContext={response.context}
-        />
-    )
 }

@@ -11,7 +11,7 @@ export default function CommentOptionsButton() {
                     right: 0,
                     top: 0,
 
-                    mt: "-6px"
+                    mt: "-8px"
                 }}
             >
                 <SvgIcon fontSize="medium">

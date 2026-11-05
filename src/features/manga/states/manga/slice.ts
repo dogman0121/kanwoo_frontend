@@ -44,9 +44,9 @@ export const mangaSlice = createSlice({
         )
         .addCase(addMangaIntoCollection.fulfilled, 
             (state, action) => {
-                const {mangaSlug, collectionId} = action.payload
+                const {mangaId, collectionId} = action.payload!
 
-                const manga = state.entities[mangaSlug]
+                const manga = state.entities[mangaId]
                 if (!manga) return
 
                 manga.manga.context!.viewer.collections.push(collectionId)
@@ -54,9 +54,9 @@ export const mangaSlice = createSlice({
         )
         .addCase(removeMangaFromCollection.fulfilled, 
             (state, action) => {
-                const {mangaSlug, collectionId} = action.payload
+                const {mangaId, collectionId} = action.payload!
 
-                const manga = state.entities[mangaSlug]
+                const manga = state.entities[mangaId]
                 if (!manga) return
 
                 manga.manga.context!.viewer.collections = manga.manga.context!.viewer.collections.filter(cId => cId != collectionId)

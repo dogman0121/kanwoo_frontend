@@ -1,19 +1,23 @@
 "use client"
 
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
-import { Box, Button, Checkbox, Dialog, DialogContent, DialogTitle, List, ListItemButton, Typography } from "@mui/material";
+import { Box, Button, Checkbox, CircularProgress, Dialog, DialogContent, DialogTitle, List, ListItemButton, Typography } from "@mui/material";
 import AddRoundedIcon from "@mui/icons-material/AddRounded"
 import PostersStack from "@/components/poster/PostersStack";
-import { selectAuthProfileCollections } from "@/features/global/states/auth-profile";
+import { selectAuthProfileCollections } from "@/features/auth/states/auth-profile";
 import { Collection, CollectionPreview } from "@/types/collection/collection";
 import { setCreateCollectionDialogOpen } from "@/features/global/states/app/slice";
-import { selectMangaBlockBySlug } from "@/features/manga/states/manga/selectors";
-import { MangaBlock } from "@/features/manga/states/manga/state";
+import { MangaBlock, MangaEntity } from "@/features/manga/states/manga/state";
+import { loadCollections, selectCollectionsLoaded } from "@/features/auth/states/auth-profile/collections.slice";
+import { useEffect, useTransition } from "react";
+import { addMangaIntoCollection, removeMangaFromCollection } from "../states/lib/thunks";
+import { MangaShort } from "@/features/manga/types";
+import { selectMangaById } from "@/features/manga/states/manga/selectors";
 
 interface CollectionDialogProps {
     open: boolean,
     context: {
-        mangaUUID: string
+        mangaId: number
     },
     onClose?: () => void,
 }
@@ -25,19 +29,38 @@ export default function MangaAddRemoveDialog({
 }: CollectionDialogProps){
     const dispatch = useAppDispatch()
 
-    const manga = useAppSelector(state => selectMangaBlockBySlug(state, context.mangaUUID))
+    const [collectionsIsLoading, setCollectionsIsLoading] = useTransition()
+
+    const manga = useAppSelector(state => selectMangaById(state, context.mangaId))
+    const collectionsLoaded = useAppSelector(selectCollectionsLoaded)
     const collections = useAppSelector(selectAuthProfileCollections)
 
-    const isMangaInCollection = (mangaBlock: MangaBlock, collectionId: number) => {
-        return mangaBlock.manga.context!.viewer.collections.findIndex(cId => cId == collectionId) != -1
+    const isMangaInCollection = (manga: MangaEntity | null, collectionId: number) => {
+        if (!manga) return
+        
+        return manga.context!.viewer.collections.findIndex(cId => cId == collectionId) != -1
     }
 
     const removeManga = async (collection: Collection) => {
+        console.log("remove")
+        if (!manga) return
+
+        dispatch(removeMangaFromCollection({mangaId: manga?.data.id, collectionId: collection.id}))
     }
 
     const addManga = async (collection: Collection) => {
-        
+        console.log("add")
+        if (!manga) return
+        dispatch(addMangaIntoCollection({mangaId: manga.data.id, collectionId: collection.id}))
     }
+
+    useEffect(() => {
+        if (open && !collectionsLoaded && !collectionsIsLoading) {
+            setCollectionsIsLoading(async () => {
+                await dispatch(loadCollections())
+            })
+        }
+    }, [open, collectionsLoaded, collectionsIsLoading])
     
     return (
         <>
@@ -49,61 +72,82 @@ export default function MangaAddRemoveDialog({
             >
                 <DialogTitle>Выберите коллекцию</DialogTitle>
                 <DialogContent>
-                    <List>
-                        {collections?.map(collection => (
-                            <ListItemButton
-                                key={`manga_page_collection_${collection.id}`}
-                                sx={{
-                                    borderRadius: 1
-                                }}
-                                onClick={async () => {
-                                    isMangaInCollection(manga, collection.id) ? removeManga(collection) : addManga(collection)
-                                }}
-                            >
-                                <PostersStack 
-                                    width="32px"
-                                />
-                                <Box
+                    {collectionsIsLoading ?
+                        <Box
+                            sx={{
+                                display: "flex",
+                                justifyContent: "center"
+                            }}
+                        >
+                            <CircularProgress />
+                        </Box>
+                        :
+                        <List>
+                            {collections?.map(collection => (
+                                <ListItemButton
+                                    key={`manga_page_collection_${collection.data.id}`}
                                     sx={{
-                                        width: "100%",
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        ml: 4
+                                        borderRadius: 1
+                                    }}
+                                    onClick={async () => {
+                                        if (!manga) return
+
+                                        isMangaInCollection(manga, collection.data.id) ? 
+                                        removeManga(collection.data) : 
+                                        addManga(collection.data)
                                     }}
                                 >
                                     <Box
                                         sx={{
+                                            ml: 2
+                                        }}
+                                    >
+                                        <PostersStack 
+                                            width="32px"
+                                        />
+                                    </Box>
+                                    <Box
+                                        sx={{
+                                            width: "100%",
                                             display: "flex",
-                                            flexDirection: "column"
+                                            justifyContent: "space-between",
+                                            ml: 4
                                         }}
                                     >
                                         <Box
                                             sx={{
                                                 display: "flex",
-                                                flexDirection: "row"
+                                                flexDirection: "column"
                                             }}
                                         >
-                                            <Typography>{collection.name}</Typography>
-                                            <Typography 
+                                            <Box
                                                 sx={{
-                                                    ml: 2
+                                                    display: "flex",
+                                                    flexDirection: "row"
                                                 }}
-                                                variant="caption"
                                             >
-                                                {collection.manga_count} тайтлов
-                                            </Typography>
+                                                <Typography>{collection.data.name}</Typography>
+                                                <Typography 
+                                                    sx={{
+                                                        ml: 2
+                                                    }}
+                                                    variant="caption"
+                                                >
+                                                    {collection.data.manga_count} тайтлов
+                                                </Typography>
+                                            </Box>
+                                            <Typography variant="caption">{collection.data.privacy.name}</Typography>
                                         </Box>
-                                        <Typography variant="caption">{collection.privacy.name}</Typography>
+                                        <Checkbox 
+                                            checked={
+                                                isMangaInCollection(manga, collection.data.id)
+                                            }
+                                        />
                                     </Box>
-                                    <Checkbox 
-                                        checked={
-                                            isMangaInCollection(manga, collection.id)
-                                        }
-                                    />
-                                </Box>
-                            </ListItemButton>
-                        ))}
-                    </List>
+                                </ListItemButton>
+                            ))}
+                        </List>
+                    }
                     <Button 
                         variant="contained"
                         fullWidth

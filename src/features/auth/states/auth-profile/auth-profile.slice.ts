@@ -10,7 +10,7 @@ const initialState: AuthProfileState = {
 }
 
 export const authProfileSlice = createSlice({
-    name: "auth_profile",
+    name: "authProfile",
     initialState,
     reducers: {
         setAuthProfile: (state, action) => {
@@ -24,10 +24,10 @@ export const {
 } = authProfileSlice.actions
 
 export type RootState = {
-    global: {authProfile: {profile: AuthProfileState}}
+    auth: {authProfile: {profile: AuthProfileState}}
 }
 
-export const selectAuthProfile = (state: RootState) => state.global.authProfile.profile.profile
-export const selectUnredNotificationsCount = (state: RootState) => state.global.authProfile.profile.profile?.unread_notifications_count
+export const selectAuthProfile = (state: RootState) => state.auth.authProfile.profile.profile
+export const selectUnredNotificationsCount = (state: RootState) => state.auth.authProfile.profile.profile?.unread_notifications_count
 
 export default authProfileSlice.reducer

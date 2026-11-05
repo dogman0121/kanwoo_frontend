@@ -2,10 +2,15 @@ import { CollectionBlock } from "@/features/collection"
 import { selectCollections } from "@/features/collection/states/auth-profile-collections-page/slice"
 import { useAppSelector } from "@/lib/state/hooks"
 import { Collection } from "@/types/collection"
-import { Grid, GridProps, Typography } from "@mui/material"
+import { Grid, GridProps, SxProps, Typography } from "@mui/material"
 
-export default function CollectionsList({...props}: GridProps) {
-    const collections: Collection[] = useAppSelector(selectCollections)
+export default function CollectionsList({
+    collections,
+    sx
+}: {
+    collections: Collection[],
+    sx?: SxProps
+}) {
 
     if (collections.length == 0)
         return (
@@ -32,8 +37,8 @@ export default function CollectionsList({...props}: GridProps) {
             spacing={{
                 lg: 3,
                 xs: 2
-            }} 
-            {...props}
+            }}
+            sx={sx}
         >
             {collections.map(collection => (
                 <Grid 

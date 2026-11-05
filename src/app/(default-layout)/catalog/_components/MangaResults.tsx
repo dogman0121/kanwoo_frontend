@@ -159,7 +159,7 @@ function MangaDetailsMobile({
                             variant="contained"
                             fullWidth
                             onClick={() => {
-                                dispatch(openCollectionDialog({mangaUUID: shortData.slug}))
+                                dispatch(openCollectionDialog({mangaId: shortData.id}))
                             }}
                         >
                             Сохранить
@@ -301,7 +301,7 @@ function MangaDetailsDesktop({
                     fullWidth
                     startIcon={<BookmarkBorderRoundedIcon />}  
                     onClick={() => {
-                        dispatch(openCollectionDialog({mangaUUID: shortData.slug}))
+                        dispatch(openCollectionDialog({mangaId: shortData.id}))
                     }}  
                 >
                         Сохранить

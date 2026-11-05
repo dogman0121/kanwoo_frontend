@@ -12,7 +12,7 @@ import SearchListModal from "./ui/SearchListModal"
 import SearchInputDesktop from "./SearchInputDesktop"
 import SuggestMangaDialog from "@/components/SuggestMangaDialog"
 import SearchContext from "../context/SearchContext"
-import LoadingBox from "@/components/LoadingBox"
+import LoadingBox from "@/components/loading/LoadingBox"
 
 export interface SearchModalProps {
     open: boolean,

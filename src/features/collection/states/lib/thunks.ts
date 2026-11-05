@@ -1,5 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 import { collectionClientApi } from "../../api/client.api"
+import { ApiError } from "@/lib/fetch/api-response.types"
+import { openSnackbar } from "@/features/global/states/app/slice"
 
 export const fetchCollections = createAsyncThunk(
     "fetchCollectionsStatus",
@@ -15,7 +17,7 @@ export const fetchCollections = createAsyncThunk(
 export const fetchCollectionManga = createAsyncThunk(
     "fetchCollectionMangaStatus",
     async (id: number) => {
-        const response = await collectionClientApi.getManga(id)
+        const response = await collectionClientApi.getCollectionManga(id)
 
         return {
             response: response
@@ -24,7 +26,7 @@ export const fetchCollectionManga = createAsyncThunk(
 )
 
 export const createCollection = createAsyncThunk(
-    "addCollectionStatus",
+    "createCollectionStatus",
     async (data: {name: string, privacyId: number}, thunkAPI) => {
         const response = await collectionClientApi.createCollection(data.name, data.privacyId)
 
@@ -59,24 +61,71 @@ export const updateCollection = createAsyncThunk(
 
 export const addMangaIntoCollection = createAsyncThunk(
     "addMangaIntoCollectionStatus",
-    async (data: {mangaSlug: string, collectionId: number}, thunkAPI) => {
-        await collectionClientApi.addManga(data.collectionId, data.mangaSlug)
+    async (data: {mangaId: number, collectionId: number}, thunkAPI) => {
+        try {
+            await collectionClientApi.addMangaIntoCollection(data.collectionId, data.mangaId)
 
-        return {
-            mangaSlug: data.mangaSlug,
-            collectionId: data.collectionId
+            return {
+                mangaId: data.mangaId,
+                collectionId: data.collectionId
+            }
+        } catch(e) {
+            let errorMessage = "неизвестная ошибка";
+            if (e instanceof ApiError) {
+                if (e.code == "already_in_collection") {
+                    errorMessage = "тайтл уже в коллекции"
+                }
+            }
+
+            thunkAPI.dispatch(openSnackbar({type: "error", message: `Произошла ошибка: ${errorMessage}`}))
+            return thunkAPI.rejectWithValue(e)
         }
     }
 ) 
 
 export const removeMangaFromCollection = createAsyncThunk(
     "removeMangaFromCollectionStatus",
-    async (data: {mangaSlug: string, collectionId: number}, thunkAPI) => {
-        await collectionClientApi.removeManga(data.collectionId, data.mangaSlug)
+    async (data: {mangaId: number, collectionId: number}, thunkAPI) => {
+        try{
+            await collectionClientApi.removeMangaFromCollection(data.collectionId, data.mangaId)
 
-        return {
-            mangaSlug: data.mangaSlug,
-            collectionId: data.collectionId
+            return {
+                mangaId: data.mangaId,
+                collectionId: data.collectionId
+            }
+        } catch(e) {
+            let errorMessage = "неизвестная ошибка";
+
+            thunkAPI.dispatch(openSnackbar({type: "error", message: `Произошла ошибка: ${errorMessage}`}))
+            return thunkAPI.rejectWithValue(e)
+        }
+    }
+)
+
+export const saveCollection = createAsyncThunk(
+    "saveCollectionStatus",
+    async (collectionId: number, thunkAPI) => {
+        try {
+            return collectionClientApi.saveCollection(collectionId)
+        } catch (e) {
+            let errorMessage = "неизвестная ошибка";
+
+            thunkAPI.dispatch(openSnackbar({type: "error", message: `Произошла ошибка: ${errorMessage}`}))
+            return thunkAPI.rejectWithValue(e)
+        }
+    }
+)
+
+export const unsaveCollection = createAsyncThunk(
+    "unsaveCollectionStatus",
+    async (collectionId: number, thunkAPI) => {
+        try {
+            return collectionClientApi.unsaveCollection(collectionId)
+        } catch (e) {
+            let errorMessage = "неизвестная ошибка";
+
+            thunkAPI.dispatch(openSnackbar({type: "error", message: `Произошла ошибка: ${errorMessage}`}))
+            return thunkAPI.rejectWithValue(e)
         }
     }
 )

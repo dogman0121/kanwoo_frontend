@@ -24,7 +24,7 @@ export default function PreviewComment({
                 <WrappedText
                     lines={3}
                     sx={{
-                        overflowWrap: "anywhere"
+                        overflowWrap: "anywhere",
                     }}
                 >
                     {comment.data.text}

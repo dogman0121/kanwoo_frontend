@@ -1,6 +1,6 @@
 "use client"
 
-import AppSnackbar from "@/components/AppSnackbar"
+import AppSnackbar from "@/components/app/AppSnackbar"
 import ReportDialog from "@/components/ReportDialog"
 import Share from "@/components/Share"
 import AuthModal from "@/features/auth/components/AuthModal"

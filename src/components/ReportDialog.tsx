@@ -17,7 +17,7 @@ import {
     Typography
 } from "@mui/material";
 import { useState } from "react";
-import AppSnackbar from "./AppSnackbar";
+import AppSnackbar from "./app/AppSnackbar";
 import { Controller, useForm } from "react-hook-form";
 
 const MySelect = styled(Select)(() => ({

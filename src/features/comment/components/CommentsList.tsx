@@ -9,6 +9,26 @@ export interface CommentsListProps {
     onNext?: () => void
 }
 
+function NoComments() {
+    return (
+        <Box
+            sx={{
+                py: 4
+            }}
+        >
+            <Typography 
+                color="textSecondary"
+                component="p"
+                sx={{
+                    textAlign: "center"
+                }}
+            >
+                Нет комментариев
+            </Typography>
+        </Box>
+    )
+}
+
 export default function CommentsList({
     hasMore,
     onNext,
@@ -17,6 +37,9 @@ export default function CommentsList({
     children,
     ...props
 }: CommentsListProps & BoxProps) {
+
+    if (commentsLength == 0 && !hasMore)
+        return <NoComments />
     
     return (
         <InfiniteScroll
