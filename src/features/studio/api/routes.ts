@@ -78,6 +78,12 @@ export const studioApiConfig: ApiConfig = {
             url: "/studio/translations/:id"
         }
     },
+    "/studio/translations/:id/forms/create-chapter": {
+        GET: {
+            mode: "proxy",
+            url: "/studio/translations/:id/forms/create-chapter"
+        },
+    },
     "/studio/translations/:id/chapters": {
         GET: {
             mode: "proxy",

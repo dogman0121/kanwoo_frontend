@@ -37,7 +37,9 @@ function ChapterItem({chapter}: {chapter: Chapter}) {
                     bgcolor: "#e7e7e7",
                     borderRadius: "12px",
                     boxShadow: "none",
-                    p: "10px 25px",
+                    py: 2,
+                    pl: 4,
+                    pr: 2,
 
                     display: "flex",
                     flexDirection: "row",
@@ -53,13 +55,13 @@ function ChapterItem({chapter}: {chapter: Chapter}) {
                     sx={{
                         display: "flex",
                         flexDirection: "row",
-                        columnGap: 4,
                         alignItems: "center"
                     }}
                 >
                     <Typography
                         sx={{
                             whiteSpace: "nowrap",
+                            minWidth: "48px",
 
                             lineHeight: 1,
                             fontWeight: 600,
@@ -216,7 +218,8 @@ function TranslationToggleButtonGroup() {
     const currTranslationId = useAppSelector(selectCurrTranslationId)
 
     const handleChangeTranslation = (_event: MouseEvent, value: number) => {
-        dispatch(setCurrTranslation(value))
+        if (value != null)
+            dispatch(setCurrTranslation(value))
     }
 
     return (

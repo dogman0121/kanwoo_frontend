@@ -7,6 +7,7 @@ import { Chapter } from "@/types/chapter"
 import { StudioChapter } from "../types/studio-chapter.type"
 import { Translation } from "@/features/translations/types/translation.type"
 import { TranslationContext } from "@/features/translations/types"
+import { GetCreateChapterFormResponseData } from "./client.api.response.types"
 
 export const studioClientAPI = {
     getProfile: async (slug: string) => {
@@ -95,5 +96,11 @@ export const studioClientAPI = {
         return clientFetch.put<StudioChapter>(`/studio/chapters/${chapterId}`, {
             body: formData
         })
+    },
+
+    getChapterCreateForm: (translationID: number) => {
+        return clientFetch.get<
+            GetCreateChapterFormResponseData
+        >(`/studio/translations/${translationID}/forms/create-chapter`)
     }
 }
