@@ -5,6 +5,7 @@ import EditInput from "@/components/edit/Input"
 import EditLabel from "@/components/edit/Label"
 import EditCaption from "@/components/edit/Caption"
 import EditMultipleFilesInput, { EditFile } from "@/components/edit/MultipleFilesInput"
+import { studioClientAPI } from "../api/client.api"
 
 
 export function getDefaultValues() {
@@ -27,10 +28,29 @@ export interface ChapterCreateFormSchema {
     privacyId: Privacy,
 }
 
-export function useCreateForm() {
+export function useCreateForm({
+    translationID
+}: {
+    translationID: number
+}) {
     const props = useForm<ChapterCreateFormSchema>({
         mode: "onChange",
-        defaultValues: getDefaultValues()
+        defaultValues: async () => {
+            const response = await studioClientAPI.getChapterCreateForm(translationID)
+
+            return {
+                name: response.data.name,
+                chapter: response.data.chapter,
+                isExtra: response.data.extra_number != null,
+                extraNumber: response.data.extra_number || 0,
+                pages: response.data.pages.map(p => ({
+                    uuid: p.uuid,
+                    previewLink: p.link,
+                    name: p.orig_filename
+                } as EditFile)),
+                privacyId: response.data.privacy_id
+            }
+        }
     });
 
     return props
@@ -46,6 +66,18 @@ export default function CreateChapterForm({
 
     const onSubmitWrapper = async (data: ChapterCreateFormSchema) => {
         await onSubmit?.(data)
+
+        const {defaultValues} = methods.formState
+        const currentChapterNumber = Number(data.chapter ?? 0);
+
+        methods.reset({
+            ...defaultValues,
+            name: "",      
+            pages: [],
+            isExtra: false,
+            extraNumber: 0,
+            chapter: currentChapterNumber + 1
+        })
     }
 
     return (

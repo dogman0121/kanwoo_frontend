@@ -124,6 +124,7 @@ export default function MangaDesktopPage({
                             sx={{
                                 display: 'flex',
                                 flexDirection: 'row',
+                                alignItems: "start",
                                 justifyContent: "space-between"
                             }}
                         >

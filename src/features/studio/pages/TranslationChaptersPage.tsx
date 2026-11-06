@@ -169,6 +169,7 @@ export default function TranslationChaptersPage() {
             <CreateChapterDialog 
                 open={createChapterDialogOpen}
                 onClose={() => dispatch(setCreateChapterDialogOpen(false))}
+                translationID={translation.id}
                 onSubmit={handleCreateChapter}
             />
         </>

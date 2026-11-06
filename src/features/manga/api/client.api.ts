@@ -5,6 +5,7 @@ import { Comment, CommentContext } from "@/features/comment/types"
 import { clientFetch } from "@/lib/fetch/client-fetch.util"
 import encodeCursor from "@/lib/fetch/encode-cursor.util"
 import { CursorPagination } from "@/lib/fetch/api-response.types"
+import { ReadingSave } from "@/features/progress/types/reading-save.type"
 
 export const mangaClientApi = {
 
@@ -67,5 +68,9 @@ export const mangaClientApi = {
         const response = await clientFetch.get<{available: boolean}>(`/manga/check_slug?slug=${slug}`)
 
         return response
+    },
+
+    getMangaProgress: async (slug: string) => {
+        return clientFetch.get<ReadingSave>(`/manga/${slug}/progress`)
     }
 }

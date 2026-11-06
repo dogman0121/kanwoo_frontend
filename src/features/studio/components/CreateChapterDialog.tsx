@@ -5,15 +5,17 @@ import CreateChapterForm, { ChapterCreateFormSchema, useCreateForm } from "../fo
 export default function CreateChapterDialog({ 
     open, 
     onSubmit, 
-    onClose 
+    onClose,
+    translationID 
 }: {
     open: boolean,
+    translationID: number,
     onSubmit?: (data: ChapterCreateFormSchema) => Promise<void>,
-    onClose?: () => void
+    onClose?: () => void,
 }) {
-    const methods = useCreateForm();
+    const methods = useCreateForm({ translationID: translationID });
 
-    const { isSubmitting, isValid } = methods.formState; // Читаем свойства ЯВНО
+    const { isSubmitting, isValid, isLoading } = methods.formState; // Читаем свойства ЯВНО
 
     console.log(isSubmitting, isValid)
 

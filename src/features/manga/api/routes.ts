@@ -144,7 +144,7 @@ export const mangaApiConfig: ApiConfig = {
             }
         }
     },
-    "/manga/:slug/progresses": {
+    "/manga/:slug/progress": {
         GET: {
             mode: "proxy",
             url: "/progresses/manga/:slug"
