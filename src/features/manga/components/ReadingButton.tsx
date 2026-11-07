@@ -31,6 +31,8 @@ function MyButton({
                     loading={loading}
                     onClick={onClick}
                     sx={{
+                        minHeight: "50px",
+                        minWidth: "150px",
                         px: 5,
                         py: 2,
 

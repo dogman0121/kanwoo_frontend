@@ -25,7 +25,6 @@ export default function MangaCarouselList({
     return (
         <Swiper
             modules={[FreeMode, Navigation]}
-            spaceBetween={15}
             navigation={{
                 enabled: true,
                 nextEl: nextButtonRef.current,
@@ -34,9 +33,9 @@ export default function MangaCarouselList({
             }}
             draggable={true}
             breakpoints={{
-                0: { slidesPerView: 3 },
-                640: { slidesPerView: 6 },
-                768: { slidesPerView: 7 },
+                0: { slidesPerView: 3.2, spaceBetween: 10 },
+                640: { slidesPerView: 6.2, spaceBetween: 15 },
+                768: { slidesPerView: 7.2, spaceBetween: 15 },
             }}
             style={{
                 width: "100%",
