@@ -61,10 +61,12 @@ export const routes = {
 }
 
 
-export function toHref(path: string, params: Record<string, string> = {}) { 
+export function toHref(path: string, params: Record<string, string> = {}, searchParams?: Record<string, string>) { 
   const toPath = compile(path);
 
-  return toPath(params);
+  const urlSearchParams = new URLSearchParams(searchParams)
+
+  return toPath(params) + "?" + urlSearchParams.toString();
 }
 
 export const ROUTES = {

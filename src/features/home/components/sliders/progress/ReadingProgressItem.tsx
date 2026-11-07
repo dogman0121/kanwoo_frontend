@@ -41,16 +41,18 @@ export default function ReadingProgressItem({
                     position: "relative",
                     display: "flex",
                     flexDirection: "row",
+                    alignItems: "center",
                     boxShadow: "none",
 
-                    p: 2,
+                    py: 2,
+                    px: 3,
                     pr: 8,
                     borderRadius: "12px"
                 }}
             >
                 <Poster 
                     src={progress.manga.poster?.small}
-                    width="72px"
+                    width="56px"
                 />
                 <Box
                     sx={{

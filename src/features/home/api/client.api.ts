@@ -11,7 +11,7 @@ export const homeClientAPI = {
             body: JSON.stringify({
                 blocks_hash: hashList
             })
-        }, {use_json: true, csrf: false})
+        }, {use_json: true, csrf: true})
     },
 
     getProgresses: async () => {

@@ -45,6 +45,16 @@ export default function Description({description, boxProps}: {description: strin
         }
     }
 
+    if (!description || description == "") {
+        <Box {...boxProps}>
+            <DescriptionText
+                variant="caption"
+            >
+                Нет описания
+            </DescriptionText>
+        </Box>
+    }
+
     return (
         <Box
             {...boxProps}

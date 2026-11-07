@@ -147,11 +147,14 @@ export default function ProfileMangaPage() {
             url.searchParams.delete("createManga")
         }
 
-        window.history.pushState({}, '', url);
+        window.history.replaceState({}, '', url);
     }, [createMangaDialogOpen])
+
     useEffect(() => {
         if (searchParams.get("createManga") == "true") {
             dispatch(setCreateMangaDialogOpen(true))
+        } else {
+            dispatch(setCreateMangaDialogOpen(false))
         }
     }, [searchParams])
 

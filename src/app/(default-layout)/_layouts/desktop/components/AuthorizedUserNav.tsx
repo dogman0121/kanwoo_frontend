@@ -39,8 +39,11 @@ import { setCreateCollectionDialogOpen } from "@/features/global/states/app/slic
 
 function ContentCreatingButton() {
     const dispatch =  useAppDispatch()
+    const router = useRouter()
     const theme = useTheme()
     
+    const authProfile = useAppSelector(selectAuthProfile)
+
     const [createContentMenuAnchorEl, setCreateContentMenuAnchorEl] = useState<HTMLButtonElement | null>(null);
     
     const handleOpenCreateContentMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -90,7 +93,15 @@ function ContentCreatingButton() {
                     </ListItemIcon>
                     Коллекция
                 </MenuItem>
-                <MenuItem>
+                <MenuItem
+                    onClick={() => router.push(
+                        toHref(
+                            routes.studio.profiles.manga, 
+                            {slug: authProfile!.slug},
+                            {createManga: "true"}
+                        )
+                    )}
+                >
                     <ListItemIcon>
                         <MenuBookRoundedIcon />
                     </ListItemIcon>

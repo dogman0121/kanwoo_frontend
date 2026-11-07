@@ -75,24 +75,24 @@ export default function ReadingProgresss({
                         direction="row"
                         spacing={2}
                     >
-                    {block?.status != "loaded" ?
-                        range(0, 4).map(idx => (
-                            <SwiperSlide key={`home_page_reading_progress_stub_${idx}`}>
-                                <ReadingProgressSkeleton/>
-                            </SwiperSlide>
-                        ))
-                        :
-                        (block.data as ProgressSave[]).map((progress, ind) => (
-                            <SwiperSlide key={`home_page_progress_${progress.id}`}>
-                                <ReadingProgressItem
-                                    progress={progress}
-                                    onDelete={() => {
-                                        handleDelete(progress.id)
-                                    }}
-                                />
-                            </SwiperSlide>
-                        )) 
-                    }
+                        {block?.status != "loaded" ?
+                            range(0, 4).map(idx => (
+                                <SwiperSlide key={`home_page_reading_progress_stub_${idx}`}>
+                                    <ReadingProgressSkeleton/>
+                                </SwiperSlide>
+                            ))
+                            :
+                            (block.data as ProgressSave[]).map((progress, ind) => (
+                                <SwiperSlide key={`home_page_progress_${progress.id}`}>
+                                    <ReadingProgressItem
+                                        progress={progress}
+                                        onDelete={() => {
+                                            handleDelete(progress.id)
+                                        }}
+                                    />
+                                </SwiperSlide>
+                            )) 
+                        }
                     </Stack>
                 </Swiper>
             </MangaCarousel>

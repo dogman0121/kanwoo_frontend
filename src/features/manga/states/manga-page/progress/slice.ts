@@ -24,12 +24,17 @@ export const loadProgress = createAsyncThunk(
                 response
             }
         } catch (e) {
-            thunkAPI.dispatch(openSnackbar({
-                type: "error",
-                message: "При получении данных произошла ошибка. Попробуйте позже."
-            }))
-
             if (e instanceof ApiError) {
+                if (e.code == "internal_error") {
+
+                } else if (e.code == "progress_not_found") {
+
+                } else {
+                    thunkAPI.dispatch(openSnackbar({
+                        type: "error",
+                        message: "При получении данных произошла ошибка. Попробуйте позже."
+                    }))
+                }
                 return thunkAPI.rejectWithValue({
                     message: e.message,
                     code: e.code,
