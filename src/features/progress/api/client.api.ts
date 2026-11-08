@@ -17,5 +17,18 @@ export const progressClientAPI = {
 
     getProgresses: async() => {
         return await clientFetch.get<ReadingProgress[], null, ReadingProgressContext[]>("/progresses")
+    },
+
+    deleteProgress: (progressID: number) => {
+        return clientFetch.delete(`/progresses/${progressID}`)
+    },
+
+    deleteHistory: (mode: string, historyIDs: number[]) => {
+        return clientFetch.delete(`/history`, {
+            body: JSON.stringify({
+                mode: mode,
+                progresses_ids: historyIDs
+            })
+        })
     }
 }

@@ -63,12 +63,7 @@ export const addMangaIntoCollection = createAsyncThunk(
     "addMangaIntoCollectionStatus",
     async (data: {mangaId: number, collectionId: number}, thunkAPI) => {
         try {
-            await collectionClientApi.addMangaIntoCollection(data.collectionId, data.mangaId)
-
-            return {
-                mangaId: data.mangaId,
-                collectionId: data.collectionId
-            }
+            return await collectionClientApi.addMangaIntoCollection(data.collectionId, data.mangaId)
         } catch(e) {
             let errorMessage = "неизвестная ошибка";
             if (e instanceof ApiError) {

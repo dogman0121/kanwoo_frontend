@@ -1,6 +1,6 @@
 import { Collection, CollectionContext } from "@/types/collection";
 import { MangaShort } from "@/types/manga";
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { addMangaIntoCollection, fetchCollectionManga, removeMangaFromCollection, saveCollection, unsaveCollection, updateCollection } from "../lib/thunks";
 import { Entity } from "@/lib/types/Entity.type";
 
@@ -82,6 +82,17 @@ const collectionPageSlice = createSlice({
 
             state.collection.context.viewer.is_saved = false
         })
+        .addCase(removeMangaFromCollection.fulfilled, (state, action) => {
+            if (state.collection?.data.id != action.meta.arg.collectionId)
+                return
+
+            state.manga = state.manga.filter(m => m.id != action.meta.arg.mangaId)
+        })
+        // .addCase(addMangaIntoCollection.fulfilled, (state, action) => {
+        //     if (state.collection?.data.id != action.meta.arg.collectionId)
+        //         return
+
+        // })
     )
 })
 
