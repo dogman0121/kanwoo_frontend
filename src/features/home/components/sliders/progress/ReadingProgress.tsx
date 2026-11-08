@@ -19,6 +19,8 @@ import { ProgressSave } from "@/features/home/types/progress";
 import { range } from "lodash";
 import ReadingProgressSkeleton from "./ReadingProgressSkeleton";
 import { HomeProgresses } from "@/features/home/types/hero";
+import { homeClientAPI } from "@/features/home/api/client.api";
+import { progressClientAPI } from "@/features/progress/api/client.api";
 
 
 export default function ReadingProgresss({
@@ -35,11 +37,22 @@ export default function ReadingProgresss({
 
     const block = useAppSelector(state => selectBlockByHash(state, hash))
 
-    const handleDelete = (progressId: number) => {
+    const [progresses, setProgresses] = useState<ProgressSave[]>([])
 
+    const handleDelete = async (progressID: number) => {
+        await progressClientAPI.deleteProgress(progressID)
+
+        setProgresses(prev => prev.filter(ps => ps.id != progressID))
     }
 
-    if (block?.status == "loaded" && (!block.data || (block.data as HomeProgresses[]).length == 0))
+    useEffect(() => {
+        if (!block?.data)
+            return
+
+        setProgresses(block.data as ProgressSave[])
+    }, [block])
+
+    if (block?.status == "loaded" && (!block.data || progresses.length == 0))
         return null
 
     return (
@@ -76,13 +89,13 @@ export default function ReadingProgresss({
                         spacing={2}
                     >
                         {block?.status != "loaded" ?
-                            range(0, 4).map(idx => (
+                            range(0, 6).map(idx => (
                                 <SwiperSlide key={`home_page_reading_progress_stub_${idx}`}>
                                     <ReadingProgressSkeleton/>
                                 </SwiperSlide>
                             ))
                             :
-                            (block.data as ProgressSave[]).map((progress, ind) => (
+                            (progresses).map((progress, ind) => (
                                 <SwiperSlide key={`home_page_progress_${progress.id}`}>
                                     <ReadingProgressItem
                                         progress={progress}

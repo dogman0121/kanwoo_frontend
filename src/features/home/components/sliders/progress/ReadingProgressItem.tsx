@@ -99,6 +99,7 @@ export default function ReadingProgressItem({
                     <IconButton
                         onClick={(event) => {
                             event.preventDefault()
+                            event.stopPropagation()
                             onDelete?.(progress.id)
                         }}
                         sx={{

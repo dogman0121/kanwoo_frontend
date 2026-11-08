@@ -11,7 +11,7 @@ export const homeClientAPI = {
             body: JSON.stringify({
                 blocks_hash: hashList
             })
-        }, {use_json: true, csrf: true})
+        }, {use_json: true, csrf: false})
     },
 
     getProgresses: async () => {
@@ -24,5 +24,5 @@ export const homeClientAPI = {
             urlParams.set("cursor", encodeCursor(cursor))
 
         return clientFetch.get<HomeChapter[], null, null, CursorPagination>('/chapters/last-added?' + urlParams.toString())
-    }
+    },
 }

@@ -41,7 +41,7 @@ export default function MangaList({
                         nextButtonRef={nextButton}
                         prevButtonRef={prevButton}
                     >
-                        {range(0, 7).map((idx) => <MangaItemSquareSkeleton key={`manga_carousel_item_${idx}_${Math.random()}`}/>)}
+                        {range(0, 16).map((idx) => <MangaItemSquareSkeleton key={`manga_carousel_item_${idx}_${Math.random()}`}/>)}
                     </MangaCarouselList>
                     :
                     <MangaCarouselList 
