@@ -139,6 +139,7 @@ export const selectIsAllSelected = (state: RootState) => state.authProfileHistor
 export const selectIsProgressSelected = (state: RootState, progressID: number) => (
     state.authProfileHistoryPage.selectedProgresses[progressID] != undefined
 )
+export const selectProgressesIDs = (state: RootState) => state.authProfileHistoryPage.ids
 export const selectHasMore = (state: RootState) => state.authProfileHistoryPage.hasMore
 export const selectCursor = (state: RootState) => state.authProfileHistoryPage.cursor
 export const selectDeleteDisabled = (state: RootState) => !state.authProfileHistoryPage.ui.allSelected && Object.entries(state.authProfileHistoryPage.selectedProgresses).length == 0

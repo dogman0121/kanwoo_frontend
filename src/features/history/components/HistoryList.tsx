@@ -1,6 +1,6 @@
 "use client"
 
-import { loadHistory, selectCursor, selectHasMore, selectDates, selectDateHistory } from "@/features/progress/states/auth-profile-history-page/slice"
+import { loadHistory, selectCursor, selectHasMore, selectDates, selectDateHistory, selectProgressesIDs } from "@/features/progress/states/auth-profile-history-page/slice"
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import { Box, CircularProgress, Divider, Paper, Stack, Typography } from "@mui/material"
 import ProgressItem from "./ProgressItem"
@@ -100,6 +100,7 @@ export default function HistoryList() {
 
     const dates = useAppSelector(selectDates)
 
+    const progressesIDs = useAppSelector(selectProgressesIDs)
     const hasMore = useAppSelector(selectHasMore)
     const cursor = useAppSelector(selectCursor)
 
@@ -117,10 +118,20 @@ export default function HistoryList() {
 
     return (
         <InfiniteScroll
-            dataLength={dates.length}
+            dataLength={progressesIDs.length}
             hasMore={hasMore}
             next={handleNext}
-            loader={<CircularProgress />}
+            loader={
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        py: 4
+                    }}
+                >
+                    <CircularProgress />
+                </Box>
+            }
             style={{
                 overflow: "hidden"
             }}
