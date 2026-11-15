@@ -1,4 +1,3 @@
-import ReadingProgresss from "@/features/home/components/sliders/progress/ReadingProgress"
 import { CursorPagination } from "@/lib/fetch/api-response.types"
 import { clientFetch } from "@/lib/fetch/client-fetch.util"
 import encodeCursor from "@/lib/fetch/encode-cursor.util"
@@ -20,7 +19,7 @@ export const progressClientAPI = {
     },
 
     deleteProgress: (progressID: number) => {
-        return clientFetch.delete(`/progresses/${progressID}`)
+        return clientFetch.delete(`/home/progresses/${progressID}`)
     },
 
     deleteHistory: (mode: string, historyIDs: number[]) => {

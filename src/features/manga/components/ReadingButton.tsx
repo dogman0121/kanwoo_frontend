@@ -67,6 +67,7 @@ function MyButton({
                     loading={loading}
                     onClick={onClick}
                     sx={{
+                        height: "54px",
                         py: 2,
                         fontWeight: 600,
 

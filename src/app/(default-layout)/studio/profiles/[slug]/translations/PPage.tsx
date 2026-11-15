@@ -59,7 +59,7 @@ function TranslationGridRow({translationBlock}: {translationBlock: Entity<Studio
                     }}
                 >
                     <Poster 
-                        width="80px"
+                        width="64px"
                         src={translationBlock.context?.manga?.poster?.medium}
                     />
                     <Link href={toHref(routes.studio.translations.item, {id: translationBlock.data.id.toString()})}>
