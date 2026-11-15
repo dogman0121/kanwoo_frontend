@@ -71,85 +71,84 @@ export default function CommentsPreview({
     if (!commentsBlock) return
 
     return (
-        <div ref={containerRef}>
-            <Paper
-                elevation={1}
-                onClick={(event) => {event.stopPropagation()}}
+        <Paper
+            elevation={1}
+            ref={containerRef}
+            onClick={(event) => {event.stopPropagation()}}
+            sx={{
+                width: "100%",
+                borderRadius: 2,
+
+                mx: "auto",
+                p: 2,
+
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+                ...sx
+            }}
+        >
+            <Box
                 sx={{
-                    width: "100%",
-                    borderRadius: 2,
-
-                    mx: "auto",
-                    p: 2,
-
                     display: "flex",
-                    flexDirection: "column",
-                    gap: 2,
-                    ...sx
+                    justifyContent: "space-between",
+                    alignItems: "center"
                 }}
             >
-                <Box
+                <Typography 
                     sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center"
+                        fontWeight: 600,
+                        fontSize: "18px"
                     }}
                 >
-                    <Typography 
-                        sx={{
-                            fontWeight: 600,
-                            fontSize: "18px"
-                        }}
-                    >
-                        {commentsBlock?.totalCount != undefined ? 
-                            commentsBlock.totalCount : 
-                            "-"
-                        } комментариев
-                    </Typography>
-                    <Button 
-                        size="small" 
-                        variant="contained" 
-                        color="secondary" 
-                        endIcon={<EastRoundedIcon />}
-                        ref={commentsButtonRef}
-                        sx={{
-                            "&:hover": {
-                                bgcolor: "secondary.main"
-                            }
-                        }}
-                    >
-                        показать ещё
-                    </Button>
-                </Box>
-                <Paper
-                    elevation={2}
+                    {commentsBlock?.totalCount != undefined ? 
+                        commentsBlock.totalCount : 
+                        "-"
+                    } комментариев
+                </Typography>
+                <Button 
+                    size="small" 
+                    variant="contained" 
+                    color="secondary" 
+                    endIcon={<EastRoundedIcon />}
+                    ref={commentsButtonRef}
                     sx={{
-                        borderRadius: 1,
-
-                        px: 3,
-                        py: 2
-                    }}
-                >
-                    <CommentsList>
-                        {commentsBlock?.commentsIds.slice(0, 3).map(
-                            commentId => (
-                                <PreviewComment
-                                    commentId={commentId} 
-                                    key={`comment_preview_comment_${commentId}`}
-                                />
-                            )
-                        )}
-                    </CommentsList>
-                </Paper>
-                <CommentInput 
-                    size="small"
-                    slotProps={{
-                        sendButton: {
-                            ref: sendButtonRef
+                        "&:hover": {
+                            bgcolor: "secondary.main"
                         }
                     }}
-                />
+                >
+                    показать ещё
+                </Button>
+            </Box>
+            <Paper
+                elevation={2}
+                sx={{
+                    borderRadius: 1,
+
+                    px: 3,
+                    py: 2
+                }}
+            >
+                <CommentsList>
+                    {commentsBlock?.commentsIds.slice(0, 3).map(
+                        commentId => (
+                            <PreviewComment
+                                commentId={commentId} 
+                                key={`comment_preview_comment_${commentId}`}
+                            />
+                        )
+                    )}
+                </CommentsList>
             </Paper>
-        </div>
+            <CommentInput 
+                size="small"
+                slotProps={{
+                    sendButton: {
+                        ref: sendButtonRef
+                    }
+                }}
+            />
+        </Paper>
     )
 }

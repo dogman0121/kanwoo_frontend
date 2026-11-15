@@ -39,7 +39,7 @@ function NavigationButton({sx, ...props}: IconButtonProps) {
                 "&.Mui-disabled": {
                     bgcolor: "#000000"
                 },
-                boxShadow: "0 0 1px rgba(255, 255, 255, 0.2)",
+                boxShadow: "0 1px 3px rgba(255, 255, 255, 0.3)",
                 ...sx
             }}
             {...props}
@@ -85,6 +85,7 @@ export default function NavigationButtons({
     return (
         <>
             <Box
+                className="mui-fixed"
                 sx={{
                     position: "fixed",
                     bottom: "25px",

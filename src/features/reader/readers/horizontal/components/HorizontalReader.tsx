@@ -1,14 +1,18 @@
 "use client"
 
 import { Box, BoxProps, styled, useTheme } from "@mui/material"
-import { useAppSelector } from "@/lib/state/hooks"
+import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import ReaderPage, { ReaderPageProps } from "../../../components/ReaderPage"
 import { selectChapters } from "@/features/reader/states/reader/selectors"
 import useSwipeController from "@/features/reader/readers/horizontal/hooks/controllers/useSwipeController"
 import ReaderVariant from "@/features/reader/interfaces/reader"
 import ChapterFooter from "./ChapterFooter"
 import OffsetContainer from "@/features/reader/components/ui/OffsetContainer"
-import { selectOffsetEnabled } from "@/features/reader/states/reader.slice"
+import { selectOffsetEnabled, setEndOfChapterReached } from "@/features/reader/states/reader.slice"
+import { selectInfinityChapter } from "@/features/reader/states/reading-settings/selectors"
+import useNavigationController from "@/features/reader/hooks/controllers/useNavOpen"
+import { useCallback } from "react"
+import { Chapter } from "@/features/chapter/types/chapter.type"
 
 function PageContainer({sx, ...props}: BoxProps){
     return (
@@ -102,19 +106,65 @@ export interface SwiperScreen extends ReaderVariant {
 }
 
 export default function HorizontalReader({
-    onPageChange,
-    onLoadNextChapter
+    onPageChanged,
+    onLoadNextChapter,
+    onChapterReadingFinished
 }: ReaderVariant) {
+    const dispatch = useAppDispatch()
 
-    const theme = useTheme()
     const chapters = useAppSelector(selectChapters)
+    const infinityChapter = useAppSelector(selectInfinityChapter)
+
+    const {toggle, open, close} = useNavigationController()
+
+    const handlePageChanged = useCallback((chapterIdx: number, pageNumber: number) => {
+        onPageChanged?.({
+            value: {
+                chapter: chapters[chapterIdx],
+                chapterIdx: chapterIdx,
+                page: chapters[chapterIdx].pages![pageNumber],
+                pageNumber: pageNumber
+            }
+        })
+    }, [chapters])
+
+    const handleLoadNextChapter = useCallback((chapter: Chapter) => {
+        onLoadNextChapter?.({
+            value: {
+                chapter: chapter
+            }
+        })
+    }, [onLoadNextChapter])
+
+    const handleChapterFinished = useCallback((chapter: Chapter) => {
+        onChapterReadingFinished?.({
+            value: {
+                chapter: chapter
+            }
+        })
+    }, [onChapterReadingFinished])
+
+    const handleClick = useCallback(() => toggle(), [toggle])
+    const handleChapterEndEntered = useCallback(() => {
+        dispatch(setEndOfChapterReached(true))
+        open()
+    }, [open, dispatch])
+    const handleChapterEndLeaved = useCallback(() => {
+        dispatch(setEndOfChapterReached(false))
+        close()
+    }, [close, dispatch])
 
     const {
         playgroundRef,
         swipeableRef
     } = useSwipeController({
-        onPageChange: onPageChange,
-        onLoadNextChapter: onLoadNextChapter
+        disableInfinityChapter: !infinityChapter,
+        onPageChanged: handlePageChanged,
+        onLoadNextChapter: handleLoadNextChapter,
+        onClick: handleClick,
+        onChapterEndEntered: handleChapterEndEntered,
+        onChapterEndLeaved: handleChapterEndLeaved,
+        onChapterFinished: handleChapterFinished
     })
 
 

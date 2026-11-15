@@ -9,22 +9,20 @@ export const readerClientAPI = {
     },
 
     getChapterProgress: async(chapterID: number) => {
-        return clientFetch.get<ReadingProgress, null, ReadingProgressContext>(`/chapters/${chapterID}/progress`) 
+        return clientFetch.get<ReadingProgress, null, ReadingProgressContext>(`/progresses/chapters/${chapterID}`) 
     },
 
-    createSession: async(chapterID: number, pageNumber: number) => {
-        return clientFetch.post<{id: number}>(`/sessions`, {
-            body: JSON.stringify({
-                chapter_id: chapterID,
-                page: pageNumber
-            })
-        }, {use_json: true})
+    getReadingSession: async(translationID: number) => {
+        const urlSearchParams = new URLSearchParams({translation_id: translationID.toString()})
+        return clientFetch.get<{id: number}>(`/progresses/reading-sessions?` + urlSearchParams.toString())
     },
 
-    saveProgress: async(sessionID: number, pageNumber: number) => {
-        return clientFetch.put(`/sessions/${sessionID}`, {
+    updateSession: async(sessionID: number, chpaterID: number, pageNumber: number, isFinished: boolean) => {
+        return clientFetch.patch(`/progresses/reading-sessions/${sessionID}`, {
             body: JSON.stringify({
-                page: pageNumber
+                chapter_id: chpaterID,
+                page: pageNumber,
+                is_finished: isFinished
             })
         }, {use_json: true})
     }

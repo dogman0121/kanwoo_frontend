@@ -1,11 +1,12 @@
 import { openSnackbar } from "@/features/global/states/app/slice";
 import { mangaClientApi } from "@/features/manga/api/client.api";
+import { ReadingStart } from "@/features/manga/types/reading-start.type";
 import { ReadingSave } from "@/features/progress/types/reading-save.type";
 import { ApiError } from "@/lib/fetch/api-response.types";
 import { Entity } from "@/lib/types/Entity.type";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export type ReadingProgressEntity = Entity<ReadingSave>
+export type ReadingProgressEntity = Entity<ReadingStart>
 
 export interface ReadingProgressState {
     progress?: ReadingProgressEntity,

@@ -2,7 +2,7 @@
 
 import { useAppSelector } from "@/lib/state/hooks"
 import MuiToolbar, { ToolbarProps as MuiToolbarProps } from "@mui/material/Toolbar"
-import { AppBar, Box, IconButton, styled } from "@mui/material"
+import { AppBar, Box, IconButton, Skeleton, styled, Typography } from "@mui/material"
 import WestRoundedIcon from "@mui/icons-material/WestRounded"
 import TuneRoundedIcon from "@mui/icons-material/TuneRounded"
 import { useState } from "react"
@@ -55,8 +55,6 @@ export function ReaderHeader({
 
     const router = useRouter()
 
-    if (!currentChapter) return 
-
     const open = navOpen || endReached
 
     return (
@@ -101,16 +99,30 @@ export function ReaderHeader({
                         >
                             <WestRoundedIcon />
                         </IconButton>
-                        <WrappedText 
-                            variant="h1"
-                            lines={1}
-                            sx={{
-                                textTransform: "uppercase",
-                                lineHeight: "1.5"
-                            }}
-                        >
-                            Глава {currentChapter.chapter}. {currentChapter.name}
-                        </WrappedText>
+                        {currentChapter ?
+                            <WrappedText 
+                                variant="h1"
+                                lines={1}
+                                sx={{
+                                    textTransform: "uppercase",
+                                    lineHeight: "1.5"
+                                }}
+                            >
+                                Глава {currentChapter.chapter}. {currentChapter.name}
+                            </WrappedText>
+                            :
+                            <Typography 
+                                variant="h1"
+                                sx={{
+                                    textTransform: "uppercase",
+                                    lineHeight: "1.5"
+                                }}
+                            >
+                                <Skeleton 
+                                    width={100}
+                                />
+                            </Typography>
+                        }
                         <IconButton
                             disableRipple
                             onClick={() => {setSettingsOpen(true)}}

@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import { mangaServerApi } from "@/lib/fetch/features/manga/server.api";
 import { Suspense } from "react";
 import MangaDesktopPage from "@/features/manga/pages/MangaDesktopPage";
 import MangaMobilePage from "@/features/manga/pages/MangaMobilePage";
+import { mangaServerApi } from "@/features/manga/api/server.api";
 
 
 export async function generateMetadata({
@@ -13,17 +13,17 @@ export async function generateMetadata({
 }): Promise<Metadata> {
     const { slug } = await params;
 
-    const {data: manga} = await mangaServerApi.getManga(slug)
+    const {data: metadata} = await mangaServerApi.getMangaMetadata(slug)
 
     return {
-        title: `Читать ${manga.type.name} ${manga.name} онлайн | kanwoo`,
-        description: manga.description,
+        title: metadata.title,
+        description: metadata.description,
         openGraph: {
-            type: "book",
-            url: `https://kanwoo.ru/manga/${manga.slug}`,
-            title: `Читать ${manga.name} онлайн | kanwoo`,
-            description: manga.description,
-            images: [{url: manga.poster?.medium || "https://cdn.kanwoo.ru/manga/default"}],
+            type: metadata.type,
+            url: metadata.canonical,
+            title: metadata.title,
+            description: metadata.description,
+            images: [{url: metadata.image || "https://cdn.kanwoo.ru/manga/default"}],
             siteName: "Kanwoo"
         },
     }

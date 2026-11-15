@@ -29,6 +29,12 @@ export const mangaApiConfig: ApiConfig = {
             url: "/manga/:slug"
         },
     },
+    "/manga/:slug/metadata": {
+        GET: {
+            mode: "proxy",
+            url: "/manga/:slug/metadata"
+        },
+    },
     "/manga/:slug/translations": {
         GET: {
             mode: "transform",
@@ -147,7 +153,7 @@ export const mangaApiConfig: ApiConfig = {
     "/manga/:slug/progress": {
         GET: {
             mode: "proxy",
-            url: "/progresses/manga/:slug"
+            url: "/progresses/manga/:slug/reading-start"
         },
         DELETE: {
             mode: "proxy",

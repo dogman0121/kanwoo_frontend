@@ -1,7 +1,7 @@
 "use client"
 
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
-import { useCallback, useEffect, useState } from "react"
+import { useEffect } from "react"
 import useReader from "../hooks/useReader"
 import pageLoaderContext from "../contexts/pageLoaderContext"
 import { selectCommentsPanelOpen } from "../states/reader.slice"
@@ -10,18 +10,18 @@ import PageNumberChip from "./PageNumberChip"
 
 import { selectDeviceType } from "@/features/global/states/app/slice"
 import ReaderCommentsPanel from "./comments/ReaderCommentsPanel"
-import { addChapter, initReader, setCurrentChapterIndex, setCurrentPageNumber } from "../states/reader/slice"
+import { addChapter, initReader } from "../states/reader/slice"
 import { ReaderEventsType, InitilizedEvent, ChapterLoadedEvent, ReaderEvent } from "../lib/reader"
 import HorizontalReader from "../readers/horizontal/components/HorizontalReader"
 import VerticalReader from "../readers/vertical/components/VerticalReader"
 import NavigationButtons from "./NavigationButtons"
-import { NextChapterEvent, PageChangedEvent } from "../interfaces/reader"
 import { ReaderMode } from "@/features/types/reader-mode"
 import { selectAuthProfile } from "@/features/auth/states/auth-profile"
 import { ReadingModeEnum } from "@/features/translations/entities/reading-mode.enum"
 import useReadingMode from "../hooks/useReadingMode"
 import useReadingSettings from "../hooks/useReadingSettings"
 import usePageMetadata from "../hooks/usePageMetadata"
+import { Box } from "@mui/material"
 
 export default function KaReader({
     initChapterID,
@@ -29,24 +29,30 @@ export default function KaReader({
 }: {
     initChapterID: number,
     disablePath?: boolean
-}) {
+}) {    
     const dispatch = useAppDispatch()
-    
+
     const commentsPanelOpen = useAppSelector(selectCommentsPanelOpen)
     const deviceType = useAppSelector(selectDeviceType)
 
     const authProfile = useAppSelector(selectAuthProfile)
 
     usePageMetadata({pathDisabled: disablePath, metadataDisabled: disablePath})
+
     const { settingsLoaded } = useReadingSettings()
 
-    const { reader } = useReader({
+    const { 
+        reader, 
+        handlePageChanged, 
+        handleReadingChapterFinished, 
+        handleLoadNextChapter 
+    } = useReader({
         pageLoaderProps: {
             preloadBeforeSize: 1,
             preloadAfterSize: 2,
             maxRetries: 3
         },
-        progressSaverProps: {
+        sessionControllerProps: {
 
         }
     })
@@ -58,6 +64,7 @@ export default function KaReader({
         const {value: {chapter, progress}} = event
 
         resetReadingMode()
+        
         dispatch(initReader({
             chapter: chapter,
             pageNumber: progress?.data.page || 0
@@ -68,26 +75,6 @@ export default function KaReader({
         const {value: chapter} = event
         
         dispatch(addChapter(chapter))
-    }
-
-    const handlePageChanged = useCallback((event: PageChangedEvent) => {
-        const {value: {chapterIdx, pageNumber, chapter}} = event
-
-        dispatch(setCurrentChapterIndex(chapterIdx))
-        dispatch(setCurrentPageNumber(pageNumber))
-
-        if (reader) {
-            reader.setPage(chapter.id, pageNumber)
-        }
-    }, [dispatch, reader])
-
-    const handleLoadNextChapter = (event: NextChapterEvent) => {
-        const {value: {chapter}} = event
-
-        if (reader) {
-            if (chapter.next_chapter_id)
-                reader.loadChapter(chapter.next_chapter_id)
-        }
     }
 
     useEffect(() => {
@@ -113,7 +100,7 @@ export default function KaReader({
     return (
         <pageLoaderContext.Provider
             value={{
-                loader: reader?.getPageLoader()
+                pageLoader: reader?.getPageLoader()
             }}
         >
             <ReaderHeader drawerOpen={offsetEnabled}/>
@@ -122,12 +109,14 @@ export default function KaReader({
                 <>
                     {readingMode == ReadingModeEnum.HORIZONTAL ?
                         <HorizontalReader 
-                            onPageChange={handlePageChanged}
+                            onPageChanged={handlePageChanged}
+                            onChapterReadingFinished={handleReadingChapterFinished}
                             onLoadNextChapter={handleLoadNextChapter}
                         />
                         :
                         <VerticalReader
-                            onPageChange={handlePageChanged}
+                            onPageChanged={handlePageChanged}
+                            onChapterReadingFinished={handleReadingChapterFinished}
                             onLoadNextChapter={handleLoadNextChapter}
                         />
                     }

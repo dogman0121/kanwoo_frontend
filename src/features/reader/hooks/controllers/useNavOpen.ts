@@ -5,7 +5,7 @@ import { useCallback } from "react"
 import { selectNavOpen, setNavOpen, toggleNavOpen } from "../../states/reader.slice"
 
 
-export default function useNavOpen() {
+export default function useNavigationController() {
     const dispatch = useAppDispatch()
 
     const navOpen = useAppSelector(selectNavOpen)
