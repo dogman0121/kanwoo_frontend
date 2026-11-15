@@ -7,6 +7,10 @@ import { useEffect, useTransition } from "react";
 import { selectManga } from "../states/manga-page/page/slice";
 import { selectDeviceType } from "@/features/global/states/app/slice";
 
+const MyButtonCaption = styled(Typography)({
+    lineHeight: 1.2
+})
+
 function MyButton({
     label,
     caption,
@@ -31,13 +35,13 @@ function MyButton({
                     loading={loading}
                     onClick={onClick}
                     sx={{
-                        minHeight: "50px",
+                        height: "54px",
                         minWidth: "150px",
                         px: 5,
-                        py: 2,
 
                         display: "flex",
-                        flexDirection: 'column'
+                        flexDirection: 'column',
+                        alignItems: "center"
                     }}
                 >
                     <Typography
@@ -49,9 +53,9 @@ function MyButton({
                         {label}
                     </Typography>
                     {caption && (
-                        <Typography variant="caption">
+                        <MyButtonCaption variant="caption">
                             {caption}
-                        </Typography>
+                        </MyButtonCaption>
                     )}
                 </Button>
             )}
@@ -78,9 +82,9 @@ function MyButton({
                         {label}
                     </Typography>
                     {caption && (
-                        <Typography variant="caption">
+                        <MyButtonCaption variant="caption">
                             {caption}
-                        </Typography>
+                        </MyButtonCaption>
                     )}
                 </Button>
             )}
@@ -106,7 +110,6 @@ export default function ReadingButton({...props}: ButtonProps) {
 
     const progress = useAppSelector(selectReadingProgress)
 
-
     const handleClick = () => {
         const chapter = progress?.chapter
         
@@ -116,7 +119,17 @@ export default function ReadingButton({...props}: ButtonProps) {
         router.push(toHref(routes.chapters.item, {id: chapter.id.toString()}))
     }
 
-    if (!progress && !progressLoading)
+    if (!progress) {
+        return (
+            <MyButton 
+                disabled
+                label=""
+                loading={progressLoading}
+            />
+        )
+    }
+
+    if (progress?.start_type == "no_chapters")
         return (
             <MyButton 
                 disabled 
@@ -124,7 +137,7 @@ export default function ReadingButton({...props}: ButtonProps) {
             />
         )
 
-    if (progress && (progress.status == "not_started" || progress.status == "finished"))
+    if (progress?.start_type == "start")
         return (
             <MyButton 
                 label={"Читать"}
@@ -137,7 +150,6 @@ export default function ReadingButton({...props}: ButtonProps) {
             label={"Продолжить чтение"}
             caption={`${progress?.chapter?.chapter} глава`}
             onClick={handleClick} 
-            loading={progressLoading}
         />
     )
 }

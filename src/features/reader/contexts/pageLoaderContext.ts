@@ -2,7 +2,7 @@ import { createContext } from "react";
 import PageLoader from "../lib/page-loader";
 
 export interface PageLoaderContextProps {
-    loader?: PageLoader,
+    pageLoader?: PageLoader,
 }
 
 const pageLoaderContext = createContext<PageLoaderContextProps>({

@@ -1,12 +1,8 @@
 import { Box, SxProps, Typography } from "@mui/material"
 import { RefObject } from "react"
-import { MAX_CHAPTER_WIDTH } from "@/constants/reader"
 import { Chapter } from "@/types/chapter"
 import { NavigationButtonsShadow } from "../../../components/NavigationButtons"
 import ChapterFooterInner from "@/features/reader/components/ChapterFooterInner"
-import OffsetContainer from "@/features/reader/components/ui/OffsetContainer"
-import { useAppSelector } from "@/lib/state/hooks"
-import { selectOffsetEnabled } from "@/features/reader/states/reader.slice"
 
 export interface ChapterFooterProps {
     chapter: Chapter,
@@ -20,8 +16,6 @@ export default function ChapterFooter({
     sx
 }: ChapterFooterProps) {
 
-    const offsetEnabled = useAppSelector(selectOffsetEnabled)
-
     return (
         <Box
             sx={{
@@ -32,35 +26,25 @@ export default function ChapterFooter({
                 display: "flex"
             }}
         >
-            <OffsetContainer
-                offsetEnabled={offsetEnabled}
-                ref={ref}
-
+            <Box
                 sx={{
+                    pt: "59px",
+                    px: 2,
+                    pb: "150px",
+
+                    height: "100%",
+                    width: "100%",
+
+                    touchAction: "pan-y",
+                    overflowY: "auto",
+
                     display: "flex",
-                    flexDirection: "column"
+                    alignItems: "center"
                 }}
             >
-                <Box
-                    sx={{
-                        pt: "59px",
-                        px: 2,
-                        pb: "150px",
-
-                        height: "100%",
-                        width: "100%",
-
-                        touchAction: "pan-y",
-                        overflowY: "auto",
-
-                        display: "flex",
-                        alignItems: "center"
-                    }}
-                >
-                    <ChapterFooterInner chapter={chapter} />
-                </Box>
-                <NavigationButtonsShadow />
-            </OffsetContainer>
+                <ChapterFooterInner chapter={chapter} />
+            </Box>
+            <NavigationButtonsShadow />
         </Box>
     )
 }

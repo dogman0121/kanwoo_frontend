@@ -2,17 +2,22 @@ import { ApiConfig } from "@/lib/api/api-config.type";
 import { HTTP_METHODS } from "@/lib/api/methods.type";
 
 export const readerRoutes: ApiConfig = {
-    "/sessions": {
-        POST: {
+    "/progresses/reading-sessions": {
+        GET: {
             mode: "proxy",
-            url: "/progresses"
+            url: "/progresses/reading-sessions"
         }
     },
-    "/sessions/:sessionID": {
-        PUT: {
+    "/progresses/reading-sessions/:id": {
+        PATCH: {
             mode: "proxy",
-            method: HTTP_METHODS.PATCH,
-            url: "/progresses/:sessionID"
+            url: "/progresses/reading-sessions/:id"
+        }
+    },
+    "/progresses/chapters/:id": {
+        GET: {
+            mode: "proxy",
+            url: "/progresses/chapters/:id"
         }
     }
 }
