@@ -8,7 +8,6 @@ import "swiper/css/free-mode"
 import "swiper/css/mousewheel"
 import "swiper/css/navigation"
 import "swiper/css/free-mode"
-import AppSnackbar from "@/components/app/AppSnackbar";
 import MangaCarousel from "../../ui/MangaCarousel";
 import MangaCarouselTitle from "../../ui/MangaCarouselTitle";
 import useSwitchButtons from "../../../hooks/use-switch-buttons";
@@ -18,8 +17,6 @@ import { selectBlockByHash } from "@/features/home/states/home-page/slice";
 import { ProgressSave } from "@/features/home/types/progress";
 import { range } from "lodash";
 import ReadingProgressSkeleton from "./ReadingProgressSkeleton";
-import { HomeProgresses } from "@/features/home/types/hero";
-import { homeClientAPI } from "@/features/home/api/client.api";
 import { progressClientAPI } from "@/features/progress/api/client.api";
 
 

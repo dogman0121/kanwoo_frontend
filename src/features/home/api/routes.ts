@@ -18,5 +18,11 @@ export const homeApiConfig: ApiConfig = {
             mode: "proxy",
             url: "/home/blocks"
         }
+    },
+    "/home/progresses/:id": {
+        DELETE: {
+            mode: "proxy",
+            url: "/progresses/bookmarks/:id"
+        }
     }
 }
