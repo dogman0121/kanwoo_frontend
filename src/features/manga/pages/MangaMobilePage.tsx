@@ -39,6 +39,12 @@ export default function MangaMobilePage({
         }))
     }, [manga, readingProgress])
 
+    useEffect(() => {
+        if (!manga) return
+
+        navigator.sendBeacon(`/api/manga/${manga.data.slug}/views`)
+    }, [manga])
+
     const backgroundURL = manga.data?.background ?? manga.data.poster?.medium 
     const backgroundColor = theme.vars?.palette.background.defaultChannel
 
