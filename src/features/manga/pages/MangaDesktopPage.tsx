@@ -22,6 +22,7 @@ import { ReadingProgress, ReadingProgressContext } from "@/types/reading-progres
 import { useEffect } from "react";
 import { addManga } from "../states/manga/slice";
 import { initializeTranslations } from "../states/manga-page/translations/slice";
+import { mangaClientApi } from "../api/client.api";
 
 
 export default function MangaDesktopPage({
@@ -40,6 +41,12 @@ export default function MangaDesktopPage({
     const handleChangeSection = (_event: React.SyntheticEvent, newValue: string) => {
         dispatch(setSection(newValue));
     };
+
+    useEffect(() => {
+        if (!manga) return
+
+        navigator.sendBeacon(`/api/manga/${manga.data.slug}/views`)
+    }, [manga])
 
     useEffect(() => {
         dispatch(addManga(manga))

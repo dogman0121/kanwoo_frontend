@@ -74,5 +74,9 @@ export const mangaClientApi = {
 
     getMangaProgress: async (slug: string) => {
         return clientFetch.get<ReadingStart>(`/manga/${slug}/progress`)
+    },
+
+    addView: (slug: string) => {
+        return clientFetch.patch(`/manga/${slug}/views`)
     }
 }

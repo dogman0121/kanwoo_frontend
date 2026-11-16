@@ -60,7 +60,7 @@ export const mangaApiConfig: ApiConfig = {
     "/manga/:slug/views": {
         POST: {
             mode: "proxy",
-            url: "/manga/views"
+            url: "/manga/:slug/views"
         }
     },
     "/manga/:slug/reports": {

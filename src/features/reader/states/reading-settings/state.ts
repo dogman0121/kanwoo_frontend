@@ -12,7 +12,7 @@ export interface ReadingSettingsState {
 }
 export const initialState: ReadingSettingsState = {
     settings: {
-        aligment: "horizontal",
+        aligment: "auto",
         autoSave: true,
         pageNumbers: false,
         infinityChapter: false
