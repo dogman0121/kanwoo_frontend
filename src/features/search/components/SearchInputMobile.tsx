@@ -11,7 +11,6 @@ const SearchOutlinedInputMobile = styled(OutlinedInput)(({theme}) => ({
     padding: `0 ${theme.spacing(2)} 0 ${theme.spacing(3)}`, 
     "& input": {
         padding: "6px 0",
-        fontSize: "14px"
     }
 }));
 

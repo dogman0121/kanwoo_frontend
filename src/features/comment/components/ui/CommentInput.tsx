@@ -236,7 +236,6 @@ function SmallInputInner({
                     fullWidth
                     autoFocus
                     multiline
-                    size="small"
                     maxRows={4}
                     value={value}
                     onChange={onChange}
