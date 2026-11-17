@@ -1,13 +1,13 @@
-import { authClientApi, LoginWithYandex } from "@/features/auth/api/client.api";
-import { clientFetch } from "@/lib/fetch/client-fetch.util";
+import { authClientApi, YandexOauthCredentials } from "@/features/auth/api/client.api";
 import { AuthSection } from "@/features/auth/types";
-import { AuthProfile, Profile } from "@/types/profile";
+import { AuthProfile } from "@/types/profile";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { setAuthProfile } from "../auth-profile/auth-profile.slice";
+import { YandexOauthResponse } from "@/lib/yandex-oauth/YandexOauthScript";
 
 export interface AuthState {
     profiles: AuthProfile[],
     ui: {
-        isLoading: boolean,
         section: AuthSection
     }
 }
@@ -15,7 +15,6 @@ export interface AuthState {
 const initialState: AuthState = {
     profiles: [],
     ui: {
-        isLoading: false,
         section: AuthSection.LOGIN
     }
 }
@@ -26,34 +25,36 @@ export const login = createAsyncThunk(
         const response = await authClientApi.login(data.email, data.password)
 
         return {
-            response: response
+            response
         }
     }
 )
 
 export const loginWithYandex = createAsyncThunk(
     "auth/loginWithYandexStatus",
-    async (data: LoginWithYandex) => {
-
+    async (data: YandexOauthCredentials) => {
+        authClientApi.loginWithYandex(data)
     }
 )
 
 export const register = createAsyncThunk(
     "auth/registerStatus",
-    async (data: {email: string, password: string, login: string}) => {
+    async (data: {code: number, email: string, password: string, login: string}, thunkAPI) => {
+        const {code, email, password, login} = data
         
+        const response = await authClientApi.register(code, login, email, password)
+
+        thunkAPI.dispatch(setAuthProfile(response.data))
     }
 )
 
 export const createProfile = createAsyncThunk(
     "auth/createProfileStatus",
     async (data: {name: string, slug: string}, thunkAPI) => {
-        thunkAPI.dispatch(setIsLoading(true))
 
         try {
 
         } finally {
-            thunkAPI.dispatch(setIsLoading(false))
         }
     }
 )
@@ -73,11 +74,11 @@ export const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
+        initialize: (state: AuthState) => {
+            state.ui.section = AuthSection.LOGIN
+        },
         setSection: (state: AuthState, action: PayloadAction<AuthSection>) => {
             state.ui.section = action.payload
-        },
-        setIsLoading: (state: AuthState, action: PayloadAction<boolean>) => {
-            state.ui.isLoading = action.payload
         },
         setProfiles: (state: AuthState, action: PayloadAction<AuthProfile[]>) => {
             state.profiles = action.payload
@@ -100,7 +101,7 @@ export const authSlice = createSlice({
 
 export const { 
     setSection,
-    setIsLoading,
+    initialize,
     setProfiles
 } = authSlice.actions
 
@@ -108,7 +109,6 @@ export type RootState = {
     auth: {authProcess: AuthState}
 }
 
-export const selectIsLoading = (state: RootState) => state.auth.authProcess.ui.isLoading
 export const selectProfiles = (state: RootState) => state.auth.authProcess.profiles
 export const selectSection = (state: RootState) => state.auth.authProcess.ui.section
 

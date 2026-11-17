@@ -1,17 +1,17 @@
 import { useState } from "react"
 import AuthInput from "./Input"
-import { Badge, FormControl, FormControlProps, FormHelperText, Icon, IconButton, InputLabel, OutlinedInput, TextFieldProps, Tooltip } from "@mui/material"
+import { Badge, FormControl, FormControlProps, FormHelperText, Icon, IconButton, InputLabel, OutlinedInput, OutlinedInputProps, TextFieldProps, Tooltip } from "@mui/material"
 import VisibilityIcon from "@mui/icons-material/Visibility"
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff"
 
-export default function PasswordInput({helperText, ...props}: FormControlProps & {helperText?: string}) {
+export default function PasswordInput({helperText, label = "Пароль", error, ...props}: OutlinedInputProps & {helperText?: string}) {
     const [passwordShown, setPasswordShown] = useState(false)
     
     return (
-        <FormControl {...props}>
-            <InputLabel>Пароль</InputLabel>
+        <FormControl error={error}>
+            <InputLabel>{label}</InputLabel>
             <OutlinedInput
-                label="Пароль"
+                label={label}
                 placeholder="Введите парооль"
                 type={passwordShown ? "text" : "password"} 
                 endAdornment={
@@ -38,6 +38,7 @@ export default function PasswordInput({helperText, ...props}: FormControlProps &
                 sx={{
                     borderRadius: "12px"
                 }}
+                {...props}
             />
             {helperText && (
                 <FormHelperText>{helperText}</FormHelperText>

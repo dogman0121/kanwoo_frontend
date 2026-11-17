@@ -2,6 +2,8 @@
 
 import { YANDEX_OAUTH_CONTAINER_ID } from "@/features/auth/components/Auth";
 import { useEffect } from "react";
+import { useAppDispatch } from "../state/hooks";
+import { loginWithYandex } from "@/features/auth/states/auth/slice";
 
 
 export interface YandexOauthResponse {
@@ -18,6 +20,7 @@ export default function YandexOauthScript({
 }: {
     onAuth: (response: YandexOauthResponse) => void
 }) {
+    const dispatch = useAppDispatch()
     
     useEffect(() => {
         window.YaAuthSuggest.init({

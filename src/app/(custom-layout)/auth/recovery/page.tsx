@@ -4,7 +4,7 @@ import Auth from "@/features/auth/components/Auth";
 import { AuthSection } from "@/features/auth/types";
 import { setSection } from "@/features/auth/states/auth/slice";
 import { useAppStore } from "@/lib/state/hooks";
-import { Suspense, useRef } from "react";
+import { useRef } from "react";
 
 export default function Page() {
 
@@ -12,7 +12,7 @@ export default function Page() {
     const initialized = useRef(false)
 
     if (!initialized.current) {
-        store.dispatch(setSection(AuthSection.VERIFY))
+        store.dispatch(setSection(AuthSection.RECOVERY))
         initialized.current = true
     }
     

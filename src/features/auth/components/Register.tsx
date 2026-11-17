@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import { ApiError } from "@/lib/fetch/api-response.types";
 import AppSnackbar from "@/components/app/AppSnackbar";
@@ -15,9 +15,10 @@ import PasswordInput from "./ui/PasswordInput";
 import TextButton from "./ui/TextButton";
 import useSlugValidator from "@/features/profile/hooks/use-slug-validator.hook";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
-import { register, selectIsLoading, setIsLoading, setSection } from "@/features/auth/states/auth/slice";
+import { register, setSection } from "@/features/auth/states/auth/slice";
 import { AuthSection } from "@/features/auth/types";
 import SlugInput from "@/features/profile/components/SlugInput";
+import { setAuthModalOpen } from "@/features/global/states/app/slice";
 
 
 interface RegisterForm {
@@ -33,7 +34,7 @@ export default function AuthRegister() {
     const [timeRemaining, setTimeRemaining] = useTimer(0)
 
     const { validate, isValid, validating } = useSlugValidator()
-    const isLoading = useAppSelector(selectIsLoading)
+    const [isLoading, setIsLoading] = useTransition()
 
     // totp form
     const [totpOpen, setTotpOpen] = useState(false)
@@ -46,22 +47,31 @@ export default function AuthRegister() {
 
     const {control, handleSubmit,  setError, formState: {errors}} = useForm<RegisterForm>({
         mode: "onChange",
-        defaultValues: registerData
+        defaultValues: {
+            login: "",
+            email: "",
+            password: ""
+        }
     })
 
     const onTotp = async (code?: number) => {
         if (!registerData)
             throw new Error("Register data is undefined")
 
-        if (!code || code < 100000)
+        if (typeof code == "undefined" || code < 100000)
             return setTotpError(false)
 
         try {
-            dispatch(register({
-                login: registerData?.login,
-                email: registerData?.email,
-                password: registerData?.password
-            })).unwrap()
+            await dispatch(
+                register({
+                    code: code,
+                    login: registerData?.login,
+                    email: registerData?.email,
+                    password: registerData?.password
+                })
+            ).unwrap()
+
+            dispatch(setAuthModalOpen(false))
         } 
         catch (e) {
             if (e instanceof ApiError) {
@@ -76,15 +86,14 @@ export default function AuthRegister() {
 
     const sendCode = async (email: string) => {
         try {
-            await authClientApi.getRegisterCode(email)
+            setIsLoading(async () => {
+                await authClientApi.getRegisterCode(email)
+            })
 
             setTimeRemaining(40)
         }
         catch (e) {
             throw e
-        }
-        finally {
-            dispatch(setIsLoading(true))
         }
     }
 
@@ -188,7 +197,7 @@ export default function AuthRegister() {
                             validate: (value) => {
                                 validate(value)
 
-                                return ""
+                                return isValid
                             }
                         }}
                         render={({field}) => (
