@@ -1,19 +1,18 @@
 "use client"
 
-import { AppBar, Avatar, Box, SvgIcon, Toolbar, Typography, useTheme } from "@mui/material"
+import { AppBar, Avatar, Box, Button, SvgIcon, Toolbar, Typography, useTheme } from "@mui/material"
 import Link from "next/link"
-import { useState } from "react"
 import UserNav from "./components/UserNav"
 import SiteLogo from "@/components/SiteLogo"
 import { useAppDispatch } from "@/lib/state/hooks"
 import { setSearchModalOpen } from "@/features/global/states/app/slice"
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import WindowRoundedIcon from '@mui/icons-material/WindowRounded';
 
 function Header() {
     const dispatch = useAppDispatch()
 
     const theme = useTheme()
-
-    const [searchOpen, setSearchOpen] = useState(false);
 
     return (
         <>
@@ -35,7 +34,7 @@ function Header() {
                     <Box
                         sx={{
                             display: "flex",
-                            columnGap: "40px",
+                            columnGap: 6,
                             alignItems: "center"
                         }}
                     >
@@ -46,18 +45,26 @@ function Header() {
                             sx={{
                                 display: "flex",
                                 flexDirection: "row",
-                                columnGap: "25px"
+                                columnGap: 2
                             }}
                         >
-                            <Link href={"/catalog"}>каталог</Link>
-                            <Typography
+                            <Button
+                                LinkComponent={Link}
+                                href="/catalog"
+                                variant="text"
+                                color="inherit"
+                                startIcon={<WindowRoundedIcon />}
+                            >
+                                каталог
+                            </Button>
+                            <Button
                                 onClick={() => dispatch(setSearchModalOpen(true))}
-                                sx={{
-                                    cursor: "pointer"
-                                }}
+                                variant="text"
+                                color="inherit"
+                                startIcon={<SearchRoundedIcon />}
                             >
                                 поиск
-                            </Typography>
+                            </Button>
                         </Box>
                     </Box>
                     <UserNav />

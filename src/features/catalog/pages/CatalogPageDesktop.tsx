@@ -1,15 +1,16 @@
 "use client"
 
-import SearchInputDesktop from "@/features/search/components/SearchInputDesktop"
-import SearchProvider from "@/features/search/components/SearchProvider"
-import { Box, Container, Grid, Paper, Typography } from "@mui/material"
-import Filters from "./_components/Filters"
-import MangaResults from "./_components/MangaResults"
-import SearchSectionSelector from "@/features/search/components/SearchSectionSelector"
-import theme from "@/constants/themes/main.theme"
-import SearchList from "@/features/search/components/ui/SearchList"
+import SearchInputDesktop from "@/features/search/components/SearchInputDesktop";
+import SearchProvider from "@/features/search/components/SearchProvider";
+import SearchSectionSelector from "@/features/search/components/SearchSectionSelector";
+import SearchList from "@/features/search/components/ui/SearchList";
+import { Box, Container, Grid, Paper, Typography, useTheme } from "@mui/material";
+import MangaResults from "../components/MangaResults";
+import Filters from "../components/Filters";
 
-export default function DesktopPage() {
+export default function CatalogPageDesktop() {
+    const theme = useTheme()
+
     return (
         <Container maxWidth="lg">
             <Typography 

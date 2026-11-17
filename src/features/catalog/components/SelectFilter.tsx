@@ -1,8 +1,9 @@
+"use client"
+
 import useSearch from "@/features/search/hooks/useSearch";
 import { Box, Chip, FormControl, MenuItem, Select, SelectChangeEvent, SelectProps, Typography } from "@mui/material";
-import CloseRoundedIcon from "@mui/icons-material/CloseRounded"
 import theme from "@/constants/themes/main.theme";
-import { MouseEvent, MouseEventHandler, useEffect, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 
 export function CatalogSelect({sx, ...props}: SelectProps) {
     return (
