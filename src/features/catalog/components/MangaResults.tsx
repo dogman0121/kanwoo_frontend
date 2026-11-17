@@ -5,7 +5,7 @@ import useSearch from "@/features/search/hooks/useSearch";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import { Box, BoxProps, Breadcrumbs, Button, Drawer, IconButton, Popover, SxProps, Typography } from "@mui/material";
 import Grid, { GridProps } from "@mui/material/Grid"
-import { RefObject, useEffect, useRef, useState } from "react";
+import { MouseEvent, PointerEvent, RefObject, useEffect, useRef, useState } from "react";
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded';
 import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded"
 import Description from "@/features/manga/components/ui/Description";
@@ -74,7 +74,8 @@ function MangaDetailsMobile({
         >
             <Box
                 sx={{
-                    py: 3,
+                    py: 4,
+                    pb: 2,
                     px: 5,
                 }}
             >
@@ -434,33 +435,40 @@ function MangaResultMobile({
 }) {
     const deviceType = useAppSelector(selectDeviceType)
 
-    const openTimoutRef = useRef<NodeJS.Timeout | null>(null);
+    const openTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const mangaItemRef = useRef<HTMLElement | null>(null);
-    const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+    const startYRef = useRef(0)
+    const startXRef = useRef(0)
+    const isLongPressTriggeredRef = useRef(false);
 
-    const setShowDetailsTimeout = () => {
-        if (closeTimeoutRef.current)
-            clearTimeout(closeTimeoutRef.current)
+    const openMenu = (e: PointerEvent) => {
+        if (e.pointerType === "mouse" || !e.isPrimary) return;
 
-        openTimoutRef.current = setTimeout(() => {
-            openTimoutRef.current = null
-            onOpen?.(manga, mangaItemRef.current)
-        }, 300)
+        isLongPressTriggeredRef.current = false;
+        startXRef.current = e.clientX;
+        startYRef.current = e.clientY;
+
+        openTimeoutRef.current = setTimeout(() => {
+            openTimeoutRef.current = null;
+            isLongPressTriggeredRef.current = true;
+            onOpen?.(manga, mangaItemRef.current);
+
+            if (typeof navigator !== "undefined" && navigator.vibrate) {
+                navigator.vibrate(40);
+            }
+        }, 400); // 400-500 мс комфортнее 300 мс: меньше ложных срабатываний при медленном скролле
     }
 
-    const cleanShowDetailsTimeout = () => {
-        closeTimeoutRef.current = setTimeout(() => {
-            if (openTimoutRef.current)
-                clearTimeout(openTimoutRef.current)
-
-            onClose?.()
-        }, 100)
+    const cancelTouch = () => {
+        if (openTimeoutRef.current) {
+            clearTimeout(openTimeoutRef.current);
+            openTimeoutRef.current = null;
+        }
     }
 
-    const throttledCleanShowDetails = throttle(() => {
-        if (!open)
-            cleanShowDetailsTimeout()
-    }, 50)
+    useEffect(() => {
+        return () => cancelTouch()
+    }, []);
 
     return (
         <>
@@ -468,30 +476,49 @@ function MangaResultMobile({
                 manga={manga as Manga}
                 ref={mangaItemRef}
                 onContextMenu={(event) => {
-                    if (deviceType != "desktop")
-                        event.preventDefault()
+                    event.preventDefault()
+                    if (!isLongPressTriggeredRef.current) {
+                        onOpen?.(manga, mangaItemRef.current);
+                    }
                 }}
-                onPointerUp={() => {
-                    if (!open)
-                        cleanShowDetailsTimeout()
+                onClickCapture={(e: MouseEvent) => {
+                // Глушим клик, который браузер сгенерирует, когда пользователь уберет палец
+                    if (isLongPressTriggeredRef.current) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        isLongPressTriggeredRef.current = false;
+                    }
                 }}
-                onPointerDown={() => {
-                    setShowDetailsTimeout()
+                onPointerUp={cancelTouch}
+                onPointerDown={openMenu}
+                onPointerMove={(e) => {
+                    if (!openTimeoutRef.current || !e.isPrimary) return;
+
+                    if (Math.abs(e.clientX - startXRef.current) > 10 || Math.abs(e.clientY - startYRef.current) > 10) {
+                        cancelTouch();
+                    }
                 }}
+                onPointerCancel={cancelTouch}
                 sx={{
                     WebkitUserSelect: "none",
                     MozUserSelect: "none",    /* Firefox */
                     MsUserSelect: "none",    /* Internet Explorer / Edge */
                     userSelect: "none",
 
-                    WebkitTouchCallout: "none", /* Отключает контекстное меню при долгом нажатии в iOS Safari */
-                    WebkitTapHighlightColor: "transparent", /* Убирает синюю подсветку при клике на Android/iOS */
+                    WebkitTouchCallout: "none",
+                    WebkitTapHighlightColor: "transparent",
+
+                    // Запрещаем iOS Safari перехватывать долгое нажатие на постер и ссылки внутри карточки
+                    "& img, & a": {
+                        WebkitTouchCallout: "none",
+                        pointerEvents: "none",
+                    },
                     
                     "&:hover": {
-                        transform: (deviceType != "desktop" ? "scale(1.05)" : undefined)
+                        transform: deviceType !== "desktop" ? "scale(1.02)" : undefined
                     },
                     ...sx
-                }}  
+                    }}  
             />
         </>
     )

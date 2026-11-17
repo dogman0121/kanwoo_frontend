@@ -113,11 +113,11 @@ export const chapterPageTheme = createTheme({
             }
         },
         MuiInputBase: {
-        styleOverrides: {
-            input: ({ theme }) => ({
-                [theme.breakpoints.down('md')]: {
-                    fontSize: '16px',
-                },
+            styleOverrides: {
+                input: ({ theme }) => ({
+                    [theme.breakpoints.down('md')]: {
+                        fontSize: '16px',
+                    },
                 }),
             },
         },

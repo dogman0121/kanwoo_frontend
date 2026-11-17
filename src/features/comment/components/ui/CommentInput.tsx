@@ -284,6 +284,7 @@ function SmallInputInner({
 export default function CommentInput({
     size,
     onSend,
+    onClose,
     ...props
 }: CommentAuthorizedWithSizeProps  ) {
     const dispatch = useAppDispatch()
@@ -307,6 +308,11 @@ export default function CommentInput({
         }
     }
 
+    const handleClose = () => {
+        setCommentText("")
+        onClose?.()
+    }
+
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const text = event.target.value;
 
@@ -323,6 +329,7 @@ export default function CommentInput({
                     onSend={handleSend}
                     disabled={isPending || error}
                     value={commentText}
+                    onClose={handleClose}
                     onChange={handleChange}
                     {...props}
                 />
@@ -331,6 +338,7 @@ export default function CommentInput({
                     onSend={handleSend}
                     disabled={isPending || error}
                     value={commentText}
+                    onClose={handleClose}
                     onChange={handleChange}
                     {...props}
                 />

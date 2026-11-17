@@ -7,7 +7,7 @@ import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import AppSnackbar from "@/components/app/AppSnackbar";
 import Message from "./ui/Message";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
-import { selectIsLoading, setIsLoading, setSection } from "@/features/auth/states/auth/slice";
+import { setSection } from "@/features/auth/states/auth/slice";
 import { AuthSection } from "@/features/auth/types";
 import Header from "./ui/Header";
 import FormContainer from "./ui/FormContainer";
@@ -16,7 +16,6 @@ import Input from "./ui/Input";
 export default function AuthForgot() {
     const dispatch = useAppDispatch()
 
-    const isLoading = useAppSelector(selectIsLoading)
 
     const [email, setEmail] = useState("");
     const [emailSent, setEmailSent] = useState(false);
@@ -24,15 +23,12 @@ export default function AuthForgot() {
 
     const handleForgot = async () => {
         try {
-            dispatch(setIsLoading(true))
             
             await authClientApi.forgot(email);
 
             setEmailSent(true);
         } catch (e) {
             throw e
-        } finally {
-            dispatch(setIsLoading(false))
         }
     }
 
@@ -70,7 +66,6 @@ export default function AuthForgot() {
                 variant="contained"
                 onClick={handleForgot}
                 autoFocus
-                loading={isLoading}
                 sx={{
                     mt: 4
                 }}

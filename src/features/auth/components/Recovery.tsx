@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Button } from "@mui/material";
 import AuthError from "./ui/Error";
 import { useSearchParams } from "next/navigation";
@@ -10,6 +10,8 @@ import Message from "./ui/Message";
 import Header from "./ui/Header";
 import FormContainer from "./ui/FormContainer";
 import PasswordInput from "./ui/PasswordInput";
+import { ApiError } from "@/lib/fetch/api-response.types";
+import ErrorBlock from "./ui/Error";
 
 interface RecoveryForm {
     password: string,
@@ -22,8 +24,14 @@ export default function AuthRecovery() {
     const urlParams = useSearchParams();
     const token = urlParams.get("t");
     
+    const [isLoading, setIsLoading] = useTransition()
+
     const {control, handleSubmit, formState: {errors}, setError} = useForm<RecoveryForm>({
-        mode: "onSubmit"
+        mode: "onSubmit",
+        defaultValues: {
+            password: "",
+            repeatPassword: ""
+        }
     })
 
     const handleRecovery = async (data: RecoveryForm) => {
@@ -35,10 +43,21 @@ export default function AuthRecovery() {
         }
 
         try {
-            await authClientApi.recovery(token, data.password);
+            setIsLoading(async () => {
+                try {
+                    await authClientApi.recovery(token, data.password)
 
-            setRecoveryMessageOpen(true)
-        } catch (_e) {
+                    setRecoveryMessageOpen(true)
+                } catch (e) {
+                    if (e instanceof ApiError) {
+                        if (e.code == "token_expired") {
+                            setError("root", {message: "Время действия ссылки истекло."})
+                        }
+                    }
+                }
+            })
+        } catch (e) {
+            
             throw new Error("Failed to recovery")
         }
     }
@@ -55,11 +74,6 @@ export default function AuthRecovery() {
         <form onSubmit={handleSubmit(handleRecovery)}>
             <Header label="Восстановление пароля"/>
             <FormContainer>
-                { errors.root && (
-                    <AuthError>
-                        {errors.root.message}
-                    </AuthError>
-                )}
                 <Controller 
                     name="password"
                     control={control}
@@ -76,6 +90,7 @@ export default function AuthRecovery() {
                     control={control}
                     render={({field}) => (
                         <PasswordInput
+                            label={"Повтор пароля"}
                             error={errors.root || errors.repeatPassword ? true : false}
                             helperText={errors.repeatPassword?.message} 
                             {...field}  
@@ -83,10 +98,16 @@ export default function AuthRecovery() {
                     )}
                 />
             </FormContainer>
+            { errors.root && (
+                <AuthError sx={{mt: 2}}>
+                    {errors.root.message}
+                </AuthError>
+            )}
             <Button
                 fullWidth
                 variant="contained"
                 type="submit"
+                loading={isLoading}
                 sx={{
                     mt: 4
                 }}

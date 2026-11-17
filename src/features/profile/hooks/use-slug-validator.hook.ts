@@ -2,7 +2,7 @@
 
 import { profileClientApi } from "@/lib/fetch/features/profile/client.api";
 import { debounce } from "lodash";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function useSlugValidator(defaultValue?: string) {
     const [validating, setValidating] = useState(false)
@@ -14,10 +14,14 @@ export default function useSlugValidator(defaultValue?: string) {
                 if (slug == defaultValue) {
                     return setIsValid(true)
                 }
-                
+            
                 const response = await profileClientApi.checkProfileSlug(slug)
                 setIsValid(response.data.available)
-            } finally {
+            }
+            catch (e) {
+                console.error(e)
+            } 
+            finally {
                 setValidating(false)
             }
         }, 500),
