@@ -170,6 +170,15 @@ const mainTheme = createTheme({
         },
       },
     },
+    MuiInputBase: {
+      styleOverrides: {
+        input: ({ theme }) => ({
+          [theme.breakpoints.down('md')]: {
+            fontSize: '16px',
+          },
+        }),
+      },
+    },
     MuiSelect: {
       styleOverrides: {
         root: {

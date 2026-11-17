@@ -1,3 +1,5 @@
+"use client"
+
 import MangaItem, { MangaItemSquare } from "@/features/manga/components/MangaItem";
 import useSearch from "@/features/search/hooks/useSearch";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
@@ -64,7 +66,9 @@ function MangaDetailsMobile({
                     WebkitUserSelect: "none",
                     MozUserSelect: "none",
                     msUserSelect: "none",
-                    userSelect: "none"
+                    userSelect: "none",
+                    WebkitTouchCallcout: "none", 
+                    WebkitTapHighlightColor: "transparent" 
                 }
             }}
         >
@@ -316,25 +320,33 @@ function MangaDetailsDesktop({
 }
 
 
-function MangaResult({
+function MangaResultDesktop({
     manga,
-    sx
-}: {manga: MangaShort, sx?: SxProps}) {
+    sx,
+    onOpen,
+    onClose
+}: {
+    manga: MangaShort, 
+    sx?: SxProps,
+    onOpen?: (manga: MangaShort, anchor?: HTMLElement | null) => void,
+    onClose?: () => void
+}) {
     const deviceType = useAppSelector(selectDeviceType)
 
     const openTimoutRef = useRef<NodeJS.Timeout | null>(null);
     const mangaItemRef = useRef<HTMLElement | null>(null);
     const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-    const [mangaMenuOpen, setMangaMenuOpen] = useState(false);
+    const [mangaMenuOpen, setMangaMenuOpen] = useState(false)
 
     const setShowDetailsTimeout = () => {
         if (closeTimeoutRef.current)
             clearTimeout(closeTimeoutRef.current)
 
         openTimoutRef.current = setTimeout(() => {
-            setMangaMenuOpen(true)
             openTimoutRef.current = null
+            setMangaMenuOpen(true)
+            onOpen?.(manga, mangaItemRef.current)
         }, 300)
     }
 
@@ -344,11 +356,12 @@ function MangaResult({
                 clearTimeout(openTimoutRef.current)
 
             setMangaMenuOpen(false)
+            onClose?.()
         }, 100)
     }
 
     const throttledCleanShowDetails = throttle(() => {
-        if (!mangaMenuOpen)
+        if (!open)
             cleanShowDetailsTimeout()
     }, 50)
 
@@ -365,10 +378,6 @@ function MangaResult({
                 aria-haspopup="true"
                 manga={manga as Manga}
                 ref={mangaItemRef}
-                onContextMenu={(event) => {
-                    if (deviceType != "desktop")
-                        event.preventDefault()
-                }}
                 onMouseEnter={() => {
                     if (deviceType === "desktop")
                         setShowDetailsTimeout()
@@ -377,8 +386,93 @@ function MangaResult({
                     if (deviceType === "desktop")
                         cleanShowDetailsTimeout()
                 }}
+                sx={{
+                    WebkitUserSelect: "none",
+                    MozUserSelect: "none",    /* Firefox */
+                    MsUserSelect: "none",    /* Internet Explorer / Edge */
+                    userSelect: "none",
+
+                    WebkitTouchCallout: "none", /* Отключает контекстное меню при долгом нажатии в iOS Safari */
+                    WebkitTapHighlightColor: "transparent", /* Убирает синюю подсветку при клике на Android/iOS */
+                    
+                    "&:hover": {
+                        transform: (deviceType != "desktop" ? "scale(1.05)" : undefined)
+                    },
+                    ...sx
+                }}  
+            />
+            <MangaDetailsDesktop 
+                shortData={manga}
+                open={mangaMenuOpen}
+                onClose={() => setMangaMenuOpen(false)}
+                mangaRef={mangaItemRef}
+                onFocus={() => {
+                    if (closeTimeoutRef.current) {
+                        clearTimeout(closeTimeoutRef.current)
+                    }
+                }}
+                onBlur={() => {
+                    cleanShowDetailsTimeout()
+                }}
+            />
+        </>
+    )
+}
+
+function MangaResultMobile({
+    manga,
+    sx,
+    open,
+    onOpen,
+    onClose
+}: {
+    manga: MangaShort, 
+    sx?: SxProps,
+    open: boolean,
+    onOpen?: (manga: MangaShort, anchor?: HTMLElement | null) => void,
+    onClose?: () => void
+}) {
+    const deviceType = useAppSelector(selectDeviceType)
+
+    const openTimoutRef = useRef<NodeJS.Timeout | null>(null);
+    const mangaItemRef = useRef<HTMLElement | null>(null);
+    const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+    const setShowDetailsTimeout = () => {
+        if (closeTimeoutRef.current)
+            clearTimeout(closeTimeoutRef.current)
+
+        openTimoutRef.current = setTimeout(() => {
+            openTimoutRef.current = null
+            onOpen?.(manga, mangaItemRef.current)
+        }, 300)
+    }
+
+    const cleanShowDetailsTimeout = () => {
+        closeTimeoutRef.current = setTimeout(() => {
+            if (openTimoutRef.current)
+                clearTimeout(openTimoutRef.current)
+
+            onClose?.()
+        }, 100)
+    }
+
+    const throttledCleanShowDetails = throttle(() => {
+        if (!open)
+            cleanShowDetailsTimeout()
+    }, 50)
+
+    return (
+        <>
+            <MangaItemSquare
+                manga={manga as Manga}
+                ref={mangaItemRef}
+                onContextMenu={(event) => {
+                    if (deviceType != "desktop")
+                        event.preventDefault()
+                }}
                 onPointerUp={() => {
-                    if (!mangaMenuOpen)
+                    if (!open)
                         cleanShowDetailsTimeout()
                 }}
                 onPointerDown={() => {
@@ -399,61 +493,75 @@ function MangaResult({
                     ...sx
                 }}  
             />
-            { deviceType == "desktop" ?
-                <MangaDetailsDesktop 
-                    shortData={manga}
-                    open={mangaMenuOpen}
-                    onClose={() => setMangaMenuOpen(false)}
-                    mangaRef={mangaItemRef}
-                    onFocus={() => {
-                        if (closeTimeoutRef.current) {
-                            clearTimeout(closeTimeoutRef.current)
-                        }
-                    }}
-                    onBlur={() => {
-                        cleanShowDetailsTimeout()
-                    }}
-                />
-                :
-                <MangaDetailsMobile 
-                    shortData={manga}
-                    open={mangaMenuOpen}
-                    onClose={() => setMangaMenuOpen(false)}
-                />
-            }
         </>
     )
 }
+
 
 export default function MangaResults({
     sx
 }: {sx?: SxProps}) {
     const { results } = useSearch();
+    const deviceType = useAppSelector(selectDeviceType)
+
+    const [mangaMenuOpen, setMangaMenuOpen] = useState(false);
+    const [focusedManga, setFocusedManga] = useState<MangaShort | null>(null)
+    const [focusedMangaAnchor, setFocusedMangaAnchor] = useState<HTMLElement | null>(null)
+
+    const handleOpen = (manga: MangaShort, anchor: HTMLElement | null = null) => {
+        setFocusedManga(manga)
+        setFocusedMangaAnchor(anchor)
+        setMangaMenuOpen(true)
+    }
+
+    const handleClose = () => {
+        setMangaMenuOpen(false)
+    }
 
     return (
-        <Grid
-            container
-            columns={{
-                lg: 6,
-                md: 5,
-                sm: 4,
-                xs: 3
-            }}
-            spacing={{
-                md: 3,
-                xs: 2
-            }}
-            sx={{
-                ...sx
-            }}
-        >
-            {results.map(manga => (
-                <Grid key={`catalog_manga_${manga.slug}`} size={1}>
-                    <MangaResult 
-                        manga={manga as MangaShort}
-                    />
-                </Grid>
-            ))}
-        </Grid>
+        <>
+            <Grid
+                container
+                columns={{
+                    lg: 6,
+                    md: 5,
+                    sm: 4,
+                    xs: 3
+                }}
+                spacing={{
+                    md: 3,
+                    xs: 2
+                }}
+                sx={{
+                    ...sx
+                }}
+            >
+                {results.map(manga => (
+                    <Grid key={`catalog_manga_${manga.slug}`} size={1}>
+                        {deviceType == "desktop" ?
+                            <MangaResultDesktop 
+                                manga={manga as MangaShort}
+                                onOpen={handleOpen}
+                                onClose={handleClose}
+                            />
+                            :
+                            <MangaResultMobile 
+                                manga={manga as MangaShort}
+                                open={mangaMenuOpen}
+                                onOpen={handleOpen}
+                                onClose={handleClose}
+                            />
+                        }
+                    </Grid>
+                ))}
+            </Grid>
+            { deviceType != "desktop" && focusedManga && (
+                <MangaDetailsMobile 
+                    shortData={focusedManga}
+                    open={mangaMenuOpen}
+                    onClose={handleClose}
+                />
+            )}
+        </>
     )
 }

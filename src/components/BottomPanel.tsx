@@ -1,5 +1,6 @@
-import { Box, Drawer, SwipeableDrawer, SxProps, Typography, TypographyProps, useTheme } from "@mui/material";
-import { Children, useEffect, useState } from "react";
+
+
+import { Box, SwipeableDrawer, SxProps, Typography, TypographyProps } from "@mui/material";
 
 export function BottomPanelHeader({
     sx,

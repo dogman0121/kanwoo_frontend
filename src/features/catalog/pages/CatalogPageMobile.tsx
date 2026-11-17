@@ -1,18 +1,18 @@
 "use client"
 
-import SearchInputMobile from "@/features/search/components/SearchInputMobile";
-import { Box, Divider, Drawer, IconButton } from "@mui/material";
+import SearchInputMobile from "@/features/search/components/SearchInputMobile"
+import SearchProvider from "@/features/search/components/SearchProvider"
+import { Box, Drawer, IconButton } from "@mui/material"
+import { useState } from "react"
 import MoreVertRoundedIcon from "@mui/icons-material/MoreVertRounded"
-import Filters from "./_components/Filters";
-import { useState } from "react";
-import SearchList from "@/features/search/components/ui/SearchList";
-import MangaResults from "./_components/MangaResults";
-import SearchProvider from "@/features/search/components/SearchProvider";
-import SearchSectionSelector from "@/features/search/components/SearchSectionSelector";
+import SearchSectionSelector from "@/features/search/components/SearchSectionSelector"
+import SearchList from "@/features/search/components/ui/SearchList"
+import Filters from "../components/Filters"
+import MangaResults from "../components/MangaResults"
 
-export default function MobilePage() {
+export default function CatalogPageMobile() {
     const [filtersOpened, setFiltersOpened] = useState(false)
-
+    
     return (
         <SearchProvider fromSearchParams={true} processEmptyQuery={true}>
             <Box
@@ -27,7 +27,7 @@ export default function MobilePage() {
                     display: "flex",
                     flexDirection: "column",
                     rowGap: 1,
-                    zIndex: 1001
+                    zIndex: 10
                 }}
             >
                 <Box
