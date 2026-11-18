@@ -72,10 +72,26 @@ export default function ReadingProgresss({
                     }}
                     draggable={true}
                     breakpoints={{
-                        0: { slidesPerView: 1.1 },
-                        600: { slidesPerView: 2.1 },
-                        900: { slidesPerView: 3.1 },
-                        1200: { slidesPerView: 4.1 }
+                        0: {
+                            slidesPerView: 1.25,
+                            spaceBetween: 10,
+                        },
+                        480: {
+                            slidesPerView: 1.7,
+                            spaceBetween: 12,
+                        },
+                        640: {
+                            slidesPerView: 2.2,
+                            spaceBetween: 12,
+                        },
+                        880: {
+                            slidesPerView: 3.15,
+                            spaceBetween: 16,
+                        },
+                        1024: {
+                            slidesPerView: 3.5, // или 4, если есть кнопки навигации по краям
+                            spaceBetween: 16,
+                        },
                     }}
                     style={{
                         width: "100%",

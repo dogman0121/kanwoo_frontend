@@ -32,8 +32,16 @@ export const login = createAsyncThunk(
 
 export const loginWithYandex = createAsyncThunk(
     "auth/loginWithYandexStatus",
-    async (data: YandexOauthCredentials) => {
-        authClientApi.loginWithYandex(data)
+    async (data: YandexOauthCredentials, thunkAPI) => {
+        const response = await authClientApi.loginWithYandex(data)
+
+        if (response.metadata.created) {
+            thunkAPI.dispatch(setAuthProfile(response.data[0]))
+        }
+
+        return {
+            response
+        }
     }
 )
 
@@ -42,9 +50,13 @@ export const register = createAsyncThunk(
     async (data: {code: number, email: string, password: string, login: string}, thunkAPI) => {
         const {code, email, password, login} = data
         
-        const response = await authClientApi.register(code, login, email, password)
+        try {
+            const response = await authClientApi.register(code, login, email, password)
 
-        thunkAPI.dispatch(setAuthProfile(response.data))
+            thunkAPI.dispatch(setAuthProfile(response.data))
+        } catch (e) {
+            return thunkAPI.rejectWithValue(e)
+        }
     }
 )
 
@@ -94,6 +106,18 @@ export const authSlice = createSlice({
             } else {
                 state.profiles = profiles
                 state.ui.section = AuthSection.CHOOSE_PROFILE
+            }
+        })
+        .addCase(loginWithYandex.fulfilled, (state, action) => {
+            const {response: {data: profiles, metadata: {created}}} = action.payload
+
+            if (!created) {
+                if (profiles.length == 0) {
+                    state.ui.section = AuthSection.CREATE_PROFILE
+                } else {
+                    state.profiles = profiles
+                    state.ui.section = AuthSection.CHOOSE_PROFILE
+                }
             }
         })
     )

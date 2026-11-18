@@ -22,7 +22,11 @@ interface LoginForm {
     password: string
 }
 
-export default function Login() {
+export default function Login({
+    onSuccess
+}: {
+    onSuccess?: () => void
+}) {
     const dispatch = useAppDispatch()
 
     const [isLoading, setIsLoading] = useTransition()
@@ -57,12 +61,18 @@ export default function Login() {
     }
 
     const handleYandexAuth = async(data: YandexOauthResponse) => {
-        dispatch(loginWithYandex({
-            accessToken: data.access_token,
-            tokenType: data.token_type,
-            expiresIn: data.expires_in,
-            extraData: data.extraData
-        }))
+        setIsLoading(async () => {
+            const {response} = await dispatch(loginWithYandex({
+                accessToken: data.access_token,
+                tokenType: data.token_type,
+                expiresIn: data.expires_in,
+                extraData: data.extraData
+            })).unwrap()
+
+            if (response.metadata.created) {
+                onSuccess?.()
+            }
+        })
     }
 
     return (

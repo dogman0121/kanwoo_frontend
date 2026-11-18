@@ -16,9 +16,15 @@ import Wrapper from "./Wrapper"
 export const YANDEX_OAUTH_CONTAINER_ID = "yandex_oauth_container"
 
 export default function Auth({
-    section
+    section,
+    onLogin,
+    onRegister,
+    onChooseProfile
 }: {
-    section?: AuthSection
+    section?: AuthSection,
+    onLogin?: () => void,
+    onRegister?: () => void,
+    onChooseProfile?: () => void
 }) {
     const dispatch = useAppDispatch()
 
@@ -40,11 +46,11 @@ export default function Auth({
                     border: "none",
                 }}
             >
-                {currSection == AuthSection.LOGIN && <Login />}
-                {currSection == AuthSection.REGISTER && <Register />}
+                {currSection == AuthSection.LOGIN && <Login onSuccess={onLogin} />}
+                {currSection == AuthSection.REGISTER && <Register onSuccess={onRegister}/>}
                 {currSection == AuthSection.RECOVERY && <Recovery />}
                 {currSection == AuthSection.FORGOT && <Forgot />}
-                {currSection == AuthSection.CHOOSE_PROFILE && <ProfileChoose />}
+                {currSection == AuthSection.CHOOSE_PROFILE && <ProfileChoose onSuccess={onChooseProfile}/>}
                 {currSection == AuthSection.CREATE_PROFILE && <ProfileCreate />}
             </Paper>
         </Wrapper>
