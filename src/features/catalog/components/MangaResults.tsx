@@ -392,13 +392,6 @@ function MangaResultDesktop({
                     MozUserSelect: "none",    /* Firefox */
                     MsUserSelect: "none",    /* Internet Explorer / Edge */
                     userSelect: "none",
-
-                    WebkitTouchCallout: "none", /* Отключает контекстное меню при долгом нажатии в iOS Safari */
-                    WebkitTapHighlightColor: "transparent", /* Убирает синюю подсветку при клике на Android/iOS */
-                    
-                    "&:hover": {
-                        transform: (deviceType != "desktop" ? "scale(1.05)" : undefined)
-                    },
                     ...sx
                 }}  
             />
@@ -433,8 +426,6 @@ function MangaResultMobile({
     onOpen?: (manga: MangaShort, anchor?: HTMLElement | null) => void,
     onClose?: () => void
 }) {
-    const deviceType = useAppSelector(selectDeviceType)
-
     const openTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const mangaItemRef = useRef<HTMLElement | null>(null);
     const startYRef = useRef(0)
@@ -446,6 +437,7 @@ function MangaResultMobile({
 
         isLongPressTriggeredRef.current = false;
         if (e.pointerType === "mouse") return;
+
         startXRef.current = e.clientX;
         startYRef.current = e.clientY;
 
@@ -464,7 +456,6 @@ function MangaResultMobile({
         if (openTimeoutRef.current) {
             clearTimeout(openTimeoutRef.current);
             openTimeoutRef.current = null;
-            isLongPressTriggeredRef.current = false
         }
     }
 
@@ -478,28 +469,27 @@ function MangaResultMobile({
                 manga={manga as Manga}
                 ref={mangaItemRef}
                 onContextMenu={(event) => {
+                    if (!openTimeoutRef.current && !isLongPressTriggeredRef.current) return;
+
                     event.preventDefault();
-                    cancelTouch();                      // чтобы таймер не выстрелил повторно
-                    isLongPressTriggeredRef.current = true; // чтобы click после этого не навигировал
-                    if (!open) {                        // опционально: не открывать повторно
+                    if (isLongPressTriggeredRef.current) return;
+
+                    cancelTouch();
+                    isLongPressTriggeredRef.current = true;
+                    if (!open) {
                         onOpen?.(manga, mangaItemRef.current);
                     }
                 }}
                 onClickCapture={(e: MouseEvent) => {
-                    console.log("manga click", {
-                        tag: e.currentTarget.tagName,
-                        href: e.currentTarget.getAttribute("href"),
-                        longPress: isLongPressTriggeredRef.current,
-                        defaultPrevented: e.defaultPrevented,
-                    });
-                    
-                    if (isLongPressTriggeredRef.current) {
+                    if (e.detail > 0 && isLongPressTriggeredRef.current) {
                         e.preventDefault();
                         e.stopPropagation();
                         isLongPressTriggeredRef.current = false;
                     }
                 }}
-                onPointerUp={cancelTouch}
+                onPointerUp={(e) => {
+                    if (e.isPrimary) cancelTouch();
+                }}
                 onPointerDown={openMenu}
                 onPointerMove={(e) => {
                     if (!openTimeoutRef.current || !e.isPrimary) return;
@@ -508,8 +498,11 @@ function MangaResultMobile({
                         cancelTouch();
                     }
                 }}
-                onPointerCancel={cancelTouch}
+                onPointerCancel={(e) => {
+                    if (e.isPrimary) cancelTouch();
+                }}
                 sx={{
+                    display: "block",
                     WebkitUserSelect: "none",
                     MozUserSelect: "none",    /* Firefox */
                     MsUserSelect: "none",    /* Internet Explorer / Edge */
@@ -521,7 +514,6 @@ function MangaResultMobile({
                     // Запрещаем iOS Safari перехватывать долгое нажатие на постер и ссылки внутри карточки
                     "& img": {
                         WebkitTouchCallout: "none",
-                        pointerEvents: "none",
                     },
                     
                     ...sx
