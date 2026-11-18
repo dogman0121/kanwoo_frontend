@@ -41,7 +41,11 @@ function ProfileItemButton({profile, onClick}: {profile: Profile, onClick: () =>
     )
 }
 
-export default function ProfileChoose() {
+export default function ProfileChoose({
+    onSuccess
+}: {
+    onSuccess?: () => void
+}) {
     const dispatch  = useAppDispatch()
 
     const profiles = useAppSelector(selectProfiles)

@@ -28,7 +28,11 @@ interface RegisterForm {
 }
 
 
-export default function AuthRegister() {
+export default function AuthRegister({
+    onSuccess
+}: {
+    onSuccess?: () => void
+}) {
     const dispatch = useAppDispatch()
 
     const [timeRemaining, setTimeRemaining] = useTimer(0)
@@ -71,9 +75,10 @@ export default function AuthRegister() {
                 })
             ).unwrap()
 
-            dispatch(setAuthModalOpen(false))
+            onSuccess?.()
         } 
         catch (e) {
+            console.log(e)
             if (e instanceof ApiError) {
                 if (e.code == "invalid_code") {
                     setTotpError(true)

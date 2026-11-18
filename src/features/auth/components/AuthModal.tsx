@@ -26,7 +26,10 @@ export default function AuthModal({open, onClose}: AuthModalProps) {
             open={open}
             onClose={onClose}
         >
-            <Auth/>
+            <Auth
+                onLogin={() => onClose()}
+                onRegister={() => onClose()}
+            />
         </Modal>
     )
 }
