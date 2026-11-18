@@ -482,7 +482,6 @@ function MangaResultMobile({
                     }
                 }}
                 onClickCapture={(e: MouseEvent) => {
-                // Глушим клик, который браузер сгенерирует, когда пользователь уберет палец
                     if (isLongPressTriggeredRef.current) {
                         e.preventDefault();
                         e.stopPropagation();
@@ -509,7 +508,7 @@ function MangaResultMobile({
                     WebkitTapHighlightColor: "transparent",
 
                     // Запрещаем iOS Safari перехватывать долгое нажатие на постер и ссылки внутри карточки
-                    "& img, & a": {
+                    "& img": {
                         WebkitTouchCallout: "none",
                         pointerEvents: "none",
                     },

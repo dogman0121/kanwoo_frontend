@@ -49,6 +49,10 @@ export default function MangaCarouselList({
                     slidesPerView: 6.2,
                     spaceBetween: 16,
                 },
+                880: {
+                    slidesPerView: 6.2,
+                    spaceBetween: 16,
+                },
                 1024: {
                     slidesPerView: 8.2,
                     spaceBetween: 16,
