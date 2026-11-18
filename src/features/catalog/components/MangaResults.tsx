@@ -483,13 +483,13 @@ function MangaResultMobile({
                         onOpen?.(manga, mangaItemRef.current);
                     }
                 }}
-                onClickCapture={(e: MouseEvent) => {
-                    if (isLongPressTriggeredRef.current) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        isLongPressTriggeredRef.current = false;
-                    }
-                }}
+                // onClickCapture={(e: MouseEvent) => {
+                //     if (isLongPressTriggeredRef.current) {
+                //         e.preventDefault();
+                //         e.stopPropagation();
+                //         isLongPressTriggeredRef.current = false;
+                //     }
+                // }}
                 onPointerUp={cancelTouch}
                 onPointerDown={openMenu}
                 onPointerMove={(e) => {
