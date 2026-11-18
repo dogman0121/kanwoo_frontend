@@ -442,9 +442,10 @@ function MangaResultMobile({
     const isLongPressTriggeredRef = useRef(false);
 
     const openMenu = (e: PointerEvent) => {
-        if (e.pointerType === "mouse" || !e.isPrimary) return;
+        if (!e.isPrimary) return;
 
         isLongPressTriggeredRef.current = false;
+        if (e.pointerType === "mouse") return;
         startXRef.current = e.clientX;
         startYRef.current = e.clientY;
 
@@ -463,6 +464,7 @@ function MangaResultMobile({
         if (openTimeoutRef.current) {
             clearTimeout(openTimeoutRef.current);
             openTimeoutRef.current = null;
+            isLongPressTriggeredRef.current = false
         }
     }
 
@@ -483,13 +485,20 @@ function MangaResultMobile({
                         onOpen?.(manga, mangaItemRef.current);
                     }
                 }}
-                // onClickCapture={(e: MouseEvent) => {
-                //     if (isLongPressTriggeredRef.current) {
-                //         e.preventDefault();
-                //         e.stopPropagation();
-                //         isLongPressTriggeredRef.current = false;
-                //     }
-                // }}
+                onClickCapture={(e: MouseEvent) => {
+                    console.log("manga click", {
+                        tag: e.currentTarget.tagName,
+                        href: e.currentTarget.getAttribute("href"),
+                        longPress: isLongPressTriggeredRef.current,
+                        defaultPrevented: e.defaultPrevented,
+                    });
+                    
+                    if (isLongPressTriggeredRef.current) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        isLongPressTriggeredRef.current = false;
+                    }
+                }}
                 onPointerUp={cancelTouch}
                 onPointerDown={openMenu}
                 onPointerMove={(e) => {
