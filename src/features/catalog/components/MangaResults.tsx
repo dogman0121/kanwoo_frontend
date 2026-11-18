@@ -476,8 +476,10 @@ function MangaResultMobile({
                 manga={manga as Manga}
                 ref={mangaItemRef}
                 onContextMenu={(event) => {
-                    event.preventDefault()
-                    if (!isLongPressTriggeredRef.current) {
+                    event.preventDefault();
+                    cancelTouch();                      // чтобы таймер не выстрелил повторно
+                    isLongPressTriggeredRef.current = true; // чтобы click после этого не навигировал
+                    if (!open) {                        // опционально: не открывать повторно
                         onOpen?.(manga, mangaItemRef.current);
                     }
                 }}
@@ -513,9 +515,6 @@ function MangaResultMobile({
                         pointerEvents: "none",
                     },
                     
-                    "&:hover": {
-                        transform: deviceType !== "desktop" ? "scale(1.02)" : undefined
-                    },
                     ...sx
                     }}  
             />
