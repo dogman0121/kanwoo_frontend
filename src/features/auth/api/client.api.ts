@@ -20,7 +20,7 @@ export const authClientApi = {
     },
 
     loginWithYandex: async (data: YandexOauthCredentials) => {
-        const response = await clientFetch.post<AuthProfile[], {created: boolean}>("/auth/login/oauth/yandex", {
+        const response = await clientFetch.post<AuthProfile[], {created: boolean}>("/auth/oauth/yandex", {
             body: JSON.stringify({
                 access_token: data.accessToken,
                 expires_in: data.expiresIn,
