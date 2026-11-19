@@ -13,7 +13,7 @@ import TotpInput from "./ui/TotpInput";
 import Input from "./ui/Input";
 import PasswordInput from "./ui/PasswordInput";
 import TextButton from "./ui/TextButton";
-import useSlugValidator from "@/features/profile/hooks/use-slug-validator.hook";
+import useSlugValidator, { SlugInvalidReason } from "@/features/profile/hooks/use-slug-validator.hook";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import { register, setSection } from "@/features/auth/states/auth/slice";
 import { AuthSection } from "@/features/auth/types";
@@ -37,7 +37,13 @@ export default function AuthRegister({
 
     const [timeRemaining, setTimeRemaining] = useTimer(0)
 
-    const { validate, isValid, validating } = useSlugValidator()
+    const invalidReasonMessages = {
+        [SlugInvalidReason.ALREADY_TAKEN]: "Данное имя пользователя занято",
+        [SlugInvalidReason.CONTAINS_UNALLOWED_SYMBOLS]: "Имя должно содежать латинские символы, цифры и (_)",
+        [SlugInvalidReason.MORE_THAN_MAX_LENGTH]: "Максимальная длина имени 32 символа"
+    }
+
+    const { validate, isValid, validating, invalidReason } = useSlugValidator()
     const [isLoading, setIsLoading] = useTransition()
 
     // totp form
@@ -49,7 +55,7 @@ export default function AuthRegister({
     const [registerData, setRegisterData] = useState<RegisterForm | undefined>(undefined)
 
 
-    const {control, handleSubmit,  setError, formState: {errors}} = useForm<RegisterForm>({
+    const {control, handleSubmit, reset, setError, formState: {errors}} = useForm<RegisterForm>({
         mode: "onChange",
         defaultValues: {
             login: "",
@@ -78,7 +84,6 @@ export default function AuthRegister({
             onSuccess?.()
         } 
         catch (e) {
-            console.log(e)
             if (e instanceof ApiError) {
                 if (e.code == "invalid_code") {
                     setTotpError(true)
@@ -91,9 +96,7 @@ export default function AuthRegister({
 
     const sendCode = async (email: string) => {
         try {
-            setIsLoading(async () => {
-                await authClientApi.getRegisterCode(email)
-            })
+            await authClientApi.getRegisterCode(email)
 
             setTimeRemaining(40)
         }
@@ -112,27 +115,28 @@ export default function AuthRegister({
     }
 
     const onRegister = async (data: RegisterForm) => {
-        try {
-            if (!data)
-                return setErrorSnackbarOpen(true)
+        if (!data)
+            return setErrorSnackbarOpen(true)
 
-            sendCode(data.email)
+        setIsLoading(async () => {
+            try {
+                await sendCode(data.email)
 
-            setTotpOpen(true)
-            setRegisterData(data)
-        } 
-        catch(e) {
-            if (e instanceof ApiError) {
-                if (e.code == "email_exists") {
-                    setError("email", {message: "Данная почта занята"})
+                setTotpOpen(true)
+                setRegisterData(data)
+            } catch (e) {
+                if (e instanceof ApiError) {
+                    if (e.code == "email_exists") {
+                        setError("email", {message: "Данная почта занята. Попробуйте другую."})
+                    }
+
+                } else {
+                    setErrorSnackbarOpen(true)
+
+                    throw e
                 }
-
-            } else {
-                setErrorSnackbarOpen(true)
-
-                throw e
             }
-        }
+        })
     }
 
     if (totpOpen) {
@@ -169,7 +173,10 @@ export default function AuthRegister({
                     color="primary"
                     disabled={timeRemaining != 0}
                     loading={isLoading}
-                    onClick={handleSendCode}
+                    onClick={() => {
+                        reset()
+                        handleSendCode()
+                    }}
                     sx={{
                         mt: 3
                     }}
@@ -211,7 +218,7 @@ export default function AuthRegister({
                                 type="text"
                                 slugChecking={validating}
                                 error={!isValid}
-                                helperText={errors.login?.message}
+                                helperText={invalidReason != null && invalidReasonMessages[invalidReason]}
                                 {...field}
                             />
                         )}
