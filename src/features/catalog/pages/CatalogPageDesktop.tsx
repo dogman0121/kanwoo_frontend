@@ -47,7 +47,8 @@ export default function CatalogPageDesktop() {
                         <SearchList
                             infinity
                             sx={{
-                                mt: 3
+                                mt: 3,
+                                pb: 4
                             }}
                         >
                             <MangaResults />
