@@ -15,11 +15,14 @@ export default function Wrapper({
             left: '50%',
             transform: 'translate(-50%, -50%)',
             width: "min(480px, 100vw)",
-            padding: "16px 24px 20px",
+            paddingTop: 4,
+            paddingBottom: 4,
+            paddingLeft: 2,
+            paddingRight: 2,
             border: "none",
             borderRadius: "20px",
             "&:focus": {
-            outline: "none"
+                outline: "none"
             }
         }}>
             {children}

@@ -267,7 +267,7 @@ const mainTheme = createTheme({
           minWidth: `calc(8 * ${theme.vars.spacing})`
         })
       }
-    }
+    },
   },
 });
 

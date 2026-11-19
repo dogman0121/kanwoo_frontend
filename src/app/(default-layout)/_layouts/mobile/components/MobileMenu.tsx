@@ -71,15 +71,18 @@ function AnonymusMobileMenu() {
                     <SettignsRoundedIcon />
                 </IconButton>
             </MobileMenuNav>
-            <ListItemButton>
+            <ListItem>
                 <Button
                     variant="contained"
                     fullWidth
                     onClick={handleOpenAuth}
+                    sx={{
+                        px: "16px"
+                    }}
                 >
                     Войдите или зарегисрируйтесь
                 </Button>
-            </ListItemButton>
+            </ListItem>
             <MenuList>
                 <ThemeSwitch />
             </MenuList>
