@@ -61,7 +61,7 @@ export default function ProfileChoose({
             <Header 
                 label="Выбор профиля" 
                 startAdornment={
-                    <IconButton disabled={isChoosing} onClick={() => dispatch(setSection(AuthSection.LOGIN))}>
+                    <IconButton onClick={() => dispatch(setSection(AuthSection.LOGIN))}>
                         <ArrowBackRoundedIcon />
                     </IconButton>
                 }
