@@ -40,24 +40,23 @@ export default function Login({
     })
 
     const handleLogin = async(data: LoginForm) => {
-        try {
-            setIsLoading(async () => {
+        setIsLoading(async () => {
+            try {
                 await dispatch(
                     login({
                         email: data.email, 
                         password: data.password
                     })
                 ).unwrap()
-            })
-
-        } catch (error: any) {
-            if ("code" in error)
-                if (error.code == "invalid_credentials") {
-                    setError("root", {message: "Неправильная почта или пароль"})
-                }
-            else
-                throw error
-        }
+            } catch (error: any) {
+                if ("code" in error)
+                    if (error.code == "invalid_credentials") {
+                        setError("root", {message: "Неправильная почта или пароль"})
+                    }
+                else
+                    throw error
+            }
+        })
     }
 
     const handleYandexAuth = async(data: YandexOauthResponse) => {
