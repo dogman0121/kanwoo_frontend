@@ -56,44 +56,48 @@ export function MangaItemSquareSkeleton() {
 export function MangaItemSquare({manga, sx, rightTopAdornment, ...props}: MangaItemProps & BoxProps) {
     return (
         <Box 
-            draggable={false}
-            component={Link}
-            href={`/manga/${manga.slug}`}
             className="TitleItem"
             sx={{
-                position: "relative", 
-                userSelect: "none",
+                position: "relative",
                 ...sx
             }}
             {...props}
         >
-            <Poster
-                src={manga.poster?.medium || ""} 
-                width="100%"
-            />
-            <Box
-                sx={{
-                    mt: 1
+            <Link 
+                draggable={false}
+                href={`/manga/${manga.slug}`}
+                style={{
+                    userSelect: "none",
                 }}
             >
+                <Poster
+                    src={manga.poster?.medium || ""} 
+                    width="100%"
+                />
                 <Box
                     sx={{
-                        display: "flex",
-                        flexDirection: "row",
+                        mt: 1
                     }}
                 >
-                    <Typography variant="caption" color="textSecondary">{manga.type?.name}</Typography>
-                    <Typography variant="caption" color="textSecondary" sx={{ml: 2}}>{manga.year}</Typography>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                        }}
+                    >
+                        <Typography variant="caption" color="textSecondary">{manga.type?.name}</Typography>
+                        <Typography variant="caption" color="textSecondary" sx={{ml: 2}}>{manga.year}</Typography>
+                    </Box>
+                    <WrappedText
+                        lines={2}
+                        sx={{
+                            lineHeight: "1.2"
+                        }}
+                    >
+                        {manga.name}
+                    </WrappedText>
                 </Box>
-                <WrappedText
-                    lines={2}
-                    sx={{
-                        lineHeight: "1.2"
-                    }}
-                >
-                    {manga.name}
-                </WrappedText>
-            </Box>
+            </Link>
             {rightTopAdornment && (
                 <Box
                     sx={{
