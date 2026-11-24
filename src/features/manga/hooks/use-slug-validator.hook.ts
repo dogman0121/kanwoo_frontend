@@ -20,7 +20,7 @@ export default function useSlugValidator(defaultValue?: string) {
             } finally {
                 setValidating(false)
             }
-        }, 200),
+        }, 500),
         []
     )
 

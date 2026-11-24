@@ -9,9 +9,27 @@ export const {
     selectById: selectTranslationBlockById
 } = translationsAdapter.getSelectors((state: RootState) => state.mangaPage.translations)
 
+export const selectTranslationsError = (state: RootState) => {
+    return state.mangaPage.translations.error
+}
+
+export const selectTranslationsLoaded = (state: RootState) => {
+    return state.mangaPage.translations.loaded
+}
+
+export const selectTranslationIsSubscribed = (state: RootState, translationId: number) => {
+    return state.mangaPage.translations.entities[translationId].translation.context?.viewer.is_subscribed
+}
 
 export const selectCurrTranslationId = (state: RootState) => {
     return state.mangaPage.translations.currTranslationId
+}
+
+export const selectTranslationById = (state: RootState, translationId: number) => {
+    const translationBlock = selectTranslationBlockById(state, translationId)
+    if (!translationBlock) throw new Error("No transtaltion with id")
+        
+    return translationBlock.translation
 }
 
 export const selectCurrTranslationBlock = (state: RootState) => {
@@ -20,13 +38,6 @@ export const selectCurrTranslationBlock = (state: RootState) => {
         return null
 
     return selectTranslationBlockById(state, currTranslationId)
-}
-
-export const selectTranslationById = (state: RootState, translationId: number) => {
-    const translationBlock = selectTranslationBlockById(state, translationId)
-    if (!translationBlock) throw new Error("No transtaltion with id")
-        
-    return translationBlock.translation
 }
 
 export const selectTranslations = createSelector(
@@ -45,44 +56,25 @@ export const selectCurrTranslation = createSelector(
     }
 )
 
+export const selectTranslationChaptersLoaded = (state: RootState, translationId?: number) => {
+    if (!translationId)
+        return false
+
+    return state.mangaPage.translations.entities[translationId].loaded
+}
+
+export const selectTranslationChaptersError = (state: RootState, translationId?: number) => {
+    if (!translationId)
+        return false
+    
+    return state.mangaPage.translations.entities[translationId].error
+}
+
 export const selectCurrTranslationChapters = createSelector(
     [selectCurrTranslationBlock],
     (translationBlock: TranslationBlock | null) => {
         if (!translationBlock || !translationBlock.chapters) return undefined
 
-        return translationBlock.chapters.map(c => c.chapter)
+        return translationBlock.chapters
     }
 )
-
-export const selectTranslationIsSubscribed = (state: RootState, translationId: number) => {
-    const translationBlock = selectTranslationBlockById(state, translationId)
-
-    if (!translationBlock) return false
-
-    return translationBlock.context.viewer.is_subscribed
-}
-
-export const selectCurrTranslationIsSubscribed = createSelector(
-    [selectCurrTranslationBlock],
-    (translationBlock: TranslationBlock | null) => {
-        if (!translationBlock) return false
-
-        return translationBlock.context.viewer.is_subscribed
-    }
-)
-
-export const selectIsLoading = (state: RootState) => {
-    return state.mangaPage.translations.loading
-}
-
-export const selectIsLoaded = (state: RootState) => {
-    return state.mangaPage.translations.loaded
-}
-
-export const selectCurrentTranslationChaptersIsLoading = (state: RootState) => {
-    const currentTranslationBlock = selectCurrTranslationBlock(state)
-    if (!currentTranslationBlock) return false
-
-    return currentTranslationBlock.chaptersIsLoading
-
-}

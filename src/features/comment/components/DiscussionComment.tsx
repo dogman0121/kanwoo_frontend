@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import { Comment } from "../types"
-import { selectCommentBlockById } from "@/features/global/states/comments/comments/selectors"
+import { selectCommentBlockById } from "@/features/comment/states/comments/selectors"
 import { Box } from "@mui/material"
 import CommentLeaveLine from "./ui/CommentLeaveLine"
 import CommentInput from "./ui/CommentInput"
@@ -10,10 +10,12 @@ export default function DiscussionComment({
     commentId,
     subthreadId,
     isLast,
+    disableReplyInput
 }: {
     commentId: number,
     subthreadId: number,
     isLast: boolean,
+    disableReplyInput?: boolean
 }) {
     return (
         <Box
@@ -37,6 +39,7 @@ export default function DiscussionComment({
                     commentId={commentId}
                     parentId={subthreadId}
                     depth={3}
+                    disableReplyInput={disableReplyInput}
                 />
             </Box>
         </Box>

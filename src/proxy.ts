@@ -16,7 +16,6 @@ export async function proxy(request: NextRequest) {
 
     // Получаем токен
     const accessTokenCookie = request.cookies.get("access_token_cookie")
-
     if (accessTokenCookie != undefined) {
         try {
             // Получаем дату истечения jwt-токена
@@ -42,13 +41,17 @@ export async function proxy(request: NextRequest) {
 
                     for (const cookieHeader of setCookieHeaders) {
                         const [part] = cookieHeader.split(";")
-                        const [name, value] = part.split("=").map((s) => s.trim())
+                        const splitIdx = part.indexOf("=")
+                        if (splitIdx != -1) {
+                            const name = part.slice(0, splitIdx).trim()
+                            const value = part.slice(splitIdx + 1).trim()
 
-                        request.cookies.set(name, value)
+                            request.cookies.set(name, value)
+                        }
                     }
                     headers.set("cookie", request.cookies.toString())
 
-                    if (["POST", "PUT", "DELETE", "PATCH"].indexOf(request.method)) {
+                    if (["POST", "PUT", "DELETE", "PATCH"].includes(request.method)) {
                         const newCSRF = request.cookies.get(process.env.NEXT_PUBLIC_CSRF_ACCESS_COOKIE_NAME || "")?.value
 
                         if (newCSRF) 
@@ -58,7 +61,7 @@ export async function proxy(request: NextRequest) {
                     setCookieHeaders.push("access_token_cookie=;max-age=-1;")
                     setCookieHeaders.push("csrf_access_token=;max-age=-1;")
                     setCookieHeaders.push("csrf_refresh_token=;max-age=-1;")
-                    setCookieHeaders.push("resfresh_token_cookie=;max-age=-1;")
+                    setCookieHeaders.push("refresh_token_cookie=;max-age=-1;")
                 }
             }
         } catch (e) {

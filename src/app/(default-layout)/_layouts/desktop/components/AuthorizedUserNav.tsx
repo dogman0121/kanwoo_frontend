@@ -33,14 +33,17 @@ import Profile from "../../../../_components/userMenu/Profile";
 import Logout from "../../mobile/components/Logout";
 import ThemeSwitch from "../../../../_components/userMenu/ThemeSwitch";
 import Link from "next/link";
-import { selectAuthProfile, selectUnredNotificationsCount } from "@/features/global/states/auth-profile/auth-profile.slice";
+import { selectAuthProfile, selectUnredNotificationsCount } from "@/features/auth/states/auth-profile/auth-profile.slice";
 import { setCreateCollectionDialogOpen } from "@/features/global/states/app/slice";
 
 
 function ContentCreatingButton() {
     const dispatch =  useAppDispatch()
+    const router = useRouter()
     const theme = useTheme()
     
+    const authProfile = useAppSelector(selectAuthProfile)
+
     const [createContentMenuAnchorEl, setCreateContentMenuAnchorEl] = useState<HTMLButtonElement | null>(null);
     
     const handleOpenCreateContentMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -90,7 +93,15 @@ function ContentCreatingButton() {
                     </ListItemIcon>
                     Коллекция
                 </MenuItem>
-                <MenuItem>
+                <MenuItem
+                    onClick={() => router.push(
+                        toHref(
+                            routes.studio.profiles.manga, 
+                            {slug: authProfile!.slug},
+                            {createManga: "true"}
+                        )
+                    )}
+                >
                     <ListItemIcon>
                         <MenuBookRoundedIcon />
                     </ListItemIcon>
@@ -191,7 +202,7 @@ function UserMenuButton() {
                 <Link href={toHref(routes.studio.profiles.item, {slug: profile.slug})}>
                     <MenuItem>
                         <ListItemIcon>
-                    r        <ManageAccountRoundedIcon />
+                            <ManageAccountRoundedIcon />
                         </ListItemIcon>
                         <ListItemText>
                             Творческая студия
@@ -290,7 +301,9 @@ function NotificationButton () {
                         Уведомления
                     </Typography>
                     <Typography 
-                        textAlign={"center"}
+                        sx={{
+                            textAlign: "center"
+                        }}
                     >
                         Тут пока ничего нет!
                     </Typography>

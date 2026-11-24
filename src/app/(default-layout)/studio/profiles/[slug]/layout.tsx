@@ -3,13 +3,12 @@
 import EditLayout from "@/components/edit/EditLayout"
 import { notFound, useParams } from "next/navigation";
 import { ApiError } from "@/lib/fetch/api-response.types";
-import { Avatar, Box, Divider, List, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Profile } from "@/types/profile";
-import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
+import { useAppDispatch } from "@/lib/state/hooks";
 import { studioClientAPI } from "@/features/studio/api/client.api";
-import { selectProfile, setStudioProfile, setStudioProfilePermissions } from "@/features/studio/states/profile/page.slice";
-import StudioDrawer from "./_components/Drawer";
+import { setStudioProfile } from "@/features/studio/states/profile/page.slice";
+import EditBody from "@/components/edit/EditBody";
+import ProfileStudioDrawer from "@/features/studio/drawers/ProfileStudioDrawer";
 
 
 
@@ -58,14 +57,10 @@ export default function Layout({
 
     return (
         <EditLayout>
-            <StudioDrawer/>
-            <Box
-                sx={{
-                    width: "100%"
-                }}
-            >
+            <ProfileStudioDrawer />
+            <EditBody>
                 {children}
-            </Box>
+            </EditBody>
         </EditLayout>
     )
 }

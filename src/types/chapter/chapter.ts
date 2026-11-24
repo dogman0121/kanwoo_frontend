@@ -1,12 +1,14 @@
 import Privacy from "../privacy";
 import { Profile } from "../profile";
+import { ReferenceEntity } from "../reference-entity";
 import Page from "./page";
 
 export type ChapterShort = {
     id: number,
     chapter: number,
     name: string,
-    pages_count: number
+    pages_count: number,
+    extra_number: null | number
 }
 
 export type Chapter = ChapterShort & {
@@ -16,4 +18,5 @@ export type Chapter = ChapterShort & {
     creator: Profile,
     prev_chapter_id: number,
     next_chapter_id: number,
+    default_alignment: ReferenceEntity
 }

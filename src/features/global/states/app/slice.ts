@@ -8,7 +8,7 @@ export interface AppState {
         createCollectionDialogOpen: boolean,
         collectionDialog: {
             open: boolean,
-            context: {mangaUUID: string}
+            context: {mangaId: number}
         },
         reportDialog: {
             open: boolean,
@@ -20,7 +20,15 @@ export interface AppState {
         shareBackdrop: {
             open: boolean,
             link: string
-        }
+        },
+        snackbar: {
+            context: {
+                type: "error" | "success",
+                message: string,
+            }
+            open: boolean
+        },
+        searchModalOpen: boolean
     }
 }
 
@@ -32,7 +40,7 @@ const initialState: AppState = {
         createCollectionDialogOpen: false,
         collectionDialog: {
             open: false,
-            context: {mangaUUID: ""}
+            context: {mangaId: 0}
         },
         reportDialog: {
             open: false,
@@ -44,7 +52,15 @@ const initialState: AppState = {
         shareBackdrop: {
             open: false,
             link: ""
-        }
+        },
+        snackbar: {
+            context: {
+                message: "нет сообщения",
+                type: "success",
+            },
+            open: false
+        },
+        searchModalOpen: false
     }
 }
 
@@ -64,7 +80,7 @@ export const appSlice = createSlice({
         setAuthModalOpen: (state, action) => {
             state.ui.authModalOpen = action.payload
         },
-        openCollectionDialog: (state, action: PayloadAction<{mangaUUID: string}>) => {
+        openCollectionDialog: (state, action: PayloadAction<{mangaId: number}>) => {
             state.ui.collectionDialog.open = true
             state.ui.collectionDialog.context = action.payload      
         },
@@ -87,6 +103,19 @@ export const appSlice = createSlice({
         },
         setCreateCollectionDialogOpen: (state, action) => {
             state.ui.createCollectionDialogOpen = action.payload
+        },
+        openSnackbar: (state, action: PayloadAction<{type: "error" | "success", message: string}>) => {
+            const {type, message} = action.payload
+
+            state.ui.snackbar.context.type = type
+            state.ui.snackbar.context.message = message
+            state.ui.snackbar.open = true
+        },
+        closeSnackbar: (state) => {
+            state.ui.snackbar.open = false
+        },
+        setSearchModalOpen: (state, action) => {
+            state.ui.searchModalOpen = action.payload
         }
     }
 })
@@ -102,7 +131,10 @@ export const {
     closeReportDialog,
     openShareBackdrop,
     closeShareBackdrop,
-    setCreateCollectionDialogOpen
+    setCreateCollectionDialogOpen,
+    openSnackbar,
+    closeSnackbar,
+    setSearchModalOpen
 } = appSlice.actions
 
 export type RootState = {
@@ -119,5 +151,8 @@ export const selectReportDialogContext = (state: RootState) => state.global.app.
 export const selectShareBackdropOpen = (state: RootState) => state.global.app.ui.shareBackdrop.open
 export const selectShareBackgropLink = (state: RootState) => state.global.app.ui.shareBackdrop.link
 export const selectCreateCollectionDialogOpen = (state: RootState) => state.global.app.ui.createCollectionDialogOpen
+export const selectSnackbarOpen = (state: RootState) => state.global.app.ui.snackbar.open
+export const selectSnackbarContext = (state: RootState) => state.global.app.ui.snackbar.context
+export const selectSearchModalOpen = (state: RootState) => state.global.app.ui.searchModalOpen
 
 export default appSlice.reducer

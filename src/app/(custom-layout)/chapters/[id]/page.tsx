@@ -1,5 +1,4 @@
 import { Metadata } from "next"
-import ChapterPage from "./ChapterPage"
 import { notFound } from "next/navigation"
 import { chapterServerApi } from "@/features/chapter/api/server.api"
 import Adapter from "./PPage"
@@ -14,10 +13,14 @@ export async function generateMetadata({
 
     const chapterID = parseInt(id)
 
-    const {data: chapter, context: {manga}} = await chapterServerApi.getChapter(chapterID)
+    const {data: metadata} = await chapterServerApi.getChapterMetadata(chapterID)
 
     return {
-        title: chapter.name ? `Глава ${chapter.id} ${chapter.name} ${manga.name} | kanwoo`  : `Глава ${chapter.id} ${manga.name} | kanwoo`
+        title: metadata.title,
+        openGraph: {
+            title: metadata.title,
+            url: metadata.canonical,
+        }
     }
 }
 

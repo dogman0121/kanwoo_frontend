@@ -1,5 +1,5 @@
-import { selectCommentBlockById, selectRepliesState } from "@/features/global/states/comments/comments/selectors"
-import { selectThreadBlockById } from "@/features/global/states/comments/threads/selectors"
+import { selectCommentBlockById, selectRepliesState } from "@/features/comment/states/comments/selectors"
+import { selectThreadBlockById } from "@/features/comment/states/threads/selectors"
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import CommentItem from "./CommentItem"
 import CommentMoreButton, { MoreButtonState } from "./ui/CommentMoreButton"
@@ -7,13 +7,15 @@ import { Box } from "@mui/material"
 import CommentReplies from "./ui/CommentReplies"
 import SubthreadComment from "./SubthreadComment"
 import { v4 } from "uuid"
-import { fetchSubthreads } from "@/features/global/states/comments/threads/slice"
-import { setRepliesState } from "@/features/global/states/comments/comments/slice"
+import { fetchSubthreads } from "@/features/comment/states/threads/slice"
+import { setRepliesState } from "@/features/comment/states/comments/slice"
 
 export default function ThreadComment({
     threadId,
+    disableReplyInput = false
 }: {
     threadId: number,
+    disableReplyInput?: boolean
 }){
     const dispatch = useAppDispatch()
 
@@ -35,7 +37,7 @@ export default function ThreadComment({
         }
 
         return dispatch(setRepliesState({
-            commentId: comment.id, 
+            commentId: comment.data.id, 
             repliesState: hasMore ? MoreButtonState.OPEN_PARTICULARLY: MoreButtonState.OPEN_FULL
         }))
     }
@@ -48,11 +50,12 @@ export default function ThreadComment({
     }
 
     return (
-        <Box id={comment.id.toString()}>
+        <Box id={comment.data.id.toString()}>
             <CommentItem
                 commentId={threadId}
                 depth={1}
                 disableReplyTo
+                disableReplyInput={disableReplyInput}
             />
             {moreButtonState != MoreButtonState.HIDDEN && (
                 <CommentReplies depth={1}>
@@ -61,16 +64,17 @@ export default function ThreadComment({
                             key={v4()}
                             subthreadId={subthreadID}
                             threadId={threadId}
+                            disableReplyInput={disableReplyInput}
                         />
                     ))}
                     
                 </CommentReplies>
             )}
-            {comment.replies_count > 0 && (
+            {comment.data.replies_count > 0 && (
                 <CommentMoreButton
                     depth={1} 
                     state={moreButtonState} 
-                    repliesCount={comment.replies_count}
+                    repliesCount={comment.data.replies_count}
                     onHidden={handleCloseReplies}
                     onShow={handleOpenReplies}
                     onMore={handleOpenReplies}

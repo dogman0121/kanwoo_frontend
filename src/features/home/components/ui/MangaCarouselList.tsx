@@ -8,6 +8,7 @@ import "swiper/css/mousewheel"
 import "swiper/css/navigation"
 import { Manga, MangaShort } from "@/types/manga";
 import { Children, RefObject } from "react";
+import { Stack } from "@mui/material";
 
 type Props = {
     prevButtonRef: RefObject<HTMLElement | null>,
@@ -24,7 +25,6 @@ export default function MangaCarouselList({
     return (
         <Swiper
             modules={[FreeMode, Navigation]}
-            spaceBetween={15}
             navigation={{
                 enabled: true,
                 nextEl: nextButtonRef.current,
@@ -33,19 +33,45 @@ export default function MangaCarouselList({
             }}
             draggable={true}
             breakpoints={{
-                0: { slidesPerView: 3 },
-                640: { slidesPerView: 6 },
-                768: { slidesPerView: 7 },
+                0: {
+                    slidesPerView: 3.2,
+                    spaceBetween: 10,
+                },
+                480: {
+                    slidesPerView: 4.2,
+                    spaceBetween: 12,
+                },
+                640: {
+                    slidesPerView: 5.2,
+                    spaceBetween: 12,
+                },
+                768: {
+                    slidesPerView: 6.2,
+                    spaceBetween: 16,
+                },
+                880: {
+                    slidesPerView: 6.2,
+                    spaceBetween: 16,
+                },
+                1024: {
+                    slidesPerView: 8.2,
+                    spaceBetween: 16,
+                },
             }}
             style={{
                 width: "100%",
             }}
         >
-            {Children.map(children, c => (
-                <SwiperSlide>
-                    {c}
-                </SwiperSlide>
-            ))}
+            <Stack
+                direction="row"
+                spacing={2}
+            >
+                {Children.map(children, c => (
+                    <SwiperSlide>
+                        {c}
+                    </SwiperSlide>
+                ))}
+            </Stack>
         </Swiper>
     )
 }

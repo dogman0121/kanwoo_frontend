@@ -87,7 +87,7 @@ export default function InfoModal({
                         >
                             <LinkImage link={link.link}/>
                             <Box>
-                                <Typography fontWeight={600}>{link.name}</Typography>
+                                <Typography sx={{fontWeight: "600"}}>{link.name}</Typography>
                                 <Link href={link.link} >
                                     {link.link}
                                 </Link>

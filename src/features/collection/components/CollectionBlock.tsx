@@ -124,7 +124,9 @@ export default function CollectionBlock({
                     <WrappedText
                         variant="h3"
                         lines={2}
-                        textAlign={"center"}
+                        sx={{
+                            textAlign: "center"
+                        }}
                     >
                         {collection.name}
                     </WrappedText>

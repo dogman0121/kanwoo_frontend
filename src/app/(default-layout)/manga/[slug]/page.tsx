@@ -1,10 +1,9 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import { mangaServerApi } from "@/lib/fetch/features/manga/server.api";
-import PPage from "./PPage";
 import { Suspense } from "react";
-import DesktopPage from "./DesktopPage";
-import MobilePage from "./MobilePage";
+import MangaDesktopPage from "@/features/manga/pages/MangaDesktopPage";
+import MangaMobilePage from "@/features/manga/pages/MangaMobilePage";
+import { mangaServerApi } from "@/features/manga/api/server.api";
 
 
 export async function generateMetadata({
@@ -14,17 +13,17 @@ export async function generateMetadata({
 }): Promise<Metadata> {
     const { slug } = await params;
 
-    const {data: manga} = await mangaServerApi.getManga(slug)
+    const {data: metadata} = await mangaServerApi.getMangaMetadata(slug)
 
     return {
-        title: `Читать ${manga.type.name} ${manga.name} онлайн | kanwoo`,
-        description: manga.description,
+        title: metadata.title,
+        description: metadata.description,
         openGraph: {
-            type: "book",
-            url: `https://kanwoo.ru/manga/${manga.slug}`,
-            title: `Читать ${manga.name} онлайн | kanwoo`,
-            description: manga.description,
-            images: [{url: manga.poster?.medium || "https://cdn.kanwoo.ru/manga/default"}],
+            type: metadata.type,
+            url: metadata.canonical,
+            title: metadata.title,
+            description: metadata.description,
+            images: [{url: metadata.image || "https://cdn.kanwoo.ru/manga/default"}],
             siteName: "Kanwoo"
         },
     }
@@ -49,23 +48,34 @@ export default async function Page({
         return notFound()
 
     return ( 
-        <PPage
-            manga={response.data.manga}
-            mangaMetadata={response.metadata.manga}
-            mangaContext={response.context.manga}
-            readingProgress={response.data.progress}
-            readingProgressMetadata={response.metadata.progress}
-            readingProgressContext={response.context.progress}
-        >
+        <>
             {viewport == "desktop" ?
                 <Suspense>
-                    <DesktopPage manga={response.data.manga} />
+                    <MangaDesktopPage 
+                        manga={{
+                            data: response.data.manga,
+                            context: response.context.manga
+                        }}
+                        readingProgress={{
+                            data: response.data.progress,
+                            context: response.context.progress
+                        }}
+                    />
                 </Suspense>
                 :
                 <Suspense>
-                    <MobilePage manga={response.data.manga}/>
+                    <MangaMobilePage
+                        manga={{
+                            data: response.data.manga,
+                            context: response.context.manga
+                        }}
+                        readingProgress={{
+                            data: response.data.progress,
+                            context: response.context.progress
+                        }}
+                    />
                 </Suspense>
             }
-        </PPage>
+        </>
     )
 }

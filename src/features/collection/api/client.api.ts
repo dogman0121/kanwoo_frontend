@@ -46,25 +46,33 @@ export const collectionClientApi = {
         return response
     },
 
-    addManga: async (collectionID: number, mangaSlug: string) => {
+    addMangaIntoCollection: async (collectionID: number, mangaId: number) => {
         const response = await clientFetch.post<{"success": boolean}>(`/collections/${collectionID}/manga`, {
             body: JSON.stringify({
-                manga: mangaSlug
+                manga_id: mangaId
             })
         }, {use_json: true})
 
         return response
     },
 
-    removeManga: async (collectionID: number, mangaSlug: string) => {
+    removeMangaFromCollection: async (collectionID: number, mangaId: number) => {
         const response = await clientFetch.delete(`/collections/${collectionID}/manga`, {
             body: JSON.stringify({
-                manga: mangaSlug
+                manga_id: mangaId
             })
         }, {use_json: true})
 
         return response
     },
 
-    getManga: async (id: number) => await clientFetch.get<MangaShort[]>(`/collections/${id}/manga`)
+    getCollectionManga: async (id: number) => await clientFetch.get<MangaShort[]>(`/collections/${id}/manga`),
+
+    saveCollection: async (id: number) => {
+        return clientFetch.post(`/collections/${id}/saves`)
+    },
+
+    unsaveCollection: async (id: number) => {
+        return clientFetch.delete(`/collections/${id}/saves`)
+    }
 }

@@ -39,21 +39,19 @@ export const readingSettingsSlice = createSlice({
             state.settings.infinityChapter = action.payload
             saveReadingSettings(state.settings)
         },
-        setVariant: (state, action) => {
-            state.settings.variant = action.payload
-            saveReadingSettings(state.settings)
-        },
         loadSettings: (state) => {
-            const readingSettingsJson = localStorage.getItem("reading_settings")
+            try {
+                const readingSettingsJson = localStorage.getItem("reading_settings")
 
-            if (!readingSettingsJson)
-                return
-
-            const settings = JSON.parse(readingSettingsJson) as ReadingSettings
-            state.settings = settings
-            state.isHydrated = true
-
-            saveReadingSettings(settings)
+                if (readingSettingsJson) {
+                    state.settings = JSON.parse(readingSettingsJson) as ReadingSettings
+                }
+                
+                state.isHydrated = true
+                saveReadingSettings(state.settings)
+            } catch (e) {
+                console.error(e)
+            }
 
         }
     }
@@ -64,7 +62,6 @@ export const {
     setAutoSave,
     setInfinityChapter,
     setPageNumbers,
-    setVariant,
     loadSettings
 } = readingSettingsSlice.actions
 

@@ -1,6 +1,5 @@
 "use client"
 
-import { Chapter, ChapterContext, ChapterMetadata } from "@/types/chapter";
 import ChapterPage from "./ChapterPage";
 
 export default function PPage({

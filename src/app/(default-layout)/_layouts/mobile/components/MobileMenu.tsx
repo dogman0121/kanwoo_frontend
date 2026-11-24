@@ -1,11 +1,11 @@
 "use client"
 
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
-import { Avatar, Box, Button, Divider, Drawer, DrawerProps, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, PaperProps, styled, Typography, useTheme } from "@mui/material";
+import { Avatar, Box, Button, Divider, Drawer, DrawerProps, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Paper, PaperProps, styled, Typography, useTheme } from "@mui/material";
 import SettignsRoundedIcon from "@mui/icons-material/SettingsRounded"
 import Logout from "./Logout";
 import ThemeSwitch from "../../../../_components/userMenu/ThemeSwitch";
-import { selectAuthProfile } from "@/features/global/states/auth-profile";
+import { selectAuthProfile } from "@/features/auth/states/auth-profile";
 import { setAuthModalOpen } from "@/features/global/states/app/slice";
 import Link from "next/link";
 import { routes, toHref } from "@/constants/routes/main.routes";
@@ -23,9 +23,6 @@ const MobileMenuNav = styled(Box)(({theme}) => ({
     paddingRight: theme.spacing(2)
 }))
 
-const MobileMenuList = styled(List)({
-})
-
 const ProfileWidget = () => {
     const authProfile = useAppSelector(selectAuthProfile)
 
@@ -37,24 +34,25 @@ const ProfileWidget = () => {
                 pb: 1
             }}
         >
-            <Link href={toHref(routes.profiles.item, {slug: authProfile.slug})}>
-                <MenuItem>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: 3
-                        }}
-                    >
-                        <Avatar src={authProfile.avatar}/>
-                        <Box>
-                            <Typography variant="caption" color="textSecondary">Ваш профиль</Typography>
-                            <Typography variant="h3">{authProfile.name}</Typography>
-                        </Box>
+            <ListItemButton
+                LinkComponent={Link}
+                href={toHref(routes.profiles.item, {slug: authProfile.slug})}
+            >
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 3
+                    }}
+                >
+                    <Avatar src={authProfile.avatar}/>
+                    <Box>
+                        <Typography variant="caption" color="textSecondary">Ваш профиль</Typography>
+                        <Typography variant="h3">{authProfile.name}</Typography>
                     </Box>
-                </MenuItem>
-            </Link>
+                </Box>
+            </ListItemButton>
         </Box>
     )
 }
@@ -73,18 +71,21 @@ function AnonymusMobileMenu() {
                     <SettignsRoundedIcon />
                 </IconButton>
             </MobileMenuNav>
-            <ListItemButton>
+            <ListItem>
                 <Button
                     variant="contained"
                     fullWidth
                     onClick={handleOpenAuth}
+                    sx={{
+                        px: "16px"
+                    }}
                 >
                     Войдите или зарегисрируйтесь
                 </Button>
-            </ListItemButton>
-            <MobileMenuList>
+            </ListItem>
+            <MenuList>
                 <ThemeSwitch />
-            </MobileMenuList>
+            </MenuList>
         </>
     )
 }
@@ -106,34 +107,16 @@ function AuthorizedMobileMenu() {
             >
                 <ProfileWidget />
                 <MyDivider />
-                <MobileMenuList>
+                <MenuList>
                     <MenuItem>
                         <ListItemIcon>
                             <NotificationsRoundedIcon />
                         </ListItemIcon>
                         <ListItemText>Уведомления</ListItemText>
                     </MenuItem>
-                    <MenuItem>
-                        <ListItemIcon>
-                            <CollectionsBookmarkIcon />
-                        </ListItemIcon>
-                        <ListItemText>Коллекции</ListItemText>
-                    </MenuItem>
-                    <MenuItem>
-                        <ListItemIcon>
-                            <HistoryRoundedIcon />
-                        </ListItemIcon>
-                        <ListItemText>История</ListItemText>
-                    </MenuItem>
-                    <MenuItem>
-                        <ListItemIcon>
-                            <ManageAccountRoundedIcon />
-                        </ListItemIcon>
-                        <ListItemText>Творческая студия</ListItemText>
-                    </MenuItem>
-                </MobileMenuList>
+                </MenuList>
                 <MyDivider />
-                <MobileMenuList>
+                <MenuList>
                     <ThemeSwitch />
                     <MenuItem>
                         <ListItemIcon>
@@ -143,19 +126,11 @@ function AuthorizedMobileMenu() {
                             Настройки
                         </ListItemText>
                     </MenuItem>
-                    <MenuItem>
-                        <ListItemIcon>
-                            <SwitchAccountRoundedIcon />
-                        </ListItemIcon>
-                        <ListItemText>
-                            Сменить пользователя
-                        </ListItemText>
-                    </MenuItem>
-                </MobileMenuList>
+                </MenuList>
                 <MyDivider />
-                <MobileMenuList>
+                <MenuList>
                     <Logout />
-                </MobileMenuList>
+                </MenuList>
             </Box>
         </>
     )

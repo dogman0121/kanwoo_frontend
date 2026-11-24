@@ -1,5 +1,5 @@
 import { Box, Skeleton, Typography } from "@mui/material";
-import { DescriptionText } from "../Description";
+import { DescriptionText } from "../ui/Description";
 
 
 

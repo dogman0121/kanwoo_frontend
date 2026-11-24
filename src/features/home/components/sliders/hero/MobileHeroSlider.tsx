@@ -17,7 +17,7 @@ function HeroManga({manga}: {manga: HeroBlock}) {
     const theme = useTheme()
     
     const router = useRouter();
-//hff
+
     return (
         <Box>
             <Box
@@ -76,7 +76,7 @@ function HeroManga({manga}: {manga: HeroBlock}) {
                     variant="contained"
                     sx={{
                         width: "100%",
-                        height: "100%"
+                        height: "35px"
                     }}
                     onClick={() => router.push(`/manga/${manga.data.slug}`)}
                 >

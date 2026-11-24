@@ -1,7 +1,7 @@
 "use client";
 
 import { Router } from "next/router";
-import React, { useCallback, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import ym, { YMInitializer } from "react-yandex-metrika";
 
 const YM_COUNTER_ID = 110001347; //Не настоящий :)

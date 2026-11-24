@@ -4,8 +4,8 @@ import { studioClientAPI } from "@/features/studio/api/client.api";
 import { useAppDispatch } from "@/lib/state/hooks";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
-import PPage from "./PPage";
 import { setTranslationsList } from "@/features/studio/states/profile/translations.slice";
+import PPage from "./PPage";
 
 export default function Page() {
     const dispatch = useAppDispatch()
@@ -15,7 +15,10 @@ export default function Page() {
     const fetchTranslations = async (slug: string) => {
         const response = await studioClientAPI.getProfileTranslations(slug)
 
-        dispatch(setTranslationsList({translations: response.data, translationsContext: response.context}))
+        dispatch(setTranslationsList(response.data.map((t, idx) => ({
+            data: t,
+            context: response.context[idx]
+        }))))
     }   
 
     useEffect(() => {

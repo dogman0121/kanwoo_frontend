@@ -7,6 +7,12 @@ export const chapterApiConfig: ApiConfig = {
             url: "/chapters/:id"
         }
     },
+    "/chapters/:id/metadata": {
+        GET: {
+            mode: "proxy",
+            url: "/chapters/:id/metadata"
+        }
+    },
     "/chapters/:id/pages": {
         GET: {
             mode: "proxy",

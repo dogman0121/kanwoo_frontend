@@ -5,7 +5,7 @@ import useSlugValidator from "@/features/profile/hooks/use-slug-validator.hook"
 import Input from "./ui/Input"
 import { Button, IconButton } from "@mui/material"
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
-import { createProfile, selectIsLoading, setSection } from "@/features/global/states/auth/slice"
+import { createProfile, setSection } from "@/features/auth/states/auth/slice"
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded"
 import { AuthSection } from "@/features/auth/types"
 import SlugInput from "@/features/profile/components/SlugInput"
@@ -18,8 +18,6 @@ interface CreateProfileForm {
 
 export function ProfileCreate() {
     const dispatch = useAppDispatch()
-
-    const isLoading = useAppSelector(selectIsLoading)
 
     const {control, handleSubmit, setError, formState: {errors}} = useForm<CreateProfileForm>({
         mode: "onChange",
@@ -95,7 +93,6 @@ export function ProfileCreate() {
                 fullWidth
                 variant="contained"
                 type="submit"
-                loading={isLoading}
                 sx={{
                     mt: 4
                 }}

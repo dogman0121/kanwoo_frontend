@@ -1,7 +1,7 @@
 "use client"
 
 import { Box, BoxProps, CSSProperties } from "@mui/material"
-import Poster, { PosterProps } from "./Poster"
+import Poster, { PosterProps } from "../../features/manga/components/ui/Poster"
 import theme from "@/constants/themes/main.theme"
 
 export interface PostersStackProps {

@@ -1,12 +1,10 @@
 "use client"
 
-import PPage from "./PPage";
+import ChapterInfoPage from "@/features/studio/pages/ChapterInfoPage"
 
 export default function Page() {
 
-    
-
     return (
-        <PPage/>
+        <ChapterInfoPage/>
     )
 }

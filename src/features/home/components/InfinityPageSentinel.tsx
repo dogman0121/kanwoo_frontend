@@ -24,7 +24,7 @@ export default function InfinityPageSentinel({
 
             intersectionLocked.current = true
             onLoadNext?.()
-        }, {rootMargin: "0px 0px 400px 0px"})
+        }, {rootMargin: "0px 0px 200px 0px"})
 
         intersectionObserverRef.current.observe(sentinelRef.current)
 

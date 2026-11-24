@@ -1,6 +1,6 @@
 "use client"
 
-import AppSnackbar from "@/components/AppSnackbar"
+import AppSnackbar from "@/components/app/AppSnackbar"
 import { clientFetch } from "@/lib/fetch/client-fetch.util"
 import { selectDeviceType } from "@/features/global/states/app/slice"
 import { useAppSelector } from "@/lib/state/hooks"
@@ -117,7 +117,6 @@ export default function Footer() {
                 component={"footer"}
                 sx={[
                     {
-                        mt: deviceType == "desktop" ? 8 : 0,
                         bgcolor: "footer.main"
                     },
                 ]}
@@ -136,7 +135,7 @@ export default function Footer() {
                             size={1}
                         >
                             <Box>
-                                <Typography fontSize={"36px"}>KANWOO</Typography>
+                                <Typography sx={{fontSize:"36px"}}>KANWOO</Typography>
                                 <Box
                                     sx={{
                                         display: "flex",

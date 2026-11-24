@@ -12,7 +12,12 @@ export interface CommentBodyProps {
 
 export function CommentCreatorName({name}: {name: string}) {
     return (
-        <Typography variant="caption" fontWeight={600}>
+        <Typography
+            sx={{
+                fontWeight: 600,
+                fontSize: "13px"
+            }}
+        >
             {name}
         </Typography>
     )
@@ -29,7 +34,10 @@ export function CommentText({
 }) {
     return (
         <Typography 
-            mt={0.4}
+            sx={{
+                mt: 0.4,
+                overflowWrap: "anywhere"
+            }}
         >
             {replyTo && !disableReplyTo && (
                 <Link href="" sx={{mr: 1}}>

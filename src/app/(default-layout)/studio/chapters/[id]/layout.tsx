@@ -4,10 +4,7 @@ import EditLayout from "@/components/edit/EditLayout"
 import { notFound, useParams } from "next/navigation";
 import { ApiError } from "@/lib/fetch/api-response.types";
 import { Avatar, Box, Divider, List, ListItemIcon, ListItemText, Typography } from "@mui/material";
-import ProfilePermission from "@/types/profile/profilePermission";
-import { clientFetch } from "@/lib/fetch/client-fetch.util";
 import { useEffect, useState } from "react";
-import { Profile } from "@/types/profile";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
 import { selectDrawerOpen, setDrawerOpen } from "@/features/studio/states/studio-page.slice";
 import useSection from "@/features/studio/hooks/useSection";
@@ -15,15 +12,12 @@ import EditDrawer from "@/components/edit/EditDrawer";
 import EditDrawerContainer from "@/components/edit/EditDrawerContainer";
 import { routes, toHref } from "@/constants/routes/main.routes";
 import InfoOutlineRoundedIcon from '@mui/icons-material/InfoOutlineRounded';
-import LibraryBooksRoundedIcon from '@mui/icons-material/LibraryBooksRounded';
-import TranslateRoundedIcon from '@mui/icons-material/TranslateRounded';
-import CollectionsBookmarkRoundedIcon from '@mui/icons-material/CollectionsBookmarkRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import EditSectionsLinkButton from "@/components/edit/EditSectionsLinkButton";
 import EditSectionsButton from "@/components/edit/EditSectionsButton";
 import { studioClientAPI } from "@/features/studio/api/client.api";
 import { selectProfile, setStudioProfile, setStudioProfilePermissions } from "@/features/studio/states/profile/page.slice";
-import { selectChapter } from "@/features/studio/states/chapter/page.slice";
+import { fetchChapter, selectChapter } from "@/features/studio/states/chapter/page.slice";
 
 function StudioDrawer() {
     const dispatch = useAppDispatch()
@@ -41,8 +35,8 @@ function StudioDrawer() {
             onClose={() => dispatch(setDrawerOpen(false))}
         >
             <EditDrawerContainer>
-                <Typography>
-                    Глава {}
+                <Typography variant="h2">
+                    Глава {chapter.chapter} {chapter.name}
                 </Typography>
                 <List>
                     <EditSectionsLinkButton 
@@ -93,37 +87,11 @@ export default function Layout({
 }) {
     const dispatch = useAppDispatch()
 
-    const { slug } = useParams<{slug: string}>()
-
-    const [isNotFound, setIsNotFound] = useState(false)
-
-    const fetchProfile = async (slug: string) => {
-        try {
-            const response = await studioClientAPI.getProfile(slug)
-
-            if (!response.data.profile)
-                return setIsNotFound(true)
-
-            dispatch(setStudioProfile(response.data.profile))
-            dispatch(setStudioProfilePermissions(response.data.profile_permission))
-            setIsNotFound(false)
-        } catch (e) {
-            if (e instanceof ApiError) {
-                return setIsNotFound(true)
-            }
-
-            throw e
-        }
-        
-    }
+    const { id } = useParams<{id: string}>()
 
     useEffect(() => {
-        fetchProfile(slug)
-    }, [slug])
-
-    if (isNotFound) {
-        notFound()
-    }
+        dispatch(fetchChapter(parseInt(id)))
+    }, [id])
 
     return (
         <EditLayout>

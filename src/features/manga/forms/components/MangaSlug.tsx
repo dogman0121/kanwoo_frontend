@@ -1,6 +1,6 @@
 "use client"
 
-import EditInput from "@/components/edit/EditInput";
+import EditInput from "@/components/edit/Input";
 import { CircularProgress, InputAdornment, TextFieldProps } from "@mui/material";
 import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
@@ -39,8 +39,10 @@ export default function MangaSlug({value, slugChecking, defaultValue, error, ...
                                     <ErrorRoundedIcon color="error"/>
                                 )}
                             </InputAdornment>
+                        
                     }
-                }
+                },
+                ...props
             }}
         />
     )

@@ -1,5 +1,4 @@
 import YandexHelpPageScript from "@/lib/yandex-oauth/YandexHelpPageScript";
-import Head from "next/head";
 import Script from "next/script";
 
 export default async function Page() {

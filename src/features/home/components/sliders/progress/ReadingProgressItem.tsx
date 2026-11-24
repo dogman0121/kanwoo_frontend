@@ -9,20 +9,19 @@ import { ReadingProgress, ReadingProgressContext } from "@/types/reading-progres
 import Link from "next/link";
 import { routes, toHref } from "@/constants/routes/main.routes";
 import { Box, IconButton, LinearProgress, Paper, Typography, useTheme } from "@mui/material";
-import Poster from "@/components/poster/Poster";
+import Poster from "@/features/manga/components/ui/Poster";
 import WrappedText from "@/components/WrapperTypography";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded"
 import { selectDeviceType } from "@/features/global/states/app/slice";
 import { HomeProgresses } from "@/features/home/types/hero";
+import { ProgressSave } from "@/features/home/types/progress";
 
 
 export default function ReadingProgressItem({
     progress,
-    progressContext,
     onDelete
 }: {
-    progress: ReadingProgress,
-    progressContext: ReadingProgressContext
+    progress: ProgressSave,
     onDelete?: (progressId: number) => void
 }) {
     const theme = useTheme()
@@ -33,7 +32,7 @@ export default function ReadingProgressItem({
 
     return (
         <Link
-            href={toHref(routes.chapters.item, {id: progressContext.chapter.id.toString()})}
+            href={toHref(routes.chapters.item, {id: progress.chapter.id.toString()})}
         >
             <Paper
                 onMouseOver={() => setRemoveIconVisible(true)}
@@ -42,16 +41,18 @@ export default function ReadingProgressItem({
                     position: "relative",
                     display: "flex",
                     flexDirection: "row",
+                    alignItems: "center",
                     boxShadow: "none",
 
-                    p: 2,
+                    py: 2,
+                    px: 3,
                     pr: 8,
                     borderRadius: "12px"
                 }}
             >
                 <Poster 
-                    src={progressContext.manga.poster.small}
-                    width="70px"
+                    src={progress.manga.poster?.small}
+                    width="56px"
                 />
                 <Box
                     sx={{
@@ -73,17 +74,17 @@ export default function ReadingProgressItem({
                         <WrappedText
                             lines={1}
                         >
-                            {progressContext.manga.name}
+                            {progress.manga.name}
                         </WrappedText>
                         <Typography variant="caption" color="textSecondary">
-                            Глава {progressContext.chapter.chapter}
+                            Глава {progress.chapter.chapter}
                         </Typography>
                     </Box>
                     <Box>
-                        <Typography variant="caption">Страница {progress.page+1} из {progressContext.chapter.pages_count}</Typography>
+                        <Typography variant="caption">Страница {progress.page+1} из {progress.chapter.pages_count}</Typography>
                         <LinearProgress 
                             variant="determinate"
-                            value={((progress.page+1) / progressContext.chapter.pages_count) * 100} 
+                            value={((progress.page+1) / progress.chapter.pages_count) * 100} 
                             sx={{
                                 width: "100%",
                                 height: "8px",
@@ -98,6 +99,7 @@ export default function ReadingProgressItem({
                     <IconButton
                         onClick={(event) => {
                             event.preventDefault()
+                            event.stopPropagation()
                             onDelete?.(progress.id)
                         }}
                         sx={{

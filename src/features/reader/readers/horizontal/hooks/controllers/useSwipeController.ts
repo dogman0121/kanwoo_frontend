@@ -1,38 +1,49 @@
 "use client"
 
 import { useCallback, useEffect, useRef } from "react"
-import useSwitchPage, { GetPageResult } from "./useSwitchPage"
-import useNavOpen from "../../../../hooks/controllers/useNavOpen"
+import useSwitchPage from "./useSwitchPage"
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import { SwipeAnimation } from "../../animations/swipeAnimation"
 import useScreenWidth from "../../../../hooks/useScreenWidth"
-import { setEndOfChapterReached } from "../../../../states/reader.slice"
-import { PageChangedEvent, ReadingEventType, NextChapterEvent } from "../../../../interfaces/reader"
 import { selectChapters, selectCurrentChapterIndex, selectCurrentPageNumber, selectInitialized } from "../../../../states/reader/selectors"
-import { selectInfinityChapter } from "@/features/reader/states/reading-settings/selectors"
+import { useTheme } from "@mui/material"
+import { Chapter } from "@/features/chapter/types/chapter.type"
 
 export default function useSwipeController({
-    onPageChange,
-    onLoadNextChapter
+    onPageChanged,
+    onLoadNextChapter,
+    onClick,
+    onChapterFinished,
+    onChapterEndEntered,
+    onChapterEndLeaved,
+    disableInfinityChapter = false
 }: {
-    onPageChange?: (event: PageChangedEvent) => void,
-    onLoadNextChapter?: (event: NextChapterEvent) => void
+    disableInfinityChapter: boolean,
+    onPageChanged?: (chapterIdx: number, pageNumber: number) => void,
+    onClick?: () => void,
+    onLoadNextChapter?: (chapter: Chapter) => void,
+    onChapterEndEntered?: () => void,
+    onChapterEndLeaved?: () => void,
+    onChapterFinished?: (chapter: Chapter) => void
 }) {
-    const dispatch = useAppDispatch()
+    const theme = useTheme()
 
     const chapters = useAppSelector(selectChapters)
     const currChapterInd = useAppSelector(selectCurrentChapterIndex) 
     const currPageNumber = useAppSelector(selectCurrentPageNumber)
-    const infinityChapter = useAppSelector(selectInfinityChapter)
+    const readerInitialized = useAppSelector(selectInitialized)
 
+    // Const refs
     const playgroundRef = useRef<HTMLElement | null>(null)
     const swipeableRef = useRef<HTMLElement | null>(null)
-    const moveLockRef = useRef(true)
     const animationRef = useRef(new SwipeAnimation())
+    
+    // Editable refs
+    const moveLockRef = useRef(true)
     const animationMutexRef = useRef(false)
     const clickLockRef = useRef(true)
     const progressInitialized = useRef(false)
-    const readerInitialized = useAppSelector(selectInitialized)
+    const endReachedRef = useRef(false)
 
     const {width} = useScreenWidth(playgroundRef)
 
@@ -41,8 +52,21 @@ export default function useSwipeController({
         getPrevPage,
         hasPrevPage,
         hasNextPage
-    } = useSwitchPage()
-    const {toggle: toggleNavOpen} = useNavOpen()
+    } = useSwitchPage({
+        disableInfinityChapter
+    })
+
+    const resetRefs = useCallback(() => {
+        moveLockRef.current = true
+        animationMutexRef.current = false
+        clickLockRef.current = true
+        progressInitialized.current = false
+    }, [])
+
+    const releasePointer = useCallback((pointerId: number) => {
+        playgroundRef.current?.releasePointerCapture(pointerId)
+        playgroundRef.current?.removeEventListener("pointermove", handlePointerMoveRef.current)
+    }, [])
 
     const handlePointerMoveRef = useRef((event: PointerEvent) => {
         if (moveLockRef.current) return
@@ -62,10 +86,12 @@ export default function useSwipeController({
         }
     })
 
-    const finishTranslation = useCallback((translate: number) => {
+    const finishTranslation = useCallback((translate: number, disableTransition?: boolean) => {
         if (!swipeableRef.current) return
 
-        swipeableRef.current.style.transitionDuration = "0.2s"
+        if (!disableTransition) {
+            swipeableRef.current.style.transitionDuration = `${theme.transitions.duration.shorter}ms`
+        }
 
         const pages = translate / 100
         swipeableRef.current.style.transform = `translate3d(calc(${pages} * var(--page-width)), 0, 0)`
@@ -90,69 +116,89 @@ export default function useSwipeController({
         playgroundRef.current?.addEventListener("pointermove", handlePointerMoveRef.current)
     }, [])
 
+    const switchPage = useCallback((direction: "next" | "prev") => {
+        const result = direction == "next" ? getNextPage() : getPrevPage()
+        if (result) {
+            const hasNextChapter = result.chapter.next_chapter_id != null
+
+            const {chapter, chapterIdx, pageIdx, endReached} = result
+
+            if (!disableInfinityChapter && endReached && hasNextChapter) {
+                onLoadNextChapter?.(chapter)
+            }
+
+            if (endReached) {
+                onChapterEndEntered?.()
+            } else if (!endReached && endReachedRef.current) {
+                onChapterEndLeaved?.()
+            } else {
+                onPageChanged?.(chapterIdx, pageIdx)
+            }
+
+            if (pageIdx == chapter.pages!.length - 1)
+                onChapterFinished?.(chapter)
+
+            endReachedRef.current = endReached
+
+            return true
+        }
+
+        return false
+    }, [getNextPage, getPrevPage, onPageChanged, onChapterEndEntered, onChapterEndLeaved, onLoadNextChapter])
+
+    const handleClick = useCallback((event: PointerEvent) => {
+        if (!playgroundRef.current) return
+
+        const screenWidth = playgroundRef.current.clientWidth;
+
+        const leftBorder = screenWidth * 0.33
+        const rightBorder = screenWidth * 0.66
+
+        if (event.clientX < leftBorder) {
+            // console.log("click prev")
+            if (switchPage("prev")) {
+                const newTranslation = animationRef.current.getTranslation() + 100
+                finishTranslation(newTranslation, true)
+                animationRef.current.setTranslation(newTranslation)
+            }
+        } else if (event.clientX > rightBorder) {
+            // console.log("click next")
+            if (switchPage("next")) {
+                const newTranslation = animationRef.current.getTranslation() - 100
+                finishTranslation(newTranslation, true)
+                animationRef.current.setTranslation(newTranslation)
+            }
+        } else {
+            //console.log("click mid")
+            onClick?.()
+        }
+    }, [switchPage, finishTranslation])
+
     const handlePointerUp = useCallback((event: PointerEvent) => {
         moveLockRef.current = true
         if (!swipeableRef.current) return
-        if (clickLockRef.current) {
-            toggleNavOpen()
-            //console.log("click")
+        if (clickLockRef.current) { // Пользователь кликнул
+            handleClick(event)
         } else {
-            //console.log("pointer up")
-        }
-        clickLockRef.current = true
+            clickLockRef.current = true
 
-        const {direction, swiped, translate} = animationRef.current.end()
-        
-        finishTranslation(translate)
+            const {direction, swiped, translate} = animationRef.current.end()
+            
+            finishTranslation(translate)
 
-        if (swiped) {
-            let result: GetPageResult | null;
-            if (direction == "next") {
-                result = getNextPage()
-            } else {
-                result = getPrevPage()
-            }
-
-            if (result) {
-                const {chapter, chapterIdx, page, pageIdx, endReached} = result
-
-                if (infinityChapter && endReached && result.chapter.next_chapter_id) {
-                    onLoadNextChapter?.({
-                        type: ReadingEventType.LOAD_NEXT_CHAPTER,
-                        value: {
-                            chapter: chapter
-                        }
-                    })
-                }
-
-                onPageChange?.({
-                    type: ReadingEventType.PAGE_CHANGED,
-                    value: {
-                        chapter: chapter,
-                        chapterId: chapter.id,
-                        chapterIdx: chapterIdx,
-                        page: page,
-                        pageNumber: pageIdx,   
-                    }
-                })
-
-                dispatch(setEndOfChapterReached(endReached))
+            if (swiped) {
+                switchPage(direction)
             }
         }
 
-        playgroundRef.current?.releasePointerCapture(event.pointerId)
-        playgroundRef.current?.removeEventListener("pointermove", handlePointerMoveRef.current)
-
-    }, [onPageChange, getPrevPage, getNextPage, playgroundRef.current, finishTranslation])
+        releasePointer(event.pointerId)
+        resetRefs()
+    }, [onPageChanged, handleClick, switchPage, finishTranslation])
 
     const handlePointerCancel = useCallback((event: PointerEvent) => {
-        console.log("pointer cancel")
         finishTranslation(animationRef.current.translation)
-        animationMutexRef.current = false
-        moveLockRef.current = true
-        clickLockRef.current = true
-        playgroundRef.current?.releasePointerCapture(event.pointerId)
-        playgroundRef.current?.removeEventListener("pointermove", handlePointerMoveRef.current)
+        releasePointer(event.pointerId)
+        resetRefs()
     }, [])
 
     useEffect(() => {
@@ -176,6 +222,10 @@ export default function useSwipeController({
             
             const offset = chaptersOffset + currPageNumber
             swipeableRef.current.style.transform = `translate3d(calc(${-offset} * var(--page-width)), 0, 0)`
+            swipeableRef.current.style.transition = theme.transitions.create("transform", {
+                easing: theme.transitions.easing.easeIn,
+                duration: "0ms"
+            })
             animationRef.current.setTranslation(-100 * offset)
         }
     }, [swipeableRef.current])

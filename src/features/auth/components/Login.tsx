@@ -14,17 +14,22 @@ import Input from "./ui/Input";
 import Header from "./ui/Header";
 import { AuthSection } from "@/features/auth/types";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
-import { login, loginWithYandex, selectIsLoading, setSection } from "@/features/global/states/auth/slice";
+import { login, loginWithYandex, setSection } from "@/features/auth/states/auth/slice";
+import { useTransition } from "react";
 
 interface LoginForm {
     email: string,
     password: string
 }
 
-export default function Login() {
+export default function Login({
+    onSuccess
+}: {
+    onSuccess?: () => void
+}) {
     const dispatch = useAppDispatch()
 
-    const isLoading = useAppSelector(selectIsLoading)
+    const [isLoading, setIsLoading] = useTransition()
 
     const {control, handleSubmit, setError, formState: {errors}} = useForm<LoginForm>({
         mode: "onSubmit",
@@ -35,25 +40,38 @@ export default function Login() {
     })
 
     const handleLogin = async(data: LoginForm) => {
-        try {
-            await dispatch(login({email: data.email, password: data.password})).unwrap()
-        } catch (error: any) {
-            if ("code" in error)
-                if (error.code == "invalid_credentials") {
-                    setError("root", {message: "Неправильная почта или пароль"})
-                }
-            else
-                throw error
-        }
+        setIsLoading(async () => {
+            try {
+                await dispatch(
+                    login({
+                        email: data.email, 
+                        password: data.password
+                    })
+                ).unwrap()
+            } catch (error: any) {
+                if ("code" in error)
+                    if (error.code == "invalid_credentials") {
+                        setError("root", {message: "Неправильная почта или пароль"})
+                    }
+                else
+                    throw error
+            }
+        })
     }
 
     const handleYandexAuth = async(data: YandexOauthResponse) => {
-        dispatch(loginWithYandex({
-            accessToken: data.access_token,
-            tokenType: data.token_type,
-            expiresIn: data.expires_in,
-            extraData: data.extraData
-        }))
+        setIsLoading(async () => {
+            const {response} = await dispatch(loginWithYandex({
+                accessToken: data.access_token,
+                tokenType: data.token_type,
+                expiresIn: data.expires_in,
+                extraData: data.extraData
+            })).unwrap()
+
+            if (response.metadata.created) {
+                onSuccess?.()
+            }
+        })
     }
 
     return (
@@ -117,8 +135,8 @@ export default function Login() {
                     fullWidth
                     variant="contained"
                     type="submit"
-                    loading={isLoading}
                     autoFocus
+                    loading={isLoading}
                     sx={{
                         mt: 2
                     }}
@@ -133,7 +151,7 @@ export default function Login() {
                         mt: 1
                     }}
                 >
-                    <Typography textAlign={"center"}>Нет учетной записи?</Typography> 
+                    <Typography sx={{textAlign: "center"}}>Нет учетной записи?</Typography> 
                     <TextButton
                         onClick={() => dispatch(setSection(AuthSection.REGISTER))}
                     >

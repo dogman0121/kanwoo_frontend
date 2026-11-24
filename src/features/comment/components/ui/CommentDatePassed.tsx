@@ -7,7 +7,7 @@ export default function CommentDatePassed({
     date: string
 }) {
     return (
-        <Typography variant="caption" color="textSecondary" ml={1}>
+        <Typography variant="caption" color="textSecondary" sx={{ml: 1}}>
             {getPassedDateString(date)}
         </Typography>
     )

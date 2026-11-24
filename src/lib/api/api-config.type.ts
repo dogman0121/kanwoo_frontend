@@ -15,6 +15,7 @@ import { searchApiConfig } from "@/features/search/api/routes";
 import { settingApiConfig } from "@/features/settings/api/routs";
 import { progressApiConfig } from "@/features/progress/api/routes";
 import { readerRoutes } from "@/features/reader/api/routes";
+import { translationApiConfig } from "@/features/translations/api/routes";
 
 export type AggregateURL = {
     name: string
@@ -51,7 +52,8 @@ export const apiConfig: ApiConfig = {
     ...collectionApiConfig,
     ...commentApiConfig,
     ...studioApiConfig,
-    ...adminApiConfig
+    ...adminApiConfig,
+    ...translationApiConfig
 }
 
 export const router: Node = initApiConfig(apiConfig)

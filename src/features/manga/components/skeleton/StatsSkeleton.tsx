@@ -1,7 +1,7 @@
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import { Box, BoxProps } from '@mui/material';
-import { StatsOption } from '../Stats';
+import { StatsOption } from '../ui/Stats';
 
 export default function StatsSkeleton ({
     size = "medium",

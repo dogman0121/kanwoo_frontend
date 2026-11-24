@@ -9,7 +9,7 @@ import WrappedText from "@/components/WrapperTypography"
 import ShowMore from "./ShowMore"
 import Posts from "./_components/Posts"
 import Collections from "./_components/Collections"
-import { selectAuthProfile } from "@/features/global/states/auth-profile"
+import { selectAuthProfile } from "@/features/auth/states/auth-profile"
 import LinkBlock from "./_components/ProfileLink"
 
 
@@ -83,7 +83,7 @@ export default function DesktopPage() {
                             <Typography variant="caption">
                                 @{profile.slug}
                             </Typography>
-                            <Typography variant="h2" lineHeight={1}>
+                            <Typography variant="h2" sx={{lineHeight: 1}}>
                                 {profile.name}
                             </Typography>
                             

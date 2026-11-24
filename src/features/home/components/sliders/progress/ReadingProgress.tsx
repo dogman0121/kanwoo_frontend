@@ -1,6 +1,6 @@
-import { useAppDispatch } from "@/lib/state/hooks"
+import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
 import { iconButtonClasses } from "@mui/material/IconButton"
-import { useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation } from "swiper/modules";
 import "swiper/css"
@@ -8,78 +8,58 @@ import "swiper/css/free-mode"
 import "swiper/css/mousewheel"
 import "swiper/css/navigation"
 import "swiper/css/free-mode"
-import AppSnackbar from "@/components/AppSnackbar";
 import MangaCarousel from "../../ui/MangaCarousel";
 import MangaCarouselTitle from "../../ui/MangaCarouselTitle";
 import useSwitchButtons from "../../../hooks/use-switch-buttons";
 import ReadingProgressItem from "./ReadingProgressItem";
-import { HomeMapItem, HomeProgresses } from "@/features/home/types/hero";
-import { Container } from "@mui/material";
+import { Container, Stack } from "@mui/material";
+import { selectBlockByHash } from "@/features/home/states/home-page/slice";
+import { ProgressSave } from "@/features/home/types/progress";
+import { range } from "lodash";
+import ReadingProgressSkeleton from "./ReadingProgressSkeleton";
 import { progressClientAPI } from "@/features/progress/api/client.api";
-import { ReadingProgress, ReadingProgressContext } from "@/types/reading-progress";
-import { homeClientAPI } from "@/features/home/api/client.api";
 
 
 export default function ReadingProgresss({
-    item
+    hash,
+    ref
 }: {
-    item: HomeMapItem
+    hash: string,
+    ref?: RefObject<HTMLDivElement | null>
 }) {
-    const [progresses, setProgresses] = useState<ReadingProgress[]>([])
-    const [progressesContext, setProgressesContexts] = useState<ReadingProgressContext[]>([])
-    const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false)
-    const loadingRef = useRef(false)
-    const loadedRef = useRef(false)
-
     const {
         nextButton,
         prevButton
     } = useSwitchButtons()
 
+    const block = useAppSelector(state => selectBlockByHash(state, hash))
+
+    const [progresses, setProgresses] = useState<ProgressSave[]>([])
+
     const handleDelete = async (progressID: number) => {
-        if (!progresses) return;
+        await progressClientAPI.deleteProgress(progressID)
 
-        try {
-            setProgresses(progresses.filter(p => p.id != progressID))
-        } catch (e) {
-            setErrorSnackbarOpen(true)
-            throw e
-        }
-    }
-
-    const fetchProgresses = async() => {
-        try {
-            loadingRef.current = true
-
-            const response = await homeClientAPI.getProgresses()
-
-            setProgresses(response.data)
-            setProgressesContexts(response.context)
-        } catch (e) {
-            setProgresses([])
-        } finally {
-            loadingRef.current = false
-            loadedRef.current = true
-        }
+        setProgresses(prev => prev.filter(ps => ps.id != progressID))
     }
 
     useEffect(() => {
-        if (loadedRef.current || loadingRef.current) return
+        if (!block?.data)
+            return
 
-        fetchProgresses()
-    }, [])
+        setProgresses(block.data as ProgressSave[])
+    }, [block])
 
-    if (loadedRef.current && progresses.length == 0)
-        return
+    if (block?.status == "loaded" && (!block.data || progresses.length == 0))
+        return null
 
     return (
-        <Container maxWidth="lg">
+        <Container maxWidth="lg" ref={ref}>
             <MangaCarousel>
                 <MangaCarouselTitle
                     prevButtonRef={prevButton}
                     nextButtonRef={nextButton}
                 >
-                    {item.title}
+                    Продолжить чтение
                 </MangaCarouselTitle>
                 <Swiper
                     modules={[FreeMode, Navigation]}
@@ -92,32 +72,56 @@ export default function ReadingProgresss({
                     }}
                     draggable={true}
                     breakpoints={{
-                        0: { slidesPerView: 1 },
-                        600: { slidesPerView: 2 },
-                        900: { slidesPerView: 3 },
-                        1200: { slidesPerView: 4 }
+                        0: {
+                            slidesPerView: 1.25,
+                            spaceBetween: 10,
+                        },
+                        480: {
+                            slidesPerView: 1.7,
+                            spaceBetween: 12,
+                        },
+                        640: {
+                            slidesPerView: 2.2,
+                            spaceBetween: 12,
+                        },
+                        880: {
+                            slidesPerView: 3.15,
+                            spaceBetween: 16,
+                        },
+                        1024: {
+                            slidesPerView: 3.5, // или 4, если есть кнопки навигации по краям
+                            spaceBetween: 16,
+                        },
                     }}
                     style={{
                         width: "100%",
                     }}
                 >
-                    {progresses.map((progress, ind) => (
-                        <SwiperSlide key={`home_page_progress_${progress.id}`}>
-                            <ReadingProgressItem
-                                progress={progress}
-                                progressContext={progressesContext[ind]}
-                                onDelete={handleDelete}
-                            />
-                        </SwiperSlide>
-                    ))}
+                    <Stack
+                        direction="row"
+                        spacing={2}
+                    >
+                        {block?.status != "loaded" ?
+                            range(0, 6).map(idx => (
+                                <SwiperSlide key={`home_page_reading_progress_stub_${idx}`}>
+                                    <ReadingProgressSkeleton/>
+                                </SwiperSlide>
+                            ))
+                            :
+                            (progresses).map((progress, ind) => (
+                                <SwiperSlide key={`home_page_progress_${progress.id}`}>
+                                    <ReadingProgressItem
+                                        progress={progress}
+                                        onDelete={() => {
+                                            handleDelete(progress.id)
+                                        }}
+                                    />
+                                </SwiperSlide>
+                            )) 
+                        }
+                    </Stack>
                 </Swiper>
             </MangaCarousel>
-            <AppSnackbar 
-                variant="error"
-                message="При удалении прогресса произошла ошибка."
-                open={errorSnackbarOpen}
-                onClose={() => setErrorSnackbarOpen(false)}
-            />
         </Container>
     )
 }

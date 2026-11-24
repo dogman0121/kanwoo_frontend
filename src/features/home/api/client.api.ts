@@ -1,13 +1,17 @@
 import { clientFetch } from "@/lib/fetch/client-fetch.util"
-import { HomeBlockData, HomeProgresses } from "../types/hero"
+import { HomeBlockData, HomeChapter, HomeProgresses } from "../types/hero"
 import { ReadingProgress, ReadingProgressContext } from "@/types/reading-progress"
 import { Chapter, ChapterContext } from "@/types/chapter"
 import { CursorPagination } from "@/lib/fetch/api-response.types"
 import encodeCursor from "@/lib/fetch/encode-cursor.util"
 
 export const homeClientAPI = {
-    getHomeBlock: async(hash: string) => {
-        return clientFetch.get<HomeBlockData>(`/home/blocks/${hash}`)
+    getHomeBlocks: async(hashList: string[]) => {
+        return clientFetch.post<HomeBlockData[]>(`/home/blocks`, {
+            body: JSON.stringify({
+                blocks_hash: hashList
+            })
+        }, {use_json: true, csrf: false})
     },
 
     getProgresses: async () => {
@@ -19,6 +23,6 @@ export const homeClientAPI = {
         if (cursor)
             urlParams.set("cursor", encodeCursor(cursor))
 
-        return clientFetch.get<Chapter[], null, ChapterContext[], CursorPagination>('/chapters/last-added' + urlParams.toString())
-    }
+        return clientFetch.get<HomeChapter[], null, null, CursorPagination>('/chapters/last-added?' + urlParams.toString())
+    },
 }

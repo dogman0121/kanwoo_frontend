@@ -1,6 +1,6 @@
 "use client"
 
-import EditInput from "@/components/edit/EditInput";
+import EditInput from "@/components/edit/Input";
 import { InputAdornment, TextFieldProps, Typography } from "@mui/material";
 
 export default function MangaDescription({value, ...props}: TextFieldProps) {

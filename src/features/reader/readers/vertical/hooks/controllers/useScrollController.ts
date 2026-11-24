@@ -5,12 +5,7 @@ import { Chapter } from "@/types/chapter"
 import Page from "@/types/chapter/page"
 import { throttle } from "lodash"
 import { useCallback, useEffect, useRef } from "react"
-import useNavOpen from "../../../../hooks/controllers/useNavOpen"
-import { NextChapterEvent, PageChangedEvent, ReadingEventType } from "../../../../interfaces/reader"
-import { selectChapters, selectCurrentPageNumber } from "../../../../states/reader/selectors"
-import { setCurrentChapterIndex, setCurrentPageNumber } from "../../../../states/reader/slice"
-import { setEndOfChapterReached } from "../../../../states/reader.slice"
-import { selectInfinityChapter } from "../../../../states/reading-settings/selectors"
+import { selectChapters, selectCurrentChapterIndex, selectCurrentPageNumber } from "../../../../states/reader/selectors"
 import useWindowWidth from "@/features/reader/hooks/useWindowWidth"
 
 const calculatePagesOffsets = (pages: Page[], windowWidth: number) => {
@@ -62,36 +57,62 @@ const calculatePage = (pageOffsets: number[], pages: Page[], scrollY: number) =>
 }
 
 export default function useScrollController({
-    onPageChange,
-    onLoadNextChapter
+    onPageChanged,
+    onLoadNextChapter,
+    onChapterEnd,
+    onTopReached,
+    onTopLeaved,
+    onBottomReached,
+    onBottomLeaved,
+    onClick,
+    onScroll,
+    disableInfinityChapter = false
 }: {
-    onLoadNextChapter?: (event: NextChapterEvent) => void,
-    onPageChange?: (event: PageChangedEvent) => void
+    disableInfinityChapter?: boolean,
+    onLoadNextChapter?: (chapter: Chapter) => void,
+    onPageChanged?: (chapterIdx: number, pageNumber: number) => void,
+    onChapterEnd?: (chapter: Chapter) => void,
+    onTopReached?: () => void,
+    onTopLeaved?: () => void,
+    onBottomReached?: () => void
+    onBottomLeaved?: () => void,
+    onClick?: () => void,
+    onScroll?: () => void,
 }) {
     const dispatch = useAppDispatch()
 
-    const {close: closeNav, open: openNav, toggle: toggleNav} = useNavOpen()
-
     const scrollHandlerIsRunningRef = useRef(false)
+
     const playgroundRef = useRef<HTMLElement | null>(null)
+    const chaptersElRefs = useRef(new Map<number, HTMLElement>())
 
     const currPageNumber = useAppSelector(selectCurrentPageNumber)
+    const currChapterIndex = useAppSelector(selectCurrentChapterIndex)
     const chapters = useAppSelector(selectChapters)
-    const infinityChapter = useAppSelector(selectInfinityChapter)
-    const chaptersElRefs = useRef(new Map<number, HTMLElement>())
+
     const chaptersOffsetsRef = useRef<number[]>([])
     const pagesOffsetsRef = useRef(new Map<number, number[]>());
+
     const progressInitialized = useRef(false)
+
+    const topReachedRef = useRef(true)
+    const bottomReachedRef = useRef(false)
+
     const { width } = useWindowWidth()
 
-    const handleChapter = useCallback((chapters: Chapter[], chaptersOffsets: number[], pagesOffsets: Map<number, number[]>, scrollY: number) => {
+    const handlePage = useCallback((
+        chapters: Chapter[], 
+        chaptersOffsets: number[], 
+        pagesOffsets: Map<number, number[]>, 
+        scrollY: number
+    ) => {
         // Calculating current page position
         const { 
             chapter, 
             offset: chapterOffset, 
             idx: chapterIdx
         } = calculateChapter(chapters, chaptersOffsets, scrollY)
-        
+
         if (!chapter.pages)
             throw new Error("Can't get chapter pages")
 
@@ -100,55 +121,55 @@ export default function useScrollController({
             idx: pageIdx 
         } = calculatePage(pagesOffsets.get(chapter.id) || [], chapter.pages, scrollY - chapterOffset)
 
-        onPageChange?.({
-            type: ReadingEventType.PAGE_CHANGED,
-            value: {
-                chapter: chapter,
-                chapterId: chapter.id,
-                chapterIdx: chapterIdx,
-                page: page,
-                pageNumber: pageIdx
-            }
-        })
-    }, [dispatch, onPageChange])
+        if (chapterIdx != currChapterIndex || pageIdx != currPageNumber) {
+            onPageChanged?.(chapterIdx, pageIdx)
+        }
+    }, [dispatch, onPageChanged, currPageNumber, currChapterIndex])
 
-    const handleScrollPosition = (scrollY: number) => {      
+    const handleNav = (scrollY: number) => {      
         const windowHeight = window.innerHeight
 
         const topReached = scrollY <= 0
         const endReached = scrollY + windowHeight >= document.documentElement.scrollHeight
 
-        if (topReached || endReached){
-            openNav()
+        if (topReached && topReachedRef.current == false) {
+            onTopReached?.()
+        } else if (!topReached && topReachedRef.current == true) {
+            onTopLeaved?.()
         }
-        else {
-            closeNav()
+        topReachedRef.current = topReached
+
+        if (endReached && bottomReachedRef.current == false) {
+            onBottomReached?.()
+        } else if (!endReached && bottomReachedRef.current == true) {
+            onBottomLeaved?.()
         }
+        bottomReachedRef.current = endReached
     }
 
-    const handleLoadNextChapter = (scrollY: number) => {
+    const handleEnd = (scrollY: number) => {
         const LOAD_NEXT_CHAPTER_OFFSET = 500      
         const windowHeight = window.innerHeight
 
-        const inCriticalSection = scrollY + windowHeight >= document.documentElement.scrollHeight - LOAD_NEXT_CHAPTER_OFFSET
+        // Вычисляем коориднаты нижней части экрана
+        const screenBottomHeight = scrollY + windowHeight
+        // Находим нижнюю отсечку для
+        const  bottomChapterBorder = document.documentElement.scrollHeight - LOAD_NEXT_CHAPTER_OFFSET
+        const inCriticalSection = screenBottomHeight >= bottomChapterBorder
 
-        if (infinityChapter && inCriticalSection) {
+        if (inCriticalSection) {
             const lastChapterInd = chapters.length - 1;
 
             const lastChapter = chapters[lastChapterInd]
-            if (infinityChapter && lastChapter.next_chapter_id) {
-                onLoadNextChapter?.({
-                    type: ReadingEventType.LOAD_NEXT_CHAPTER,
-                    value: {
-                        chapter: lastChapter
-                    }
-                })
+            if (!disableInfinityChapter && lastChapter.next_chapter_id) {
+                onLoadNextChapter?.(lastChapter)
             }
+            onChapterEnd?.(lastChapter)
         }
     }
 
     const handleClick = () => {
-        toggleNav()
+        onClick?.()
     }
 
     useEffect(() => {
@@ -172,6 +193,7 @@ export default function useScrollController({
 
             if (!progressInitialized.current && chapters.length > 0) {
                 const initialOffsets = pagesOffsetsRef.current.get(chapters[0].id)
+                
                 if (initialOffsets && typeof initialOffsets[currPageNumber] !== 'undefined') {
                     // Используем setTimeout, чтобы вытолкнуть скролл в конец макрозадач
                     setTimeout(() => {
@@ -199,20 +221,19 @@ export default function useScrollController({
         const handleScroll = throttle((_event) => {
             if (scrollHandlerIsRunningRef.current) return;
 
-            closeNav()
+            onScroll?.()
+            // Блокируем обработчику следующих событий до завершения текущей
             scrollHandlerIsRunningRef.current = true
             window.requestAnimationFrame(() => {
                 try {
                     const scrollY = window.scrollY
 
-                    handleChapter(
-                        chapters, 
-                        chaptersOffsetsRef.current, 
-                        pagesOffsetsRef.current, 
-                        scrollY
-                    )
-                    handleScrollPosition(scrollY)
-                    handleLoadNextChapter(scrollY)
+                    // Вычисляем текущую главу и номер страницы
+                    handlePage(chapters, chaptersOffsetsRef.current, pagesOffsetsRef.current, scrollY)
+                    // Вычисляет события открытия/закрытия навигации
+                    handleNav(scrollY)
+                    // Проверяем, стоит ли загрузить новую главу
+                    handleEnd(scrollY)
                 } catch (e: unknown) {
                     if (e instanceof Error)
                         console.error("ScrollController error:", e.message)
@@ -229,7 +250,7 @@ export default function useScrollController({
             window.removeEventListener("scroll", handleScroll)
             handleScroll.cancel()
         };
-    }, [handleClick, handleChapter, handleScrollPosition]);
+    }, [handleClick, handleEnd, handleNav, handlePage]);
 
     return {
         playgroundRef: playgroundRef,

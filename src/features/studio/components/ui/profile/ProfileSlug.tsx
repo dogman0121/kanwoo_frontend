@@ -4,7 +4,7 @@ import { Box, CircularProgress, InputAdornment, TextFieldProps } from "@mui/mate
 import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import { profileClientApi } from "@/lib/fetch/features/profile/client.api";
-import EditInput from "@/components/edit/EditInput";
+import EditInput from "@/components/edit/Input";
 
 export async function validateSlug(slug: string) {
     try {

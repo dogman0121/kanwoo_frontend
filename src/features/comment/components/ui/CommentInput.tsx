@@ -1,12 +1,13 @@
 "use client"
 
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
-import { Box, BoxProps, Button, ButtonProps, FormControl, FormControlProps, IconButton, IconButtonProps, InputBase, Paper, SxProps, Typography, useTheme } from "@mui/material"
+import { Box, BoxProps, Button, ButtonProps, FormControl, FormControlProps, IconButton, IconButtonProps, InputAdornment, InputBase, Paper, SvgIcon, SxProps, Typography, useTheme } from "@mui/material"
 import { ChangeEvent, Children, MouseEvent, useState, useTransition } from "react"
 import SendRoundedIcon from "@mui/icons-material/SendRounded"
 import { MAX_COMMENT_LENGTH } from "@/constants/comments"
-import { selectAuthProfile } from "@/features/global/states/auth-profile/auth-profile.slice"
+import { selectAuthProfile } from "@/features/auth/states/auth-profile/auth-profile.slice"
 import { setAuthSnackbarOpen } from "@/features/global/states/app/slice"
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 type CommentAuthorizedWithoutSizeProps = {
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void
@@ -15,6 +16,7 @@ type CommentAuthorizedWithoutSizeProps = {
     disabled: boolean,
     defaultOpen?: boolean,
     sx?: SxProps,
+    open?: boolean,
     onOpen?: () => void,
     onClose?: () => void,
     slotProps?: {
@@ -26,6 +28,7 @@ type CommentAuthorizedWithSizeProps = {
     size: "small" | "medium",
     onSend?: (text: string) => void,
     sx?: SxProps,
+    open?: boolean,
     onOpen?: () => void,
     onClose?: () => void,
     defaultOpen?: boolean,
@@ -171,11 +174,12 @@ function SmallInputInner({
     onSend,
     sx,
     slotProps = {},
+    open,
+    onOpen,
+    onClose,
     ...props
 }: CommentAuthorizedWithoutSizeProps) {
     const theme = useTheme()
-
-    const [opened, setOpened] = useState(defaultOpen)
 
     const handleSend = (event: MouseEvent) => {
         event.stopPropagation()
@@ -186,26 +190,29 @@ function SmallInputInner({
     const handleOpen = () => {}
 
 
-    // if (!opened) {
-    //     return (
-    //         <InputContainer
-    //             onClick={() => setOpened(true)}
-    //             sx={{
-    //                 display: 'flex',
-    //                 borderRadius: 3,
-    //                 height: "34px",
-    //                 ...sx
-    //             }}
-    //         >
-    //             <Typography 
-    //                 color="textSecondary" 
-    //                 my={"auto"}
-    //             >
-    //                 Введите комментарий
-    //             </Typography>
-    //         </InputContainer>
-    //     )
-    // }
+    if (!open) {
+        return (
+            <InputContainer
+                onClick={() => onOpen?.()}
+                sx={{
+                    display: 'flex',
+                    borderRadius: 4,
+                    height: "42px",
+                    ...sx
+                }}
+            >
+                <Typography 
+                    color="textSecondary" 
+                    sx={{
+                        my: "auto",
+                        lineHeight: "1"
+                    }}
+                >
+                    Введите комментарий
+                </Typography>
+            </InputContainer>
+        )
+    }
 
     return (
         <Box
@@ -217,14 +224,18 @@ function SmallInputInner({
         >
             <InputContainer
                 sx={{
-                    borderRadius: 3,
+                    borderRadius: 4,
+                    minHeight: "42px",
+
+                    display: "flex",
+                    flexDirection: "row",
                     ...sx
                 }}
             >
                 <InputBase 
                     fullWidth
+                    autoFocus
                     multiline
-                    size="small"
                     maxRows={4}
                     value={value}
                     onChange={onChange}
@@ -232,8 +243,19 @@ function SmallInputInner({
                     sx={{
                         py: 0.2
                     }}
+                    endAdornment={
+                        <InputAdornment position="end">
+                            <IconButton
+                                size="small"
+                                onClick={() => onClose?.()}
+                            >
+                                <SvgIcon fontSize="small">
+                                    <CloseRoundedIcon />
+                                </SvgIcon>
+                            </IconButton>
+                        </InputAdornment>
+                    }
                 />
-                
             </InputContainer>
             <IconButton 
                 size="small" 
@@ -242,6 +264,7 @@ function SmallInputInner({
                 sx={{
                     bgcolor: theme.palette.primary.main,
                     color: theme.palette.primary.contrastText,
+                    mb: "6px",
 
                     "&:hover": {
                         bgcolor: theme.palette.primary.main
@@ -261,6 +284,7 @@ function SmallInputInner({
 export default function CommentInput({
     size,
     onSend,
+    onClose,
     ...props
 }: CommentAuthorizedWithSizeProps  ) {
     const dispatch = useAppDispatch()
@@ -284,6 +308,11 @@ export default function CommentInput({
         }
     }
 
+    const handleClose = () => {
+        setCommentText("")
+        onClose?.()
+    }
+
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const text = event.target.value;
 
@@ -300,6 +329,7 @@ export default function CommentInput({
                     onSend={handleSend}
                     disabled={isPending || error}
                     value={commentText}
+                    onClose={handleClose}
                     onChange={handleChange}
                     {...props}
                 />
@@ -308,6 +338,7 @@ export default function CommentInput({
                     onSend={handleSend}
                     disabled={isPending || error}
                     value={commentText}
+                    onClose={handleClose}
                     onChange={handleChange}
                     {...props}
                 />

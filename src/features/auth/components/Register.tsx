@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import { ApiError } from "@/lib/fetch/api-response.types";
-import AppSnackbar from "@/components/AppSnackbar";
+import AppSnackbar from "@/components/app/AppSnackbar";
 import { Controller, useForm } from "react-hook-form";
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import useTimer from "../hooks/useTimer";
@@ -13,11 +13,12 @@ import TotpInput from "./ui/TotpInput";
 import Input from "./ui/Input";
 import PasswordInput from "./ui/PasswordInput";
 import TextButton from "./ui/TextButton";
-import useSlugValidator from "@/features/profile/hooks/use-slug-validator.hook";
+import useSlugValidator, { SlugInvalidReason } from "@/features/profile/hooks/use-slug-validator.hook";
 import { useAppDispatch, useAppSelector } from "@/lib/state/hooks";
-import { register, selectIsLoading, setIsLoading, setSection } from "@/features/global/states/auth/slice";
+import { register, setSection } from "@/features/auth/states/auth/slice";
 import { AuthSection } from "@/features/auth/types";
 import SlugInput from "@/features/profile/components/SlugInput";
+import { setAuthModalOpen } from "@/features/global/states/app/slice";
 
 
 interface RegisterForm {
@@ -27,13 +28,23 @@ interface RegisterForm {
 }
 
 
-export default function AuthRegister() {
+export default function AuthRegister({
+    onSuccess
+}: {
+    onSuccess?: () => void
+}) {
     const dispatch = useAppDispatch()
 
     const [timeRemaining, setTimeRemaining] = useTimer(0)
 
-    const { validate, isValid, validating } = useSlugValidator()
-    const isLoading = useAppSelector(selectIsLoading)
+    const invalidReasonMessages = {
+        [SlugInvalidReason.ALREADY_TAKEN]: "Данное имя пользователя занято",
+        [SlugInvalidReason.CONTAINS_UNALLOWED_SYMBOLS]: "Имя должно содежать латинские символы, цифры и (_)",
+        [SlugInvalidReason.MORE_THAN_MAX_LENGTH]: "Максимальная длина имени 32 символа"
+    }
+
+    const { validate, isValid, validating, invalidReason } = useSlugValidator()
+    const [isLoading, setIsLoading] = useTransition()
 
     // totp form
     const [totpOpen, setTotpOpen] = useState(false)
@@ -44,24 +55,33 @@ export default function AuthRegister() {
     const [registerData, setRegisterData] = useState<RegisterForm | undefined>(undefined)
 
 
-    const {control, handleSubmit,  setError, formState: {errors}} = useForm<RegisterForm>({
+    const {control, handleSubmit, reset, setError, formState: {errors}} = useForm<RegisterForm>({
         mode: "onChange",
-        defaultValues: registerData
+        defaultValues: {
+            login: "",
+            email: "",
+            password: ""
+        }
     })
 
     const onTotp = async (code?: number) => {
         if (!registerData)
             throw new Error("Register data is undefined")
 
-        if (!code || code < 100000)
+        if (typeof code == "undefined" || code < 100000)
             return setTotpError(false)
 
         try {
-            dispatch(register({
-                login: registerData?.login,
-                email: registerData?.email,
-                password: registerData?.password
-            })).unwrap()
+            await dispatch(
+                register({
+                    code: code,
+                    login: registerData?.login,
+                    email: registerData?.email,
+                    password: registerData?.password
+                })
+            ).unwrap()
+
+            onSuccess?.()
         } 
         catch (e) {
             if (e instanceof ApiError) {
@@ -83,9 +103,6 @@ export default function AuthRegister() {
         catch (e) {
             throw e
         }
-        finally {
-            dispatch(setIsLoading(true))
-        }
     }
 
     const handleSendCode = async () => {
@@ -98,27 +115,28 @@ export default function AuthRegister() {
     }
 
     const onRegister = async (data: RegisterForm) => {
-        try {
-            if (!data)
-                return setErrorSnackbarOpen(true)
+        if (!data)
+            return setErrorSnackbarOpen(true)
 
-            sendCode(data.email)
+        setIsLoading(async () => {
+            try {
+                await sendCode(data.email)
 
-            setTotpOpen(true)
-            setRegisterData(data)
-        } 
-        catch(e) {
-            if (e instanceof ApiError) {
-                if (e.code == "email_exists") {
-                    setError("email", {message: "Данная почта занята"})
+                setTotpOpen(true)
+                setRegisterData(data)
+            } catch (e) {
+                if (e instanceof ApiError) {
+                    if (e.code == "email_exists") {
+                        setError("email", {message: "Данная почта занята. Попробуйте другую."})
+                    }
+
+                } else {
+                    setErrorSnackbarOpen(true)
+
+                    throw e
                 }
-
-            } else {
-                setErrorSnackbarOpen(true)
-
-                throw e
             }
-        }
+        })
     }
 
     if (totpOpen) {
@@ -155,7 +173,10 @@ export default function AuthRegister() {
                     color="primary"
                     disabled={timeRemaining != 0}
                     loading={isLoading}
-                    onClick={handleSendCode}
+                    onClick={() => {
+                        reset()
+                        handleSendCode()
+                    }}
                     sx={{
                         mt: 3
                     }}
@@ -188,7 +209,7 @@ export default function AuthRegister() {
                             validate: (value) => {
                                 validate(value)
 
-                                return ""
+                                return isValid
                             }
                         }}
                         render={({field}) => (
@@ -197,7 +218,7 @@ export default function AuthRegister() {
                                 type="text"
                                 slugChecking={validating}
                                 error={!isValid}
-                                helperText={errors.login?.message}
+                                helperText={invalidReason != null && invalidReasonMessages[invalidReason]}
                                 {...field}
                             />
                         )}
@@ -246,7 +267,7 @@ export default function AuthRegister() {
                         mt: "5px"    
                     }}
                 >
-                    <Typography textAlign={"center"}>Уже есть аккаунт?</Typography> 
+                    <Typography sx={{textAlign: "center"}}>Уже есть аккаунт?</Typography> 
                     <TextButton
                         onClick={()=>{
                             dispatch(setSection(AuthSection.LOGIN))

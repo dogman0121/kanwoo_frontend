@@ -1,7 +1,7 @@
 import { serverFetch } from "@/lib/fetch/server-fetch.util";
 import { GetHomeContext, GetHomeData } from "./types";
-import { HomeMap } from "../types/hero";
+import { HomePageMap } from "../types/hero";
 
 export const homeServerAPI = {
-    getHomeMap: async () => serverFetch.get<HomeMap, null>('/home')
+    getHomeMap: async () => serverFetch.get<HomePageMap, null>('/home')
 }

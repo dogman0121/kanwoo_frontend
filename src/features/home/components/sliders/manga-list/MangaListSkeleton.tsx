@@ -17,7 +17,7 @@ export const MangaSkeleton = () => (
 export default function MangaListSkeleton() {
     return (
         <>
-            {range(0, 7).map((idx) => <MangaSkeleton key={`manga_carousel_item_${idx}_${Math.random()}`}/>)}
+            {range(0, 16).map((idx) => <MangaSkeleton key={`manga_carousel_item_${idx}_${Math.random()}`}/>)}
         </>
     )
 }

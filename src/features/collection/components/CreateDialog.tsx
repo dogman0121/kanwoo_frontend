@@ -10,7 +10,7 @@ import {
     TextField
 } from "@mui/material";
 import { useState } from "react";
-import AppSnackbar from "../../../components/AppSnackbar";
+import AppSnackbar from "../../../components/app/AppSnackbar";
 import PrivacySelect from "../../../components/PrivacySelect";
 import { Controller, useForm } from "react-hook-form";
 import { useAppDispatch } from "@/lib/state/hooks";
@@ -35,7 +35,7 @@ export default function CreateDialog({
 
     const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-    const {control, handleSubmit} = useForm<CreateCollectionFormSchema>({
+    const {control, handleSubmit, reset} = useForm<CreateCollectionFormSchema>({
         defaultValues: {
             name: "",
             privacy: 1
@@ -46,6 +46,7 @@ export default function CreateDialog({
         try {
             await dispatch(createCollection({name: data.name, privacyId: data.privacy})).unwrap()
 
+            reset()
             onClose()
         }
         catch (e) {

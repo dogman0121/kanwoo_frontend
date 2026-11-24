@@ -1,6 +1,6 @@
 "use client"
 
-import EditInput from "@/components/edit/EditInput";
+import EditInput from "@/components/edit/Input";
 import { Box, TextFieldProps } from "@mui/material";
 
 

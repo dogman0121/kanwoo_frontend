@@ -1,38 +1,39 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
-import { HomeBlockData, HomeMap, HomeMapItem } from "../types/hero"
-import { homeClientAPI } from "../api/client.api"
+import { useAppDispatch, useAppSelector } from "@/lib/state/hooks"
+import { throttle } from "lodash"
+import { useCallback, useEffect, useRef } from "react"
+import { loadBlocks, selectBlocks } from "../states/home-page/slice"
 
-export default function useBlockLoader(block: HomeMapItem) {
-    
-    const [data, setData] = useState<HomeBlockData>([])
-    const [loading, setLoading] = useState(false)
-    const [loaded, setLoaded] = useState(false)
+export default function useBlockLoader() {
+    const dispatch = useAppDispatch()
 
-    const fetchBlock = async (hash: string) => {
-        try{
-            setLoading(true)
+    const blocks = useAppSelector(selectBlocks)
 
-            const response = await homeClientAPI.getHomeBlock(hash)
+    const requestedBlocksRef = useRef<Record<string, number>>({})
 
-            setData(response.data)
+    const throttledLoadBlock = useCallback(throttle(() => {
+        const hashList = Object.keys(requestedBlocksRef.current)
+        if (hashList.length == 0)
+            return
+
+        dispatch(loadBlocks(hashList))
+
+        requestedBlocksRef.current = {}
+    }, 150, {leading: true, trailing: true}), [dispatch])
+
+    const loadBlock = useCallback((hash: string) => {
+        //console.log(blocks)
+        if (Object.keys(blocks).length == 0) return
+
+        if (blocks[hash].status == "idle") {
+            requestedBlocksRef.current[hash] = 1
         }
-        finally {
-            setLoading(false)
-            setLoaded(true)
-        }
-    }
 
-    useEffect(() => {
-        if (loading || loaded) return
-
-        fetchBlock(block.hash!)
-    }, [])
+        throttledLoadBlock()
+    }, [blocks, throttledLoadBlock])
 
     return {
-        data: data,
-        loading: loading,
-        loaded: loaded
+        loadBlock
     }
 }

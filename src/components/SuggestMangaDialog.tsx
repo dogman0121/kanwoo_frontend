@@ -3,7 +3,7 @@
 import { clientFetch } from "@/lib/fetch/client-fetch.util";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogProps, DialogTitle, TextField } from "@mui/material";
 import { ChangeEvent, useState } from "react";
-import AppSnackbar from "./AppSnackbar";
+import AppSnackbar from "./app/AppSnackbar";
 import { Controller, useForm } from "react-hook-form";
 
 export interface SuggestMangaForm {
@@ -17,11 +17,16 @@ export default function SuggestMangaDialog({onClose, ...props}: Omit<DialogProps
     const [successSnackbarOpen, setSuccessSnackbarOpen] = useState(false)
 
     const {handleSubmit, control, formState: {errors}} = useForm<SuggestMangaForm>({
-        mode: "onChange"
+        mode: "onChange",
+        defaultValues: {
+            name: "",
+            link: "",
+            comment: ""
+        }
     })
 
     const handleSuggest = async (data: SuggestMangaForm) => {
-        await clientFetch.post("/manga/suggest", {
+        await clientFetch.post("/manga/suggestions", {
             headers: {
                 "Content-Type": "application/json"
             },

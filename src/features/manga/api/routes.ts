@@ -29,16 +29,38 @@ export const mangaApiConfig: ApiConfig = {
             url: "/manga/:slug"
         },
     },
-    "/manga/:slug/translations": {
+    "/manga/:slug/metadata": {
         GET: {
             mode: "proxy",
-            url: "/translations?target_type=manga&target_id=:slug"
+            url: "/manga/:slug/metadata"
+        },
+    },
+    "/manga/:slug/translations": {
+        GET: {
+            mode: "transform",
+            transformRequest: async (req, params) => {
+                const url = new URL(req.url)
+
+                const searchParams = url.searchParams
+                searchParams.set("manga_id", params.slug)
+
+                const newHeaders = new Headers(req.headers)
+
+                return new Request(
+                    url.origin + "/translations?" + searchParams.toString(),
+                    {
+                        method: "GET",
+                        headers: newHeaders,
+                        credentials: "include"
+                    }
+                )
+            }
         }
     },
     "/manga/:slug/views": {
         POST: {
             mode: "proxy",
-            url: "/manga/views"
+            url: "/manga/:slug/views"
         }
     },
     "/manga/:slug/reports": {
@@ -128,10 +150,10 @@ export const mangaApiConfig: ApiConfig = {
             }
         }
     },
-    "/manga/:slug/progresses": {
+    "/manga/:slug/progress": {
         GET: {
             mode: "proxy",
-            url: "/progresses/manga/:slug"
+            url: "/progresses/manga/:slug/reading-start"
         },
         DELETE: {
             mode: "proxy",

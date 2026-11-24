@@ -1,14 +1,32 @@
-import PPage from "./PPage";
+"use client"
 
-export default async function Page({
+import { selectAuthProfile } from "@/features/auth/states/auth-profile"
+import AuthProfileCollectionsPageDesktop from "@/features/collection/pages/AuthProfileCollectionsPageDesktop"
+import AuthProfileCollectionsPageMobile from "@/features/collection/pages/AuthProfileCollectionsPageMobile"
+import { selectDeviceType } from "@/features/global/states/app/slice"
+import { useAppSelector } from "@/lib/state/hooks"
+import { notFound } from "next/navigation"
+
+export default function Page({
     searchParams
 }: {
     searchParams: Promise<{ viewport: string }>
 }) {
 
-    const { viewport } = await searchParams;
+    const deviceType = useAppSelector(selectDeviceType)
+    const authProfile = useAppSelector(selectAuthProfile)
+
+    if (!authProfile)
+        return notFound()
 
     return (
-        <PPage deviceType={viewport} />
+        <>
+            {deviceType == "desktop" && (
+                <AuthProfileCollectionsPageDesktop />
+            )}
+            {deviceType != "desktop" && (
+                <AuthProfileCollectionsPageMobile />
+            )}
+        </>
     )
 }

@@ -1,5 +1,5 @@
 import { range } from "lodash";
-import { GenresContainer } from "../Genres";
+import { GenresContainer } from "../ui/Genres";
 import { Chip, Skeleton } from "@mui/material";
 
 export default function GenresSkeleton() {

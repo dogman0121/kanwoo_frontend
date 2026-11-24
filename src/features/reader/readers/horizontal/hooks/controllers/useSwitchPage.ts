@@ -15,18 +15,17 @@ export type GetPageResult = {
     endReached: boolean
 }
 
-export default function useSwitchPage() {
-    const dispatch = useAppDispatch()
-
+export default function useSwitchPage({
+    disableInfinityChapter
+}: {
+    disableInfinityChapter: boolean
+}) {
     const endReached = useAppSelector(selectEndOfChapterReached)
 
     const chapters = useAppSelector(selectChapters)
     const currChapterIdx = useAppSelector(selectCurrentChapterIndex)
 
     const currPageNum = useAppSelector(selectCurrentPageNumber)
-
-    const getNextPageRef = useRef<() => GetPageResult | null>(() => null)
-    const getPrevPageRef = useRef<() => GetPageResult | null>(() => null)
 
     const getNextPage = (
         chapters: Chapter[], 
@@ -55,7 +54,7 @@ export default function useSwitchPage() {
                     endReached: true
                 }
             } else {
-                if (hasNextChapter) {
+                if (!disableInfinityChapter && hasNextChapter) {
                     return {
                         chapter: chapters[currChapterIdx + 1],
                         chapterIdx: currChapterIdx + 1,

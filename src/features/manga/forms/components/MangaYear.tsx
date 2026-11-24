@@ -1,6 +1,6 @@
 "use client"
 
-import EditInput from "@/components/edit/EditInput";
+import EditInput from "@/components/edit/Input";
 
 export default function MangaYear({value}: {value: number}) {
     return (

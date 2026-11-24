@@ -140,6 +140,7 @@ const mainTheme = createTheme({
       styleOverrides: {
         root: ({ theme }) => ({
           "& .MuiDialog-paper": {
+            overflow: "hidden",
             borderRadius: "20px",
             width: "400px",
             marginTop: theme.spacing(4),
@@ -167,6 +168,15 @@ const mainTheme = createTheme({
             borderRadius: "12px",
           },
         },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        input: ({ theme }) => ({
+          [theme.breakpoints.down('md')]: {
+            fontSize: '16px',
+          },
+        }),
       },
     },
     MuiSelect: {
@@ -250,7 +260,14 @@ const mainTheme = createTheme({
           fontWeight: 400
         })
       }
-    }
+    },
+    MuiListItemIcon: {
+      styleOverrides: {
+        root: ({theme}) => ({
+          minWidth: `calc(8 * ${theme.vars.spacing})`
+        })
+      }
+    },
   },
 });
 

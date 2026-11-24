@@ -1,6 +1,6 @@
 import { Box, Select, SelectProps } from "@mui/material";
-import EditInputLabel from "./EditInputLabel";
-import EditInputCaption from "./EditInputCaption";
+import EditInputLabel from "./Label";
+import EditInputCaption from "./Caption";
 
 export default function EditSelect({label, caption, sx, ...props}: SelectProps & {caption?: string}) {
     return(

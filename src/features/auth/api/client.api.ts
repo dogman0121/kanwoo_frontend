@@ -3,7 +3,7 @@
 import { clientFetch } from "@/lib/fetch/client-fetch.util";
 import { AuthProfile } from "@/types/profile";
 
-export type LoginWithYandex = {
+export type YandexOauthCredentials = {
     accessToken: string,
     expiresIn: string,
     extraData: Record<string, unknown>
@@ -19,8 +19,8 @@ export const authClientApi = {
         return response;
     },
 
-    loginWithYandex: async (data: LoginWithYandex) => {
-        const response = await clientFetch.post<AuthProfile[], {created: boolean}>("/auth/login/oauth/yandex", {
+    loginWithYandex: async (data: YandexOauthCredentials) => {
+        const response = await clientFetch.post<AuthProfile[], {created: boolean}>("/auth/oauth/yandex", {
             body: JSON.stringify({
                 access_token: data.accessToken,
                 expires_in: data.expiresIn,
